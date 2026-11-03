@@ -1,0 +1,16 @@
+{
+  "name": "StarQuest: Daily Quests & History Heroes",
+  "short_name": "StarQuest",
+  "description": "A daily quest tracker with star rewards and a history card collection.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#6c5ce7",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

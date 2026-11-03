@@ -1,0 +1,9 @@
+{
+  "appId": "com.victorwong.starquest",
+  "appName": "StarQuest",
+  "webDir": "www",
+  "server": {
+    "url": "https://coldbeefsundae.github.io/LearningEveryday/",
+    "cleartext": false
+  }
+}
