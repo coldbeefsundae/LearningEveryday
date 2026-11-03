@@ -701,6 +701,18 @@ body[data-calm=on] .kit *{animation:none!important}
 .gsend{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
 @media (prefers-reduced-motion:reduce){.gbacks i{animation:none}.gflip .gin{transition:none}}
 
+/* journal writing box */
+.jtext{cursor:text}
+.jw{position:fixed;inset:0;z-index:500;background:rgba(24,22,60,.55)}
+.jwbox{position:absolute;top:8px;left:max(8px,calc(50% - 360px));right:max(8px,calc(50% - 360px));background:#fff;color:var(--ink);border-radius:20px;padding:10px 12px 12px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.jwbar{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.jwt{flex:1;font-size:17px;font-weight:900}
+.jwcnt{font-size:13px;font-weight:800;color:var(--muted)}
+.jwdone{min-height:44px;padding:4px 20px}
+.jwprompt{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
+.jw textarea.jwtext{display:block;width:100%;height:160px;border-radius:14px;border:2.5px solid var(--accent);background:#fff;color:var(--ink);font:inherit;font-size:18px;line-height:1.5;padding:12px;resize:none}
+.jw textarea.jwtext:focus{outline:none}
+
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
    Tokens: body:is([data-skin=hybrid],[data-skin=gallery]) dark skins, body[data-skin=hybrid] hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
@@ -5197,7 +5209,7 @@ function renderJournal(){
   });
   h += '</div><div class="jsec">My story</div>';
   h += '<div class="jprompt"><span data-noicon>💡</span> <span id="jPrompt">'+esc(J_PROMPTS[jPromptI % J_PROMPTS.length])+'</span> <button class="btn small" data-act="jprompt">Another idea</button> <button class="btn small" data-act="juse">Use it</button></div>';
-  h += '<textarea class="jtext" id="jText" data-day="'+k+'" maxlength="600" rows="5" placeholder="Write about your day..." autocomplete="off" autocapitalize="sentences">'+esc(e.t || '')+'</textarea>';
+  h += '<textarea class="jtext" id="jText" data-day="'+k+'" maxlength="600" rows="5" readonly placeholder="Tap here to write about your day..." autocomplete="off" autocapitalize="sentences">'+esc(e.t || '')+'</textarea>';
   h += '<div class="jfoot"><span class="hint" id="jSaved">'+(e.t || e.m ? 'Saved ✓' : '')+'</span><span class="hint">Only on this device. Up to 600 letters.</span></div>';
   h += '</div>';
   h += '<div class="panel"><div class="ptitle">📅 My calendar</div>'+calendarHTML()+'</div>';
@@ -6320,6 +6332,56 @@ window.addEventListener('error', function(ev){
     b.textContent = '⚠️ ' + (ev.message || 'Error') + ' (line ' + ev.lineno + ') — tap to hide';
   }catch(_){}
 });
+
+/* ---------- Journal writing box: lifts to the top so the on-screen keyboard never covers it ---------- */
+var JW = {el:null, day:null, ta:null};
+function jwSize(){
+  if(!JW.el) return;
+  var box = JW.el.firstChild, ta = JW.ta; if(!box || !ta) return;
+  var vv = window.visualViewport, full = window.innerHeight || 700, vh = vv ? vv.height : full;
+  var shrunk = vh < full * 0.85;
+  var avail = shrunk ? vh - 150 : Math.round(full * 0.34);
+  ta.style.height = Math.max(110, Math.min(avail, 340)) + 'px';
+  box.style.top = 'calc(' + Math.round(vv ? vv.offsetTop : 0) + 'px + env(safe-area-inset-top,0px) + 8px)';
+}
+function jwCount(){ var c = document.getElementById('jwCnt'); if(c && JW.ta) c.textContent = JW.ta.value.length + ' / 600'; }
+function jwOpen(){
+  if(JW.el) return;
+  var k = jKey(), e = jEntry(k) || {t:''};
+  var d = document.createElement('div'); d.className = 'jw'; d.id = 'jw'; d.setAttribute('data-noicon', '1');
+  d.innerHTML = '<div class="jwbox"><div class="jwbar"><b class="jwt">✏️ '+esc(longDate(k))+'</b><span class="jwcnt" id="jwCnt"></span><button class="btn primary jwdone" type="button" id="jwDone">Done</button></div>'+
+    '<div class="jwprompt">💡 '+esc(J_PROMPTS[jPromptI % J_PROMPTS.length])+'</div>'+
+    '<textarea class="jwtext" id="jwText" maxlength="600" placeholder="Write about your day..." autocomplete="off" autocapitalize="sentences"></textarea></div>';
+  document.body.appendChild(d);
+  JW.el = d; JW.day = k; JW.ta = d.querySelector('textarea');
+  JW.ta.value = e.t || '';
+  JW.ta.addEventListener('input', function(){ jSetText(JW.day, JW.ta.value); jwCount(); });
+  d.addEventListener('click', function(ev){ if(ev.target === d || (ev.target.closest && ev.target.closest('#jwDone'))) jwClose(); });
+  jwCount(); jwSize();
+  try{ JW.ta.focus(); var n = JW.ta.value.length; JW.ta.setSelectionRange(n, n); }catch(_){}
+  setTimeout(jwSize, 120); setTimeout(jwSize, 400); setTimeout(jwSize, 900);
+  if(window.visualViewport){ window.visualViewport.addEventListener('resize', jwSize); window.visualViewport.addEventListener('scroll', jwSize); }
+  window.addEventListener('resize', jwSize);
+}
+function jwClose(){
+  if(!JW.el) return;
+  try{ JW.ta.blur(); }catch(_){}
+  if(window.visualViewport){ window.visualViewport.removeEventListener('resize', jwSize); window.visualViewport.removeEventListener('scroll', jwSize); }
+  window.removeEventListener('resize', jwSize);
+  try{ JW.el.parentNode.removeChild(JW.el); }catch(_){}
+  JW.el = null; JW.ta = null;
+  jFlush();
+  try{ checkBadges(); }catch(_){}
+  if(typeof tab !== 'undefined' ? tab === 'journal' : true){ try{ renderJournal(); }catch(_){} }
+}
+document.addEventListener('click', function(e){
+  var t = e.target; if(t && t.id === 'jText'){ e.preventDefault(); jwOpen(); }
+}, true);
+document.addEventListener('focusin', function(e){
+  var t = e.target; if(t && t.id === 'jText'){ jwOpen(); }
+}, true);
+document.addEventListener('keydown', function(e){ if(JW.el && e.key === 'Escape') jwClose(); });
+
 
 })();
 </script>
