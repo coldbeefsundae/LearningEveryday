@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v17', errs = [], shown = false;
+  var V = 'v19', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -771,6 +771,17 @@ body[data-calm=on] .kit *{animation:none!important}
 .jwprompt{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .jw textarea.jwtext{display:block;width:100%;height:160px;border-radius:14px;border:2.5px solid var(--accent);background:#fff;color:var(--ink);font:inherit;font-size:18px;line-height:1.5;padding:12px;resize:none}
 .jw textarea.jwtext:focus{outline:none}
+@media (max-width:640px){.modal{max-height:88vh;max-height:88dvh}}
+/* phone safety: never let a wide child push the whole page sideways */
+html,body{max-width:100%;overflow-x:hidden}
+.main,.page,.view{min-width:0;max-width:100%}
+@media (max-width:520px){
+  .rcard{gap:10px;padding:10px}
+  .rtile{width:46px;height:46px;font-size:26px;border-radius:14px}
+  .rbody b{font-size:16px}
+  .rcost{font-size:14px}
+  .btn.small{padding:8px 10px}
+}
 
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
@@ -1218,10 +1229,10 @@ body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 .bfact .byear{display:inline-block;margin-right:8px;font-weight:900;padding:1px 8px;border-radius:8px;background:var(--accent-soft);color:var(--accent)}
 .recap{margin:10px 0;padding:12px;border-radius:18px;background:rgba(127,127,160,.1)}
 .rhead{font-weight:900;font-size:16px;margin-bottom:8px}
-.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.rtile{text-align:center;padding:8px 4px;border-radius:14px;background:rgba(127,127,160,.12)}
-.rtile b{display:block;font-size:22px;font-weight:900}
-.rtile small{font-size:12px;font-weight:700;color:var(--muted)}
+.rcgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rctile{text-align:center;padding:8px 4px;border-radius:14px;background:rgba(127,127,160,.12)}
+.rctile b{display:block;font-size:22px;font-weight:900}
+.rctile small{font-size:12px;font-weight:700;color:var(--muted)}
 .rlines{margin:10px 0 0;padding-left:18px;font-size:14px;line-height:1.55}
 /* holidays in calendar */
 .cday{cursor:pointer}
@@ -1295,7 +1306,7 @@ body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 .bdpanel .btn{margin-top:2px}
 body:is([data-skin=hybrid],[data-skin=gallery]) .banner.bday,body:is([data-skin=hybrid],[data-skin=gallery]) .banner.bday.soft{color:#4a1030}
 body:is([data-skin=hybrid],[data-skin=gallery]) .mood.on,body:is([data-skin=hybrid],[data-skin=gallery]) .evb.on{color:var(--ink)}
-@media (max-width:420px){.moodgrid,.evgrid{gap:6px}.mood .me{font-size:27px}.rtile b{font-size:19px}}
+@media (max-width:420px){.moodgrid,.evgrid{gap:6px}.mood .me{font-size:27px}.rctile b{font-size:19px}}
 a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .fld input[type=email],.fld input[type=tel],.fld input[type=url],.fld input[type=date],.pin{height:54px;border-radius:15px;border:3px solid rgba(127,127,160,.35);padding:0 14px;font:inherit;font-size:17px;font-weight:700;background:rgba(127,127,160,.08);color:inherit;width:100%;min-width:0}
 .pin{height:46px;width:auto;font-size:15px}
@@ -4177,9 +4188,24 @@ function toggleMusic(on){
 }
 $('musicBtn').addEventListener('click', function(){ toggleMusic(!state.ui.music); });
 $('parentBtn').addEventListener('click', function(){ requireParent(showParent); });
+/* Tap outside any window to close it (unless something was typed that would be lost). */
+var ovDownOnBackdrop = false;
+function modalDirty(){
+  var els = $('modal').querySelectorAll('textarea, input[type=text], input[type=number], input[type=password]'), i;
+  for(i = 0; i < els.length; i++){ if(els[i].value !== els[i].defaultValue && els[i].id !== 'fpFile') return true; }
+  return false;
+}
+function closeModalFromOutside(){
+  if(!$('overlay').classList.contains('show')) return;
+  if(modalDirty()){ toast('✏️ You typed something. Use Cancel or Save to close.', 2600); return; }
+  stopSpeak(); $('modal').onclick = null; $('modal').onchange = null; closeModal();
+}
+$('overlay').addEventListener('pointerdown', function(e){ ovDownOnBackdrop = (e.target === $('overlay')); });
 $('overlay').addEventListener('click', function(e){
-  if(e.target === $('overlay') && $('modal').querySelector('[data-closable],[data-act="pclose"]')){ stopSpeak(); $('modal').onclick = null; $('modal').onchange = null; closeModal(); }
+  if(e.target === $('overlay') && ovDownOnBackdrop){ ovDownOnBackdrop = false; closeModalFromOutside(); }
 });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !JW.el) closeModalFromOutside(); });
+
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ tick(); render(); } });
 window.addEventListener('storage', function(e){ if(e.key === STORAGE_KEY){ state = load(); render(); } });
 
@@ -5077,8 +5103,8 @@ function liveRecap(){
 function moodBy(id){ for(var i=0;i<MOODS.length;i++) if(MOODS[i][0] === id) return MOODS[i]; return null; }
 function evBy(id){ for(var i=0;i<EVENTS.length;i++) if(EVENTS[i][0] === id) return EVENTS[i]; return null; }
 function recapHTML(r, title, live){
-  var tile = function(n, l){ return '<div class="rtile"><b>'+n+'</b><small>'+l+'</small></div>'; };
-  var h = '<div class="recap"><div class="rhead">'+title+'</div><div class="rgrid">';
+  var tile = function(n, l){ return '<div class="rctile"><b>'+n+'</b><small>'+l+'</small></div>'; };
+  var h = '<div class="recap"><div class="rhead">'+title+'</div><div class="rcgrid">';
   h += tile(r.perfect, 'perfect days');
   h += tile(r.run, 'longest streak');
   h += tile(r.cards, 'new cards');
