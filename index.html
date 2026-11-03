@@ -6291,6 +6291,13 @@ document.addEventListener('click', function(e){
 });
 document.addEventListener('change', function(e){ var t = e.target; if(t && t.id === 'fpFile') fpImport(t.files && t.files[0]); });
 
+
+/* Any Close button marked data-x closes the open modal (kanji screens had no handler). */
+document.addEventListener('click', function(e){
+  var t = e.target && e.target.closest && e.target.closest('#modal [data-x]');
+  if(t && $('overlay').classList.contains('show')){ closeModal(); }
+});
+
 })();
 </script>
 <script>if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
