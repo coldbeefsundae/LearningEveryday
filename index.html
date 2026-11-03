@@ -2951,23 +2951,31 @@ function kitMood(){
   var left = act.length - d;
   return {mood:'happy', say:'Nice! Only '+left+' more quest'+(left === 1 ? '' : 's')+' to go.'};
 }
+function errPanel(label, e){
+  var m = String((e && e.message) || e), st = ((e && e.stack) || '').split('\n').slice(0,3).join(' | ');
+  try{ console.error(label, e); }catch(_){}
+  return '<div class="panel" style="border:2px solid #ff6b6b"><b>⚠️ '+esc(label)+' could not load</b><div style="margin-top:4px;font-size:13px;word-break:break-word">'+esc(m)+'</div><div style="margin-top:4px;font-size:10px;opacity:.7;word-break:break-all">'+esc(st.slice(0,300))+'</div></div>';
+}
+function safeSec(label, fn){ try{ return fn(); }catch(e){ return errPanel(label, e); } }
 function renderHome(){
-  var nm = displayName(), act = activeTasks();
-  var km = kitMood();
-  var h = '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div><div class="ratebox">'+rateHTML()+'</div></div>';
-  h += '<div class="banners">'+specialBannersHTML()+bannersHTML()+'</div>';
-  h += goalPanelHTML();
-  h += '<div class="duo">'+quoteBlock()+discoveryHTML()+'</div>';
-  h += quizPanelHTML();
-  h += bitesPanelHTML();
-  h += kanjiPanelHTML();
-  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+doneCount()+' of '+act.length+' done</span></div><div class="qgrid">';
+  var nm = '', act = [], km = {mood:'happy', say:''};
+  try{ nm = displayName(); }catch(e){}
+  try{ act = activeTasks(); }catch(e){}
+  try{ km = kitMood(); }catch(e){}
+  var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div><div class="ratebox">'+rateHTML()+'</div></div>'; });
+  h += '<div class="banners">'+safeSec('Banners', specialBannersHTML)+safeSec('Streak banner', bannersHTML)+'</div>';
+  h += safeSec('Goal cards', goalPanelHTML);
+  h += '<div class="duo">'+safeSec('Quote', quoteBlock)+safeSec('Daily card', discoveryHTML)+'</div>';
+  h += safeSec('Quiz', quizPanelHTML);
+  h += safeSec('Bites', bitesPanelHTML);
+  h += safeSec('Kanji of the Day', kanjiPanelHTML);
+  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'; })+'</span></div><div class="qgrid">';
   if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
-  act.forEach(function(t,i){ h += questHTML(t,i); });
-  if(state.bonusOn && act.length) h += bonusCardHTML();
+  act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
+  if(state.bonusOn && act.length) h += safeSec('Bonus', bonusCardHTML);
   h += '</div>';
   $('view-home').innerHTML = h;
-  updateTimerDisplays();
+  try{ updateTimerDisplays(); }catch(e){}
 }
 function renderBanners(){ if(tab === 'home') renderHome(); }
 function renderGrid(){ if(tab === 'home') renderHome(); }
@@ -3077,13 +3085,18 @@ function renderProfile(){
 }
 
 function render(){
-  renderTop();
-  if(tab === 'home') renderHome();
-  else if(tab === 'cards') renderCards();
-  else if(tab === 'shop') renderShop();
-  else if(tab === 'journal') renderJournal();
-  else renderProfile();
-  p4After();
+  try{ renderTop(); }catch(e){ try{ console.error('top', e); }catch(_){} }
+  try{
+    if(tab === 'home') renderHome();
+    else if(tab === 'cards') renderCards();
+    else if(tab === 'shop') renderShop();
+    else if(tab === 'journal') renderJournal();
+    else renderProfile();
+  }catch(e){
+    var v = $('view-'+(tab === 'profile' ? 'profile' : tab));
+    if(v) v.innerHTML = errPanel('This screen', e);
+  }
+  try{ p4After(); }catch(e){ try{ console.error('after', e); }catch(_){} }
 }
 function setTab(t){
   tab = t;
@@ -5893,11 +5906,11 @@ function setAvatarEl(el, a){ if(!el) return; if(typeof a === 'string' && a.index
 setTimeout(kitLoop, 5000);
 state = load();
 if(FAMPACK && FAMPACK.bday && FAMPACK.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:FAMPACK.bday.y, m:FAMPACK.bday.m, d:FAMPACK.bday.d}; }
-checkNewDay();
+try{ checkNewDay(); }catch(e){ try{ console.error('newday', e); }catch(_){} }
 save();
 render();
-tick();
-retryNotify();
+try{ tick(); }catch(e){ try{ console.error('tick', e); }catch(_){} }
+try{ retryNotify(); }catch(e){}
 window.__iconStart();
 setInterval(tick, 500);
 requestPersist();
@@ -6296,6 +6309,16 @@ document.addEventListener('change', function(e){ var t = e.target; if(t && t.id 
 document.addEventListener('click', function(e){
   var t = e.target && e.target.closest && e.target.closest('#modal [data-x]');
   if(t && $('overlay').classList.contains('show')){ closeModal(); }
+});
+
+
+/* Visible error bar (helps find problems on the tablet). Tap to hide. */
+window.addEventListener('error', function(ev){
+  try{
+    var b = document.getElementById('errbar');
+    if(!b){ b = document.createElement('div'); b.id = 'errbar'; b.style.cssText = 'position:fixed;left:8px;right:8px;bottom:80px;z-index:99999;background:#3a0d12;color:#ffd7db;border:2px solid #ff6b6b;border-radius:12px;padding:8px 10px;font:12px/1.35 system-ui;word-break:break-all'; b.onclick = function(){ b.remove(); }; document.body.appendChild(b); }
+    b.textContent = '⚠️ ' + (ev.message || 'Error') + ' (line ' + ev.lineno + ') — tap to hide';
+  }catch(_){}
 });
 
 })();
