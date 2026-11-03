@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v16', errs = [], shown = false;
+  var V = 'v17', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3645,18 +3645,21 @@ function natLang(c){
   return SPEAK_LANG[c.r] || 'ja-JP';
 }
 var speakingEl = null;
-function stopSpeak(){
+/* Android app (Capacitor): the WebView has no speech, so talk to the phone's own text-to-speech through the app. */
+function nativeCap(){
+  try{ var c = window.Capacitor; if(c && typeof c.nativePromise === 'function' && (!c.getPlatform || c.getPlatform() !== 'web')) return c; }catch(e){}
+  return null;
+}
+function stopSpeak(keepNative){
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+  if(!keepNative){ try{ var c = nativeCap(); if(c) c.nativePromise('TextToSpeech', 'stop', {}).catch(function(){}); }catch(e){} }
   if(speakingEl){ speakingEl.classList.remove('speaking'); speakingEl = null; }
 }
 function spokenYear(y){
   return String(y).replace(/^c\. /,'about ').replace(/–/g,' to ').replace(/ BC/g,' B.C.').replace(/ AD/g,' A.D.')
     .replace(/(\d)00s/,'$100s').replace(/^Born /,'Born in ');
 }
-function speakText(txt, lang, el){
-  if(state.mute){ toast('🔇 Sound is off. Tap the speaker button to turn it on.'); return; }
-  if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined'){ toast('This device can\'t read aloud.'); return; }
-  stopSpeak();
+function webSpeak(txt, lang, el){
   try{
     var u = new SpeechSynthesisUtterance(txt);
     u.lang = lang || 'en-US'; u.rate = 0.92; u.pitch = 1.05;
@@ -3665,6 +3668,28 @@ function speakText(txt, lang, el){
     u.onend = clear; u.onerror = clear;
     window.speechSynthesis.speak(u);
   }catch(e){}
+}
+function speakText(txt, lang, el){
+  if(state.mute){ toast('🔇 Sound is off. Tap the speaker button to turn it on.'); return; }
+  var cap = nativeCap();
+  var webOK = ('speechSynthesis' in window) && typeof SpeechSynthesisUtterance !== 'undefined';
+  if(!cap && !webOK){ toast('This device can\'t read aloud.'); return; }
+  stopSpeak(!!cap);
+  if(cap){
+    if(el){ speakingEl = el; el.classList.add('speaking'); }
+    var clear = function(){ if(el) el.classList.remove('speaking'); if(speakingEl === el) speakingEl = null; };
+    try{
+      cap.nativePromise('TextToSpeech', 'speak', {text:txt, lang:lang || 'en-US', rate:0.92, pitch:1.05, volume:1.0, queueStrategy:0}).then(clear, function(err){
+        clear();
+        if(webOK){ webSpeak(txt, lang, el); return; }
+        var m = String((err && (err.message || err.errorMessage)) || err || '');
+        if(/not implemented|unimplemented|not available|no such plugin/i.test(m)) toast('Reading aloud needs the newest StarQuest app. Please install the latest version.', 4500);
+        else toast('Could not read this aloud. Check that a Text-to-speech engine is installed (Android Settings, search "Text-to-speech").', 5000);
+      });
+    }catch(e){ clear(); if(webOK) webSpeak(txt, lang, el); else toast('This device can\'t read aloud.'); }
+    return;
+  }
+  webSpeak(txt, lang, el);
 }
 function sayCard(kind, id, el){
   var c = BY_ID[id]; if(!c) return;
