@@ -3,6 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script>
+(function(){
+  var V = 'v16', errs = [], shown = false;
+  window.__SQV = V;
+  function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
+  window.addEventListener('error', function(ev){
+    try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
+  }, true);
+  window.addEventListener('unhandledrejection', function(ev){ try{ note('Promise: ' + (ev.reason && ev.reason.message || ev.reason)); }catch(e){} });
+  function report(){
+    var L = [];
+    L.push('StarQuest ' + V);
+    L.push('Screen ' + window.innerWidth + 'x' + window.innerHeight + ' @' + (window.devicePixelRatio || 1));
+    L.push(navigator.userAgent);
+    try{ L.push('color-mix: ' + (window.CSS && CSS.supports && CSS.supports('color', 'color-mix(in srgb, red 50%, blue)')) + ', :is: ' + (window.CSS && CSS.supports && CSS.supports('selector(:is(a))'))); }catch(e){}
+    try{ var ks = []; for(var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); ks.push(k + '=' + (localStorage.getItem(k) || '').length); } L.push('Saved: ' + (ks.join(', ') || 'nothing')); }catch(e){ L.push('localStorage blocked: ' + e.message); }
+    L.push('Errors: ' + (errs.length ? '' : 'none caught'));
+    for(var j = 0; j < errs.length; j++) L.push(' - ' + errs[j]);
+    return L.join('\n');
+  }
+  function clearCaches(){
+    var jobs = [];
+    try{ if(navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){ return Promise.all(rs.map(function(r){ return r.unregister(); })); })); }catch(e){}
+    try{ if(window.caches && caches.keys) jobs.push(caches.keys().then(function(ks){ return Promise.all(ks.map(function(k){ return caches.delete(k); })); })); }catch(e){}
+    var done = function(){ location.reload(); };
+    try{ Promise.all(jobs).then(done, done); }catch(e){ done(); }
+    setTimeout(done, 2500);
+  }
+  function show(){
+    if(shown) return; shown = true;
+    try{
+      var d = document.createElement('div');
+      d.id = 'sqboot';
+      d.style.cssText = 'position:fixed;inset:0;z-index:100000;background:#1b1740;color:#fff;font:16px/1.45 system-ui,sans-serif;padding:22px;overflow:auto';
+      d.innerHTML = '<div style="max-width:720px;margin:0 auto"><h2 style="margin:0 0 6px;font-size:26px">⭐ StarQuest did not start</h2>' +
+        '<p style="margin:0 0 12px;opacity:.85">Something stopped the app from loading on this device. Please send a screenshot of this screen. It shows what went wrong.</p>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><button id="sqb1" style="font:inherit;font-weight:800;padding:12px 18px;border-radius:12px;border:0;background:#ffd34d;color:#2a2200">Try again</button>' +
+        '<button id="sqb2" style="font:inherit;font-weight:800;padding:12px 18px;border-radius:12px;border:0;background:#8fd0ff;color:#0b2a40">Clear app cache and reload</button></div>' +
+        '<pre id="sqbr" style="white-space:pre-wrap;word-break:break-all;background:#0e0b28;border-radius:12px;padding:12px;font:13px/1.4 ui-monospace,monospace;user-select:text;-webkit-user-select:text"></pre>' +
+        '<p style="opacity:.7;font-size:13px">Your saved progress is not touched by these buttons.</p></div>';
+      document.body.appendChild(d);
+      document.getElementById('sqbr').textContent = report();
+      document.getElementById('sqb1').onclick = function(){ location.reload(); };
+      document.getElementById('sqb2').onclick = clearCaches;
+    }catch(e){}
+  }
+  window.__sqBootShow = show;
+  function check(){
+    try{
+      if(window.__SQ_BOOTED && document.getElementById('sqboot')){ document.getElementById('sqboot').parentNode.removeChild(document.getElementById('sqboot')); shown = false; }
+      var hv = document.getElementById('view-home');
+      var blank = !window.__SQ_BOOTED || !hv || (hv.className.indexOf('show') > -1 && hv.innerHTML.length < 300 && !window.__SQ_OTHERTAB);
+      if(blank) show();
+    }catch(e){}
+  }
+  window.addEventListener('load', function(){ setTimeout(check, 3500); setTimeout(check, 9000); });
+})();
+
+</script>
 <meta name="theme-color" content="#6c5ce7">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3112,7 +3171,7 @@ function render(){
 }
 function setTab(t){
   tab = t;
-  ['home','cards','shop','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); });
+  ['home','cards','shop','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
   render();
   window.scrollTo(0,0);
 }
@@ -5923,6 +5982,7 @@ save();
 render();
 try{ tick(); }catch(e){ try{ console.error('tick', e); }catch(_){} }
 try{ retryNotify(); }catch(e){}
+window.__SQ_BOOTED = true;
 window.__iconStart();
 setInterval(tick, 500);
 requestPersist();
