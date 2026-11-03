@@ -13,7 +13,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Create a small fallback page
+      - name: Copy the web app into www
         run: |
           mkdir -p www
           echo '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font-family:sans-serif;text-align:center;padding:40px"><h2>StarQuest</h2><p>Please connect to the internet the first time you open the app.</p>' > www/index.html
@@ -23,6 +23,16 @@ jobs:
         run: |
           npx cap add android
           npx cap sync android
+      - name: Allow text-to-speech
+        run: |
+          python3 - <<'PY'
+          p = 'android/app/src/main/AndroidManifest.xml'
+          s = open(p).read()
+          q = '<queries><intent><action android:name="android.intent.action.TTS_SERVICE"/></intent></queries>'
+          if 'TTS_SERVICE' not in s:
+              s = s.replace('<application', q + '\n    <application', 1)
+          open(p, 'w').write(s)
+          PY
       - name: Build the debug APK
         run: |
           cd android
