@@ -1,10 +1,7 @@
 // Fetches the newest real CBC Kids News story and writes news.json (headline, one line, link).
 // Runs in GitHub Actions (Node 20+, no packages). Safe to fail: if anything goes wrong it
 // leaves the old news.json alone and the app keeps showing it (or hides the card).
-//
-// v2: reads several story pages, skips promo / teacher pages, and picks the newest by date.
-// It only stores a headline, a one-line description and the link, and the app opens the
-// story on cbc.ca. No article text or pictures are copied.
+// It only stores a headline, a one-line description and the link.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const FRONT = 'https://www.cbc.ca/kidsnews';
@@ -48,3 +45,71 @@ function findDate(html) {
     (/"firstPublished"\s*:\s*"?([0-9T:\-+.Z]+)"?/i.exec(html) || [])[1],
     (/<time[^>]+datetime=["']([^"']+)["']/i.exec(html) || [])[1],
     meta(html, 'og:updated_time'),
+  ];
+  for (const t of tries) {
+    if (!t) continue;
+    const d = new Date(t);
+    if (!isNaN(d)) return d;
+  }
+  return null;
+}
+
+function storyLinks(html) {
+  const flat = html.replace(/\\\//g, '/');
+  const seen = [];
+  const re = /(?:https:\/\/www\.cbc\.ca)?\/kidsnews\/post\/([a-z0-9][a-z0-9-]{3,140})/gi;
+  let m;
+  while ((m = re.exec(flat))) {
+    const slug = m[1].toLowerCase();
+    if (PROMO_SLUG.test(slug)) continue;
+    const url = 'https://www.cbc.ca/kidsnews/post/' + slug;
+    if (!seen.includes(url)) seen.push(url);
+  }
+  return seen;
+}
+
+function clip(s, n) { s = String(s || '').trim(); return s.length > n ? s.slice(0, n - 1).trimEnd() + '\u2026' : s; }
+
+async function readStory(url) {
+  try {
+    const page = await get(url);
+    const title = clip(meta(page, 'og:title').replace(/\s*[|\u2013-]\s*CBC Kids News\s*$/i, ''), 160);
+    const summary = clip(meta(page, 'og:description') || meta(page, 'description'), 260);
+    const date = findDate(page);
+    return { url, title, summary, date };
+  } catch (e) { console.log('skip ' + url + ': ' + e.message); return null; }
+}
+
+try {
+  // Prefer the page as Chrome rendered it (front.html); fall back to a plain download.
+  let front = '';
+  if (existsSync('front.html')) { front = readFileSync('front.html', 'utf8'); console.log('front.html from Chrome: ' + front.length + ' characters'); }
+  let links = storyLinks(front);
+  if (links.length < 2) {
+    console.log('Chrome page had ' + links.length + ' story link(s); trying a plain download too');
+    const plain = storyLinks(await get(FRONT));
+    plain.forEach((u) => { if (!links.includes(u)) links.push(u); });
+  }
+  console.log('story links found: ' + links.length);
+  links = links.slice(0, MAX_CANDIDATES);
+  if (!links.length) throw new Error('no story links found on the front page (page layout may have changed)');
+  const found = (await Promise.all(links.map(readStory))).filter((x) => x && x.title);
+  found.forEach((x) => console.log('candidate: ' + (x.date ? x.date.toISOString().slice(0, 10) : 'no-date') + ' | ' + x.title));
+  const real = found.filter((x) => !PROMO_TITLE.test(x.title));
+  if (!real.length) throw new Error('only promo pages found');
+  // The front page lists the newest story first, so the first real story wins.
+  const item = real[0];
+  const old = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : {};
+  const out = {
+    source: 'CBC Kids News',
+    title: item.title,
+    summary: item.summary,
+    url: item.url,
+    published: item.date ? item.date.toISOString().slice(0, 10) : '',
+    fetched: new Date().toISOString().slice(0, 10),
+  };
+  if (old.url === out.url && old.title === out.title && old.summary === out.summary) { console.log('No change: ' + out.title); }
+  else { writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n'); console.log('Updated: ' + out.title + ' -> ' + out.url); }
+} catch (e) {
+  console.log('::warning::News fetch failed, keeping the old news.json: ' + e.message);
+}
