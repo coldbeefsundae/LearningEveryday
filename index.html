@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v25', errs = [], shown = false;
+  var V = 'v26', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3456,8 +3456,9 @@ function showTaskForm(task){
       } else {
         var nt = {id:uid(), emoji:emoji, name:name, minutes:mins, days:days, calm:calm, fs:fsOn};
         state.tasks.push(nt);
-        // new custom quest shows up today even if today isn't in its days
-        if(days.indexOf(new Date().getDay())===-1) state.overrides[nt.id] = true;
+        // a new quest only shows on its assigned days (not forced onto today)
+        var notToday = days.indexOf(new Date().getDay())===-1;
+        if(notToday && days.length) toast('✅ Saved. It will show on ' + days.map(function(x){return DAY_NAMES[x];}).join(', ') + ', not today.', 4200);
       }
       Sound.chime(); afterProgressChange(); showParent();
     }
