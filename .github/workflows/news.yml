@@ -1,8 +1,9 @@
 # Put this file in your repo at:  .github/workflows/news.yml
-# and put fetch-news.mjs at:      the top level of the repo (next to index.html)
+# and keep fetch-news.mjs at the top level of the repo (next to index.html).
 #
-# Every morning it reads the top CBC Kids News story and saves it as news.json in the repo.
-# You can also run it by hand: Actions tab > "Daily kids news" > Run workflow.
+# Every morning it opens the CBC Kids News front page in Chrome, reads the top story and
+# saves it as news.json in the repo. You can also run it by hand:
+# Actions tab > "Daily kids news" > Run workflow.
 name: Daily kids news
 
 on:
@@ -25,6 +26,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Open the front page in Chrome (the story list loads after the page does)
+        run: |
+          CHROME="$(which google-chrome || which google-chrome-stable || which chromium || which chromium-browser || true)"
+          echo "Using: $CHROME"
+          if [ -n "$CHROME" ]; then
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage \
+              --virtual-time-budget=25000 --dump-dom https://www.cbc.ca/kidsnews > front.html || true
+          fi
+          ls -la front.html || true
       - name: Fetch the top story
         run: node fetch-news.mjs news.json
       - name: Save it if it changed
