@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v29', errs = [], shown = false;
+  var V = 'v30', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -1410,6 +1410,8 @@ window.CARD_IMGS={"af01": "UklGRg47AABXRUJQVlA4IAI7AACQHQGdASpgAWABPqVInksmJCKnq
    CONFIG & DEFAULTS
    ========================================================= */
 var STORAGE_KEY = 'questBoard.v1';
+/* declared early: the first render runs before the Goal Cards module below has executed */
+var GCARDS = [], GBYID = {}, GFULL = 10, gSt = null, GREPLY = {}, JW = {el:null, day:null, ta:null};
 var STAR_MINUTES = 30;
 var DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var ALL_DAYS = [0,1,2,3,4,5,6];
@@ -6716,6 +6718,8 @@ document.addEventListener('focusin', function(e){
 document.addEventListener('keydown', function(e){ if(JW.el && e.key === 'Escape') jwClose(); });
 
 
+/* everything is defined now: draw the page once more so late modules (goal cards etc.) show up */
+try{ render(); }catch(e){ try{ console.error('final render', e); }catch(_){} }
 })();
 </script>
 <script>if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
