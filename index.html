@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v40', errs = [], shown = false;
+  var V = 'v41', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -6013,10 +6013,10 @@ var BADGES = [
   ['c75','🏅','Card Champion','Collect 75 cards','silver',ownedCount,75],
   ['c151','🏛️','Hall of Fame','Collect 151 cards','gold',ownedCount,151],
   ['c200','🌌','Time Master','Collect 200 cards','gold',ownedCount,200],
-  ['kj7','🈴','Kanji Starter','Learn 7 kanji of the day','bronze',kanjiCount,7],
-  ['kj30','🈴','Kanji Explorer','Learn 30 kanji of the day','silver',kanjiCount,30],
-  ['kj100','🈴','Kanji Master','Learn 100 kanji of the day','gold',kanjiCount,100],
-  ['kj200','🈴','Kanji Legend','Learn all 200 grade 3 kanji','gold',kanjiCount,200],
+  ['kj7','🈴','Kanji Starter','Meet 7 different kanji','bronze',kjMetCount,7],
+  ['kj30','🈴','Kanji Explorer','Meet 30 different kanji','silver',kjMetCount,30],
+  ['kj100','🈴','Kanji Master','Meet 100 different kanji','gold',kjMetCount,100],
+  ['kj200','🈴','Kanji Legend','Meet all 200 grade 3 kanji','gold',kjMetCount,200],
   ['call','👑','History Legend','Collect every card','gold',ownedCount,CARDS.length],
   ['cfam','💛','Our Family','Find all '+FAM_ALL.length+' family cards','gold',function(){ return FAM_ALL.filter(function(i){ return state.cards[i]; }).length; },FAM_ALL.length],
   ['cE','🌟','The Star','Find the SSSR star card','gold',function(){ return state.cards.fam03 ? 1 : 0; },1],
@@ -6557,6 +6557,9 @@ function kjMetState(ch){
   return kjHoshukoDone(ch) ? 'cov' : '';
 }
 function kjInBook(ch){ return !!kjMetState(ch); }
+/* badges count only what she has done in the app, never what hoshuko covered */
+function kjMetCount(){ var ks = kanjiState(), n = 0; try{ kanjiBackfill(); }catch(e){} KANJI.forEach(function(k){ if(ks.log[k.k] || (ks.met && ks.met[k.k])) n++; }); return n; }
+function kjStat(name, by){ var st = (state.stats = state.stats || {}); st[name] = (st[name] || 0) + (by || 1); }
 function showKanjiBook(){
   try{ kanjiBackfill(); }catch(e){}
   var ink = kinkLoad(), hh = hz(), idx = {};
@@ -6668,7 +6671,7 @@ function kjRec(ch, ok, wrong){
   var wk = kwk(), e = wk[ch] = wk[ch] || {};
   if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
   if(!ok && wrong && klookOf(ch)){ e.lk = (e.lk || 0) + 1; }
-  e.t = Date.now(); kjMeet(ch); save();
+  e.t = Date.now(); kjMeet(ch); if(ok) kjStat('kfcRight'); save(); checkBadgesX();
 }
 function kfcPick(n){
   var recent = kjRecent(), focus = kjFocus(), last = window.__kfcLast || {};
@@ -7143,6 +7146,7 @@ function kwClose(quiet){
   cancelAnimationFrame(KW.raf); window.removeEventListener('resize', KW.onResize);
   if(KW.el && KW.el.parentNode) KW.el.parentNode.removeChild(KW.el);
   KW = null;
+  if(!quiet) checkBadgesX();
 }
 function kwSetMode(m, first){
   var s = KW; cancelAnimationFrame(s.raf); s.anim = null;
@@ -7424,6 +7428,7 @@ function kwKeep(){
   if(s.saved) return;
   var ok = kinkAdd(s.ch, {d:dateKey(), flat:at.flat, ck:at.ck, m:s.mode, n:at.a.n});
   s.saved = true;
+  if(ok){ kjStat('kwKept'); if(at.ck.filter(function(v){ return v === 1; }).length === 3) kjStat('kwNeat'); }
   var wk = kwk(), e = wk[s.ch] = wk[s.ch] || {}, bad = at.ck.filter(function(v){ return v === 0; }).length, yes = at.ck.filter(function(v){ return v === 1; }).length;
   if(bad >= 2) e.nw = Math.min(5, (e.nw || 0) + 1);
   else if(yes === 3) e.nw = Math.max(0, (e.nw || 0) - 1);
@@ -7545,7 +7550,8 @@ function kcbRec(wd, ok){
   if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
   var wk = kwk();
   wd.g.forEach(function(c){ var k = wk[c] = wk[c] || {}; if(!ok) k.cm = Math.min(6, (k.cm || 0) + 1); else if(k.cm) k.cm = Math.max(0, k.cm - 0.5); kjMeet(c); });
-  save();
+  if(ok) kjStat('kcbRight');
+  save(); checkBadgesX();
 }
 function kcbRandChars(n, not){
   var pool = shuffle(KWORDS.filter(function(x){ return x.c; }), Math.random), out = [];
@@ -8148,6 +8154,51 @@ BADGES.push(
   ['gk1','🎴','Goal Starter','Check in on a goal card','bronze',function(){ return (state.stats && state.stats.goalChecks) || 0; },1],
   ['gk5','🎯','Goal Getter','Check in on 5 goal weeks','silver',function(){ return (state.stats && state.stats.goalChecks) || 0; },5],
   ['gkg','🏅','Gold Character','Turn a character card gold','gold',function(){ var n = 0; GCARDS.forEach(function(c){ if(gStamps(c.id) >= GFULL) n++; }); return n; },1]
+);
+
+
+/* ---- v40: badges for the kanji practice and the Money tab ----
+   Nothing here rewards spending, scores on a test, or how fast she goes. */
+function kwDistinct(){ var o = kinkLoad(); return Object.keys(o).filter(function(k){ return o[k] && o[k].length; }).length; }
+function bkPeakD(){ return Math.floor(((state.stats && state.stats.bkPeak) || 0)/100); }
+function bkTrackBadges(){
+  if(!state.bank || !state.bank.ledger || !state.bank.opened) return;
+  var b = state.bank, st = (state.stats = state.stats || {}), changed = false, bal = 0, peak = st.bkPeak || 0;
+  b.ledger.forEach(function(e){ if(e.jar === 'save'){ bal += e.cents; if(bal > peak) peak = bal; } });
+  if(peak !== (st.bkPeak || 0)){ st.bkPeak = peak; changed = true; }
+  if(b.goal && b.goal.price > 0){
+    if(!st.bkGoalSet){ st.bkGoalSet = 1; changed = true; }
+    if(!b.goal.hit && bal >= b.goal.price){ b.goal.hit = dateKey(); st.bkGoalsHit = (st.bkGoalsHit || 0) + 1; changed = true; }
+  }
+  if(changed) save();
+}
+function bkSpendsLogged(){
+  if(!state.bank || !state.bank.ledger) return 0;
+  var seen = {}, n = 0;
+  state.bank.ledger.forEach(function(e){ if(e.jar === 'spent' && e.kind === 'spend' && e.cents > 0 && !e.undone && !seen[e.grp || e.id]){ seen[e.grp || e.id] = 1; n++; } });
+  return n;
+}
+(function(){
+  var _cb = checkBadges;
+  checkBadges = function(){ try{ bkTrackBadges(); }catch(e){} return _cb.apply(this, arguments); };
+})();
+BADGES.push(
+  ['kw1','✍️','First Strokes','Keep a kanji you wrote','bronze',function(){ return (state.stats && state.stats.kwKept) || 0; },1],
+  ['kw10','🖌️','Ten Kanji Written','Write 10 different kanji','silver',kwDistinct,10],
+  ['kw50','🏯','Fifty Kanji Written','Write 50 different kanji','gold',kwDistinct,50],
+  ['kwn5','🌸','Neat Writer','Keep 5 writings where all 3 neatness checks were yes','silver',function(){ return (state.stats && state.stats.kwNeat) || 0; },5],
+  ['kf25','🃏','Card Fan','Get 25 kanji cards right','bronze',function(){ return (state.stats && state.stats.kfcRight) || 0; },25],
+  ['kf100','🎴','Card Whiz','Get 100 kanji cards right','silver',function(){ return (state.stats && state.stats.kfcRight) || 0; },100],
+  ['kc10','🧩','Word Builder','Get 10 kanji words right','bronze',function(){ return (state.stats && state.stats.kcbRight) || 0; },10],
+  ['kc50','📖','Word Wizard','Get 50 kanji words right','silver',function(){ return (state.stats && state.stats.kcbRight) || 0; },50],
+  ['mn1','🪙','First Coins','Start your money jar','bronze',function(){ return (typeof bankOn === 'function' && bankOn()) ? 1 : 0; },1],
+  ['ms1','📝','Money Diary','Write down something you spent','bronze',bkSpendsLogged,1],
+  ['ms10','🔎','Careful Counter','Write down 10 things you spent','silver',bkSpendsLogged,10],
+  ['mg1','📌','Goal Setter','Pick something to save for','bronze',function(){ return (state.stats && state.stats.bkGoalSet) || 0; },1],
+  ['mg2','🎯','Goal Reached','Save up enough for your goal','gold',function(){ return (state.stats && state.stats.bkGoalsHit) || 0; },1],
+  ['mp10','🐷','Jar of Ten','Have $10 in your jar','bronze',bkPeakD,10],
+  ['mp25','💰','Jar of Twenty-Five','Have $25 in your jar','silver',bkPeakD,25],
+  ['mp50','🏦','Jar of Fifty','Have $50 in your jar','gold',bkPeakD,50]
 );
 
 
