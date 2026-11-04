@@ -1,5 +1,5 @@
 # Put this file in your repo at:  .github/workflows/news.yml
-# and put fetch-news.mjs at:      scripts/fetch-news.mjs
+# and put fetch-news.mjs at:      the top level of the repo (next to index.html)
 #
 # Every morning it reads the top CBC Kids News story and saves it as news.json in the repo.
 # You can also run it by hand: Actions tab > "Daily kids news" > Run workflow.
