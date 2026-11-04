@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v34', errs = [], shown = false;
+  var V = 'v36', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -899,7 +899,7 @@ body[data-calm=on] .kit *{animation:none!important}
 .bkden{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
 .bkdt{border:2px solid #e1def5;border-radius:16px;padding:6px 4px 4px;text-align:center;background:#faf9ff}
 .bkdt.has{border-color:#6c5ce7;background:#f1eeff}
-.bkdimg{height:50px;width:100%;display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer}
+.bkdimg{height:66px;width:100%;display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer}
 .bkdctl{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px}
 .bkdctl button{width:34px;height:34px;border-radius:50%;border:2px solid #cfc9ee;background:#fff;color:#2b2850;font-size:20px;font-weight:900;line-height:1;padding:0;cursor:pointer}
 .bkdctl b{min-width:22px;font-size:18px;color:#2b2850}
@@ -912,6 +912,10 @@ body[data-calm=on] .kit *{animation:none!important}
 .bkcn.loonie{background:radial-gradient(circle at 35% 30%,#fff0a0,#e8b94a 60%,#c28a14);font-size:13px}
 .bkcn.quarter,.bkcn.dime,.bkcn.nickel{background:radial-gradient(circle at 35% 30%,#fff,#d6dae2 60%,#9aa3b5);color:#2b2850;font-size:11px}
 .bkcn.penny{background:radial-gradient(circle at 35% 30%,#ffd0a8,#d9824a 60%,#a85a28);color:#4a2200;font-size:11px}
+
+.bkcoinsvg,.bkbillsvg{display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28))}
+.bkgrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 4px}.bkgrow .btn{margin-left:auto}
+.bkgoal .fld{margin:8px 0}
 
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
@@ -1466,6 +1470,9 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
     <button class="navbtn" data-tab="shop" aria-label="Rewards">
       <svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9c-4 0-5-5-2-5s2 5 2 5zm0 0c4 0 5-5 2-5s-2 5-2 5z"/></svg>Rewards
     </button>
+    <button class="navbtn" data-tab="money" id="moneyNav" aria-label="Money" style="display:none">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.7 9.3c-.6-.8-1.6-1.3-2.7-1.3-1.5 0-2.6.8-2.6 2 0 2.8 5.4 1.4 5.4 4.2 0 1.2-1.2 2.1-2.8 2.1-1.2 0-2.3-.5-2.9-1.4"/><path d="M12 6.3V8M12 16.3V18"/></svg>Money
+    </button>
     <button class="navbtn" data-tab="journal" aria-label="Journal">
       <svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14H8a2 2 0 0 1-2-2V3z"/><path d="M6 17a2 2 0 0 1 2-2h11"/><path d="M10 7h6M10 10h4"/></svg>Journal
     </button>
@@ -1507,6 +1514,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
       <section class="view show" id="view-home"></section>
       <section class="view" id="view-cards"></section>
       <section class="view" id="view-shop"></section>
+      <section class="view" id="view-money"></section>
       <section class="view" id="view-journal"></section>
       <section class="view" id="view-profile"></section>
     </div>
@@ -3229,6 +3237,7 @@ function renderTop(){
   [].forEach.call(document.querySelectorAll('.navbtn'), function(b){
     b.classList.toggle('on', b.getAttribute('data-tab') === tab);
   });
+  try{ var mn = $('moneyNav'); if(mn) mn.style.display = bankOn() ? '' : 'none'; }catch(e){}
 }
 
 /* ---------- home ---------- */
@@ -3463,6 +3472,7 @@ function render(){
     if(tab === 'home') renderHome();
     else if(tab === 'cards') renderCards();
     else if(tab === 'shop') renderShop();
+    else if(tab === 'money') renderMoney();
     else if(tab === 'journal') renderJournal();
     else renderProfile();
   }catch(e){
@@ -3473,8 +3483,9 @@ function render(){
   updateBed(true);
 }
 function setTab(t){
+  if(t === 'money' && !bankOn()) t = 'home';
   tab = t;
-  ['home','cards','shop','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
+  ['home','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
   render();
   window.scrollTo(0,0);
 }
@@ -7178,7 +7189,7 @@ function bkPhFrame(ts){
     if(BKP.maxSpeed(w.bs) > 6 || Math.abs(w.sx) + Math.abs(w.sy) > 0.05) moving = true;
   }
   if(bkHitMax > 35){
-    if(ts - bkSndT > 55 && tab === 'shop'){ bkSndT = ts; try{ Sound.coinTick(Math.min(1, bkHitMax/350)); }catch(_){} }
+    if(ts - bkSndT > 55 && tab === 'money'){ bkSndT = ts; try{ Sound.coinTick(Math.min(1, bkHitMax/350)); }catch(_){} }
     bkHitMax = 0;
   }
   if(!live){ bkLastT = 0; return; }
@@ -7292,10 +7303,17 @@ function moneyHTML(){
   var nx = bkNextPay();
   if(b.paused) h += '<div class="bknext">⏸ Allowance is paused for now.</div>';
   else if(nx) h += '<div class="bknext">🗓️ Next allowance: <b>'+BK_DAYS[nx.date.getDay()]+' '+BK_MON[nx.date.getMonth()]+' '+nx.date.getDate()+'</b> · '+money(b.weekly)+' ('+(nx.days <= 1 ? 'tomorrow!' : nx.days+' more sleeps')+')</div>';
-  if(b.goal && b.goal.price > 0){
+  var hasGoal = !!(b.goal && b.goal.price > 0), dr = window.__bkGoalDraft;
+  if(hasGoal && !window.__bkGoalEdit){
     var pct = Math.min(100, Math.round(bal/b.goal.price*100)), left = Math.max(0, b.goal.price - bal), wk = b.weekly;
-    h += '<div class="panel bkgoal"><div class="qlabel">📌 Saving for</div><b>'+esc(b.goal.name || 'My goal')+'</b> <span class="bkgp">'+money(b.goal.price)+'</span><div class="rbar thick"><i style="width:'+pct+'%"></i></div>';
+    h += '<div class="panel bkgoal"><div class="qlabel">📌 Saving for</div><div class="bkgrow"><b>'+esc(b.goal.name || 'My goal')+'</b> <span class="bkgp">'+money(b.goal.price)+'</span><button class="btn small" data-bk="goaledit" type="button">✏️ Change</button></div><div class="rbar thick"><i style="width:'+pct+'%"></i></div>';
     h += '<div class="bkgs">'+(left <= 0 ? '🎉 You have enough! Ask a parent.' : money(bal)+' saved · '+money(left)+' to go'+(wk > 0 ? ' · about '+Math.ceil(left/wk)+' more weeks at '+money(wk)+' a week' : ''))+'</div></div>';
+  } else {
+    var gn0 = dr ? dr.n : (hasGoal ? (b.goal.name || '') : ''), gp0 = dr ? dr.p : (hasGoal ? (b.goal.price/100).toFixed(2) : '');
+    h += '<div class="panel bkgoal"><div class="qlabel">📌 '+(hasGoal ? 'Change my saving goal' : 'What are you saving for?')+'</div>';
+    h += '<div class="fld"><label>What is it?</label><input type="text" id="bkMyGoalName" maxlength="40" value="'+esc(gn0)+'" placeholder="Lego set" autocomplete="off"></div>';
+    h += '<div class="fld"><label>How much does it cost? ($)</label><input type="text" id="bkMyGoalPrice" inputmode="decimal" value="'+esc(gp0)+'" placeholder="25.00" autocomplete="off"></div>';
+    h += '<div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><button class="btn primary" data-bk="goalsave" type="button">✔ Save my goal</button>'+(hasGoal ? '<button class="btn small" data-bk="goalcancel" type="button">Cancel</button><button class="btn small" data-bk="goalclear" type="button">Remove goal</button>' : '')+'</div></div>';
   }
   var rows = bkHistoryRows(window.__bkAll ? 0 : 10);
   h += '<div class="sec"><h2>🧾 My money history</h2></div><div class="panel bkhist">';
@@ -7304,17 +7322,17 @@ function moneyHTML(){
   if(bkHistoryRows(0).length > 10) h += '<div class="row" style="margin-top:8px"><button class="btn small" data-bk="more">'+(window.__bkAll ? 'Show less' : 'Show all')+'</button></div>';
   return h;
 }
-function renderShop(){
-  renderShopCoins();
+function renderShop(){ renderShopCoins(); }
+/* Money has its own tab (it is about learning to think about money, not a reward) */
+function renderMoney(){
   try{
-    if(!bankOn()) return;
+    if(!bankOn()){ if(tab === 'money') setTab('home'); return; }
     bankCatchUp();
-    var b = bk(), v = $('view-shop'), mode = b.mode === 'money' ? 'money' : 'coins';
-    var seg = '<div class="mseg"><button data-bk="mode:coins" class="'+(mode === 'coins' ? 'on' : '')+'">⭐ Star Coins</button><button data-bk="mode:money" class="'+(mode === 'money' ? 'on' : '')+'">💵 Money</button></div>';
-    var pend = (mode === 'money' && tab === 'shop' && !window.__bkDrop) ? bkPendingDrops() : 0;
+    var v = $('view-money');
+    var pend = (tab === 'money' && !window.__bkDrop) ? bkPendingDrops() : 0;
     if(pend > 0) window.__bkHide = pend;
-    v.innerHTML = seg + (mode === 'money' ? moneyHTML() : v.innerHTML);
-    if(mode === 'money') bkPhAttach();
+    v.innerHTML = moneyHTML();
+    bkPhAttach();
     if(pend > 0) setTimeout(function(){ bkPlayDrops(pend); }, 500);
   }catch(e){ try{ console.error('money view', e); }catch(_){} }
 }
@@ -7411,7 +7429,7 @@ function bkPlayDrops(sum){
     if(kit) kit.classList.remove('eyes-lit');
     var say = $('bkSay'); if(say) say.textContent = 'Yay! New coins! ✨';
     var bl = $('bkBalL'); if(bl) bl.textContent = money(after);
-    if(tab === 'shop') render();
+    if(tab === 'money') render();
   }
   if(!jar || !bkAnim()){ finish(); return; }
   window.__bkDrop = true;
@@ -7444,17 +7462,89 @@ function bkPlayDrops(sum){
 /* ----- the spend window: bills and coins that add up ----- */
 var BK_DEN = [
   {c:2000, k:'b', t:'$20', n:'$20 bill'}, {c:1000, k:'b', t:'$10', n:'$10 bill'}, {c:500, k:'b', t:'$5', n:'$5 bill'},
-  {c:200, k:'toonie', t:'$2', n:'toonie', s:42}, {c:100, k:'loonie', t:'$1', n:'loonie', s:39}, {c:25, k:'quarter', t:'25¢', n:'quarter', s:35},
-  {c:10, k:'dime', t:'10¢', n:'dime', s:27}, {c:5, k:'nickel', t:'5¢', n:'nickel', s:32}, {c:1, k:'penny', t:'1¢', n:'penny', s:29}
+  {c:200, k:'toonie', t:'$2', n:'toonie', s:62}, {c:100, k:'loonie', t:'$1', n:'loonie', s:58}, {c:25, k:'quarter', t:'25¢', n:'quarter', s:53},
+  {c:10, k:'dime', t:'10¢', n:'dime', s:40}, {c:5, k:'nickel', t:'5¢', n:'nickel', s:47}, {c:1, k:'penny', t:'1¢', n:'penny', s:42}
 ];
+/* ----- real-looking Canadian coins and bills, drawn as small pictures ----- */
+var BKART_N = 0;
+var BKM_LEAF = 'M0,-12 L2.5,-6 L7,-8 L5.5,-1 L11,-3 L8.5,3 L12,5 L4,8 L5,12 L0.6,10 L0.6,16 L-0.6,16 L-0.6,10 L-5,12 L-4,8 L-12,5 L-8.5,3 L-11,-3 L-5.5,-1 L-7,-8 L-2.5,-6 Z';
+var BKM = {
+  penny: '<g transform="translate(41 44) rotate(-18) scale(1.15)"><path d="'+BKM_LEAF+'"/></g><g transform="translate(60 47) rotate(14) scale(1.05)"><path d="'+BKM_LEAF+'"/></g><path d="M34,66 C44,60 56,60 66,64" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="50" cy="56" r="1.8"/>',
+  nickel: '<path d="M22,67 L80,67 L76,74 L26,74 Z"/><path d="M28,62 C26,52 34,42 46,41 C56,40 64,45 68,52 C70,56 70,60 68,64 L36,66 C32,66 29,65 28,62 Z"/><circle cx="31" cy="53" r="6.2"/><path d="M27,52 L24,56 L28,57 Z"/><path d="M66,58 C74,54 83,58 83,66 C77,71 68,68 65,63 Z"/><circle cx="34" cy="50" r="1.3" fill="#fff" opacity=".7"/>',
+  dime: '<path d="M22,66 L78,66 L70,75 L30,75 Z"/><rect x="41" y="24" width="2" height="42"/><rect x="58" y="30" width="2" height="36"/><path d="M44,26 L44,63 L72,63 Z"/><path d="M40,33 L40,63 L20,63 Z"/><path d="M61,32 L61,60 L76,60 Z" opacity=".85"/><path d="M42,24 L42,20 L50,22 Z"/><path d="M14,81 q6,-5 12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="currentColor" stroke-width="2"/>',
+  quarter: '<path d="M39,70 C40,62 41,58 41,54 C41,50 44,48 50,48 C56,48 59,50 59,54 C59,58 60,62 61,70 C57,74 43,74 39,70 Z"/><path d="M41,52 L32,48 L35,56 Z"/><path d="M59,52 L68,48 L65,56 Z"/><path d="M44,48 C38,42 37,34 40,26 M40,26 L34,23 M39,32 L31,32 M40,38 L33,40 M41,44 L47,38" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M56,48 C62,42 63,34 60,26 M60,26 L66,23 M61,32 L69,32 M60,38 L67,40 M59,44 L53,38" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="46" cy="58" r="1.4" fill="#fff" opacity=".7"/><circle cx="54" cy="58" r="1.4" fill="#fff" opacity=".7"/>',
+  loonie: '<path d="M27,60 C32,53 52,51 66,55 C73,57 76,61 72,65 C58,69 36,69 27,60 Z"/><path d="M68,56 L81,49 L76,60 Z"/><path d="M31,57 C26,47 28,38 35,34 L39,36 C35,41 35,49 39,55 Z"/><circle cx="36" cy="33" r="5"/><path d="M32,32 L21,34 L32,37 Z"/><path d="M18,73 H82 M26,78 H74 M34,83 H66" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  toonie: '<path d="M24,55 C24,45 34,41 46,41 C54,41 59,43 63,46 C66,41 72,41 75,46 C77,50 76,53 72,54 L67,55 L65,66 L59,66 L58,58 L45,58 L43,66 L37,66 L36,58 L31,59 L30,66 L24,66 Z"/><circle cx="70" cy="47" r="1.1" fill="#fff" opacity=".8"/><path d="M20,70 H78" stroke="currentColor" stroke-width="1.6" fill="none"/>'
+};
+function bkRel(m, hi, lo){ return '<g color="'+hi+'" fill="'+hi+'" transform="translate(-.9 -.9)">'+m+'</g><g color="'+lo+'" fill="'+lo+'">'+m+'</g>'; }
+function bkCoinArt(kind, px, label){
+  var n = ++BKART_N, id = kind+n, C = {
+    penny:  {a:'#ffd9b8', b:'#d98a52', c:'#9c5326', rim:'#7a3d18', hi:'#ffdcc0', lo:'#8a4720', tx:'#6d3512'},
+    nickel: {a:'#ffffff', b:'#d7dbe3', c:'#9aa2b3', rim:'#7b8397', hi:'#ffffff', lo:'#7f879a', tx:'#5d6578'},
+    dime:   {a:'#ffffff', b:'#d9dde5', c:'#9ca4b5', rim:'#7b8397', hi:'#ffffff', lo:'#7f879a', tx:'#5d6578'},
+    quarter:{a:'#ffffff', b:'#d9dde5', c:'#9ca4b5', rim:'#7b8397', hi:'#ffffff', lo:'#7f879a', tx:'#5d6578'},
+    loonie: {a:'#fff2a6', b:'#eac14d', c:'#b88a1a', rim:'#8c6410', hi:'#fff6bd', lo:'#a37813', tx:'#7a560c'},
+    toonie: {a:'#ffffff', b:'#d9dde5', c:'#9ca4b5', rim:'#7b8397', hi:'#fff4b8', lo:'#9a7312', tx:'#7a560c'}
+  }[kind], s = '', i, pts = '';
+  s += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="'+px+'" height="'+px+'" class="bkcoinsvg" data-noicon="1" aria-hidden="true"><defs>'+
+    '<radialGradient id="a'+id+'" cx=".34" cy=".26" r=".9"><stop offset="0" stop-color="'+C.a+'"/><stop offset=".55" stop-color="'+C.b+'"/><stop offset="1" stop-color="'+C.c+'"/></radialGradient>'+
+    '<linearGradient id="r'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+C.a+'"/><stop offset=".5" stop-color="'+C.b+'"/><stop offset="1" stop-color="'+C.rim+'"/></linearGradient>'+
+    (kind === 'toonie' ? '<radialGradient id="g'+id+'" cx=".34" cy=".26" r=".9"><stop offset="0" stop-color="#fff0a0"/><stop offset=".55" stop-color="#e3b445"/><stop offset="1" stop-color="#a97a14"/></radialGradient>' : '')+
+    '</defs>';
+  if(kind === 'loonie'){
+    for(i = 0; i < 11; i++){ var an = -Math.PI/2 + i*2*Math.PI/11; pts += (50 + 49*Math.cos(an)).toFixed(1)+','+(50 + 49*Math.sin(an)).toFixed(1)+' '; }
+    s += '<polygon points="'+pts+'" fill="'+C.rim+'"/>';
+    pts = ''; for(i = 0; i < 11; i++){ var an2 = -Math.PI/2 + i*2*Math.PI/11; pts += (50 + 46.5*Math.cos(an2)).toFixed(1)+','+(50 + 46.5*Math.sin(an2)).toFixed(1)+' '; }
+    s += '<polygon points="'+pts+'" fill="url(#r'+id+')"/>';
+  } else {
+    s += '<circle cx="50" cy="50" r="49.5" fill="'+C.rim+'"/><circle cx="50" cy="50" r="47.6" fill="url(#r'+id+')"/>';
+    if(kind === 'dime' || kind === 'quarter') s += '<circle cx="50" cy="50" r="48.4" fill="none" stroke="'+C.rim+'" stroke-width="2.2" stroke-dasharray="1.1 1.1" opacity=".55"/>';
+  }
+  if(kind === 'toonie'){
+    s += '<circle cx="50" cy="50" r="33.5" fill="'+C.rim+'" opacity=".6"/><circle cx="50" cy="50" r="32" fill="url(#g'+id+')"/><circle cx="50" cy="50" r="32" fill="none" stroke="#7a560c" stroke-width="1" opacity=".5"/>';
+    s += '<g transform="translate(50 50) scale(.78) translate(-50 -52)">'+bkRel(BKM.toonie, C.hi, C.lo)+'</g>';
+    s += '<circle cx="50" cy="50" r="42" fill="none" stroke="'+C.rim+'" stroke-width=".8" opacity=".5"/>';
+    s += '<text x="50" y="14.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10.5" fill="'+C.tx+'" opacity=".9">$2</text>';
+  } else {
+    s += '<circle cx="50" cy="50" r="42" fill="url(#a'+id+')"/><circle cx="50" cy="50" r="42" fill="none" stroke="'+C.rim+'" stroke-width="1.1" opacity=".45"/>';
+    s += bkRel(BKM[kind], C.hi, C.lo);
+    s += '<text x="50" y="'+(kind === 'loonie' ? 20 : 19)+'" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="'+(kind === 'dime' || kind === 'penny' ? 13 : 15)+'" fill="'+C.tx+'" opacity=".85">'+label+'</text>';
+  }
+  s += '<ellipse cx="34" cy="24" rx="20" ry="9" fill="#fff" opacity=".22" transform="rotate(-28 34 24)"/></svg>';
+  return s;
+}
+function bkBillArt(c, w){
+  var n = ++BKART_N, id = 'b'+n, C = {
+    500:  {a:'#2a5aa6', b:'#5b94d8', c:'#2a5aa6', t:'$5'},
+    1000: {a:'#5d2f8a', b:'#a37ccb', c:'#5d2f8a', t:'$10'},
+    2000: {a:'#2a7239', b:'#78c184', c:'#2a7239', t:'$20'}
+  }[c], s = '', i, wl = '', h = Math.round(w*0.46);
+  for(i = 0; i < 7; i++) wl += '<path d="M-4,'+(8 + i*13)+' q25,-9 50,0 t50,0 t50,0 t50,0" fill="none" stroke="#fff" stroke-width="1" opacity=".16"/>';
+  s += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 92" width="'+w+'" height="'+h+'" class="bkbillsvg" data-noicon="1" aria-hidden="true"><defs>'+
+    '<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+C.a+'"/><stop offset=".5" stop-color="'+C.b+'"/><stop offset="1" stop-color="'+C.c+'"/></linearGradient>'+
+    '<clipPath id="k'+id+'"><rect width="200" height="92" rx="6"/></clipPath></defs>'+
+    '<rect width="200" height="92" rx="6" fill="url(#'+id+')"/><g clip-path="url(#k'+id+')">'+wl+
+    '<ellipse cx="136" cy="56" rx="40" ry="48" fill="#fff" opacity=".16"/>'+
+    '<circle cx="136" cy="42" r="15" fill="#000" opacity=".2"/><path d="M104,96 C106,70 122,64 136,64 C150,64 166,70 168,96 Z" fill="#000" opacity=".2"/>'+
+    '<circle cx="136" cy="42" r="15" fill="none" stroke="#fff" stroke-width="1" opacity=".35"/></g>'+
+    '<rect x="3.5" y="3.5" width="193" height="85" rx="4" fill="none" stroke="#fff" stroke-width="1.2" opacity=".55"/>'+
+    '<rect x="14" y="12" width="34" height="68" rx="12" fill="#fff" opacity=".28" stroke="#fff" stroke-width="1.4"/>'+
+    '<g transform="translate(31 42) scale(1.25)" fill="#fff" opacity=".85"><path d="'+BKM_LEAF+'"/></g>'+
+    '<text x="60" y="80" font-family="Arial,sans-serif" font-weight="900" font-size="34" fill="#000" opacity=".28" transform="translate(1.5 1.5)">'+C.t+'</text>'+
+    '<text x="60" y="80" font-family="Arial,sans-serif" font-weight="900" font-size="34" fill="#fff">'+C.t+'</text>'+
+    '<text x="60" y="20" font-family="Arial,sans-serif" font-weight="800" font-size="9" letter-spacing="2" fill="#fff" opacity=".85">CANADA</text>'+
+    '<text x="186" y="19" text-anchor="end" font-family="Arial,sans-serif" font-weight="900" font-size="13" fill="#fff" opacity=".9">'+C.t+'</text></svg>';
+  return s;
+}
+
 var bkDenCnt = {};
 function bkGreedy(c){
   var o = {}; BK_DEN.forEach(function(d){ var n = Math.floor(c/d.c); o[d.c] = n; c -= n*d.c; }); return o;
 }
 function bkDenSum(){ var s = 0; BK_DEN.forEach(function(d){ s += (bkDenCnt[d.c] || 0)*d.c; }); return s; }
 function bkDenArt(d){
-  if(d.k === 'b') return '<span class="bkbill b'+d.c+'" data-noicon="1">'+d.t+'</span>';
-  return '<span class="bkcn '+d.k+'" data-noicon="1" style="width:'+d.s+'px;height:'+d.s+'px">'+d.t+'</span>';
+  if(d.k === 'b') return bkBillArt(d.c, 104);
+  return bkCoinArt(d.k, d.s, d.k === 'toonie' ? '$2' : (d.k === 'loonie' ? '$1' : d.t));
 }
 function bkDenSync(fromInput){
   BK_DEN.forEach(function(d){ var el = $('bkdn'+d.c); if(el) el.textContent = bkDenCnt[d.c] || 0; var t = $('bkdt'+d.c); if(t) t.classList.toggle('has', (bkDenCnt[d.c] || 0) > 0); });
@@ -7475,6 +7565,8 @@ function bkSpendModal(){
   gOpen(h);
 }
 document.addEventListener('input', function(e){
+  var gt = e.target;
+  if(gt && (gt.id === 'bkMyGoalName' || gt.id === 'bkMyGoalPrice')){ var d0 = window.__bkGoalDraft || (window.__bkGoalDraft = {n:'', p:''}); if($('bkMyGoalName')) d0.n = $('bkMyGoalName').value; if($('bkMyGoalPrice')) d0.p = $('bkMyGoalPrice').value; return; }
   var t = e.target; if(!t || t.id !== 'bkAmt') return;
   var v = String(t.value).trim();
   if(v === ''){ bkDenCnt = {}; BK_DEN.forEach(function(d){ bkDenCnt[d.c] = 0; }); bkDenSync(true); return; }
@@ -7508,7 +7600,7 @@ function showBankParent(){
     return;
   }
   var bal = bkBal('save'), ms = bkMonthStats();
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" data-bkset="on" '+(b.on ? 'checked' : '')+'><span></span></span> Show Money on this device</label>';
+  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" data-bkset="on" '+(b.on ? 'checked' : '')+'><span></span></span> Show the Money tab on this device</label>';
   h += '<div class="bkparent"><b>'+money(bal)+'</b> in the jar · received '+money(ms.received)+' and spent '+money(ms.spent)+' this month</div>';
   h += '<h3>➕ Add an entry</h3>';
   h += '<div class="fld"><label>Type</label>'+bkSel('bkType', [['gift','Gift money (adds to the jar)'],['spend','Record a spend'],['corr','Correction (+ or -)']])+'</div>';
@@ -7520,7 +7612,7 @@ function showBankParent(){
   h += '<div class="fld"><label>Added every</label>'+bkSel('bkDow', BK_DAYS.map(function(d, i){ return [i, d]; }))+'</div>';
   h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="bkPhys" '+(b.physics !== false ? 'checked' : '')+'><span></span></span> Coins slide around when the tablet is tilted or shaken</label>';
   h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="bkPause" '+(b.paused ? 'checked' : '')+'><span></span></span> Pause the allowance (weeks while paused are skipped)</label>';
-  h += '<div class="fld"><label>Saving goal name</label><input type="text" id="bkGoalName" maxlength="40" value="'+esc(b.goal ? b.goal.name : '')+'" placeholder="Lego set"></div>';
+  h += '<div class="fld"><label>Saving goal name (she can also change this on the Money tab)</label><input type="text" id="bkGoalName" maxlength="40" value="'+esc(b.goal ? b.goal.name : '')+'" placeholder="Lego set"></div>';
   h += '<div class="fld"><label>Saving goal price ($, blank for none)</label><input type="text" id="bkGoalPrice" inputmode="decimal" value="'+(b.goal && b.goal.price ? (b.goal.price/100).toFixed(2) : '')+'"></div>';
   h += '<div class="row"><button class="btn primary" data-bk="psave">Save settings</button></div>';
   h += '<h3>🧾 Recent entries</h3><div class="bkhist">'+(bkHistoryRows(10).map(bkRowHTML).join('') || '<div class="hint">Nothing yet.</div>')+'</div>';
@@ -7545,6 +7637,16 @@ document.addEventListener('click', function(e){
   if(a === 'more'){ window.__bkAll = !window.__bkAll; render(); return; }
   if(a === 'spend'){ bkStartSpend(); return; }
   if(a === 'motion'){ bkAskMotion(); return; }
+  if(a === 'goaledit'){ window.__bkGoalEdit = true; window.__bkGoalDraft = null; Sound.tap(); render(); return; }
+  if(a === 'goalcancel'){ window.__bkGoalEdit = false; window.__bkGoalDraft = null; render(); return; }
+  if(a === 'goalclear'){ bk().goal = null; window.__bkGoalEdit = false; window.__bkGoalDraft = null; save(); render(); toast('Goal removed', 1600); return; }
+  if(a === 'goalsave'){
+    var gnE = $('bkMyGoalName'), gpE = $('bkMyGoalPrice'); if(!gnE || !gpE) return;
+    var gnV = gnE.value.trim().slice(0, 40), gpV = parseMoney(gpE.value);
+    if(!gnV){ toast('What is it? Type a name for your goal.', 2200); return; }
+    if(isNaN(gpV) || gpV <= 0 || gpV > 1000000){ toast('Type how much it costs, like 25.00', 2400); return; }
+    bk().goal = {name:gnV, price:gpV}; window.__bkGoalEdit = false; window.__bkGoalDraft = null; save(); render(); toast('📌 Goal saved!', 1800); return;
+  }
   if(a === 'dospend'){ bkDoSpend(); return; }
   if(!parentUnlocked){ toast('🔒 Parent only', 1800); return; }
   if(a === 'pback'){ showParent(); return; }
@@ -7553,7 +7655,7 @@ document.addEventListener('click', function(e){
     if(isNaN(sc) || sc < 0){ bkMsgSet('Please type an amount like 5.00', true); return; }
     if(isNaN(wk) || wk < 0 || wk > 100000){ bkMsgSet('Please type the weekly allowance like 1.00', true); return; }
     b.weekly = wk; b.payDay = +$('bkDow').value || 0;
-    bkOpen(sc); render(); toast('💵 Money is on. First allowance: '+bkShortDate(dateToKey(nextPayDay(new Date(), b.payDay))), 4200); showBankParent(); return;
+    bkOpen(sc); render(); toast('💵 Money is on. Look for the Money tab. First allowance: '+bkShortDate(dateToKey(nextPayDay(new Date(), b.payDay))), 4800); showBankParent(); return;
   }
   if(a === 'pundo'){ if(bkUndo()){ render(); toast('↩️ Undone', 1800); } else toast('Nothing to undo', 1800); showBankParent(); return; }
   if(a === 'padd'){
@@ -7574,13 +7676,13 @@ document.addEventListener('click', function(e){
     if(isNaN(w2) || w2 < 0 || w2 > 100000){ bkMsgSet('Please type the weekly allowance like 1.00', true); return; }
     b.weekly = w2; b.payDay = +$('bkDow').value || 0; b.paused = $('bkPause').checked; if($('bkPhys')) b.physics = !!$('bkPhys').checked;
     var gp = parseMoney($('bkGoalPrice').value), gn = $('bkGoalName').value.trim();
-    b.goal = (!isNaN(gp) && gp > 0) ? {name:gn || 'My goal', price:gp} : null;
+    b.goal = (!isNaN(gp) && gp > 0) ? {name:gn || 'My goal', price:gp} : null; window.__bkGoalEdit = false; window.__bkGoalDraft = null;
     save(); render(); toast('Saved ✔', 1600); showBankParent(); return;
   }
 });
 document.addEventListener('change', function(e){
   var t = e.target; if(!t || !t.getAttribute) return;
-  if(t.getAttribute('data-bkset') === 'on' && parentUnlocked){ var b = bk(); b.on = !!t.checked; save(); render(); toast(b.on ? 'Money is shown on this device.' : 'Money is hidden on this device.', 2400); }
+  if(t.getAttribute('data-bkset') === 'on' && parentUnlocked){ var b = bk(); b.on = !!t.checked; save(); if(!b.on && tab === 'money') setTab('home'); else render(); toast(b.on ? 'The Money tab is shown on this device.' : 'The Money tab is hidden on this device.', 2400); }
 });
 
 try{ bankCatchUp(); }catch(e){}
