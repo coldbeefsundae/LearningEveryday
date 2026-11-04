@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v43', errs = [], shown = false;
+  var V = 'v46', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -708,6 +708,16 @@ body[data-calm=on] .kit *{animation:none!important}
 .kjgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px;margin-top:10px;max-height:52vh;overflow:auto}
 .kjcell{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;font:700 26px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;background:rgba(128,128,128,.12);color:rgba(128,128,128,.5);border:0}
 .kjcell.on{background:rgba(108,92,231,.16);color:inherit;cursor:pointer}
+/* ---- v46: Kit's speech bubble ---- */
+.pill.bank .ico{cursor:pointer}
+.kitbub{position:fixed;z-index:125;width:min(350px,calc(100vw - 16px));display:flex;gap:10px;align-items:flex-start;background:#fff;color:#1c1c2e;border:2px solid var(--accent,#6c5ce7);border-radius:20px;padding:12px 14px;box-shadow:0 14px 34px rgba(0,0,0,.3);font-weight:800;font-size:15px;line-height:1.38;opacity:0;transform:translateY(-6px) scale(.97);transition:opacity .16s,transform .16s}
+.kitbub.on{opacity:1;transform:none}
+.kitbub::before{content:'';position:absolute;top:-9px;left:var(--ax,40px);width:15px;height:15px;margin-left:-8px;background:#fff;border-left:2px solid var(--accent,#6c5ce7);border-top:2px solid var(--accent,#6c5ce7);transform:rotate(45deg)}
+.kitbub .embkit{flex:none;width:46px}
+.kitbub .kbtxt{flex:1;min-width:0}
+.kitbub .kbtxt b{color:inherit}
+.kitbub .kbbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub::before{background:#232650;color:#fff}
 /* ---- v42: grouped badges ---- */
 .bdsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0 8px;font-weight:900;font-size:15px}
 .bdsec small{font-weight:800;opacity:.6;font-size:12px}
@@ -883,6 +893,10 @@ body[data-calm=on] .kit *{animation:none!important}
 .gactive{border:2px solid var(--gc)}
 .gfaces{display:flex;gap:8px;margin-top:10px}.gfaces button{flex:1;border:0;border-radius:18px;background:var(--accent-soft);padding:10px 4px;font-weight:900;font-size:13px;cursor:pointer;color:var(--ink)}.gfaces button span{display:block;font-size:34px;line-height:1.1}
 .gfaces button:active{transform:scale(.96)}
+.topcharm{display:flex;align-items:center;flex:none}
+.topcharm:empty{display:none}
+.gtopcharm{width:42px;height:42px;border-radius:50%;background:var(--gc);color:#fff;font-weight:900;font-size:24px;line-height:1;font-family:inherit;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.28);cursor:pointer;padding:0;flex:none}
+.gtopcharm:active{transform:scale(.94)}
 .gkitcharm{position:absolute;right:2px;bottom:4px;width:30px;height:30px;border-radius:50%;background:var(--gc);color:#fff;font-weight:900;font-size:18px;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);line-height:1;cursor:pointer}
 .herol .kitwrap{position:relative}
 .gqbadge{display:inline-block;margin-left:6px;vertical-align:middle;font-size:11px;font-weight:900;background:var(--gc);color:#fff;border-radius:10px;padding:2px 7px;white-space:nowrap}
@@ -1649,6 +1663,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
         <div class="who" id="whoBtn" role="button">
           <div class="avwrap"><div class="avatar" id="avatar">🦊</div><span class="lvb" id="lvBadge"></span></div>
           <div class="whotxt"><b id="whoName">Explorer</b><small id="whoRank"></small><div class="xp"><i id="xpFill"></i></div></div>
+          <span id="topCharm" class="topcharm"></span>
         </div>
         <div class="timebox">
           <div class="clock" id="clock">--:--</div>
@@ -3369,6 +3384,7 @@ function renderTop(){
   document.body.setAttribute('data-skin', skinKey());
   setAvatarEl($('avatar'), state.avatar);
   $('whoName').textContent = displayName() || 'Explorer';
+  try{ $('topCharm').innerHTML = gTopCharmHTML(); }catch(_){}
   var ri_ = rankInfo();
   $('whoRank').textContent = ri_.rank.icon+' '+ri_.rank.title;
   var lvl_ = 1;
@@ -3413,24 +3429,21 @@ function bannersHTML(){
   if(state.restNote){
     h += '<div class="banner rest"><div>🌙 Your rest day kept your streak safe on '+parseKey(state.restNote).toLocaleDateString(undefined,{weekday:'long'})+'!</div><button data-act="dismissrest">OK</button></div>';
   }
-  if(allQuestsDone()){
-    if(state.result === 'star') h += '<div class="banner win"><div>🏆 Amazing! All quests finished before '+fmt12(state.deadline)+'. You earned '+pointsEarnedToday()+' points today! ⭐</div></div>';
-    else if(state.result === 'override') h += '<div class="banner win"><div>💖 Great job finishing! A parent topped up your points: '+pointsEarnedToday()+' today! ⭐</div></div>';
-    else if(state.result === 'late') h += '<div class="banner late"><div>💖 Great job finishing! Finishing after '+fmt12(state.deadline)+' still earns half the finish bonus. You got '+pointsEarnedToday()+' points today. You stuck with it and that really counts!</div></div>';
-    else if(state.result === 'repeat') h += '<div class="banner win"><div>🌟 Great job finishing everything!</div></div>';
-  }
-  var sn = streakNow();
-  if(state.restToday){
-    h += '<div class="banner rest"><div>🌙 Rest day! Your streak is safe. Quests are optional today, but there are no points.</div></div>';
-  } else if(sn > 0 || restAvailable()){
-    var nx = nextStreakStep();
-    h += '<div class="banner streak"><div>🔥 <b>'+sn+'-day streak!</b> '+(nx ? 'Next bonus on day '+nx+' (+'+STREAK_BONUS[nx]+' points).' : 'Top bonus reached!')+'</div>';
-    if(restAvailable() && sn > 0 && !allQuestsDone()) h += '<button data-act="restday">🌙 Use rest day</button>';
-    h += '</div>';
-  }
   return h;
 }
 
+/* what the star and the flame say when tapped (these used to be boxes on the quests page) */
+function streakBubbleHTML(){
+  var sn = streakNow(), nx = nextStreakStep(), h;
+  if(state.restToday) h = '🌙 <b>Rest day!</b> Your streak is safe at '+sn+' day'+(sn === 1 ? '' : 's')+'.';
+  else if(sn > 0) h = '🔥 <b>'+sn+'-day streak!</b> '+(nx ? 'Next bonus on day '+nx+' (+'+STREAK_BONUS[nx]+' points).' : 'Top bonus reached!');
+  else h = '🔥 <b>Let\u2019s start a streak!</b> Finish all your quests today.'+(nx ? ' Your first bonus comes on day '+nx+' (+'+STREAK_BONUS[nx]+' points).' : '');
+  var b = '';
+  if(restAvailable() && sn > 0 && !allQuestsDone() && !state.restToday) b += '<button class="btn small" data-kb="rest">🌙 Use rest day</button>';
+  b += '<button class="btn small" data-kb="streak">📅 My streak</button>';
+  return h + '<div class="kbbtns">'+b+'</div>';
+}
+function pointsBubbleHTML(){ return rateHTML(); }
 function quoteBlock(){ return quoteHTML(); }
 
 function discoveryHTML(){
@@ -3479,9 +3492,15 @@ function kitMood(){
   if(bm === 'asleep') return {mood:'sleep', say:'Zzz... Kit is asleep. See you in the morning!'};
   if(bm === 'drowsy') return {mood:'drowsy', say:'*yawn* I am getting sleepy. It is almost bedtime!'};
   var act = activeTasks(), d = doneCount();
-  if(state.restToday) return {mood:'sleep', say:'Rest day! I am taking a nap too.'};
+  if(state.restToday) return {mood:'sleep', say:'Rest day! Your streak is safe. Quests are optional today, but there are no points. I am taking a nap too. 💤'};
   if(!act.length) return {mood:'sleep', say:'No quests today. Enjoy your day!'};
-  if(d === act.length) return {mood:'cheer', say:'You did it! Amazing work!'};
+  if(d === act.length){
+    var pe = 0, dl = ''; try{ pe = pointsEarnedToday(); dl = fmt12(state.deadline); }catch(e){}
+    if(state.result === 'star') return {mood:'cheer', say:'You did it! Amazing work! All finished before '+dl+', and you earned '+pe+' points today! ⭐'};
+    if(state.result === 'override') return {mood:'cheer', say:'You did it! Great job finishing! A parent topped up your points: '+pe+' today! ⭐'};
+    if(state.result === 'late') return {mood:'cheer', say:'You did it! Finishing after '+dl+' still earns half the finish bonus. You got '+pe+' points today. You stuck with it and that really counts! 💖'};
+    return {mood:'cheer', say:'You did it! Amazing work!'};
+  }
   if(d === 0) return {mood:'happy', say:'Ready for today\'s quests? Let\'s go!'};
   var left = act.length - d;
   return {mood:'happy', say:'Nice! Only '+left+' more quest'+(left === 1 ? '' : 's')+' to go.'};
@@ -3497,7 +3516,7 @@ function renderHome(){
   try{ nm = displayName(); }catch(e){}
   try{ act = activeTasks(); }catch(e){}
   try{ km = kitMood(); }catch(e){}
-  var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div><div class="ratebox">'+rateHTML()+'</div></div>'; });
+  var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div></div>'; });
   h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'+(state.restToday ? '' : ' · ⭐ '+pointsEarnedToday()+' of '+pointsMaxToday()+' points'); })+'</span></div><div class="qgrid">';
   if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
   act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
@@ -4667,9 +4686,9 @@ function showRewardEditor(scroll){
 [].forEach.call(document.querySelectorAll('[data-tab]'), function(b){
   b.addEventListener('click', function(){ Sound.tap(); setTab(b.getAttribute('data-tab')); });
 });
-$('whoBtn').addEventListener('click', function(){ setTab('profile'); });
+$('whoBtn').addEventListener('click', function(e){ if(e.target.closest && e.target.closest('[data-gl]')) return; setTab('profile'); });
 $('packPill').addEventListener('click', function(){ setTab('cards'); });
-$('streakPill').addEventListener('click', function(){ setTab('profile'); });
+$('streakPill').addEventListener('click', function(){ kitBubble($('streakPill'), streakBubbleHTML(), 10000); });
 
 $('view-home').addEventListener('click', function(e){
   var dyh = e.target.closest('[data-day]');
@@ -8053,11 +8072,13 @@ function goalPanelHTML(){
   }
   return h;
 }
-function gHeroCharm(html){
-  if(!gOn()) return html;
-  var a = gActive(); if(!a) return html;
-  var c = GBYID[a.pick]; if(!c) return html;
-  return html.replace(/<\/span>$/, '<span class="gkitcharm" style="--gc:'+c.col+'" lang="ja" data-gl="book">'+c.k+'</span></span>');
+function gHeroCharm(html){ return html; }
+/* this week's goal card sits in the top bar, to the right of her name */
+function gTopCharmHTML(){
+  if(!gOn()) return '';
+  var a = gActive(); if(!a) return '';
+  var c = GBYID[a.pick]; if(!c) return '';
+  return '<button class="gtopcharm" style="--gc:'+c.col+'" lang="ja" data-gl="book" aria-label="This week\u2019s goal card: '+esc(c.t)+'" title="'+esc(c.t)+'">'+c.k+'</button>';
 }
 function gQuestBadge(t){
   if(!gOn()) return '';
@@ -8398,6 +8419,56 @@ document.addEventListener('click', function(e){
 }, true);
 
 
+/* ---- v46: Kit's speech bubble, shown when she taps the star or the flame ---- */
+var KBUB = {el:null, anchor:null, timer:0};
+function kitBubbleClose(){
+  if(KBUB.timer){ clearTimeout(KBUB.timer); KBUB.timer = 0; }
+  if(KBUB.el){ var el = KBUB.el; el.classList.remove('on'); setTimeout(function(){ try{ if(el.parentNode) el.parentNode.removeChild(el); }catch(_){} }, 180); }
+  KBUB.el = null; KBUB.anchor = null;
+}
+function kitBubble(anchor, html, ms){
+  if(KBUB.el && KBUB.anchor === anchor){ kitBubbleClose(); return; }
+  kitBubbleClose();
+  var el = document.createElement('div');
+  el.className = 'kitbub'; el.setAttribute('role', 'status');
+  el.innerHTML = '<span class="embkit">'+kitSVG('happy','face')+'</span><div class="kbtxt">'+html+'</div>';
+  el.style.visibility = 'hidden'; document.body.appendChild(el);
+  var r = anchor.getBoundingClientRect(), w = el.offsetWidth || 320, vw = window.innerWidth || 1024;
+  var left = Math.max(8, Math.min(r.left + r.width/2 - w/2, vw - w - 8));
+  el.style.left = left+'px'; el.style.top = (r.bottom + 10)+'px';
+  el.style.setProperty('--ax', Math.max(22, Math.min(w - 22, r.left + r.width/2 - left))+'px');
+  el.style.visibility = '';
+  KBUB.el = el; KBUB.anchor = anchor;
+  requestAnimationFrame(function(){ el.classList.add('on'); });
+  try{ Sound.tap(); }catch(_){}
+  KBUB.timer = setTimeout(kitBubbleClose, ms || 9000);
+}
+(function(){
+  var _st = setTab;
+  setTab = function(){ kitBubbleClose(); return _st.apply(this, arguments); };
+})();
+document.addEventListener('pointerdown', function(e){
+  if(!KBUB.el) return;
+  var t = e.target; if(t.closest && (t.closest('.kitbub') || (KBUB.anchor && KBUB.anchor.contains(t)))) return;
+  kitBubbleClose();
+}, true);
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') kitBubbleClose(); });
+document.addEventListener('click', function(e){
+  var b = e.target.closest && e.target.closest('[data-kb]'); if(!b) return;
+  var a = b.getAttribute('data-kb'); kitBubbleClose();
+  if(a === 'streak'){ setTab('profile'); }
+  else if(a === 'rest'){ confirmBox('Use your rest day?','Today you can rest. Your streak stays safe, but there are no points today. You get one rest day each week.','Yes, rest 🌙',useRestDay); }
+});
+(function(){
+  var ico = document.querySelector('.pill.bank .ico');
+  if(ico){
+    ico.setAttribute('role', 'button'); ico.setAttribute('tabindex', '0'); ico.setAttribute('aria-label', 'How do points work?');
+    ico.addEventListener('click', function(e){ e.stopPropagation(); kitBubble(ico, pointsBubbleHTML(), 10000); });
+    ico.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); kitBubble(ico, pointsBubbleHTML(), 10000); } });
+  }
+})();
+
+
 /* ---------- Private family pack (import / remove) ---------- */
 function showFamPack(){
   var on = !!FAMPACK, n = on ? FAMPACK.cards.length : 0;
@@ -8733,6 +8804,12 @@ function bkJarSVG(id, cents, silver){
 }
 /* ----- the coin worlds: one per jar. They keep their coins between page redraws. ----- */
 var BKW = {}, BKG = {x:0, y:1, tx:0, ty:1, rx:0, ry:1}, bkRaf = 0, bkLastT = 0, bkCalm = 0, bkSndT = 0, bkHitMax = 0, bkSensorsOn = false, bkJ = null;
+/* Coin clinks come in short bursts. A burst starts when coins are added, the jar is touched or the tablet is shaken.
+   It lasts 5 seconds at most and fades out, even if a full jar keeps jiggling, so the sound can never run on. */
+var bkSndEnd = 0, BK_SND_MS = 5000;
+function bkNow(){ try{ return performance.now(); }catch(e){ return Date.now(); } }
+function bkSndBurst(){ var n = bkNow(); if(n > bkSndEnd + 600) bkSndEnd = n + BK_SND_MS; }
+function bkSndGain(ts){ var left = bkSndEnd - ts; return left <= 0 ? 0 : Math.min(1, left/1000); }
 var BK_SVGNS = 'http://www.w3.org/2000/svg';
 function bkPhOn(){ try{ return !!BKP && bk().physics !== false && bkAnim(); }catch(e){ return false; } }
 function bkWorld(id){ return BKW[id] || (BKW[id] = {id:id, bs:[], nodes:[], g:null, timers:[], target:0, init:false, sx:0, sy:0}); }
@@ -8775,7 +8852,7 @@ function bkPhAdd(id, quiet){
   var b = BKP.spawn(w.bs), nd = document.createElementNS(BK_SVGNS, 'g');
   nd.setAttribute('transform', 'translate('+b.x.toFixed(2)+' '+b.y.toFixed(2)+')'); nd.innerHTML = bkCoinInner(id);
   w.g.appendChild(nd); w.nodes.push(nd);
-  bkPhWake(); return true;
+  bkSndBurst(); bkPhWake(); return true;
 }
 function bkPhWake(){
   bkCalm = 0;
@@ -8798,7 +8875,8 @@ function bkPhFrame(ts){
     if(BKP.maxSpeed(w.bs) > 6 || Math.abs(w.sx) + Math.abs(w.sy) > 0.05) moving = true;
   }
   if(bkHitMax > 35){
-    if(ts - bkSndT > 55 && tab === 'money'){ bkSndT = ts; try{ Sound.coinTick(Math.min(1, bkHitMax/350)); }catch(_){} }
+    var gn = bkSndGain(ts);
+    if(gn > 0 && ts - bkSndT > 60 && tab === 'money'){ bkSndT = ts; try{ Sound.coinTick(Math.min(1, bkHitMax/350)*gn); }catch(_){} }
     bkHitMax = 0;
   }
   if(!live){ bkLastT = 0; return; }
@@ -8828,7 +8906,9 @@ function bkMotion(e){
   var live = false, id; for(id in BKW){ if(BKW[id].g && BKW[id].g.isConnected !== false) live = true; }
   if(!live) return;
   var sg = bkIsIOS() ? -1 : 1, gv = bkGravityFrom(a.x*sg/9.81, a.y*sg/9.81, bkAngle());
-  if(Math.abs(gv[0] - BKG.tx) + Math.abs(gv[1] - BKG.ty) > 0.02){ BKG.tx = gv[0]; BKG.ty = gv[1]; }
+  var dsh = Math.abs(gv[0] - BKG.tx) + Math.abs(gv[1] - BKG.ty);
+  if(dsh > 0.9) bkSndBurst();
+  if(dsh > 0.02){ BKG.tx = gv[0]; BKG.ty = gv[1]; }
   if(Math.abs(BKG.tx - BKG.x) + Math.abs(BKG.ty - BKG.y) > 0.05) bkPhWake();
 }
 function bkSensors(){
@@ -8863,7 +8943,7 @@ document.addEventListener('pointerdown', function(e){
   var w = BKW[id]; if(!w) return;
   bkJ = {id:id, x:e.clientX, y:e.clientY};
   w.bs.forEach(function(b){ b.vy -= 90 + Math.random()*120; b.vx += (Math.random() - .5)*90; });
-  bkHitMax = Math.max(bkHitMax, 160); bkPhWake();
+  bkHitMax = Math.max(bkHitMax, 160); bkSndBurst(); bkPhWake();
 });
 document.addEventListener('pointermove', function(e){
   if(!bkJ) return;
