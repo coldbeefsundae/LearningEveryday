@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v30', errs = [], shown = false;
+  var V = 'v33', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -798,6 +798,123 @@ body[data-calm=on] .kit *{animation:none!important}
 @media (prefers-reduced-motion:reduce){.kit.drowsy .k-eyes,.kit.drowsy .k-all,.kit.drowsy .k-zz,.kit.asleep .k-zz,.kit.asleep .k-all{animation:none!important}}
 .kit.drowsy.a-yawn .k-all{animation:kYawnAll 2.5s ease-in-out 1}
 
+.mseg{display:flex;gap:8px;margin:0 0 14px;padding:6px;border-radius:999px;background:rgba(127,127,160,.16)}
+.mseg button{flex:1;height:48px;border-radius:999px;border:0;font-size:17px;font-weight:900;background:transparent;color:inherit;cursor:pointer}
+.mseg button.on{background:linear-gradient(135deg,#ffb347,#ff7bd0);color:#2b2850;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.bkhead{text-align:center}
+.bklabel{font-weight:800;font-size:16px;opacity:.85}
+.bknum{font-size:46px;font-weight:900;line-height:1.1}
+.bkjars{display:flex;gap:14px;justify-content:center;margin:10px 0}
+.bkjarbox{flex:1;max-width:170px;text-align:center}
+.bkjar{width:84px;height:104px;color:#8d86b5}
+.bkjl{font-weight:900;font-size:17px}
+.bkjn{font-weight:900;font-size:24px}
+.bknext{font-weight:800;font-size:16px;margin-top:6px}
+.bkgp{font-weight:900;opacity:.85}
+.bkgs{font-weight:800;margin-top:6px;font-size:16px}
+.bkrow{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(127,127,160,.25);font-size:16px}
+.bkrow:last-child{border-bottom:0}
+.bkd{min-width:92px;font-weight:700;opacity:.8;font-size:14px}
+.bkl{flex:1;line-height:1.3}
+.bkjt{display:inline-block;font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px;background:rgba(127,127,160,.25);margin-left:4px}
+.bkamt{font-weight:900;white-space:nowrap}
+.bkamt.pos{color:#1a7a4a}.bkamt.neg{color:#b3362b}
+.bkparent{font-weight:800;margin:8px 0 6px;font-size:17px}
+.bkm select{height:54px;border-radius:15px;border:3px solid #e1def5;font-size:18px;font-weight:700;padding:0 10px;background:#fff;color:#2b2850}
+.bkm .reqrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0}
+
+/* v32 */
+.seg .seglabel{color:#5b5780}
+.seg .segbtn{color:#2b2850}
+.seg .segbtn.on{background:var(--accent);color:#fff}
+.wrapseg .segbtn small{opacity:.9;color:inherit}
+.mxw{position:sticky;top:8px;height:0;z-index:40;overflow:visible}
+.mx{position:absolute;right:-4px;top:-6px;width:36px;height:36px;border-radius:50%;border:0;background:#ece9fb;color:#2b2850;font-size:17px;font-weight:900;line-height:36px;padding:0;cursor:pointer;box-shadow:0 2px 6px rgba(30,33,66,.25)}
+.mx:active{transform:scale(.92)}
+.jwx{position:static;flex:none;margin-left:8px}
+.gdealrow{flex-wrap:nowrap;gap:6px;align-items:stretch}
+.gflip{flex:1 1 0;min-width:0;width:auto;transition:flex-grow .35s ease}
+.gflip.flipped{flex-grow:1.35}
+.gflip.sel{flex-grow:1.75}
+.gflip .gin{aspect-ratio:auto;height:clamp(250px,68vw,340px)}
+.gflip .gcard{height:100%;overflow:hidden;padding:4px;border-radius:14px}
+.gflip .gtitle{font-size:12px;margin:4px 0 1px}
+.gflip .gdesc{font-size:10px;min-height:0;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.gflip .gkanji{width:28px;height:28px;font-size:16px}
+.gflip .gstars i{width:11px;height:11px}
+.embkit{display:block;width:64%;max-width:96px;margin:auto}
+.embkit .kit{width:100%;display:block;filter:grayscale(1) brightness(1.6) contrast(.7) drop-shadow(-1.5px -1.5px 0 rgba(255,255,255,.75)) drop-shadow(2px 3px 2px rgba(25,12,70,.6));opacity:.9}
+.gback{box-shadow:inset 0 0 0 3px rgba(255,255,255,.28),inset 0 0 0 7px rgba(0,0,0,.1),0 8px 18px -8px rgba(30,33,66,.5)}
+.gbacks i{box-shadow:inset 0 0 0 2px rgba(255,255,255,.28),0 6px 14px -6px rgba(30,33,66,.5)}
+.gbacks i .embkit{width:70%}
+/* Kit: calculator + glowing eyes */
+.kit .k-calc,.kit .k-spark{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.kit .k-cd{opacity:0}
+.kit.a-calc .k-calc{animation:kCalcIn 3.5s ease-in-out 1}
+.kit.a-calc .k-all{transform-origin:60px 112px;animation:kCalcHead 3.5s ease-in-out 1}
+.kit.a-calc .k-eyes{animation:kLookDn 3.5s ease-in-out 1}
+.kit.a-calc .k-paws{opacity:1}
+.kit.a-calc .k-pl{animation:kPress .42s ease-in-out 3 .55s}
+.kit.a-calc .k-pr{animation:kPress .42s ease-in-out 3 .76s}
+.kit.a-calc .k-cd1{animation:kCd1 3.5s linear 1}
+.kit.a-calc .k-cd2{animation:kCd2 3.5s linear 1}
+.kit.a-calc .k-cd3{animation:kCd3 3.5s linear 1}
+@keyframes kCalcIn{0%{opacity:0;transform:translateY(28px)}12%,86%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(28px)}}
+@keyframes kCalcHead{0%,100%{transform:rotate(0)}14%,84%{transform:rotate(-3deg) translateY(2px)}}
+@keyframes kLookDn{0%,100%{transform:translateY(0)}14%,84%{transform:translateY(2.6px)}}
+@keyframes kPress{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes kCd1{0%,30%{opacity:1}31%,100%{opacity:0}}
+@keyframes kCd2{0%,30%{opacity:0}31%,62%{opacity:1}63%,100%{opacity:0}}
+@keyframes kCd3{0%,62%{opacity:0}63%,86%{opacity:1}87%,100%{opacity:0}}
+.kit.eyes-lit .k-spark{opacity:1;transform-origin:50% 50%;animation:kTw .45s ease-in-out infinite alternate}
+@keyframes kTw{from{transform:scale(.88)}to{transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.kit.eyes-lit .k-spark{animation:none}}
+/* Money page */
+.mhero{margin-bottom:12px}
+.mbanner{flex:1;min-width:0;background:linear-gradient(135deg,#2b2a5c,#4a3f9f);color:#fff;border-radius:20px;padding:10px 14px;box-shadow:0 6px 16px rgba(43,42,92,.3)}
+.mbt{font-weight:900;font-size:16px;opacity:.95}
+.mbrow{display:flex;gap:14px;margin-top:4px}
+.mbs small{display:block;font-size:12px;font-weight:800;opacity:.85}
+.mbs b{font-size:22px;font-weight:900}
+.mbs b.pos{color:#8ff0b6}.mbs b.spn{color:#ffc978}
+.mbanner .kitsay{background:rgba(255,255,255,.16);color:#fff;margin-top:6px}
+.bkjars2{display:flex;gap:10px;justify-content:center;align-items:flex-start;margin:6px 0 4px}
+.bkjc{flex:1;max-width:210px;text-align:center;position:relative}
+.bkjtitle{font-weight:900;font-size:17px}
+.bkjwrap{position:relative;touch-action:none;-webkit-user-select:none;user-select:none}
+.bkhelp2{text-align:center;font-weight:700;font-size:14px;opacity:.85;margin:2px 10px 8px}
+.bkjar{width:100%;max-width:150px;height:auto;color:#8d86b5;display:block;margin:2px auto}
+.bkjbal{font-weight:900;font-size:26px;margin-top:2px}
+.bkjsub{font-weight:700;font-size:13px;opacity:.8}
+.bkshake{animation:bkShake .5s ease-in-out 1}
+@keyframes bkShake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-3px) rotate(-2deg)}40%{transform:translateX(3px) rotate(2deg)}60%{transform:translateX(-2px) rotate(-1deg)}80%{transform:translateX(2px) rotate(1deg)}}
+.bkcoin,.bkfly{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a8,#ffc83d 55%,#d99200);border:3px solid #b87400;box-shadow:0 4px 10px rgba(0,0,0,.3),inset 0 -3px 5px rgba(150,90,0,.35);color:#7a4d00;font-weight:900;font-size:17px;display:grid;place-items:center;padding:0}
+.bkcoin{margin:8px auto 0;touch-action:none;cursor:grab;animation:bkHint 2.8s ease-in-out infinite}
+.bkcoin:disabled{opacity:.4;animation:none;cursor:default}
+.bkcoin.away{opacity:.25;animation:none}
+.bkarrow{position:absolute;right:-16px;bottom:8px;font-size:24px;font-weight:900;color:#8a7bf0;animation:bkHint 2.8s ease-in-out infinite}
+.bkfly,.bkfall{position:fixed;left:0;top:0;z-index:300;pointer-events:none;will-change:transform}
+.bkfall{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a8,#ffc83d 55%,#d99200);border:1px solid #b27800;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+@keyframes bkHint{0%,55%,100%{transform:translateX(0)}70%{transform:translateX(14px)}85%{transform:translateX(0)}}
+.bkhelp{text-align:center;font-weight:700;font-size:15px;margin:6px 8px 8px}
+@media (prefers-reduced-motion:reduce){.bkcoin,.bkarrow{animation:none}}
+.bkden{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.bkdt{border:2px solid #e1def5;border-radius:16px;padding:6px 4px 4px;text-align:center;background:#faf9ff}
+.bkdt.has{border-color:#6c5ce7;background:#f1eeff}
+.bkdimg{height:50px;width:100%;display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer}
+.bkdctl{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px}
+.bkdctl button{width:34px;height:34px;border-radius:50%;border:2px solid #cfc9ee;background:#fff;color:#2b2850;font-size:20px;font-weight:900;line-height:1;padding:0;cursor:pointer}
+.bkdctl b{min-width:22px;font-size:18px;color:#2b2850}
+.bkbill{display:grid;place-items:center;width:76px;height:38px;border-radius:6px;font-weight:900;font-size:16px;color:#fff;border:2px solid rgba(255,255,255,.55);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.bkbill.b2000{background:linear-gradient(135deg,#3e9b4f,#256d33)}
+.bkbill.b1000{background:linear-gradient(135deg,#8b5cc7,#5b32a0)}
+.bkbill.b500{background:linear-gradient(135deg,#3f86d6,#1f5aa6)}
+.bkcn{display:grid;place-items:center;border-radius:50%;font-weight:900;font-size:12px;color:#4a3a00;box-shadow:0 2px 4px rgba(0,0,0,.3),inset 0 -2px 3px rgba(0,0,0,.18);border:2px solid rgba(0,0,0,.18)}
+.bkcn.toonie{background:radial-gradient(circle,#e8b94a 0 50%,#d6dae2 52%);font-size:13px}
+.bkcn.loonie{background:radial-gradient(circle at 35% 30%,#fff0a0,#e8b94a 60%,#c28a14);font-size:13px}
+.bkcn.quarter,.bkcn.dime,.bkcn.nickel{background:radial-gradient(circle at 35% 30%,#fff,#d6dae2 60%,#9aa3b5);color:#2b2850;font-size:11px}
+.bkcn.penny{background:radial-gradient(circle at 35% 30%,#ffd0a8,#d9824a 60%,#a85a28);color:#4a2200;font-size:11px}
+
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
    Tokens: body:is([data-skin=hybrid],[data-skin=gallery]) dark skins, body[data-skin=hybrid] hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
@@ -1329,6 +1446,11 @@ a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:in
 
 body:is([data-skin=hybrid],[data-skin=gallery]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
 body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done .q-name small.qpts{color:var(--muted)}
+
+body:is([data-skin=hybrid],[data-skin=gallery]) .bkamt.pos{color:#7be0a8}
+body:is([data-skin=hybrid],[data-skin=gallery]) .bkamt.neg{color:#ff9a90}
+
+body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 
 </style>
 </head>
@@ -1908,6 +2030,7 @@ function kitSVG(mood, cls){
   var anim = (cls === 'hero');
   var FX = anim ? ('<g class="k-open"><ellipse cx="60" cy="86" rx="6.5" ry="7.5" fill="#c2384e" stroke="'+ink+'" stroke-width="2.4"/><ellipse cx="60" cy="90" rx="4" ry="3" fill="#ff8aa0"/></g>'+
     '<g class="k-puff"><circle cx="88" cy="84" r="5" fill="#fff" stroke="#bcd8ff" stroke-width="1.6"/><circle cx="97" cy="90" r="4" fill="#fff" stroke="#bcd8ff" stroke-width="1.6"/><circle cx="92" cy="98" r="3" fill="#fff" stroke="#bcd8ff" stroke-width="1.6"/></g>'+
+    '<g class="k-calc"><rect x="37" y="88" width="46" height="34" rx="6" fill="#2b2850" stroke="#12102e" stroke-width="1.5"/><rect x="41" y="92" width="38" height="9" rx="2" fill="#bff5c8"/><text class="k-cd k-cd1" x="77" y="99.4" font-size="8" font-weight="900" text-anchor="end" fill="#1b5e2f" font-family="monospace">0</text><text class="k-cd k-cd2" x="77" y="99.4" font-size="8" font-weight="900" text-anchor="end" fill="#1b5e2f" font-family="monospace">12.50</text><text class="k-cd k-cd3" x="77" y="99.4" font-size="8" font-weight="900" text-anchor="end" fill="#1b5e2f" font-family="monospace">3.75</text><g fill="#8a7bf0"><rect x="41" y="104" width="7.5" height="4.4" rx="1"/><rect x="50.7" y="104" width="7.5" height="4.4" rx="1"/><rect x="60.4" y="104" width="7.5" height="4.4" rx="1"/><rect x="41" y="110" width="7.5" height="4.4" rx="1"/><rect x="50.7" y="110" width="7.5" height="4.4" rx="1"/><rect x="60.4" y="110" width="7.5" height="4.4" rx="1"/><rect x="41" y="116" width="7.5" height="4.4" rx="1"/><rect x="50.7" y="116" width="7.5" height="4.4" rx="1"/><rect x="60.4" y="116" width="7.5" height="4.4" rx="1"/></g><g fill="#ffb347"><rect x="70.1" y="104" width="9" height="4.4" rx="1"/><rect x="70.1" y="110" width="9" height="4.4" rx="1"/><rect x="70.1" y="116" width="9" height="4.4" rx="1"/></g></g><g class="k-spark"><g transform="translate(46 60)"><circle r="8.5" fill="#ffd54a" opacity=".5"/><path d="M0-8.5L2.4-2.4 8.5 0 2.4 2.4 0 8.5-2.4 2.4-8.5 0-2.4-2.4z" fill="#fff9d6" stroke="#ffb400" stroke-width="1"/></g><g transform="translate(74 60)"><circle r="8.5" fill="#ffd54a" opacity=".5"/><path d="M0-8.5L2.4-2.4 8.5 0 2.4 2.4 0 8.5-2.4 2.4-8.5 0-2.4-2.4z" fill="#fff9d6" stroke="#ffb400" stroke-width="1"/></g></g>'+
     '<g class="k-paws"><g class="k-pl"><circle cx="46" cy="106" r="7.5" fill="#ff8a3d" stroke="#d96a00" stroke-width="1.2"/><circle cx="46" cy="107.5" r="3.4" fill="#ffd2ad"/></g><g class="k-pr"><circle cx="74" cy="106" r="7.5" fill="#ff8a3d" stroke="#d96a00" stroke-width="1.2"/><circle cx="74" cy="107.5" r="3.4" fill="#ffd2ad"/></g></g>'+
     '<g class="k-fx k-stars"><path transform="translate(14 28)" d="M0-6L1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z" fill="#ffc233"/><path transform="translate(106 22) scale(.8)" d="M0-6L1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z" fill="#ffe08a"/><path transform="translate(100 56) scale(.6)" d="M0-6L1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z" fill="#ffc233"/></g>'+
     '<g class="k-fx k-hearts"><path transform="translate(14 36)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff5d8f"/><path transform="translate(104 28) scale(.8)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff8aa8"/><path transform="translate(98 60) scale(.6)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff5d8f"/></g>'+
@@ -3374,6 +3497,7 @@ function updateTimerDisplays(){
 function tick(){
   if(checkNewDay()){ toast('🌅 New day, new quests!'); render(); }
   updateBed();
+  try{ if(window.__bkDay !== dateKey()){ window.__bkDay = dateKey(); if(bankOn()){ var nn = bankCatchUp(); if(nn) render(); } } }catch(e){}
   musicTick();
   var cdTxt = '';
   var now = new Date(), h = now.getHours()%12 || 12;
@@ -3483,6 +3607,7 @@ function showParent(scrollTop){
   h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="rweditor">✏️ Edit rewards &amp; prices</button><button class="btn" data-act="pcalendar">📅 Streak calendar</button></div>';
   h += '<label class="row" style="font-weight:800;margin:12px 0 0"><span class="switch"><input type="checkbox" data-act="pbonuson" '+(state.bonusOn?'checked':'')+'><span></span></span> Show the daily Bonus Challenge</label>';
   h += '<div class="row" style="margin-top:8px"><button class="btn" data-glparent="1">🎯 Goal cards &amp; “I saw you…”</button> <button class="btn" data-fp="1">👪 Family pack</button></div>';
+  h += '<div class="row" style="margin-top:8px"><button class="btn" data-bkp="1">💵 Allowance money</button></div>';
   h += '<div class="starctl" style="margin-top:12px"><button class="btn danger small" data-act="pkminus">− 1</button><div class="n" style="font-size:28px;min-width:150px">'+state.packs+'<small style="font-size:14px"> card packs</small></div><button class="btn good small" data-act="pkplus">+ 1</button></div>';
   if(state.screenEndsAt && state.screenEndsAt>Date.now()){
     h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="pclearscreen">⏹ Stop Free Time timer</button></div>';
@@ -4091,7 +4216,7 @@ function rewardCardHTML(r){
   if(r.kind !== 'screen') h += '<button class="pinbtn'+(isGoal?' on':'')+'" data-goal="'+esc(r.id)+'" aria-label="Pin as my goal" title="Pin as my goal">📌</button>';
   return h + '</div></div>';
 }
-function renderShop(){
+function renderShopCoins(){
   var e = state.eco;
   var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(state.points)+' of screen time</div></div></div>';
   h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>+1 to +10</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
@@ -4408,6 +4533,25 @@ $('musicBtn').addEventListener('click', function(){ toggleMusic(!state.ui.music)
 $('parentBtn').addEventListener('click', function(){ requireParent(showParent); });
 /* Tap outside any window to close it (unless something was typed that would be lost). */
 var ovDownOnBackdrop = false;
+(function(){
+  /* a small round X on every window; it closes the same way as tapping outside */
+  var m = $('modal');
+  function addX(){
+    if(!m.firstChild || m.querySelector('.mxw')) return;
+    var w = document.createElement('div'); w.className = 'mxw'; w.setAttribute('data-noicon', '1');
+    w.innerHTML = '<button type="button" class="mx" aria-label="Close window" data-mx="1">✕</button>';
+    m.insertBefore(w, m.firstChild);
+  }
+  try{ new MutationObserver(addX).observe(m, {childList:true}); }catch(e){}
+  document.addEventListener('click', function(e){
+    var x = e.target.closest && e.target.closest('[data-mx]');
+    if(!x) return;
+    e.preventDefault(); e.stopPropagation();
+    try{ Sound.tap(); }catch(_){}
+    if(x.id === 'jwX'){ jwClose(); return; }
+    closeModalFromOutside();
+  }, true);
+})();
 function modalDirty(){
   var els = $('modal').querySelectorAll('textarea, input[type=text], input[type=number], input[type=password]'), i;
   for(i = 0; i < els.length; i++){ if(els[i].value !== els[i].defaultValue && els[i].id !== 'fpFile') return true; }
@@ -6115,7 +6259,7 @@ function afterTimerStop(t, why){
 document.addEventListener('visibilitychange', function(){ if(!document.hidden && Tfs.id) tfsAcquire(); });
 
 /* ---------- Kit's little animations ---------- */
-var KIT_DUR = {blink:900, wink:1300, ears:1300, wiggle:1200, hop:1400, tilt:1800, clap:1600, sneeze:2000, yawn:2600, bow:2400, jingle:1500, toot:1700};
+var KIT_DUR = {calc:3600, blink:900, wink:1300, ears:1300, wiggle:1200, hop:1400, tilt:1800, clap:1600, sneeze:2000, yawn:2600, bow:2400, jingle:1500, toot:1700};
 var KIT_BASE = ['blink','wink','ears','wiggle','hop','tilt','clap','sneeze','yawn'];
 var KIT_SKIN = {
   /* theme signature moves: [action, effect] */
@@ -6165,8 +6309,9 @@ function kitAnimOK(){
 function kitLoop(){
   try{
     if(kitAnimOK() && !document.hidden && !Tfs.id && bedMode() !== 'asleep'){
-      var s = document.querySelector('.hero .kit');
-      if(s && s.getBoundingClientRect().width > 0 && !$('overlay').classList.contains('show')) kitPlay(s);
+      var s = null, all = document.querySelectorAll('.hero .kit'), q;
+      for(q = 0; q < all.length; q++){ if(all[q].getBoundingClientRect().width > 0){ s = all[q]; break; } }
+      if(s && !$('overlay').classList.contains('show')) kitPlay(s);
     }
   }catch(e){}
   setTimeout(kitLoop, 6500 + Math.random()*7500);
@@ -6174,7 +6319,7 @@ function kitLoop(){
 document.addEventListener('click', function(e){
   var w = e.target.closest && e.target.closest('.hero .kitwrap');
   if(w && bedMode() === 'asleep'){ toast('🤫 Shh... Kit is sleeping. See you in the morning!', 2600); return; }
-  if(w && kitAnimOK()){ var s = w.querySelector('.kit'); if(s){ var pick = kitPickAction(); kitPlay(s, pick); } }
+  if(w && kitAnimOK()){ var s = w.querySelector('.kit'); if(s){ var pick = kitPickAction(); if(w.closest('.mhero') && Math.random() < 0.7) pick = ['calc','']; kitPlay(s, pick); } }
 });
 
 /* ---------- Kanji of the day + English Word of the day ---------- */
@@ -6184,7 +6329,24 @@ var KANJI_ORDER = shuffle(KANJI.map(function(x,i){ return i; }), rngFor((FAMPACK
 function dayNumX(){ var d = parseKey(dateKey()); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000); }
 function kanjiToday(){ return KANJI[KANJI_ORDER[dayNumX() % KANJI.length]]; }
 function kanjiState(){ if(!state.kanji) state.kanji = {log:{}, date:null}; if(!state.kanji.log) state.kanji.log = {}; return state.kanji; }
-function kanjiCount(){ return Object.keys(kanjiState().log).length; }
+function kanjiForDayNum(n){ return KANJI[KANJI_ORDER[((n % KANJI.length) + KANJI.length) % KANJI.length]]; }
+function kanjiDayKey(n){ var d = new Date(n*86400000); return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0'); }
+/* Every day's Kanji of the Day she has already seen stays in the book, even if she did not tap it that day. */
+function kanjiBackfill(){
+  var ks = kanjiState(), dn = dayNumX(), changed = false, n, k, d, first = null;
+  if(ks.bf == null){
+    for(k in ks.log){ var p = String(ks.log[k]).split('-'); if(p.length === 3){ d = Math.floor(Date.UTC(+p[0], +p[1]-1, +p[2])/86400000); if(first === null || d < first) first = d; } }
+    ks.bf = (first !== null ? first : dn - 1) - 1; changed = true;
+  }
+  var from = Math.max(ks.bf + 1, dn - KANJI.length);
+  for(n = from; n <= dn - 1; n++){
+    k = kanjiForDayNum(n);
+    if(k && !ks.log[k.k]){ ks.log[k.k] = kanjiDayKey(n); (ks.auto = ks.auto || {})[k.k] = 1; changed = true; }
+  }
+  if(ks.bf !== dn - 1){ ks.bf = dn - 1; changed = true; }
+  if(changed) save();
+}
+function kanjiCount(){ try{ kanjiBackfill(); }catch(e){} return Object.keys(kanjiState().log).length; }
 function kjEsc(s){ return esc(s === '-' ? '—' : s); }
 function kanjiPanelHTML(){
   if(state.eco.kanjiOn === false) return '';
@@ -6223,6 +6385,7 @@ function showKanji(k, reward){
   window.__kjCur = k;
 }
 function showKanjiBook(){
+  try{ kanjiBackfill(); }catch(e){}
   var ks = kanjiState(), h = '<div class="kjmodal"><h2 style="margin:0 0 6px">📖 My Kanji Book</h2><div class="hint">'+kanjiCount()+' of '+KANJI.length+' learned. Tap one to see it again.</div><div class="kjgrid">';
   KANJI.forEach(function(k, i){
     var has = !!ks.log[k.k];
@@ -6406,7 +6569,7 @@ function goalPanelHTML(){
     var sun = gDow() === 0;
     h += '<div class="panel gpanel gdeal"><div class="ptitle">🎴 '+(sun ? 'New week, new goal card!' : 'Pick a goal card for this week')+'</div>'+
       '<div class="gsrow">'+kitHTML('cheer','')+'<div class="gsmsg">'+(sun ? 'Kit has 3 goal cards for you. Flip them and choose one!' : 'You have not picked a card yet. Kit has 3 for you!')+'</div></div>'+
-      '<div class="gbacks"><i>?</i><i>?</i><i>?</i></div><button class="btn primary" data-gl="deal">Flip the cards</button></div>';
+      '<div class="gbacks"><i><span class="embkit">'+kitSVG('happy','face')+'</span></i><i><span class="embkit">'+kitSVG('happy','face')+'</span></i><i><span class="embkit">'+kitSVG('happy','face')+'</span></i></div><button class="btn primary" data-gl="deal">Flip the cards</button></div>';
   }
   var a = gActive();
   if(a && !cp){
@@ -6450,7 +6613,7 @@ function drawGoalDeal(){
     h += '<h2>🎴 Choose your goal card</h2><div class="hint" style="text-align:center">Tap a card to flip it. Tap it again to choose it.</div><div class="gdealrow">';
     e.dealt.forEach(function(id, i){
       var c = GBYID[id], fl = !!gSt.flipped[id];
-      h += '<div class="gflip'+(fl ? ' flipped' : '')+(gSt.sel === id ? ' sel' : '')+'" data-gl="flip" data-id="'+id+'"><div class="gin"><div class="gface gback"><b>?</b></div><div class="gface gfront">'+gCardHTML(c, {sel:gSt.sel === id})+'</div></div></div>';
+      h += '<div class="gflip'+(fl ? ' flipped' : '')+(gSt.sel === id ? ' sel' : '')+'" data-gl="flip" data-id="'+id+'"><div class="gin"><div class="gface gback"><span class="embkit">'+kitSVG('happy','face')+'</span></div><div class="gface gfront">'+gCardHTML(c, {sel:gSt.sel === id})+'</div></div></div>';
     });
     h += '</div>';
     var allFlipped = e.dealt.every(function(id){ return gSt.flipped[id]; });
@@ -6684,7 +6847,7 @@ function jwOpen(){
   if(JW.el) return;
   var k = jKey(), e = jEntry(k) || {t:''};
   var d = document.createElement('div'); d.className = 'jw'; d.id = 'jw'; d.setAttribute('data-noicon', '1');
-  d.innerHTML = '<div class="jwbox"><div class="jwbar"><b class="jwt">✏️ '+esc(longDate(k))+'</b><span class="jwcnt" id="jwCnt"></span><button class="btn primary jwdone" type="button" id="jwDone">Done</button></div>'+
+  d.innerHTML = '<div class="jwbox"><div class="jwbar"><b class="jwt">✏️ '+esc(longDate(k))+'</b><span class="jwcnt" id="jwCnt"></span><button class="btn primary jwdone" type="button" id="jwDone">Done</button><button class="mx jwx" type="button" id="jwX" data-mx="1" aria-label="Close">✕</button></div>'+
     '<div class="jwprompt">💡 '+esc(J_PROMPTS[jPromptI % J_PROMPTS.length])+'</div>'+
     '<textarea class="jwtext" id="jwText" maxlength="600" placeholder="Write about your day..." autocomplete="off" autocapitalize="sentences"></textarea></div>';
   document.body.appendChild(d);
@@ -6718,6 +6881,711 @@ document.addEventListener('focusin', function(e){
 document.addEventListener('keydown', function(e){ if(JW.el && e.key === 'Escape') jwClose(); });
 
 
+
+/* ---------- Allowance (Money) ----------
+   A tracker for real cash a parent hands over. Whole cents, a ledger that is never edited (mistakes get a reversing entry).
+   Left jar = her coins (the weekly allowance goes in here). Right jar = what she has spent (this month).
+   She drags a coin from the left jar into the right jar, then says what she spent. Off unless turned on in Parent mode. */
+function bankDef(){ return {v:2, on:false, opened:false, cur:'CAD', weekly:100, payDay:0, splitSave:100, paidThrough:null, paused:false, goal:null, requests:[], ledger:[], mode:'coins', animIdx:0, physics:true}; }
+function bkMigrateOld(b){
+  /* v31 had a Save and a Spend jar. Now: one jar of coins plus a tally of money spent. */
+  var extra = [];
+  b.ledger.forEach(function(e){
+    if(e.jar === 'spend'){
+      if(e.kind === 'spend' && e.cents < 0){
+        e.jar = 'save';
+        extra.push({id:bkId(), ts:e.ts, date:e.date, jar:'spent', cents:-e.cents, kind:'spend', note:e.note, grp:e.grp});
+      } else e.jar = 'save';
+    }
+  });
+  b.ledger = b.ledger.concat(extra);
+  b.animIdx = b.ledger.length;
+}
+function bk(){
+  if(!state.bank || typeof state.bank !== 'object') state.bank = bankDef();
+  var b = state.bank, old = !('v' in b), d = bankDef();
+  if(!Array.isArray(b.ledger)) b.ledger = [];
+  if(!Array.isArray(b.requests)) b.requests = [];
+  if(old){ if(b.opened || b.ledger.length) bkMigrateOld(b); b.splitSave = 100; }
+  for(var k in d){ if(!(k in b)) b[k] = d[k]; }
+  return b;
+}
+function bankOn(){ return !!(state && state.bank && state.bank.on && state.bank.opened); }
+function money(c){ c = Math.round(c); return (c < 0 ? '-' : '') + '$' + (Math.abs(c)/100).toFixed(2); }
+function parseMoney(s){
+  s = String(s == null ? '' : s).replace(/[$,\s]/g, '');
+  if(!/^-?\d*\.?\d+$/.test(s) && !/^-?\d+\.$/.test(s)) return NaN;
+  var v = parseFloat(s); return isNaN(v) ? NaN : Math.round(v*100);
+}
+function keyToDate(k){ var p = String(k).split('-'); return new Date(+p[0], +p[1]-1, +p[2], 12, 0, 0); }
+function dateToKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function addDaysD(d, n){ var x = new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function nextPayDay(d, dow){ var x = addDaysD(d, 1), g = 0; while(x.getDay() !== dow && g++ < 8) x = addDaysD(x, 1); return x; }
+var BK_SEQ = 0;
+function bkId(){ BK_SEQ++; return 'e'+Date.now().toString(36)+BK_SEQ; }
+function bkAdd(jar, cents, kind, note, grp, dateKeyStr, extra){
+  var b = bk(), d = dateKeyStr || dateToKey(new Date());
+  var e = {id:bkId(), ts:keyToDate(d).getTime() + (dateKeyStr ? 0 : (Date.now() % 43200000)), date:d, jar:jar, cents:Math.round(cents), kind:kind, note:note || '', grp:grp || null};
+  if(extra) for(var k in extra) e[k] = extra[k];
+  b.ledger.push(e); return e;
+}
+function bkBal(jar){ var n = 0; bk().ledger.forEach(function(e){ if(!jar || e.jar === jar) n += e.cents; }); return n; }
+function bkMonthKey(){ return dateToKey(new Date()).slice(0, 7); }
+var BK_IN = {allowance:1, gift:1};
+function bkMonthStats(){
+  var mk = bkMonthKey(), rec = 0, sp = 0;
+  bk().ledger.forEach(function(e){
+    if(String(e.date).slice(0, 7) !== mk) return;
+    if(e.jar === 'save' && (BK_IN[e.kind] || (e.kind === 'undo' && BK_IN[e.of]))) rec += e.cents;
+    if(e.jar === 'spent') sp += e.cents;
+  });
+  return {received:rec, spent:sp};
+}
+function bkCredit(dateKeyStr){ var b = bk(); if(b.weekly > 0) bkAdd('save', b.weekly, 'allowance', 'Allowance', bkId(), dateKeyStr); }
+function bankCatchUp(){
+  var b = bk(); if(!b.on || !b.opened || !b.paidThrough) return 0;
+  var today = dateToKey(new Date()), n = 0, guard = 0, moved = false;
+  var cur = nextPayDay(keyToDate(b.paidThrough), b.payDay);
+  while(dateToKey(cur) <= today && guard++ < 400){
+    if(!b.paused){ bkCredit(dateToKey(cur)); n++; }
+    b.paidThrough = dateToKey(cur); moved = true;
+    cur = addDaysD(cur, 7);
+  }
+  if(moved){ save(); }
+  return n;
+}
+function bkOpen(coinsC){
+  var b = bk(), g = bkId();
+  if(coinsC > 0) bkAdd('save', coinsC, 'opening', 'Starting money', g);
+  b.opened = true; b.on = true; b.paidThrough = dateToKey(new Date()); b.mode = 'money'; b.splitSave = 100;
+  save();
+}
+function bkSpend(cents, note, den){
+  var g = bkId();
+  bkAdd('save', -cents, 'spend', note || 'Spent', g);
+  bkAdd('spent', cents, 'spend', note || 'Spent', g, null, den ? {den:den} : null);
+  save();
+}
+function bkUndo(){
+  var b = bk(), i, last = null;
+  for(i = b.ledger.length - 1; i >= 0; i--){ var e = b.ledger[i]; if(e.kind !== 'undo' && !e.undone){ last = e; break; } }
+  if(!last) return false;
+  var grp = last.grp, g2 = bkId(), n = 0;
+  b.ledger.slice().forEach(function(e){
+    if((grp ? e.grp === grp : e.id === last.id) && e.kind !== 'undo' && !e.undone){
+      e.undone = true; bkAdd(e.jar, -e.cents, 'undo', 'Undo: '+(e.note || bkKindLabel(e.kind)), g2, null, {of:e.kind}); n++;
+    }
+  });
+  save(); return n > 0;
+}
+function bkKindLabel(k){ return {opening:'Starting money', allowance:'Allowance', gift:'Gift money', spend:'Spent', correction:'Correction', undo:'Undo'}[k] || k; }
+function bkNextPay(){
+  var b = bk(); if(!b.paidThrough) return null;
+  var nx = nextPayDay(keyToDate(b.paidThrough), b.payDay), t = keyToDate(dateToKey(new Date()));
+  return {date:nx, days:Math.round((nx.getTime() - t.getTime())/86400000)};
+}
+var BK_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var BK_MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function bkShortDate(k){ var d = keyToDate(k); return DAY_NAMES[d.getDay()]+' '+BK_MON[d.getMonth()]+' '+d.getDate(); }
+
+/* ----- coin physics: coins are little circles that fall, bounce and pile up inside the jar glass ----- */
+var BKP = (function(){
+  var R = 4.35, WR = 5.3, G0 = 1000, TAU = Math.PI/2, IT = 6;
+  function cubic(p0, p1, p2, p3, n, out){
+    for(var i = 1; i <= n; i++){
+      var t = i/n, u = 1 - t;
+      out.push([u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]]);
+    }
+  }
+  var POLY = (function(){
+    var p = [[32,22],[88,22],[88,30]], i, a;
+    cubic([88,30], [98,36], [102,45], [102,57], 8, p);
+    p.push([102,127]);
+    for(i = 1; i <= 8; i++){ a = TAU*i/8; p.push([88 + 14*Math.cos(a), 127 + 14*Math.sin(a)]); }
+    for(i = 1; i <= 8; i++){ a = TAU + TAU*i/8; p.push([32 + 14*Math.cos(a), 127 + 14*Math.sin(a)]); }
+    p.push([18,57]);
+    cubic([18,57], [18,45], [22,36], [32,30], 8, p);
+    return p;
+  })();
+  var NE = POLY.length;
+  function inside(x, y){
+    var c = false, i, j, a, b;
+    for(i = 0, j = NE - 1; i < NE; j = i++){
+      a = POLY[i]; b = POLY[j];
+      if(((a[1] > y) !== (b[1] > y)) && (x < (b[0] - a[0])*(y - a[1])/(b[1] - a[1]) + a[0])) c = !c;
+    }
+    return c;
+  }
+  /* nearest point on the glass outline: returns [px, py, dist] */
+  var NP = [0, 0, 0];
+  function nearest(x, y){
+    var best = 1e18, bx = 0, by = 0, i, j, a, b, dx, dy, l2, t, px, py, d;
+    for(i = 0, j = NE - 1; i < NE; j = i++){
+      a = POLY[i]; b = POLY[j]; dx = b[0] - a[0]; dy = b[1] - a[1]; l2 = dx*dx + dy*dy;
+      t = l2 > 0 ? ((x - a[0])*dx + (y - a[1])*dy)/l2 : 0; t = t < 0 ? 0 : (t > 1 ? 1 : t);
+      px = a[0] + t*dx; py = a[1] + t*dy; d = (x - px)*(x - px) + (y - py)*(y - py);
+      if(d < best){ best = d; bx = px; by = py; }
+    }
+    NP[0] = bx; NP[1] = by; NP[2] = Math.sqrt(best); return NP;
+  }
+  var DT = 1/120;
+  function walls(b, hit){
+    if(b.x > 24 && b.x < 96 && b.y > 58 && b.y < 126) return;
+    var np = nearest(b.x, b.y), px = np[0], py = np[1], d = np[2], ins = inside(b.x, b.y), nx, ny, vn, vx, vy;
+    vx = (b.x - b.ox)/DT; vy = (b.y - b.oy)/DT;
+    if(ins){
+      if(d >= WR) return;
+      if(d < 1e-6){ nx = 0; ny = -1; } else { nx = (b.x - px)/d; ny = (b.y - py)/d; }
+      var pen = WR - d; b.x += nx*pen; b.y += ny*pen;
+    } else {
+      /* it slipped out (a very hard shake): put it back just inside */
+      nx = d < 1e-6 ? 0 : (px - b.x)/d; ny = d < 1e-6 ? -1 : (py - b.y)/d;
+      b.x = px + nx*WR; b.y = py + ny*WR; nx = -nx; ny = -ny;
+    }
+    vn = vx*nx + vy*ny;
+    if(vn < -30){ b.bx -= 0.42*vn*nx; b.by -= 0.42*vn*ny; if(hit) hit(-vn); }
+  }
+  function pairs(bs, hit){
+    var n = bs.length, i, j, a, b, dx, dy, d2, d, nx, ny, pen, rv, m = 2*R, m2 = m*m;
+    for(i = 0; i < n; i++){
+      a = bs[i];
+      for(j = i + 1; j < n; j++){
+        b = bs[j]; dx = b.x - a.x; if(dx > m || dx < -m) continue; dy = b.y - a.y; if(dy > m || dy < -m) continue;
+        d2 = dx*dx + dy*dy; if(d2 >= m2) continue;
+        d = Math.sqrt(d2);
+        if(d < 1e-4){ var an = Math.random()*6.283; nx = Math.cos(an); ny = Math.sin(an); d = 0; } else { nx = dx/d; ny = dy/d; }
+        rv = (((b.x - b.ox) - (a.x - a.ox))*nx + ((b.y - b.oy) - (a.y - a.oy))*ny)/DT;
+        pen = (m - d)*0.5; a.x -= nx*pen; a.y -= ny*pen; b.x += nx*pen; b.y += ny*pen;
+        if(rv < -40){ a.bx += 0.19*rv*nx; a.by += 0.19*rv*ny; b.bx -= 0.19*rv*nx; b.by -= 0.19*rv*ny; if(hit) hit(-rv*0.8); }
+      }
+    }
+  }
+  /* one small step of time. gx, gy are in "g" (1 = normal gravity pointing down the screen) */
+  function step(bs, dt, gx, gy, hit){
+    var i, n = bs.length, b, k = G0*dt, damp = 0.9996, it;
+    DT = dt;
+    for(i = 0; i < n; i++){ b = bs[i]; b.ox = b.x; b.oy = b.y; b.bx = 0; b.by = 0; b.vx = (b.vx + gx*k)*damp; b.vy = (b.vy + gy*k)*damp; b.x += b.vx*dt; b.y += b.vy*dt; }
+    for(it = 0; it < IT; it++){ pairs(bs, hit); for(i = 0; i < n; i++) walls(bs[i], hit); }
+    for(i = 0; i < n; i++){
+      b = bs[i]; b.vx = (b.x - b.ox)/dt + b.bx; b.vy = (b.y - b.oy)/dt + b.by;
+      var s2 = b.vx*b.vx + b.vy*b.vy; if(s2 < 36){ b.vx *= 0.6; b.vy *= 0.6; }
+      if(s2 > 640000){ var f = 800/Math.sqrt(s2); b.vx *= f; b.vy *= f; }
+    }
+  }
+  function maxSpeed(bs){ var m = 0, i, s; for(i = 0; i < bs.length; i++){ s = bs[i].vx*bs[i].vx + bs[i].vy*bs[i].vy; if(s > m) m = s; } return Math.sqrt(m); }
+  /* a fresh pile, already settled at the bottom, so nothing moves when the page first opens */
+  function pile(n){
+    var bs = [], i, r = 0, left = 0, cap = 9, x;
+    for(i = 0; i < n; i++){
+      if(left >= cap){ left = 0; r++; cap = (r % 2 === 0) ? 9 : 8; }
+      x = (r % 2 === 0 ? 25.2 : 29.55) + left*8.7; left++;
+      bs.push({x:x, y:135.4 - 7.6*r, vx:0, vy:0, ox:x, oy:135.4 - 7.6*r, bx:0, by:0});
+    }
+    for(i = 0; i < 100; i++) step(bs, 1/120, 0, 1, null);
+    for(i = 0; i < bs.length; i++){ bs[i].vx = bs[i].vy = 0; }
+    return bs;
+  }
+  function spawn(bs){
+    var x0 = 44 + Math.random()*32, b = {x:x0, y:27, ox:x0, oy:27, bx:0, by:0, vx:(Math.random() - .5)*40, vy:90 + Math.random()*60}; bs.push(b); return b;
+  }
+  return {R:R, step:step, pile:pile, spawn:spawn, inside:inside, maxSpeed:maxSpeed, POLY:POLY};
+})();
+
+/* ----- the jars: one coin per dollar, $100 = a full jar ----- */
+var BK_FULL = 100;
+function bkCoinCount(cents){ return cents <= 0 ? 0 : Math.min(BK_FULL, Math.max(1, Math.round(cents/100))); }
+function bkCoinXY(i){
+  var r = 0, left = i, cap;
+  while(true){ cap = (r % 2 === 0) ? 9 : 8; if(left < cap) break; left -= cap; r++; }
+  return {x:(r % 2 === 0 ? 22.6 : 27) + left*8.8, y:129.6 - 7.7*r};
+}
+var BK_JAR_PATH = 'M32 22h56v8c10 6 14 15 14 27v70a14 14 0 0 1-14 14H32a14 14 0 0 1-14-14V57c0-12 4-21 14-27z';
+function bkJarSVG(id, cents, silver){
+  var n = bkCoinCount(cents), g = silver ? 'bkcs' : 'bkcg', i, c, coins = '';
+  if(BKP){ var w = bkPhSync(id, n); coins = w.bs.map(function(b){ return bkCoinG(id, b); }).join(''); }
+  else for(i = 0; i < n; i++){ c = bkCoinXY(i); coins += '<g transform="translate('+c.x.toFixed(1)+' '+c.y.toFixed(1)+')">'+bkCoinInner(id)+'</g>'; }
+  return '<svg viewBox="0 0 120 150" class="bkjar" id="bkjar'+id+'" aria-hidden="true" data-noicon="1"><defs>'+
+    '<radialGradient id="'+g+id+'" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="'+(silver ? '#ffffff' : '#fff3a8')+'"/><stop offset=".55" stop-color="'+(silver ? '#cfd6e4' : '#ffc83d')+'"/><stop offset="1" stop-color="'+(silver ? '#8d99b3' : '#d99200')+'"/></radialGradient>'+
+    '<clipPath id="bkc'+id+'"><path d="'+BK_JAR_PATH+'"/></clipPath></defs>'+
+    '<path d="'+BK_JAR_PATH+'" fill="rgba(160,170,210,.14)"/>'+
+    '<g clip-path="url(#bkc'+id+')" class="bkcoins" id="bkcoins'+id+'">'+coins+'</g>'+
+    '<path d="'+BK_JAR_PATH+'" fill="none" stroke="currentColor" stroke-width="3.2" opacity=".85"/>'+
+    '<path d="M26 66v54" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45"/>'+
+    '<rect x="30" y="6" width="60" height="15" rx="6" fill="currentColor" opacity=".85"/></svg>';
+}
+/* ----- the coin worlds: one per jar. They keep their coins between page redraws. ----- */
+var BKW = {}, BKG = {x:0, y:1, tx:0, ty:1, rx:0, ry:1}, bkRaf = 0, bkLastT = 0, bkCalm = 0, bkSndT = 0, bkHitMax = 0, bkSensorsOn = false, bkJ = null;
+var BK_SVGNS = 'http://www.w3.org/2000/svg';
+function bkPhOn(){ try{ return !!BKP && bk().physics !== false && bkAnim(); }catch(e){ return false; } }
+function bkWorld(id){ return BKW[id] || (BKW[id] = {id:id, bs:[], nodes:[], g:null, timers:[], target:0, init:false, sx:0, sy:0}); }
+function bkCoinInner(id){
+  var silver = id === 'R', g = silver ? 'bkcs' : 'bkcg';
+  return '<circle r="4.4" fill="url(#'+g+id+')" stroke="'+(silver ? '#7c88a6' : '#b27800')+'" stroke-width=".7"/><circle r="2.5" fill="none" stroke="'+(silver ? '#a9b4cc' : '#e7a700')+'" stroke-width=".5"/>';
+}
+function bkCoinG(id, b){ return '<g transform="translate('+b.x.toFixed(2)+' '+b.y.toFixed(2)+')">'+bkCoinInner(id)+'</g>'; }
+/* make the world hold the right number of coins (extra coins pour in after the page is drawn) */
+function bkPhSync(id, n){
+  var w = bkWorld(id); w.target = n;
+  if(!w.init){ w.bs = BKP.pile(n); w.init = true; return w; }
+  if(window.__bkDrop && id === 'L') return w;
+  if(w.bs.length > n){ w.bs.sort(function(a, b){ return a.y - b.y; }); w.bs.splice(0, w.bs.length - n); }
+  return w;
+}
+function bkPhAttach(){
+  var ids = ['L', 'R'];
+  ids.forEach(function(id){
+    var w = BKW[id]; if(!w) return;
+    w.timers.forEach(function(t){ try{ clearTimeout(t); }catch(_){} }); w.timers = [];
+    var g = $('bkcoins'+id); w.g = g || null; w.nodes = [];
+    if(!g || !g.childNodes) return;
+    var add = w.target - w.bs.length;
+    if(add > 0 && !bkPhOn()){
+      w.bs = BKP.pile(w.target); add = 0; g.innerHTML = w.bs.map(function(b){ return bkCoinG(id, b); }).join('');
+    }
+    if(g.childNodes.length !== w.bs.length) g.innerHTML = w.bs.map(function(b){ return bkCoinG(id, b); }).join('');
+    w.nodes = Array.prototype.slice.call(g.childNodes);
+    if(add > 0){
+      var gap = Math.max(40, Math.min(190, 2400/add)), i;
+      for(i = 0; i < add; i++) w.timers.push(setTimeout(function(){ bkPhAdd(id, true); }, 300 + i*gap));
+    }
+  });
+  if(bkPhOn()){ bkSensors(); bkPhWake(); }
+}
+/* a coin drops in through the neck of the jar */
+function bkPhAdd(id, quiet){
+  var w = BKW[id]; if(!w || !w.g || w.g.isConnected === false || !bkPhOn()) return false;
+  var b = BKP.spawn(w.bs), nd = document.createElementNS(BK_SVGNS, 'g');
+  nd.setAttribute('transform', 'translate('+b.x.toFixed(2)+' '+b.y.toFixed(2)+')'); nd.innerHTML = bkCoinInner(id);
+  w.g.appendChild(nd); w.nodes.push(nd);
+  bkPhWake(); return true;
+}
+function bkPhWake(){
+  bkCalm = 0;
+  if(!bkRaf && !document.hidden && bkPhOn()) bkRaf = requestAnimationFrame(bkPhFrame);
+}
+function bkHit(v){ if(v > bkHitMax) bkHitMax = v; }
+function bkPhFrame(ts){
+  bkRaf = 0;
+  if(!bkPhOn()) return;
+  var dt = bkLastT ? Math.min(0.034, (ts - bkLastT)/1000) : 0.016, id, w, i, k, live = false, moving = false, sub = Math.max(2, Math.min(5, Math.ceil(dt/0.0085))), f = Math.min(1, dt*14);
+  bkLastT = ts;
+  BKG.x += (BKG.tx - BKG.x)*f; BKG.y += (BKG.ty - BKG.y)*f;
+  for(id in BKW){
+    w = BKW[id];
+    if(!w.g || w.g.isConnected === false || !w.bs.length || !w.nodes.length) continue;
+    live = true; w.sx *= 0.86; w.sy *= 0.86;
+    var gx = BKG.x + w.sx, gy = BKG.y + w.sy;
+    for(k = 0; k < sub; k++) BKP.step(w.bs, dt/sub, gx, gy, bkHit);
+    for(i = 0; i < w.bs.length && i < w.nodes.length; i++) w.nodes[i].setAttribute('transform', 'translate('+w.bs[i].x.toFixed(2)+' '+w.bs[i].y.toFixed(2)+')');
+    if(BKP.maxSpeed(w.bs) > 6 || Math.abs(w.sx) + Math.abs(w.sy) > 0.05) moving = true;
+  }
+  if(bkHitMax > 35){
+    if(ts - bkSndT > 55 && tab === 'shop'){ bkSndT = ts; try{ Sound.coinTick(Math.min(1, bkHitMax/350)); }catch(_){} }
+    bkHitMax = 0;
+  }
+  if(!live){ bkLastT = 0; return; }
+  if(Math.abs(BKG.x - BKG.rx) + Math.abs(BKG.y - BKG.ry) > 0.03){ BKG.rx = BKG.x; BKG.ry = BKG.y; moving = true; }
+  if(moving) bkCalm = 0; else bkCalm++;
+  if(bkCalm < 40 && !document.hidden) bkRaf = requestAnimationFrame(bkPhFrame); else bkLastT = 0;
+}
+/* ----- tilt and shake: the tablet's motion sensor tells the coins which way is down ----- */
+function bkAngle(){
+  try{ var a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : 0; return ((a % 360) + 360) % 360; }catch(e){ return 0; }
+}
+function bkIsIOS(){ try{ return /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }catch(e){ return false; } }
+function bkGravityFrom(ax, ay, ang){
+  /* ax, ay in g units as Android reports them; returns where "down" is on the screen */
+  var gx, gy;
+  if(ang === 90){ gx = ay; gy = ax; } else if(ang === 180){ gx = ax; gy = -ay; } else if(ang === 270){ gx = -ay; gy = -ax; } else { gx = -ax; gy = ay; }
+  var m = Math.sqrt(gx*gx + gy*gy);
+  if(m > 3.2){ gx *= 3.2/m; gy *= 3.2/m; m = 3.2; }
+  if(m < 0.3){ gy += 0.15*(1 - m/0.3); }
+  return [gx, gy];
+}
+function bkMotion(e){
+  var a = e && e.accelerationIncludingGravity;
+  if(!a || a.x == null || a.y == null || !bkPhOn()) return;
+  window.__bkSensor = true;
+  if(!BKW.L && !BKW.R) return;
+  var live = false, id; for(id in BKW){ if(BKW[id].g && BKW[id].g.isConnected !== false) live = true; }
+  if(!live) return;
+  var sg = bkIsIOS() ? -1 : 1, gv = bkGravityFrom(a.x*sg/9.81, a.y*sg/9.81, bkAngle());
+  if(Math.abs(gv[0] - BKG.tx) + Math.abs(gv[1] - BKG.ty) > 0.02){ BKG.tx = gv[0]; BKG.ty = gv[1]; }
+  if(Math.abs(BKG.tx - BKG.x) + Math.abs(BKG.ty - BKG.y) > 0.05) bkPhWake();
+}
+function bkSensors(){
+  if(bkSensorsOn) return;
+  try{
+    if(typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function' && !window.__bkMotionOK) return;
+    window.addEventListener('devicemotion', bkMotion); bkSensorsOn = true;
+  }catch(e){}
+}
+function bkAskMotion(){
+  try{
+    DeviceMotionEvent.requestPermission().then(function(r){
+      window.__bkMotionAsked = true;
+      if(r === 'granted'){ window.__bkMotionOK = true; bkSensors(); toast('🪙 Tilt or shake to move the coins!', 2600); }
+      else toast('Motion is off. You can still drag a jar.', 2600);
+      render();
+    }).catch(function(){ window.__bkMotionAsked = true; render(); });
+  }catch(e){}
+}
+Sound.coinTick = function(v){
+  v = v == null ? 0.5 : v; var p = 1 + Math.random()*0.35;
+  bkPing(2900*p, 0, .11, .02 + .07*v); bkPing(4400*p, 0, .07, .01 + .04*v);
+  if(v > 0.55) bkPing(1180*p, 0, .2, .05*v);
+};
+/* drag or tap a jar: the coins slosh and hop */
+function bkJarOf(e){
+  var w = e.target && e.target.closest && e.target.closest('.bkjwrap'); if(!w) return null;
+  return w.id === 'bkJarR' ? 'R' : 'L';
+}
+document.addEventListener('pointerdown', function(e){
+  var id = bkJarOf(e); if(!id || !bkPhOn()) return;
+  var w = BKW[id]; if(!w) return;
+  bkJ = {id:id, x:e.clientX, y:e.clientY};
+  w.bs.forEach(function(b){ b.vy -= 90 + Math.random()*120; b.vx += (Math.random() - .5)*90; });
+  bkHitMax = Math.max(bkHitMax, 160); bkPhWake();
+});
+document.addEventListener('pointermove', function(e){
+  if(!bkJ) return;
+  var w = BKW[bkJ.id]; if(!w){ bkJ = null; return; }
+  var dx = e.clientX - bkJ.x, dy = e.clientY - bkJ.y; bkJ.x = e.clientX; bkJ.y = e.clientY;
+  w.sx = Math.max(-3, Math.min(3, w.sx - dx*0.09)); w.sy = Math.max(-3, Math.min(3, w.sy - dy*0.09));
+  bkPhWake();
+});
+function bkJEnd(){ bkJ = null; }
+document.addEventListener('pointerup', bkJEnd); document.addEventListener('pointercancel', bkJEnd);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) bkPhWake(); });
+
+function bkHistoryRows(limit){
+  var b = bk(), rows = [], i, e, last = null;
+  for(i = b.ledger.length - 1; i >= 0; i--){
+    e = b.ledger[i]; if(e.jar !== 'save') continue;
+    last = {grp:e.grp, kind:e.kind, date:e.date, note:e.note, cents:e.cents, parts:[e]};
+    rows.push(last);
+  }
+  rows.sort(function(a, b2){ return a.date < b2.date ? 1 : (a.date > b2.date ? -1 : 0); });
+  return limit ? rows.slice(0, limit) : rows;
+}
+function bkRowHTML(r){
+  var lab = bkKindLabel(r.kind), note = r.note && r.note !== lab && r.note !== 'Spent' ? ' · '+esc(r.note) : '';
+  return '<div class="bkrow"><span class="bkd">'+esc(bkShortDate(r.date))+'</span><span class="bkl"><b>'+esc(lab)+'</b>'+note+'</span><span class="bkamt '+(r.cents < 0 ? 'neg' : 'pos')+'">'+(r.cents > 0 ? '+' : '')+money(r.cents)+'</span></div>';
+}
+function bkPendingDrops(){
+  var b = bk(), sum = 0, i, e;
+  for(i = b.animIdx || 0; i < b.ledger.length; i++){
+    e = b.ledger[i];
+    if(e.jar === 'save' && e.cents > 0 && (e.kind === 'allowance' || e.kind === 'gift' || e.kind === 'opening' || e.kind === 'correction')) sum += e.cents;
+  }
+  return sum;
+}
+function moneyHTML(){
+  var b = bk(), bal = bkBal('save'), ms = bkMonthStats(), h = '';
+  var shown = bal - (window.__bkHide || 0), month = new Date().toLocaleString(undefined, {month:'long'});
+  var km = kitMood();
+  h += '<div class="hero mhero"><div class="herol">'+kitHTML(km.mood, 'hero')+'<div class="mbanner"><div class="mbt">💵 '+esc(month)+'</div><div class="mbrow"><div class="mbs"><small>Received</small><b class="pos">'+money(ms.received)+'</b></div><div class="mbs"><small>Spent</small><b class="spn">'+money(ms.spent)+'</b></div></div><div class="kitsay" id="bkSay">'+(bal > 0 ? 'Let\'s count your coins!' : 'Your jar is waiting for coins!')+'</div></div></div></div>';
+  h += '<div class="bkjars2"><div class="bkjc"><div class="bkjtitle">🪙 My coins</div><div class="bkjwrap" id="bkJarL">'+bkJarSVG('L', shown, false)+'</div><div class="bkjbal" id="bkBalL">'+money(shown)+'</div>';
+  h += '<button class="bkcoin" id="bkCoin" type="button" aria-label="Drag a coin to the other jar to spend money" data-noicon="1"'+(bal > 0 ? '' : ' disabled')+'><span>$1</span></button><div class="bkarrow" aria-hidden="true">➜</div></div>';
+  h += '<div class="bkjc"><div class="bkjtitle">🛍️ Spent</div><div class="bkjwrap" id="bkJarR">'+bkJarSVG('R', ms.spent, true)+'</div><div class="bkjbal" id="bkBalR">'+money(ms.spent)+'</div><div class="bkjsub">in '+esc(month)+'</div></div></div>';
+  if(bkPhOn()){ h += '<div class="bkhelp2">Tilt or shake the tablet, or drag a jar, and the coins slide around!'+((typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function' && !window.__bkMotionOK) ? ' <button class="btn small" data-bk="motion" type="button">🪙 Let the coins move</button>' : '')+'</div>'; }
+  h += '<div class="bkhelp">'+(bal > 0 ? 'Spent some money? <b>Drag a coin</b> from your jar into the Spent jar, or tap the coin.' : 'Your jar is empty. Allowance arrives soon!')+'</div>';
+  h += '<div class="row" style="justify-content:center;margin:4px 0 12px"><button class="btn good" data-bk="spend"'+(bal > 0 ? '' : ' disabled')+'>🪙 I spent money</button></div>';
+  var nx = bkNextPay();
+  if(b.paused) h += '<div class="bknext">⏸ Allowance is paused for now.</div>';
+  else if(nx) h += '<div class="bknext">🗓️ Next allowance: <b>'+BK_DAYS[nx.date.getDay()]+' '+BK_MON[nx.date.getMonth()]+' '+nx.date.getDate()+'</b> · '+money(b.weekly)+' ('+(nx.days <= 1 ? 'tomorrow!' : nx.days+' more sleeps')+')</div>';
+  if(b.goal && b.goal.price > 0){
+    var pct = Math.min(100, Math.round(bal/b.goal.price*100)), left = Math.max(0, b.goal.price - bal), wk = b.weekly;
+    h += '<div class="panel bkgoal"><div class="qlabel">📌 Saving for</div><b>'+esc(b.goal.name || 'My goal')+'</b> <span class="bkgp">'+money(b.goal.price)+'</span><div class="rbar thick"><i style="width:'+pct+'%"></i></div>';
+    h += '<div class="bkgs">'+(left <= 0 ? '🎉 You have enough! Ask a parent.' : money(bal)+' saved · '+money(left)+' to go'+(wk > 0 ? ' · about '+Math.ceil(left/wk)+' more weeks at '+money(wk)+' a week' : ''))+'</div></div>';
+  }
+  var rows = bkHistoryRows(window.__bkAll ? 0 : 10);
+  h += '<div class="sec"><h2>🧾 My money history</h2></div><div class="panel bkhist">';
+  h += rows.length ? rows.map(bkRowHTML).join('') : '<div class="hint">Nothing yet.</div>';
+  h += '</div>';
+  if(bkHistoryRows(0).length > 10) h += '<div class="row" style="margin-top:8px"><button class="btn small" data-bk="more">'+(window.__bkAll ? 'Show less' : 'Show all')+'</button></div>';
+  return h;
+}
+function renderShop(){
+  renderShopCoins();
+  try{
+    if(!bankOn()) return;
+    bankCatchUp();
+    var b = bk(), v = $('view-shop'), mode = b.mode === 'money' ? 'money' : 'coins';
+    var seg = '<div class="mseg"><button data-bk="mode:coins" class="'+(mode === 'coins' ? 'on' : '')+'">⭐ Star Coins</button><button data-bk="mode:money" class="'+(mode === 'money' ? 'on' : '')+'">💵 Money</button></div>';
+    var pend = (mode === 'money' && tab === 'shop' && !window.__bkDrop) ? bkPendingDrops() : 0;
+    if(pend > 0) window.__bkHide = pend;
+    v.innerHTML = seg + (mode === 'money' ? moneyHTML() : v.innerHTML);
+    if(mode === 'money') bkPhAttach();
+    if(pend > 0) setTimeout(function(){ bkPlayDrops(pend); }, 500);
+  }catch(e){ try{ console.error('money view', e); }catch(_){} }
+}
+
+/* ----- sounds: a coin clinking on glass ----- */
+function bkPing(f, start, dur, vol){
+  var c = audio(); if(!c || state.mute) return;
+  var t0 = c.currentTime + start, o = c.createOscillator(), g = c.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(f, t0);
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(sfxOut || c.destination); o.start(t0); o.stop(t0 + dur + 0.05);
+}
+Sound.clink = function(v){
+  v = v == null ? 1 : v; var p = 1 + Math.random()*0.09;
+  bkPing(3150*p, 0, .30, .20*v); bkPing(4870*p, 0, .20, .11*v); bkPing(6520*p, 0, .11, .06*v); bkPing(1180*p, 0, .38, .10*v);
+  bkPing(2380*p, .075, .22, .09*v); bkPing(3720*p, .08, .13, .06*v);
+};
+
+/* ----- the animated coin: tap to fly, or drag it into the Spent jar ----- */
+function bkAnim(){ try{ return kitAnimOK(); }catch(e){ return true; } }
+function bkCoinEl(){
+  var c = document.createElement('div'); c.className = 'bkfly'; c.setAttribute('data-noicon', '1'); c.innerHTML = '<span>$1</span>';
+  document.body.appendChild(c); return c;
+}
+function bkPlaceCoin(c, x, y, rot){ c.style.transform = 'translate('+(x-27)+'px,'+(y-27)+'px) rotate('+(rot||0)+'deg)'; }
+function bkTarget(){
+  var r = $('bkJarR') ? $('bkJarR').getBoundingClientRect() : null;
+  return r && r.width ? {x:r.left + r.width/2, y:r.top + r.height*0.16, rect:r} : null;
+}
+function bkFly(el, x0, y0, x1, y1, ms, done){
+  var cx = (x0 + x1)/2, cy = Math.min(y0, y1) - 90, t0 = null;
+  function step(ts){
+    if(t0 === null) t0 = ts;
+    var t = Math.min(1, (ts - t0)/ms), e = t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2)/2;
+    var x = (1-e)*(1-e)*x0 + 2*(1-e)*e*cx + e*e*x1, y = (1-e)*(1-e)*y0 + 2*(1-e)*e*cy + e*e*y1;
+    bkPlaceCoin(el, x, y, e*540);
+    if(t < 1) requestAnimationFrame(step); else done();
+  }
+  requestAnimationFrame(step);
+}
+function bkLand(el){
+  try{ if(el && el.parentNode) el.parentNode.removeChild(el); }catch(_){}
+  Sound.clink(1);
+  var jr = $('bkJarR'); if(jr){ jr.classList.remove('bkshake'); void jr.offsetWidth; jr.classList.add('bkshake'); }
+  setTimeout(bkSpendModal, 420);
+}
+function bkStartSpend(){
+  if(window.__bkBusy) return;
+  if(bkBal('save') <= 0){ toast('Your jar is empty right now.', 2200); return; }
+  var coin = $('bkCoin'), tg = bkTarget();
+  if(!coin || !tg || !bkAnim()){ Sound.clink(1); setTimeout(bkSpendModal, 250); return; }
+  window.__bkBusy = true;
+  var r = coin.getBoundingClientRect(), x0 = r.left + r.width/2, y0 = r.top + r.height/2, el = bkCoinEl();
+  bkPlaceCoin(el, x0, y0, 0); coin.classList.add('away');
+  bkFly(el, x0, y0, tg.x, tg.y, 780, function(){ window.__bkBusy = false; coin.classList.remove('away'); bkLand(el); });
+}
+var BKD = null;
+document.addEventListener('pointerdown', function(e){
+  var c = e.target.closest && e.target.closest('#bkCoin'); if(!c || c.disabled || window.__bkBusy) return;
+  BKD = {x:e.clientX, y:e.clientY, el:null, moved:false, id:e.pointerId};
+  try{ c.setPointerCapture(e.pointerId); }catch(_){}
+});
+document.addEventListener('pointermove', function(e){
+  if(!BKD) return;
+  var dx = e.clientX - BKD.x, dy = e.clientY - BKD.y;
+  if(!BKD.moved && Math.sqrt(dx*dx + dy*dy) > 10){ BKD.moved = true; BKD.el = bkCoinEl(); var cc = $('bkCoin'); if(cc) cc.classList.add('away'); }
+  if(BKD.moved && BKD.el){ bkPlaceCoin(BKD.el, e.clientX, e.clientY, (e.clientX - BKD.x)*0.6); e.preventDefault(); }
+}, {passive:false});
+function bkDragEnd(e, cancel){
+  if(!BKD) return;
+  var d = BKD; BKD = null; var cc = $('bkCoin');
+  if(!d.moved){ if(!cancel) bkStartSpend(); return; }
+  var tg = bkTarget(), over = false;
+  if(tg && !cancel){ var r = tg.rect, m = 28; over = e.clientX > r.left - m && e.clientX < r.right + m && e.clientY > r.top - m && e.clientY < r.bottom + m; }
+  if(over){
+    window.__bkBusy = true;
+    bkFly(d.el, e.clientX, e.clientY, tg.x, tg.y, 220, function(){ window.__bkBusy = false; if(cc) cc.classList.remove('away'); bkLand(d.el); });
+  } else {
+    var back = cc ? cc.getBoundingClientRect() : null;
+    if(back){ bkFly(d.el, e.clientX, e.clientY, back.left + back.width/2, back.top + back.height/2, 260, function(){ try{ d.el.parentNode.removeChild(d.el); }catch(_){} if(cc) cc.classList.remove('away'); }); }
+    else try{ d.el.parentNode.removeChild(d.el); }catch(_){}
+  }
+}
+document.addEventListener('pointerup', function(e){ bkDragEnd(e, false); });
+document.addEventListener('pointercancel', function(e){ bkDragEnd(e, true); });
+
+/* ----- coins fall into the left jar, once per amount added ----- */
+function bkPlayDrops(sum){
+  if(window.__bkDrop) return;
+  var b = bk(); b.animIdx = b.ledger.length; save();
+  var after = bkBal('save'), before = after - sum, jar = $('bkjarL'), kit = document.querySelector('.mhero .kit');
+  function finish(){
+    window.__bkDrop = false; window.__bkHide = 0;
+    if(kit) kit.classList.remove('eyes-lit');
+    var say = $('bkSay'); if(say) say.textContent = 'Yay! New coins! ✨';
+    var bl = $('bkBalL'); if(bl) bl.textContent = money(after);
+    if(tab === 'shop') render();
+  }
+  if(!jar || !bkAnim()){ finish(); return; }
+  window.__bkDrop = true;
+  if(kit) kit.classList.add('eyes-lit');
+  var say0 = $('bkSay'); if(say0) say0.textContent = 'Ooh, new coins! ✨';
+  var n = Math.max(1, Math.min(14, Math.round(sum/100))), r = jar.getBoundingClientRect(), s = r.width/120, base = bkCoinCount(before), i;
+  var done = 0, gm = $('bkcoinsL');
+  for(i = 0; i < n; i++){ (function(i){
+    setTimeout(function(){
+      var el = document.createElement('div');
+      el.className = 'bkfall'; el.setAttribute('data-noicon', '1'); el.style.width = el.style.height = (8.8*s)+'px';
+      var tx = r.left + (44 + Math.random()*32)*s, ty = r.top + 27*s, sx = tx + (Math.random()*16 - 8);
+      el.style.transform = 'translate('+(sx - 4.4*s)+'px,'+(r.top - 90)+'px)'; document.body.appendChild(el);
+      var t0 = null, dur = 520;
+      function step(ts){
+        if(t0 === null) t0 = ts;
+        var t = Math.min(1, (ts - t0)/dur), y = (r.top - 90) + (ty - (r.top - 90))*t*t, x = sx + (tx - sx)*t;
+        el.style.transform = 'translate('+(x - 4.4*s)+'px,'+(y - 4.4*s)+'px)';
+        if(t < 1){ requestAnimationFrame(step); return; }
+        try{ el.parentNode.removeChild(el); }catch(_){}
+        Sound.clink(.55 + Math.random()*.4);
+        try{ bkPhAdd('L', false); }catch(_){}
+        done++; if(done === n) setTimeout(finish, 1100);
+      }
+      requestAnimationFrame(step);
+    }, 200 + i*190);
+  })(i); }
+}
+
+/* ----- the spend window: bills and coins that add up ----- */
+var BK_DEN = [
+  {c:2000, k:'b', t:'$20', n:'$20 bill'}, {c:1000, k:'b', t:'$10', n:'$10 bill'}, {c:500, k:'b', t:'$5', n:'$5 bill'},
+  {c:200, k:'toonie', t:'$2', n:'toonie', s:42}, {c:100, k:'loonie', t:'$1', n:'loonie', s:39}, {c:25, k:'quarter', t:'25¢', n:'quarter', s:35},
+  {c:10, k:'dime', t:'10¢', n:'dime', s:27}, {c:5, k:'nickel', t:'5¢', n:'nickel', s:32}, {c:1, k:'penny', t:'1¢', n:'penny', s:29}
+];
+var bkDenCnt = {};
+function bkGreedy(c){
+  var o = {}; BK_DEN.forEach(function(d){ var n = Math.floor(c/d.c); o[d.c] = n; c -= n*d.c; }); return o;
+}
+function bkDenSum(){ var s = 0; BK_DEN.forEach(function(d){ s += (bkDenCnt[d.c] || 0)*d.c; }); return s; }
+function bkDenArt(d){
+  if(d.k === 'b') return '<span class="bkbill b'+d.c+'" data-noicon="1">'+d.t+'</span>';
+  return '<span class="bkcn '+d.k+'" data-noicon="1" style="width:'+d.s+'px;height:'+d.s+'px">'+d.t+'</span>';
+}
+function bkDenSync(fromInput){
+  BK_DEN.forEach(function(d){ var el = $('bkdn'+d.c); if(el) el.textContent = bkDenCnt[d.c] || 0; var t = $('bkdt'+d.c); if(t) t.classList.toggle('has', (bkDenCnt[d.c] || 0) > 0); });
+  if(!fromInput){ var s = bkDenSum(), inp = $('bkAmt'); if(inp) inp.value = s > 0 ? (s/100).toFixed(2) : ''; }
+}
+function bkSpendModal(){
+  bkDenCnt = {}; BK_DEN.forEach(function(d){ bkDenCnt[d.c] = 0; });
+  var bal = bkBal('save');
+  var h = '<div class="gmodal bkm bkspend"><h2>🪙 What did you spend?</h2><p style="font-weight:700;margin-bottom:8px">You have <b>'+money(bal)+'</b> in your jar. Type how much, or tap the bills and coins you used.</p>';
+  h += '<div class="fld"><label>How much did you spend? ($)</label><input type="text" id="bkAmt" inputmode="decimal" placeholder="0.00" autocomplete="off"></div>';
+  h += '<div class="bkden">';
+  BK_DEN.forEach(function(d){
+    h += '<div class="bkdt" id="bkdt'+d.c+'"><button type="button" class="bkdimg" data-den="'+d.c+'" data-dd="1" aria-label="Add a '+d.n+'">'+bkDenArt(d)+'</button>'+
+      '<div class="bkdctl"><button type="button" data-den="'+d.c+'" data-dd="-1" aria-label="Take away a '+d.n+'">−</button><b id="bkdn'+d.c+'">0</b><button type="button" data-den="'+d.c+'" data-dd="1" aria-label="Add a '+d.n+'">+</button></div></div>';
+  });
+  h += '</div><div class="fld"><label>What for? (you can skip this)</label><input type="text" id="bkWhy" maxlength="60" placeholder="A sticker book" autocomplete="off"></div><div class="hint" id="bkMsg"></div>';
+  h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Cancel</button><button class="btn primary" data-bk="dospend">✔ I spent it</button></div></div>';
+  gOpen(h);
+}
+document.addEventListener('input', function(e){
+  var t = e.target; if(!t || t.id !== 'bkAmt') return;
+  var v = String(t.value).trim();
+  if(v === ''){ bkDenCnt = {}; BK_DEN.forEach(function(d){ bkDenCnt[d.c] = 0; }); bkDenSync(true); return; }
+  var c = parseMoney(v);
+  if(isNaN(c) || c < 0 || c > 99999) return;
+  bkDenCnt = bkGreedy(c); bkDenSync(true);
+});
+function bkDoSpend(){
+  var msg = function(t){ var m = $('bkMsg'); if(m) m.textContent = t; try{ Sound.error(); }catch(_){} };
+  var c = parseMoney($('bkAmt').value), why = ($('bkWhy').value || '').trim();
+  if(isNaN(c) || c <= 0){ msg('Please type how much you spent, like 3.00, or tap the bills and coins.'); return; }
+  var bal = bkBal('save');
+  if(c > bal){ msg('That is more than the '+money(bal)+' in your jar. Please check the amount.'); return; }
+  var den = {}; BK_DEN.forEach(function(d){ if(bkDenCnt[d.c]) den[d.c] = bkDenCnt[d.c]; });
+  bkSpend(c, why || 'Spent', den);
+  closeModal(); $('modal').onclick = null; render();
+  Sound.chime(); toast('✅ Saved! You spent '+money(c), 2800);
+}
+
+/* ----- Parent: set up, add money, record, settings ----- */
+function showBankParent(){
+  var b = bk(), h = '<div class="gmodal bkm"><h2>💵 Allowance money</h2>';
+  if(!b.opened){
+    h += '<p style="font-weight:700;line-height:1.5">Track the weekly allowance on this device. The allowance goes into her jar of coins, and she records what she spends. Tell me how much is in the jar right now.</p>';
+    h += '<div class="fld"><label>Money in the jar today ($)</label><input type="text" id="bkOpenSave" inputmode="decimal" value="0.00"></div>';
+    h += '<div class="fld"><label>Weekly allowance ($)</label><input type="text" id="bkWeekly" inputmode="decimal" value="'+(b.weekly/100).toFixed(2)+'"></div>';
+    h += '<div class="fld"><label>Added every</label>'+bkSel('bkDow', BK_DAYS.map(function(d, i){ return [i, d]; }))+'</div><div class="hint" id="bkMsg">Tip: turn this on only on the device that will keep the money (her tablet).</div>';
+    h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-bk="pback">Back</button><button class="btn primary" data-bk="popen">Start tracking</button></div></div>';
+    gOpen(h);
+    var dw = $('bkDow'); if(dw) dw.value = String(b.payDay);
+    return;
+  }
+  var bal = bkBal('save'), ms = bkMonthStats();
+  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" data-bkset="on" '+(b.on ? 'checked' : '')+'><span></span></span> Show Money on this device</label>';
+  h += '<div class="bkparent"><b>'+money(bal)+'</b> in the jar · received '+money(ms.received)+' and spent '+money(ms.spent)+' this month</div>';
+  h += '<h3>➕ Add an entry</h3>';
+  h += '<div class="fld"><label>Type</label>'+bkSel('bkType', [['gift','Gift money (adds to the jar)'],['spend','Record a spend'],['corr','Correction (+ or -)']])+'</div>';
+  h += '<div class="fld"><label>Amount ($)</label><input type="text" id="bkAmtP" inputmode="decimal" placeholder="5.00"></div>';
+  h += '<div class="fld"><label>Note</label><input type="text" id="bkNote" maxlength="60" placeholder="Lunar New Year red envelope"></div><div class="hint" id="bkMsg"></div>';
+  h += '<div class="row"><button class="btn good" data-bk="padd">Add entry</button><button class="btn small" data-bk="pundo">↩️ Undo last entry</button></div>';
+  h += '<h3>⚙️ Settings</h3>';
+  h += '<div class="fld"><label>Weekly allowance ($)</label><input type="text" id="bkWeekly" inputmode="decimal" value="'+(b.weekly/100).toFixed(2)+'"></div>';
+  h += '<div class="fld"><label>Added every</label>'+bkSel('bkDow', BK_DAYS.map(function(d, i){ return [i, d]; }))+'</div>';
+  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="bkPhys" '+(b.physics !== false ? 'checked' : '')+'><span></span></span> Coins slide around when the tablet is tilted or shaken</label>';
+  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="bkPause" '+(b.paused ? 'checked' : '')+'><span></span></span> Pause the allowance (weeks while paused are skipped)</label>';
+  h += '<div class="fld"><label>Saving goal name</label><input type="text" id="bkGoalName" maxlength="40" value="'+esc(b.goal ? b.goal.name : '')+'" placeholder="Lego set"></div>';
+  h += '<div class="fld"><label>Saving goal price ($, blank for none)</label><input type="text" id="bkGoalPrice" inputmode="decimal" value="'+(b.goal && b.goal.price ? (b.goal.price/100).toFixed(2) : '')+'"></div>';
+  h += '<div class="row"><button class="btn primary" data-bk="psave">Save settings</button></div>';
+  h += '<h3>🧾 Recent entries</h3><div class="bkhist">'+(bkHistoryRows(10).map(bkRowHTML).join('') || '<div class="hint">Nothing yet.</div>')+'</div>';
+  h += '<div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" data-bk="pback">Back to Parent</button><button class="btn primary" data-x="1">Done</button></div></div>';
+  gOpen(h);
+  var dw2 = $('bkDow'); if(dw2) dw2.value = String(b.payDay);
+}
+function bkSel(id, opts){ return '<select id="'+id+'">'+opts.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('')+'</select>'; }
+function bkMsgSet(t, bad){ var m = $('bkMsg'); if(m){ m.textContent = t; } if(bad){ try{ Sound.error(); }catch(_){} } }
+document.addEventListener('click', function(e){
+  var dn = e.target.closest && e.target.closest('[data-den]');
+  if(dn){
+    var key = +dn.getAttribute('data-den'), dd = +dn.getAttribute('data-dd');
+    var cur = bkDenCnt[key] || 0, nx = Math.max(0, Math.min(99, cur + dd));
+    if(nx !== cur){ bkDenCnt[key] = nx; if(dd > 0){ if(key >= 500) Sound.tap(); else Sound.clink(.5); } bkDenSync(false); }
+    return;
+  }
+  var t = e.target.closest && e.target.closest('[data-bk],[data-bkp]'); if(!t) return;
+  if(t.hasAttribute('data-bkp')){ try{ Sound.tap(); }catch(_){} showBankParent(); return; }
+  var a = t.getAttribute('data-bk'), b = bk();
+  if(a.indexOf('mode:') === 0){ b.mode = a.slice(5); save(); Sound.tap(); render(); return; }
+  if(a === 'more'){ window.__bkAll = !window.__bkAll; render(); return; }
+  if(a === 'spend'){ bkStartSpend(); return; }
+  if(a === 'motion'){ bkAskMotion(); return; }
+  if(a === 'dospend'){ bkDoSpend(); return; }
+  if(!parentUnlocked){ toast('🔒 Parent only', 1800); return; }
+  if(a === 'pback'){ showParent(); return; }
+  if(a === 'popen'){
+    var sc = parseMoney($('bkOpenSave').value), wk = parseMoney($('bkWeekly').value);
+    if(isNaN(sc) || sc < 0){ bkMsgSet('Please type an amount like 5.00', true); return; }
+    if(isNaN(wk) || wk < 0 || wk > 100000){ bkMsgSet('Please type the weekly allowance like 1.00', true); return; }
+    b.weekly = wk; b.payDay = +$('bkDow').value || 0;
+    bkOpen(sc); render(); toast('💵 Money is on. First allowance: '+bkShortDate(dateToKey(nextPayDay(new Date(), b.payDay))), 4200); showBankParent(); return;
+  }
+  if(a === 'pundo'){ if(bkUndo()){ render(); toast('↩️ Undone', 1800); } else toast('Nothing to undo', 1800); showBankParent(); return; }
+  if(a === 'padd'){
+    var type = $('bkType').value, c = parseMoney($('bkAmtP').value), note = $('bkNote').value.trim();
+    if(isNaN(c) || c === 0 || (type !== 'corr' && c < 0)){ bkMsgSet('Please type an amount like 5.00', true); return; }
+    if(type === 'gift'){ bkAdd('save', c, 'gift', note || 'Gift money', bkId()); }
+    else if(type === 'spend'){
+      if(c > bkBal('save')){ bkMsgSet('The jar only has '+money(bkBal('save'))+'.', true); return; }
+      bkSpend(c, note || 'Spent', null);
+    } else {
+      if(bkBal('save') + c < 0){ bkMsgSet('That would make the jar negative.', true); return; }
+      bkAdd('save', c, 'correction', note || 'Correction', bkId());
+    }
+    save(); render(); toast('✅ Added', 1600); showBankParent(); return;
+  }
+  if(a === 'psave'){
+    var w2 = parseMoney($('bkWeekly').value);
+    if(isNaN(w2) || w2 < 0 || w2 > 100000){ bkMsgSet('Please type the weekly allowance like 1.00', true); return; }
+    b.weekly = w2; b.payDay = +$('bkDow').value || 0; b.paused = $('bkPause').checked; if($('bkPhys')) b.physics = !!$('bkPhys').checked;
+    var gp = parseMoney($('bkGoalPrice').value), gn = $('bkGoalName').value.trim();
+    b.goal = (!isNaN(gp) && gp > 0) ? {name:gn || 'My goal', price:gp} : null;
+    save(); render(); toast('Saved ✔', 1600); showBankParent(); return;
+  }
+});
+document.addEventListener('change', function(e){
+  var t = e.target; if(!t || !t.getAttribute) return;
+  if(t.getAttribute('data-bkset') === 'on' && parentUnlocked){ var b = bk(); b.on = !!t.checked; save(); render(); toast(b.on ? 'Money is shown on this device.' : 'Money is hidden on this device.', 2400); }
+});
+
+try{ bankCatchUp(); }catch(e){}
 /* everything is defined now: draw the page once more so late modules (goal cards etc.) show up */
 try{ render(); }catch(e){ try{ console.error('final render', e); }catch(_){} }
 })();
