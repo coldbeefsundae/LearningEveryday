@@ -33,6 +33,27 @@ jobs:
               s = s.replace('<application', q + '\n    <application', 1)
           open(p, 'w').write(s)
           PY
+      - name: Use the Kit icon
+        run: |
+          pip install pillow
+          python3 - <<'PY'
+          from PIL import Image
+          import os
+          res = 'android/app/src/main/res'
+          dens = {'mdpi': (48, 108), 'hdpi': (72, 162), 'xhdpi': (96, 216), 'xxhdpi': (144, 324), 'xxxhdpi': (192, 432)}
+          for d, (ic, fg) in dens.items():
+              p = res + '/mipmap-' + d
+              os.makedirs(p, exist_ok=True)
+              Image.open('kit-legacy.png').convert('RGBA').resize((ic, ic), Image.LANCZOS).save(p + '/ic_launcher.png')
+              Image.open('kit-round.png').convert('RGBA').resize((ic, ic), Image.LANCZOS).save(p + '/ic_launcher_round.png')
+              Image.open('kit-fg.png').convert('RGBA').resize((fg, fg), Image.LANCZOS).save(p + '/ic_launcher_foreground.png')
+          os.makedirs(res + '/mipmap-anydpi-v26', exist_ok=True)
+          xml = '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n  <background android:drawable="@color/ic_launcher_background"/>\n  <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n</adaptive-icon>\n'
+          for n in ('ic_launcher.xml', 'ic_launcher_round.xml'):
+              open(res + '/mipmap-anydpi-v26/' + n, 'w').write(xml)
+          os.makedirs(res + '/values', exist_ok=True)
+          open(res + '/values/ic_launcher_background.xml', 'w').write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n  <color name="ic_launcher_background">#7864F0</color>\n</resources>\n')
+          PY
       - name: Build the debug APK
         run: |
           cd android
