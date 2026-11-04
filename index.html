@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v38', errs = [], shown = false;
+  var V = 'v39', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -708,6 +708,38 @@ body[data-calm=on] .kit *{animation:none!important}
 .kjgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px;margin-top:10px;max-height:52vh;overflow:auto}
 .kjcell{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;font:700 26px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;background:rgba(128,128,128,.12);color:rgba(128,128,128,.5);border:0}
 .kjcell.on{background:rgba(108,92,231,.16);color:inherit;cursor:pointer}
+/* ---- v39: kanji combos ---- */
+.kfch{grid-column:1/-1;font-weight:900;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.6;margin-top:6px}
+.kcbslots{display:flex;gap:14px;justify-content:center;margin:6px 0 14px}
+.kcbslot{width:104px;height:104px;border:3px dashed rgba(128,128,128,.5);border-radius:20px;display:flex;align-items:center;justify-content:center;font:700 64px/1 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",Meiryo,sans-serif;background:rgba(108,92,231,.06);touch-action:none}
+.kcbslot.full{border-style:solid;border-color:var(--brand,#6c5ce7);background:rgba(108,92,231,.14)}
+.kcbslot.ok{border-color:#46c27b;background:rgba(70,194,123,.2)}
+.kcbslot.bad{border-color:#e17055;background:rgba(225,112,85,.18)}
+.kcbslots.shake{animation:kcbshake .5s}
+@keyframes kcbshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.kcbtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto}
+.kcbtile{height:88px;border:3px solid rgba(128,128,128,.35);border-radius:18px;display:flex;align-items:center;justify-content:center;font:700 52px/1 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",Meiryo,sans-serif;cursor:grab;background:rgba(255,255,255,.06);touch-action:none;user-select:none;-webkit-user-select:none}
+.kcbtile.used{opacity:.18;pointer-events:none}
+.kcbtile.hint{border-color:#f0b429;box-shadow:0 0 0 4px rgba(240,180,41,.35)}
+.kcbghost{position:fixed;z-index:9999;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:18px;background:var(--brand,#6c5ce7);color:#fff;display:flex;align-items:center;justify-content:center;font:700 52px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;pointer-events:none;box-shadow:0 10px 26px rgba(0,0,0,.35);opacity:.92}
+.kcbword{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;justify-content:center;margin-top:10px;padding:10px 12px;border-radius:16px;background:rgba(70,194,123,.12)}
+.kcbw{font:700 34px/1.2 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif}
+.kcbr{font-size:18px;font-weight:700;opacity:.85}
+.kcbm{font-size:15px;opacity:.75}
+.kcbshow{font:700 76px/1.15 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",Meiryo,sans-serif;color:var(--brand,#6c5ce7);margin:4px 0}
+.kcbropts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kcbropt{font:700 26px/1.2 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;border:3px solid rgba(128,128,128,.3);background:transparent;color:inherit;border-radius:18px;padding:16px 6px;cursor:pointer}
+.kcbropt.ok{border-color:#46c27b;background:rgba(70,194,123,.18)}
+.kcbropt.no{border-color:#e17055;background:rgba(225,112,85,.15)}
+.kcbropt.dim{opacity:.4}
+.kcbchips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.kcbchip{font:700 22px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;border:2px solid rgba(128,128,128,.3);background:transparent;color:inherit;border-radius:12px;padding:6px 10px;cursor:pointer}
+.kcbchip.on{border-color:var(--brand,#6c5ce7);background:rgba(108,92,231,.18)}
+.kcbbig{font:700 40px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;color:var(--brand,#6c5ce7)}
+.kcbfam{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto}
+.kcbfw{display:flex;align-items:baseline;gap:6px 12px;flex-wrap:wrap;padding:8px 10px;border:2px solid rgba(128,128,128,.22);border-radius:14px}
+.kcbfw .kcbm{flex:1;min-width:120px}
+
 /* ---- v38: writing practice ---- */
 .kw{position:fixed;inset:0;z-index:450;background:#f3eee0;color:#2b2b3a;display:flex;flex-direction:column;overscroll-behavior:none;-webkit-user-select:none;user-select:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .kwtop{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fffaf0;border-bottom:2px solid #e6dcc3}
@@ -6489,7 +6521,7 @@ function showKanji(k, reward){
   h += '<div class="kjlink">🔗 <span lang="ja">'+k.k+'</span> means “'+esc(k.m.split(',')[0])+'”. Today’s English word is a good one to use for it!</div></div>';
   if(reward) h += '<div class="rpts" style="display:block;text-align:center;margin-top:10px">⭐ +'+reward+' point'+(reward === 1 ? '' : 's')+' for learning!</div>';
   h += '<div class="hint" style="text-align:center;margin-top:8px">📖 '+kanjiCount()+' of '+KANJI.length+' kanji learned</div>';
-  h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button><button class="btn" data-kw-open="'+k.k+'">✍️ Write it</button><button class="btn" data-kfc="open">🃏 Cards</button><button class="btn primary" data-kjbook="1">📖 Kanji book</button></div></div>';
+  h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button><button class="btn" data-kw-open="'+k.k+'">✍️ Write it</button><button class="btn" data-kcb="fam:'+k.k+'">🔗 Words</button><button class="btn" data-kfc="open">🃏 Cards</button><button class="btn primary" data-kjbook="1">📖 Kanji book</button></div></div>';
   openModal(h);
   window.__kjCur = k;
 }
@@ -6556,7 +6588,7 @@ function klookOf(ch){ for(var i = 0; i < KLOOK.length; i++){ if(KLOOK[i].a.index
 /* ---- state: position, weak spots, test log ---- */
 function hz(){ var ks = kanjiState(); if(!ks.hz) ks.hz = {on:true, vol:'下', page:16}; return ks.hz; }
 function kwk(){ var ks = kanjiState(); if(!ks.wk) ks.wk = {}; return ks.wk; }
-function kjWeight(ch){ var e = kwk()[ch]; if(!e) return 1; return 1 + 3*Math.min(e.m || 0, 3) + Math.max(0, (e.a || 0) - 0.7*(e.g || 0)) + 0.7*Math.min(e.nw || 0, 3); }
+function kjWeight(ch){ var e = kwk()[ch]; if(!e) return 1; return 1 + 3*Math.min(e.m || 0, 3) + Math.max(0, (e.a || 0) - 0.7*(e.g || 0)) + 0.7*Math.min(e.nw || 0, 3) + 0.6*Math.min(e.cm || 0, 3); }
 function kjWeak(){ return KANJI.map(function(k){ return k.k; }).filter(function(c){ return kjWeight(c) >= 2.5; }).sort(function(a, b){ return kjWeight(b) - kjWeight(a); }); }
 function kjFocus(){ var f = kanjiState().focus; return (f && f.list) ? f.list : []; }
 function kjRecent(){
@@ -6642,10 +6674,17 @@ function kfcShow(){
     h += '<h2 style="margin:0 0 4px">🃏 Kanji flash cards</h2>';
     h += '<div class="hint" style="margin-bottom:10px">Just 5 cards when you feel like it. No timer, no points. Kit keeps the tricky ones for later.</div>';
     h += '<div class="kfcmenu">';
+    h += '<div class="kfch">Kanji cards</div>';
     h += '<button class="btn kfcm" data-kfc="mode:read"><b>👀 Read it</b><small>See the kanji, flip for the reading</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:recall"><b>💭 Remember it</b><small>See the meaning, think of the kanji</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:pick"><b>🔍 Find the kanji</b><small>Pick the right one from four</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:look"><b>👯 Look-alikes</b><small>Tell tricky twins apart</small></button>';
+    h += '<div class="kfch">Kanji combos</div>';
+    h += '<button class="btn kfcm" data-kcb="mode:build"><b>🧩 Build the word</b><small>Drag two kanji together</small></button>';
+    h += '<button class="btn kfcm" data-kcb="mode:miss"><b>🔎 Missing kanji</b><small>Which kanji fits in the gap?</small></button>';
+    h += '<button class="btn kfcm" data-kcb="mode:readw"><b>📖 Read the word</b><small>Pick the right reading</small></button>';
+    h += '<button class="btn kfcm" data-kcb="fam:today"><b>🔗 Word family</b><small>All the words with one kanji</small></button>';
+    h += '<div class="kfch">Writing</div>';
     h += '<button class="btn kfcm" data-kw-open="today"><b>✍️ Write it</b><small>Stroke order and neat writing</small></button>';
     h += '<button class="btn kfcm" data-kwalbum="1"><b>📓 My writing</b><small>See how it has grown</small></button>';
     h += '</div><div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button></div></div>';
@@ -6796,6 +6835,7 @@ function showKanjiParent(){
       if(e.a) bits.push(e.a+' again');
       if(e.lk) bits.push('mixed up '+e.lk+'x');
       if(e.nw) bits.push('neatness '+e.nw);
+      if(e.cm) bits.push('combos '+Math.round(e.cm*10)/10);
       h += '<div class="kjw1"><b lang="ja">'+c+'</b><small>'+bits.join(', ')+'</small></div>';
     });
     h += '</div><div class="row" style="margin-top:6px"><button class="btn small danger" data-kjp="reset">Reset weak spots</button></div>';
@@ -7397,6 +7437,295 @@ document.addEventListener('click', function(e){
   if(t.hasAttribute('data-kwalbum')){ showInkAlbum(); return; }
   if(t.hasAttribute('data-kw-open')){ var c = t.getAttribute('data-kw-open'); if(c === 'today') c = kanjiToday().k; kwOpen(c); return; }
   var v = t.getAttribute('data-kwa'); if(v === 'back') showInkAlbum(); else showInkOne(v);
+}, true);
+
+/* =====================================================================
+   KANPEKI-KUN COMPANION, phase 3: kanji combos (熟語).
+   Optional practice only. Words use grade 1 to 3 kanji; written by hand, please spot-check.
+   ===================================================================== */
+var KWORDS_SRC = "詩人|しじん|poet\n詩集|ししゅう|book of poems\n言葉|ことば|words, language\n落葉|おちば|fallen leaves\n葉書|はがき|postcard\n青葉|あおば|fresh green leaves\n学習|がくしゅう|study\n練習|れんしゅう|practice\n予習|よしゅう|preparing for a lesson\n自習|じしゅう|studying by yourself\n着物|きもの|kimono\n上着|うわぎ|jacket\n水着|みずぎ|swimsuit\n着地|ちゃくち|landing\n登山|とざん|mountain climbing\n登校|とうこう|going to school\n登場|とうじょう|appearing on stage\n動物|どうぶつ|animal\n植物|しょくぶつ|plant\n荷物|にもつ|luggage\n生物|せいぶつ|living thing\n本物|ほんもの|the real thing\n作物|さくもつ|crops\n物語|ものがたり|story\n見物|けんぶつ|sightseeing\n持ち主|もちぬし|owner\n気持ち|きもち|feeling\n旅行|りょこう|trip\n旅人|たびびと|traveler\n旅館|りょかん|Japanese inn\n旅先|たびさき|travel destination\n開始|かいし|start\n始発|しはつ|first train\n始業|しぎょう|start of school or work\n年始|ねんし|start of the year\n始点|してん|starting point\n前進|ぜんしん|moving forward\n進行|しんこう|progress\n進学|しんがく|going on to a higher school\n行進|こうしん|march\n進歩|しんぽ|progress, improvement\n運動|うんどう|exercise\n自動|じどう|automatic\n動作|どうさ|movement\n感動|かんどう|being deeply moved\n活動|かつどう|activity\n行動|こうどう|action\n深海|しんかい|deep sea\n深夜|しんや|late at night\n水深|すいしん|water depth\n様子|ようす|appearance, how things are\n同様|どうよう|the same\n王様|おうさま|king\n神様|かみさま|god\n場面|ばめん|scene\n画面|がめん|screen\n表面|ひょうめん|surface\n地面|じめん|ground\n面会|めんかい|meeting a person\n方面|ほうめん|direction, area\n会館|かいかん|hall\n開館|かいかん|opening of a building\n本館|ほんかん|main building\n番号|ばんごう|number\n記号|きごう|symbol\n年号|ねんごう|era name\n暗号|あんごう|secret code\n調子|ちょうし|condition\n調理|ちょうり|cooking\n使用|しよう|use\n使命|しめい|mission\n天使|てんし|angel\n問題|もんだい|problem, question\n学問|がくもん|learning\n問答|もんどう|questions and answers\n意味|いみ|meaning\n注意|ちゅうい|attention, be careful\n用意|ようい|preparation\n意見|いけん|opinion\n味方|みかた|ally, on your side\n地味|じみ|plain, quiet in style\n味見|あじみ|tasting\n湖水|こすい|lake water\n湖面|こめん|lake surface\n湖岸|こがん|lakeshore\n漢字|かんじ|kanji\n漢文|かんぶん|writing in classical Chinese\n理由|りゆう|reason\n自由|じゆう|freedom\n由来|ゆらい|origin\n気温|きおん|air temperature\n体温|たいおん|body temperature\n温度|おんど|temperature\n水温|すいおん|water temperature\n温室|おんしつ|greenhouse\n酒屋|さかや|liquor store\n話題|わだい|topic\n宿題|しゅくだい|homework\n題名|だいめい|title\n出発|しゅっぱつ|departure\n発見|はっけん|discovery\n発音|はつおん|pronunciation\n発明|はつめい|invention\n開発|かいはつ|development\n発表|はっぴょう|announcement, presentation\n発送|はっそう|shipping\n文章|ぶんしょう|writing, sentences\n楽章|がくしょう|movement of music\n平和|へいわ|peace\n平気|へいき|unconcerned, fine\n平日|へいじつ|weekday\n水平|すいへい|level, horizontal\n平野|へいや|plain\n平地|へいち|flat land\n決心|けっしん|decision, resolve\n決定|けってい|decision\n決勝|けっしょう|final match\n仕事|しごと|work, job\n大事|だいじ|important\n食事|しょくじ|meal\n火事|かじ|fire\n用事|ようじ|errand\n事実|じじつ|fact\n行事|ぎょうじ|event\n落下|らっか|falling\n相手|あいて|partner, opponent\n相談|そうだん|talking something over\n首相|しゅしょう|prime minister\n洋服|ようふく|Western clothes\n西洋|せいよう|the West\n洋食|ようしょく|Western food\n東洋|とうよう|the East\n大洋|たいよう|ocean\n和服|わふく|Japanese clothes\n次回|じかい|next time\n次男|じなん|second son\n目次|もくじ|table of contents\n場所|ばしょ|place\n住所|じゅうしょ|address\n近所|きんじょ|neighborhood\n台所|だいどころ|kitchen\n県立|けんりつ|run by the prefecture\n県内|けんない|within the prefecture\n有名|ゆうめい|famous\n所有|しょゆう|ownership\n氷水|こおりみず|ice water\n氷山|ひょうざん|iceberg\n流氷|りゅうひょう|drift ice\n一秒|いちびょう|one second\n秒速|びょうそく|speed per second\n数秒|すうびょう|a few seconds\n農家|のうか|farmer, farm family\n農業|のうぎょう|agriculture\n農場|のうじょう|farm\n農村|のうそん|farming village\n仕方|しかた|way of doing something\n地球|ちきゅう|the Earth\n野球|やきゅう|baseball\n電球|でんきゅう|light bulb\n球場|きゅうじょう|ballpark\n薬局|やっきょく|pharmacy\n全部|ぜんぶ|all\n安全|あんぜん|safety\n全力|ぜんりょく|full power\n全体|ぜんたい|the whole\n全員|ぜんいん|everyone\n遊具|ゆうぐ|playground equipment\n代表|だいひょう|representative\n表紙|ひょうし|cover of a book\n昔話|むかしばなし|old tale\n大昔|おおむかし|ancient times\n世界|せかい|the world\n世話|せわ|taking care of\n世代|せだい|generation\n速度|そくど|speed\n時速|じそく|speed per hour\n高速|こうそく|high speed\n横顔|よこがお|profile of a face\n横道|よこみち|side road\n横線|よこせん|horizontal line\n指定|してい|designation\n指先|ゆびさき|fingertip\n鉄道|てつどう|railway\n鉄板|てっぱん|iron plate\n鉄橋|てっきょう|iron bridge\n安心|あんしん|peace of mind\n定食|ていしょく|set meal\n予定|よてい|plan\n定期|ていき|regular\n運転|うんてん|driving\n運命|うんめい|fate\n運送|うんそう|transporting\n予想|よそう|prediction\n放送|ほうそう|broadcast\n住人|じゅうにん|resident\n道具|どうぐ|tool\n家具|かぐ|furniture\n文具|ぶんぐ|stationery\n具合|ぐあい|condition\n方向|ほうこう|direction\n向上|こうじょう|improvement\n坂道|さかみち|slope\n悲鳴|ひめい|scream\n緑色|みどりいろ|green\n緑茶|りょくちゃ|green tea\n新緑|しんりょく|fresh green leaves\n開店|かいてん|shop opening\n開会|かいかい|opening a meeting\n海岸|かいがん|seashore\n川岸|かわぎし|riverbank\n道路|どうろ|road\n線路|せんろ|railroad track\n通路|つうろ|aisle\n路地|ろじ|alley\n感心|かんしん|admiration\n感想|かんそう|impressions\n反対|はんたい|opposite\n区間|くかん|section\n区立|くりつ|run by the ward\n太陽|たいよう|the sun\n陽気|ようき|cheerful\n夕陽|ゆうひ|evening sun\n整理|せいり|tidying up\n整列|せいれつ|lining up\n部分|ぶぶん|part\n部屋|へや|room\n部長|ぶちょう|department head\n水泳|すいえい|swimming\n助手|じょしゅ|assistant\n童話|どうわ|children's story\n作品|さくひん|work, creation\n品物|しなもの|goods\n食品|しょくひん|food products\n商店|しょうてん|shop\n商人|しょうにん|merchant\n商売|しょうばい|business\n客間|きゃくま|guest room\n来客|らいきゃく|visitor\n数式|すうしき|math formula\n形式|けいしき|form, format\n去年|きょねん|last year\n倍数|ばいすう|multiple\n二倍|にばい|twice as much\n一礼|いちれい|a bow\n毛筆|もうひつ|brush for calligraphy\n筆者|ひっしゃ|author\n筆算|ひっさん|written calculation\n銀行|ぎんこう|bank\n金銀|きんぎん|gold and silver\n銀色|ぎんいろ|silver color\n植木|うえき|garden plant\n集合|しゅうごう|gathering\n集会|しゅうかい|meeting\n集中|しゅうちゅう|concentration\n文化|ぶんか|culture\n化学|かがく|chemistry\n生死|せいし|life and death\n都会|とかい|big city\n都合|つごう|convenience\n都市|とし|city\n両手|りょうて|both hands\n両方|りょうほう|both\n両足|りょうあし|both legs\n両親|りょうしん|parents\n勝負|しょうぶ|match, contest\n係員|かかりいん|attendant\n会員|かいいん|member\n店員|てんいん|shop clerk\n教員|きょういん|teacher\n祭り|まつり|festival\n工業|こうぎょう|industry\n作業|さぎょう|work\n黒板|こくばん|blackboard\n電柱|でんちゅう|utility pole\n石油|せきゆ|oil\n油絵|あぶらえ|oil painting\n空港|くうこう|airport\n港町|みなとまち|port town\n薬屋|くすりや|drugstore\n薬指|くすりゆび|ring finger\n草笛|くさぶえ|grass whistle\n口笛|くちぶえ|whistling\n汽笛|きてき|steam whistle\n注目|ちゅうもく|attention\n注文|ちゅうもん|order\n悪人|あくにん|bad person\n悪口|わるくち|bad-mouthing\n悪者|わるもの|bad guy\n学者|がくしゃ|scholar\n作者|さくしゃ|author\n医者|いしゃ|doctor\n文庫|ぶんこ|paperback library\n車庫|しゃこ|garage\n金庫|きんこ|safe\n電波|でんぱ|radio wave\n大波|おおなみ|big wave\n開放|かいほう|opening up\n勉強|べんきょう|study\n勉学|べんがく|studies\n写真|しゃしん|photograph\n写生|しゃせい|sketching from life\n真夏|まなつ|midsummer\n真実|しんじつ|truth\n真昼|まひる|broad daylight\n真下|ました|right below\n行列|ぎょうれつ|line of people\n列車|れっしゃ|train\n一列|いちれつ|one row\n出血|しゅっけつ|bleeding\n鼻血|はなぢ|nosebleed\n血色|けっしょく|complexion\n暗算|あんざん|mental math\n暗記|あんき|memorizing\n暗室|あんしつ|darkroom\n石橋|いしばし|stone bridge\n大橋|おおはし|big bridge\n暑中|しょちゅう|midsummer\n寒中|かんちゅう|midwinter\n寒空|さむぞら|cold sky\n大寒|だいかん|the coldest time of year\n軽食|けいしょく|light meal\n手軽|てがる|easy, simple\n気軽|きがる|casual\n生命|せいめい|life\n人命|じんめい|human life\n第一|だいいち|first\n第三|だいさん|third\n返事|へんじ|reply\n返金|へんきん|refund\n主人|しゅじん|master, husband\n主役|しゅやく|leading role\n主食|しゅしょく|staple food\n本州|ほんしゅう|Honshu\n九州|きゅうしゅう|Kyushu\n屋上|おくじょう|rooftop\n屋根|やね|roof\n小屋|こや|hut\n本屋|ほんや|bookstore\n大根|だいこん|radish\n根本|こんぽん|root, basis\n荷車|にぐるま|cart\n子守|こもり|babysitting\n役場|やくば|town office\n役所|やくしょ|government office\n役目|やくめ|role, duty\n大豆|だいず|soybean\n小豆|あずき|red bean\n教育|きょういく|education\n体育|たいいく|physical education\n消火|しょうか|putting out a fire\n学期|がっき|school term\n期間|きかん|period\n時期|じき|season, time\n期待|きたい|expectation\n田畑|たはた|fields\n花畑|はなばたけ|flower field\n終点|しゅうてん|last stop\n終日|しゅうじつ|all day\n終電|しゅうでん|last train\n幸福|こうふく|happiness\n急行|きゅうこう|express train\n急用|きゅうよう|urgent business\n急病|きゅうびょう|sudden illness\n起立|きりつ|standing up\n起点|きてん|starting point\n苦手|にがて|not good at\n苦心|くしん|great effort\n会談|かいだん|talks\n鼻水|はなみず|runny nose\n鼻先|はなさき|tip of the nose\n歯車|はぐるま|gear\n虫歯|むしば|cavity\n中央|ちゅうおう|center\n二階|にかい|second floor\n階下|かいか|downstairs\n委員|いいん|committee member\n学級|がっきゅう|class\n一級|いっきゅう|first grade\n上級|じょうきゅう|advanced level\n昭和|しょうわ|Showa era\n和食|わしょく|Japanese food\n和室|わしつ|Japanese-style room\n駅前|えきまえ|in front of the station\n駅員|えきいん|station staff\n駅長|えきちょう|station master\n毛皮|けがわ|fur\n小皿|こざら|small plate\n大皿|おおざら|large plate\n短所|たんしょ|weak point\n短文|たんぶん|short sentence\n短歌|たんか|tanka poem\n休息|きゅうそく|rest\n息子|むすこ|son\n美人|びじん|beautiful woman\n美化|びか|making beautiful\n回転|かいてん|spinning\n病気|びょうき|illness\n病人|びょうにん|sick person\n医学|いがく|medicine\n飲食|いんしょく|eating and drinking\n重大|じゅうだい|serious\n体重|たいじゅう|body weight\n心配|しんぱい|worry\n今度|こんど|this time, next time\n年度|ねんど|school year\n幸運|こううん|good luck\n流行|りゅうこう|fashion, trend\n水流|すいりゅう|stream of water\n家族|かぞく|family\n手帳|てちょう|pocket notebook\n時代|じだい|era\n曲線|きょくせん|curved line\n作曲|さっきょく|composing music\n名曲|めいきょく|famous song\n投球|とうきゅう|pitching\n投手|とうしゅ|pitcher\n石炭|せきたん|coal\n木炭|もくたん|charcoal\n炭火|すみび|charcoal fire\n子羊|こひつじ|lamb\n羊毛|ようもう|wool\n宿屋|やどや|inn\n丁目|ちょうめ|city block\n神宮|じんぐう|grand shrine\n宮中|きゅうちゅう|imperial palace\n病院|びょういん|hospital\n平等|びょうどう|equality\n乗車|じょうしゃ|boarding a vehicle\n乗馬|じょうば|horseback riding\n乗客|じょうきゃく|passenger\n庭園|ていえん|garden\n校庭|こうてい|schoolyard\n家庭|かてい|home, family\n研究|けんきゅう|research\n打者|だしゃ|batter\n打球|だきゅう|batted ball\n島国|しまぐに|island country\n半島|はんとう|peninsula\n小島|こじま|small island\n実力|じつりょく|true ability\n実話|じつわ|true story\n神社|じんじゃ|shrine\n本箱|ほんばこ|bookcase\n小箱|こばこ|small box\n湯気|ゆげ|steam\n湯船|ゆぶね|bathtub\n他人|たにん|another person\n全身|ぜんしん|whole body\n自身|じしん|oneself\n身長|しんちょう|height\n持つ|もつ|to hold\n着く|つく|to arrive\n登る|のぼる|to climb\n始める|はじめる|to begin\n進む|すすむ|to go forward\n動く|うごく|to move\n深い|ふかい|deep\n使う|つかう|to use\n習う|ならう|to learn\n決める|きめる|to decide\n落ちる|おちる|to fall\n開ける|あける|to open\n拾う|ひろう|to pick up\n申す|もうす|to say (polite)\n君|きみ|you (to a friend)\n追う|おう|to chase\n追い風|おいかぜ|tailwind\n取る|とる|to take\n受ける|うける|to receive\n受け取る|うけとる|to receive, to take\n守る|まもる|to protect\n死ぬ|しぬ|to die\n皮|かわ|skin, peel\n苦い|にがい|bitter\n悲しい|かなしい|sad\n幸せ|しあわせ|happy\n重い|おもい|heavy\n軽い|かるい|light in weight\n暗い|くらい|dark\n寒い|さむい|cold\n暑い|あつい|hot\n急ぐ|いそぐ|to hurry\n起きる|おきる|to get up\n返す|かえす|to give back\n終わる|おわる|to end\n育つ|そだつ|to grow up\n消す|けす|to turn off, to erase\n泳ぐ|およぐ|to swim\n助ける|たすける|to help\n勝つ|かつ|to win\n負ける|まける|to lose\n美しい|うつくしい|beautiful\n配る|くばる|to hand out\n投げる|なげる|to throw\n流れる|ながれる|to flow\n曲がる|まがる|to turn, to bend\n乗る|のる|to ride\n打つ|うつ|to hit\n向かう|むかう|to head toward\n羊|ひつじ|sheep\n炭|すみ|charcoal\n氷|こおり|ice";
+var KWORDS = KWORDS_SRC.split('\n').filter(Boolean).map(function(l){
+  var p = l.split('|'), g = [];
+  p[0].split('').forEach(function(c){ if(KJ_BY[c] && g.indexOf(c) < 0) g.push(c); });
+  return {w:p[0], r:p[1], m:p[2], g:g, c:/^[\u4e00-\u9fff]{2}$/.test(p[0])};
+});
+var KCB = null;
+/* kanji she should have met by now (everything up to her place in the book) */
+function kjCovered(){
+  var h = hz(), set = {};
+  if(!h.on){ KANJI.forEach(function(k){ set[k.k] = 1; }); return set; }
+  KBOOK.forEach(function(x){
+    if((h.vol === '下' && x.v === '上') || (x.v === h.vol && x.p <= h.page)) x.ks.forEach(function(c){ set[c] = 1; });
+  });
+  return set;
+}
+function kcbWeight(wd){
+  var w = 1, rec = kjRecent(), foc = kjFocus(), cov = kjCovered();
+  wd.g.forEach(function(c){
+    w += (kjWeight(c) - 1)*0.6;
+    if(rec.indexOf(c) > -1) w *= 2.2;
+    if(foc.indexOf(c) > -1) w *= 2.5;
+    if(!cov[c]) w *= 0.05;
+  });
+  var st = (kanjiState().wd || {})[wd.w];
+  if(st && (st.a || 0) > (st.g || 0)) w *= 2;
+  if(window.__kcbLast && window.__kcbLast[wd.w]) w *= 0.1;
+  return w;
+}
+function kcbPick(n, only2){
+  var rec = kjRecent().concat(kjFocus(), kjWeak()), cov = kjCovered();
+  var all = KWORDS.filter(function(x){ return !only2 || x.c; }).map(function(x){ return {x:x, w:kcbWeight(x), pri:x.g.some(function(c){ return rec.indexOf(c) > -1; }) && x.g.every(function(c){ return cov[c]; })}; });
+  var out = [];
+  function draw(list, k){
+    var items = list.slice();
+    while(k > 0 && items.length){
+      var tot = items.reduce(function(s, y){ return s + y.w; }, 0), r = Math.random()*tot, j = 0;
+      for(; j < items.length - 1; j++){ r -= items[j].w; if(r <= 0) break; }
+      out.push(items[j].x); var id = items[j]; items.splice(j, 1); k--;
+      all = all.filter(function(y){ return y !== id; });
+    }
+  }
+  draw(all.filter(function(y){ return y.pri; }), n >= 4 ? 3 : 1);
+  var have = {}; out.forEach(function(x){ have[x.w] = 1; });
+  draw(all.filter(function(y){ return !have[y.x.w]; }), n - out.length);
+  out = shuffle(out, Math.random);
+  window.__kcbLast = {}; out.forEach(function(x){ window.__kcbLast[x.w] = 1; });
+  return out;
+}
+function kcbRec(wd, ok){
+  var ks = kanjiState(); if(!ks.wd) ks.wd = {};
+  var e = ks.wd[wd.w] = ks.wd[wd.w] || {};
+  if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
+  var wk = kwk();
+  wd.g.forEach(function(c){ var k = wk[c] = wk[c] || {}; if(!ok) k.cm = Math.min(6, (k.cm || 0) + 1); else if(k.cm) k.cm = Math.max(0, k.cm - 0.5); });
+  save();
+}
+function kcbRandChars(n, not){
+  var pool = shuffle(KWORDS.filter(function(x){ return x.c; }), Math.random), out = [];
+  for(var i = 0; i < pool.length && out.length < n; i++){
+    var c = pool[i].w.charAt(Math.floor(Math.random()*2));
+    if(not.indexOf(c) < 0 && out.indexOf(c) < 0) out.push(c);
+  }
+  return out;
+}
+function kcbTiles(wd){
+  var a = wd.w.split(''), out = a.slice(), extra = [];
+  a.forEach(function(c){ var g = klookOf(c); if(g) (g.a + g.d).split('').forEach(function(d){ if(a.indexOf(d) < 0 && extra.indexOf(d) < 0) extra.push(d); }); });
+  extra = shuffle(extra, Math.random).slice(0, 2);
+  out = out.concat(extra).concat(kcbRandChars(6 - out.length - extra.length, a.concat(extra)));
+  return shuffle(out, Math.random);
+}
+function kcbAlt(w, wd){ return w === wd.w || KWORDS.some(function(x){ return x.w === w && x.r === wd.r; }); }
+function kcbKanjiOpts(wd, bi){
+  var c = wd.w.charAt(bi), opts = [c], g = klookOf(c);
+  function okd(d){ return opts.indexOf(d) < 0 && !kcbAlt(wd.w.substr(0, bi) + d + wd.w.substr(bi + 1), wd); }
+  if(g) shuffle((g.a + g.d).split(''), Math.random).forEach(function(d){ if(opts.length < 3 && okd(d)) opts.push(d); });
+  kcbRandChars(8, opts.concat(wd.w.split(''))).forEach(function(d){ if(opts.length < 4 && okd(d)) opts.push(d); });
+  return shuffle(opts, Math.random);
+}
+function kcbReadOpts(wd){
+  var opts = [wd.r], same = [], other = [];
+  KWORDS.forEach(function(x){
+    if(x.r === wd.r || x.w === wd.w) return;
+    var sh = x.w.split('').some(function(c){ return wd.w.indexOf(c) > -1; });
+    var lenOk = Math.abs(x.r.length - wd.r.length) <= 1;
+    if(sh && lenOk) same.push(x.r); else if(lenOk) other.push(x.r);
+  });
+  shuffle(same, Math.random).concat(shuffle(other, Math.random)).forEach(function(r){ if(opts.length < 4 && opts.indexOf(r) < 0) opts.push(r); });
+  return shuffle(opts, Math.random);
+}
+function kcbStart(mode){
+  var cards = kcbPick(5, mode !== 'readw');
+  KCB = {mode:mode, cards:cards, i:0, res:[], rq:{}, stage:'card', picked:null, fails:0, done:false, slots:[null, null], lock:false};
+  kcbPrep(); kcbShow();
+}
+function kcbPrep(){
+  var s = KCB, wd = s.cards[s.i]; s.picked = null; s.fails = 0; s.done = false; s.slots = [null, null]; s.lock = false; s.hint = false;
+  if(s.mode === 'build') s.tiles = kcbTiles(wd);
+  else if(s.mode === 'miss'){
+    var gi = []; wd.w.split('').forEach(function(c, i){ if(KJ_BY[c]) gi.push(i); });
+    s.bi = gi.length ? gi[Math.floor(Math.random()*gi.length)] : 0; s.opts = kcbKanjiOpts(wd, s.bi);
+  } else s.opts = kcbReadOpts(wd);
+}
+function kcbDots(){ var s = KCB, h = '<div class="kfcdots">'; for(var i = 0; i < s.cards.length; i++) h += '<i class="'+(i < s.i ? 'd' : (i === s.i ? 'c' : ''))+'"></i>'; return h + '</div>'; }
+function kcbWordCard(wd){
+  return '<div class="kcbword"><span class="kcbw" lang="ja">'+esc(wd.w)+'</span><span class="kcbr" lang="ja">'+esc(wd.r)+'</span><span class="kcbm">'+esc(wd.m)+'</span> <button class="btn small" data-kcb="say">🔊</button></div>';
+}
+function kcbShow(){
+  var s = KCB, h = '<div class="kjmodal kfc">';
+  if(s.stage === 'fam'){ kcbFamShow(); return; }
+  if(s.stage === 'end'){
+    var got = s.res.filter(function(x){ return x.ok; }), again = s.res.filter(function(x){ return !x.ok; });
+    h += '<h2 style="margin:0 0 6px;text-align:center">🌟 Nice work!</h2><div class="hint" style="text-align:center">You looked at '+s.cards.length+' words. Thank you for practising.</div>';
+    if(got.length) h += '<div class="kfcres">👍 <span>'+got.map(function(x){ return '<b lang="ja">'+x.w+'</b>'; }).join(' ')+'</span></div>';
+    if(again.length) h += '<div class="kfcres">🔁 <span>'+again.map(function(x){ return '<b lang="ja">'+x.w+'</b>'; }).join(' ')+'</span><small>Kit will show these again soon.</small></div>';
+    h += '<div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" data-x="1">Done</button><button class="btn primary" data-kcb="mode:'+s.mode+'">Another 5</button></div>';
+    h += '<div class="row" style="margin-top:8px"><button class="btn small" data-kfc="open">Other games</button></div></div>';
+    openModal(h); return;
+  }
+  var wd = s.cards[s.i];
+  h += kcbDots();
+  if(s.mode === 'build'){
+    h += '<div class="kfcq"><div class="kfcmean">Build the word</div><div class="kfcq2"><b>'+esc(wd.m)+'</b><br><span lang="ja">'+esc(wd.r)+'</span></div></div>';
+    h += '<div class="kcbslots'+(s.shake ? ' shake' : '')+'">';
+    for(var i = 0; i < 2; i++){
+      var ti = s.slots[i], cls = 'kcbslot' + (ti !== null ? ' full' : '') + (s.done ? ' ok' : '') + (s.shake ? ' bad' : '');
+      h += '<div class="'+cls+'" data-kcbs="'+i+'" lang="ja">'+(ti !== null ? s.tiles[ti] : '')+'</div>';
+    }
+    h += '</div><div class="kcbtiles">';
+    s.tiles.forEach(function(c, ti){
+      var used = s.slots.indexOf(ti) > -1, hint = s.hint && !used && c === wd.w.charAt(s.slots[0] === null ? 0 : 1) ;
+      h += '<div class="kcbtile'+(used ? ' used' : '')+(hint ? ' hint' : '')+'" data-kcbt="'+ti+'" lang="ja">'+c+'</div>';
+    });
+    h += '</div>';
+    if(s.msg) h += '<div class="kfctip">'+s.msg+'</div>';
+    if(s.done) h += kcbWordCard(wd) + '<div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn primary" data-kcb="next">Next ▶</button></div>';
+    else h += '<div class="hint" style="text-align:center;margin-top:6px">Drag the kanji into the boxes, or just tap them.</div>';
+  } else {
+    var blank = s.mode === 'miss', shown = wd.w;
+    if(blank) shown = wd.w.substr(0, s.bi) + '？' + wd.w.substr(s.bi + 1);
+    var ans = blank ? wd.w.charAt(s.bi) : wd.r;
+    h += '<div class="kfcq"><div class="kfcmean">'+(blank ? 'Which kanji is missing?' : 'How do you read it?')+'</div>';
+    h += '<div class="kcbshow" lang="ja">'+esc(shown)+'</div>';
+    h += '<div class="kfcq2">'+(blank ? '<span lang="ja">'+esc(wd.r)+'</span> · ' : '')+'<b>'+(blank || s.picked ? esc(wd.m) : '&nbsp;')+'</b></div></div>';
+    h += '<div class="'+(blank ? 'kfcopts' : 'kcbropts')+'">';
+    s.opts.forEach(function(c){
+      var cls = blank ? 'kfcopt' : 'kcbropt';
+      if(s.picked){ if(c === ans) cls += ' ok'; else if(c === s.picked) cls += ' no'; else cls += ' dim'; }
+      h += '<button class="'+cls+'" lang="ja" data-kcb="opt:'+c+'"'+(s.picked ? ' disabled' : '')+'>'+esc(c)+'</button>';
+    });
+    h += '</div>';
+    if(s.picked){
+      h += '<div class="kfctip">'+(s.picked === ans ? '✅ Yes!' : '💡 It is <b lang="ja">'+esc(ans)+'</b>.')+'</div>' + kcbWordCard(wd);
+      h += '<div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn primary" data-kcb="next">Next ▶</button></div>';
+    }
+  }
+  h += '<div class="row" style="margin-top:12px"><button class="btn small" data-x="1">Stop</button></div></div>';
+  openModal(h);
+}
+function kcbAdvance(){
+  var s = KCB; s.i++; s.msg = '';
+  if(s.i >= s.cards.length) s.stage = 'end'; else kcbPrep();
+  kcbShow();
+}
+function kcbMark(ok){
+  var s = KCB, wd = s.cards[s.i];
+  s.res.push({w:wd.w, ok:ok}); kcbRec(wd, ok);
+  if(!ok && !s.rq[wd.w] && s.cards.length < 8){ s.rq[wd.w] = 1; s.cards.push(wd); }
+}
+/* tiles: place, remove, check */
+function kcbPlace(ti, slot){
+  var s = KCB; if(!s || s.done || s.lock || s.slots.indexOf(ti) > -1) return;
+  if(slot === undefined || slot === null){ slot = s.slots[0] === null ? 0 : (s.slots[1] === null ? 1 : -1); }
+  if(slot < 0) return;
+  s.slots[slot] = ti; s.msg = '';
+  try{ Sound.tap(); }catch(_){}
+  if(s.slots[0] !== null && s.slots[1] !== null) kcbCheck(); else kcbShow();
+}
+function kcbCheck(){
+  var s = KCB, wd = s.cards[s.i], got = s.tiles[s.slots[0]] + s.tiles[s.slots[1]];
+  if(kcbAlt(got, wd)){
+    s.done = true; s.msg = '';
+    s.res.push({w:wd.w, ok:s.fails === 0}); kcbRec(wd, s.fails === 0);
+    if(s.fails > 0 && !s.rq[wd.w] && s.cards.length < 8){ s.rq[wd.w] = 1; s.cards.push(wd); }
+    try{ Sound.chime(); }catch(_){}
+    kcbShow();
+    try{ if(!state.mute) speakText(wd.w, 'ja-JP', null); }catch(_){}
+    return;
+  }
+  s.fails++; s.shake = true; s.lock = true;
+  try{ Sound.untick(); }catch(_){}
+  if(s.fails >= 3){
+    s.slots = [s.tiles.indexOf(wd.w.charAt(0)), s.tiles.indexOf(wd.w.charAt(1))]; s.done = true; s.shake = false; s.lock = false;
+    s.msg = 'No worries! This one is <b lang="ja">'+esc(wd.w)+'</b>.';
+    s.res.push({w:wd.w, ok:false}); kcbRec(wd, false);
+    kcbShow(); return;
+  }
+  s.msg = s.fails === 1 ? 'Not quite. Try again!' : 'Almost! Look at the glowing kanji for a hint.';
+  if(s.fails >= 2) s.hint = true;
+  kcbShow();
+  setTimeout(function(){ if(KCB === s && !s.done){ s.shake = false; s.lock = false; s.slots = [null, null]; kcbShow(); } }, 800);
+}
+/* drag or tap */
+(function(){
+  var D = null;
+  function kcbOn(){ return KCB && KCB.stage === 'card' && KCB.mode === 'build' && !KCB.done; }
+  document.addEventListener('pointerdown', function(e){
+    if(!kcbOn() || KCB.lock) return;
+    var t = e.target.closest && e.target.closest('[data-kcbt],[data-kcbs]'); if(!t) return;
+    if(t.hasAttribute('data-kcbs')){
+      var si = +t.getAttribute('data-kcbs'); if(KCB.slots[si] === null) return;
+      KCB.slots[si] = null; try{ Sound.tap(); }catch(_){} kcbShow(); e.preventDefault(); return;
+    }
+    var ti = +t.getAttribute('data-kcbt'); if(KCB.slots.indexOf(ti) > -1) return;
+    e.preventDefault();
+    var g = document.createElement('div'); g.className = 'kcbghost'; g.textContent = KCB.tiles[ti]; g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px'; g.setAttribute('lang', 'ja');
+    document.body.appendChild(g);
+    D = {ti:ti, id:e.pointerId, x0:e.clientX, y0:e.clientY, g:g, moved:false};
+    try{ t.setPointerCapture(e.pointerId); }catch(_){}
+  }, true);
+  document.addEventListener('pointermove', function(e){
+    if(!D || e.pointerId !== D.id) return;
+    D.g.style.left = e.clientX + 'px'; D.g.style.top = e.clientY + 'px';
+    if(Math.hypot(e.clientX - D.x0, e.clientY - D.y0) > 8) D.moved = true;
+  }, true);
+  function end(e, cancel){
+    if(!D || e.pointerId !== D.id) return;
+    var d = D; D = null;
+    if(d.g.parentNode) d.g.parentNode.removeChild(d.g);
+    if(cancel || !kcbOn()) return;
+    if(!d.moved){ kcbPlace(d.ti); return; }
+    var el = document.elementFromPoint(e.clientX, e.clientY), sl = el && el.closest && el.closest('[data-kcbs]');
+    if(sl){
+      var si = +sl.getAttribute('data-kcbs');
+      if(KCB.slots[si] !== null) KCB.slots[si] = null;
+      kcbPlace(d.ti, si);
+    }
+  }
+  document.addEventListener('pointerup', function(e){ end(e, false); }, true);
+  document.addEventListener('pointercancel', function(e){ end(e, true); }, true);
+})();
+/* word family */
+function kcbFam(ch){
+  KCB = {stage:'fam', ch:ch}; kcbFamShow();
+}
+function kcbFamShow(){
+  var s = KCB, k = KJ_BY[s.ch], words = KWORDS.filter(function(x){ return x.w.indexOf(s.ch) > -1; });
+  var h = '<div class="kjmodal kfc"><h2 style="margin:0 0 4px">🔗 Words with <span lang="ja" class="kcbbig">'+esc(s.ch)+'</span></h2>';
+  if(k) h += '<div class="hint">'+esc(k.m)+' · <span lang="ja">'+kjEsc(k.kun)+' · '+kjEsc(k.on)+'</span></div>';
+  var chips = kjUniq(kjFocus().concat(kjRecent(), kjWeak())).slice(0, 14);
+  if(chips.indexOf(s.ch) < 0) chips.unshift(s.ch);
+  h += '<div class="kcbchips">'+chips.map(function(c){ return '<button class="kcbchip'+(c === s.ch ? ' on' : '')+'" lang="ja" data-kcb="fam:'+c+'">'+c+'</button>'; }).join('')+'</div>';
+  if(!words.length) h += '<div class="hint">No words yet for this kanji.</div>';
+  h += '<div class="kcbfam">';
+  words.forEach(function(x, i){
+    h += '<div class="kcbfw"><span class="kcbw" lang="ja">'+esc(x.w)+'</span><span class="kcbr" lang="ja">'+esc(x.r)+'</span><span class="kcbm">'+esc(x.m)+'</span><button class="btn small" data-kcb="sayw:'+i+'">🔊</button></div>';
+  });
+  h += '</div><div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">🃏 Games</button></div></div>';
+  openModal(h);
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kcb]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  var a = t.getAttribute('data-kcb'), s = KCB;
+  try{ Sound.tap(); }catch(_){}
+  if(a.indexOf('mode:') === 0){ kcbStart(a.slice(5)); return; }
+  if(a === 'fam:today'){ kcbFam(kanjiToday().k); return; }
+  if(a.indexOf('fam:') === 0){ kcbFam(a.slice(4)); return; }
+  if(!s) return;
+  if(a === 'say'){ speakText(s.cards[s.i].w, 'ja-JP', t); return; }
+  if(a.indexOf('sayw:') === 0){
+    var ws = KWORDS.filter(function(x){ return x.w.indexOf(s.ch) > -1; })[+a.slice(5)];
+    if(ws) speakText(ws.w, 'ja-JP', t); return;
+  }
+  if(a === 'next'){ kcbAdvance(); return; }
+  if(a.indexOf('opt:') === 0){
+    if(s.picked) return;
+    var c = a.slice(4), wd = s.cards[s.i], ans = s.mode === 'miss' ? wd.w.charAt(s.bi) : wd.r;
+    s.picked = c; var ok = (c === ans); kcbMark(ok);
+    if(!ok) try{ Sound.untick(); }catch(_){ } else try{ Sound.tap(); }catch(_){}
+    kcbShow(); return;
+  }
 }, true);
 
 /* ---------- picture avatars ---------- */
