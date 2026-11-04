@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '20'
       - name: Fetch the top story
-        run: node scripts/fetch-news.mjs news.json
+        run: node fetch-news.mjs news.json
       - name: Save it if it changed
         run: |
           if [ -n "$(git status --porcelain news.json)" ]; then
