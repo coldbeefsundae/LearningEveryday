@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v26', errs = [], shown = false;
+  var V = 'v29', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -776,6 +776,28 @@ body[data-calm=on] .kit *{animation:none!important}
 .jwrite{width:100%;margin-top:10px;min-height:48px;font-size:16px}
 @media (orientation:portrait),(max-width:760px){.railtool{display:none!important}}
 
+.quest .q-name small.qpts{display:block;font-size:13px;font-weight:800;color:#8a5b00;margin-top:3px}
+.quest.done .q-name small.qpts{color:#1a7a4a}
+.ptsfloat{position:absolute;right:14px;top:8px;font-weight:900;font-size:19px;background:#fff4cf;color:#8a5b00;border-radius:999px;padding:3px 12px;pointer-events:none;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.18);animation:ptsf 1.2s ease-out forwards}
+@keyframes ptsf{0%{opacity:0;transform:translateY(10px) scale(.8)}20%{opacity:1}100%{opacity:0;transform:translateY(-34px) scale(1.12)}}
+
+.bedstrip{margin:0 0 14px;padding:14px 18px;border-radius:22px;background:linear-gradient(135deg,#2b2a5c,#4a3f9f);color:#fff;font-weight:800;font-size:17px;line-height:1.35;box-shadow:0 6px 18px rgba(43,42,92,.35)}
+.bedstrip[hidden]{display:none}
+.bedstrip .bed-min{font-weight:700;opacity:.95}
+.bedstrip .bed-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bedstrip .bed-list span{background:rgba(255,255,255,.18);padding:7px 13px;border-radius:999px;font-size:15px;font-weight:800}
+.kit.drowsy .k-eyes{transform-box:fill-box;transform-origin:50% 50%;animation:kDrowse 4.2s ease-in-out infinite}
+.kit.drowsy .k-all{transform-origin:60px 112px;animation:kNod 5.2s ease-in-out infinite}
+.kit.drowsy .k-zz,.kit.asleep .k-zz{transform-box:fill-box;animation:kZZ 3.4s ease-in-out infinite}
+.kit.asleep .k-zz2{animation-delay:1.3s}
+.kit.asleep .k-all{transform-origin:60px 118px;animation:kBreath 3.8s ease-in-out infinite}
+@keyframes kDrowse{0%,52%,100%{transform:scaleY(1)}66%,86%{transform:scaleY(.12)}}
+@keyframes kNod{0%,100%{transform:rotate(0)}50%{transform:rotate(3.5deg) translateY(2px)}}
+@keyframes kBreath{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,1.04)}}
+@keyframes kZZ{0%{opacity:0;transform:translate(-3px,6px)}35%{opacity:1}100%{opacity:0;transform:translate(6px,-12px)}}
+@media (prefers-reduced-motion:reduce){.kit.drowsy .k-eyes,.kit.drowsy .k-all,.kit.drowsy .k-zz,.kit.asleep .k-zz,.kit.asleep .k-all{animation:none!important}}
+.kit.drowsy.a-yawn .k-all{animation:kYawnAll 2.5s ease-in-out 1}
+
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
    Tokens: body:is([data-skin=hybrid],[data-skin=gallery]) dark skins, body[data-skin=hybrid] hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
@@ -1305,6 +1327,9 @@ a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:in
 .pin{height:46px;width:auto;font-size:15px}
 .fld input[type=email]:focus,.fld input[type=tel]:focus,.fld input[type=url]:focus,.fld input[type=date]:focus,.pin:focus{outline:none;border-color:var(--accent)}
 
+body:is([data-skin=hybrid],[data-skin=gallery]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
+body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done .q-name small.qpts{color:var(--muted)}
+
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -1358,6 +1383,7 @@ a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:in
     </header>
 
     <div class="page">
+      <div id="bedstrip" class="bedstrip" hidden></div>
       <section class="view show" id="view-home"></section>
       <section class="view" id="view-cards"></section>
       <section class="view" id="view-shop"></section>
@@ -1421,7 +1447,7 @@ function freshState(){
   return {
     v:4, pv:1, date:dateKey(), name:'', avatar:'🦊', theme:'grape',
     tasks:defaultTasks(), done:{}, overrides:{},
-    stars:0, awardedToday:false, completedAt:null, result:null,
+    stars:0, awardedToday:false, completedAt:null, result:null, paidQ:{}, pqDate:null, bonusPaid:0,
     timers:{}, screenEndsAt:null,
     pin:'1234', deadline:'20:30', mute:false,
     bonusOn:true, bonusDone:false, bonusMinutes:0,
@@ -1430,7 +1456,7 @@ function freshState(){
     cardZoom:'L', skin:'hybrid',
     points:0, history:{}, streakBest:0, streakPaid:{}, restUsed:{}, restToday:false, restNote:null,
     extraToday:0, screenToday:0, pointsLog:[], rewards:defaultRewards(), requests:[], goalId:null,
-    journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{daily:30, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
+    journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{bedOn:false, bedTime:'21:00', wakeTime:'07:00', daily:30, base:20, finish:10, latePct:50, screenEnd:'20:45', curfewOn:true, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
     ui:{ts:'M', calm:false, sfx:100, music:false, mvol:50, track:'meadow', sleep:0, mascot:true, lang:'both'},
     news:[], bitesDate:null, dailyId:null,
     goals:{weeks:{}, col:{}, sparks:[], from:'Dad'},
@@ -1527,6 +1553,9 @@ function resetProgress(full){
     state.extraToday = 0;
     state.screenToday = 0;
     state.restToday = false;
+    state.paidQ = {}; state.pqDate = dateKey(); state.bonusPaid = 0;
+  } else {
+    try{ payQuestPoints(); }catch(e){}
   }
 }
 function checkNewDay(){
@@ -1579,6 +1608,11 @@ function isActive(t){
 function activeTasks(){ return state.tasks.filter(isActive); }
 function doneCount(){ return activeTasks().filter(function(t){return state.done[t.id];}).length; }
 
+function curfewOn(){ return !state.eco || state.eco.curfewOn !== false; }
+function curfewDate(){
+  var p = ((state.eco && state.eco.screenEnd) || '20:45').split(':');
+  var d = new Date(); d.setHours(+p[0], +p[1], 0, 0); return d;
+}
 function deadlineDate(){
   var p = state.deadline.split(':');
   var d = new Date(); d.setHours(+p[0], +p[1], 0, 0); return d;
@@ -1793,8 +1827,52 @@ function iconSVG(name){
 function IC(name){ return iconSVG(name) || ''; }
 
 /* ---------- Kit the fox (mascot) ---------- */
+/* ---------- bedtime ---------- */
+var BED_WARN = 15;
+function bedOn(){ return !!(state && state.eco && state.eco.bedOn); }
+function hm2min(str, def){
+  var p = String(str || def).split(':'), h = +p[0], m = +p[1];
+  if(isNaN(h) || isNaN(m)){ p = def.split(':'); h = +p[0]; m = +p[1]; }
+  return h*60 + m;
+}
+function bedInfo(){
+  if(!bedOn()) return null;
+  var n = new Date(), m = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
+  var b = hm2min(state.eco.bedTime, '21:00'), w = hm2min(state.eco.wakeTime, '07:00');
+  var sinceB = ((m - b) % 1440 + 1440) % 1440, sleepLen = ((w - b) % 1440 + 1440) % 1440;
+  if(sinceB < sleepLen) return {mode:'asleep'};
+  var toB = 1440 - sinceB;
+  if(toB <= BED_WARN) return {mode:'drowsy', mins:Math.max(1, Math.ceil(toB))};
+  return {mode:''};
+}
+function bedMode(){ try{ var i = bedInfo(); return i ? i.mode : ''; }catch(e){ return ''; } }
+function bedStripHTML(){
+  var i = bedInfo(); if(!i || !i.mode) return '';
+  if(i.mode === 'asleep') return '<div class="bed-in">😴 <b>Shh... Kit is sleeping.</b> It is bedtime. Kit wakes up at '+fmt12(state.eco.wakeTime || '07:00')+'. See you in the morning!</div>';
+  return '<div class="bed-in">🌙 <b>Almost bedtime!</b> <span class="bed-min">Bedtime is in '+i.mins+' minute'+(i.mins === 1 ? '' : 's')+'.</span>'+
+    '<div class="bed-list"><span>🧸 Get ready for bed</span><span>🧹 Clean up any mess</span><span>🛏️ Make sure your room is clean</span><span>🚽 Use the bathroom</span><span>😴 Go to bed</span></div></div>';
+}
+function bedRefreshKit(wake){
+  try{
+    var hk = document.querySelector('.hero .kitwrap'); if(!hk) return;
+    var km = kitMood(); hk.innerHTML = kitSVG(km.mood, 'hero');
+    var say = document.querySelector('.hero .kitsay'); if(say) say.innerHTML = km.say;
+    if(wake && kitAnimOK()) setTimeout(function(){ var sv = document.querySelector('.hero .kit'); if(sv) kitPlay(sv, ['yawn','']); }, 500);
+  }catch(e){}
+}
+function updateBed(force){
+  try{
+    var i = bedInfo(), mode = i ? i.mode : '', key = mode + ':' + (i && i.mins || 0);
+    if(!force && window.__bedKey === key) return;
+    var prev = window.__bedMode; window.__bedKey = key; window.__bedMode = mode;
+    var el = $('bedstrip'); if(el){ var h = bedStripHTML(); el.innerHTML = h; el.hidden = !h; }
+    if(prev !== undefined && prev !== mode) bedRefreshKit(prev === 'asleep' && mode === '');
+  }catch(e){}
+}
 function kitSVG(mood, cls){
   mood = mood || 'happy';
+  var bm = (cls === 'face') ? '' : bedMode();
+  if(bm === 'asleep') mood = 'sleep'; else if(bm === 'drowsy' && mood !== 'sleep') mood = 'drowsy';
   var eyes, mouth = '', extra = '', brow = '';
   var ink = '#3b2a4a';
   if(mood === 'cheer'){
@@ -1804,7 +1882,12 @@ function kitSVG(mood, cls){
   } else if(mood === 'sleep'){
     eyes = '<path d="M40 60q6 5 12 0M68 60q6 5 12 0" fill="none" stroke="'+ink+'" stroke-width="3.4" stroke-linecap="round"/>';
     mouth = '<path d="M55 81q5 3 10 0" fill="none" stroke="'+ink+'" stroke-width="2.6" stroke-linecap="round"/>';
-    extra = '<text x="92" y="30" font-size="18" font-weight="900" fill="#8a7bf0" font-family="sans-serif">z</text><text x="102" y="16" font-size="13" font-weight="900" fill="#8a7bf0" font-family="sans-serif">z</text>';
+    extra = '<g class="k-zz"><text x="92" y="30" font-size="18" font-weight="900" fill="#8a7bf0" font-family="sans-serif">z</text></g><g class="k-zz k-zz2"><text x="102" y="16" font-size="13" font-weight="900" fill="#8a7bf0" font-family="sans-serif">z</text></g>';
+  } else if(mood === 'drowsy'){
+    eyes = '<path d="M40.6 60h10.8a5.4 5.4 0 0 1-10.8 0zM68.6 60h10.8a5.4 5.4 0 0 1-10.8 0z" fill="'+ink+'"/><path d="M39 59.6h13.4M67.6 59.6h13.4" fill="none" stroke="'+ink+'" stroke-width="3" stroke-linecap="round"/>';
+    brow = '<path d="M38 52q7 2 14 0M68 52q7 2 14 0" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>';
+    mouth = '<path d="M55 82q5 2 10 0" fill="none" stroke="'+ink+'" stroke-width="2.6" stroke-linecap="round"/>';
+    extra = '<g class="k-zz"><text x="98" y="26" font-size="14" font-weight="900" fill="#8a7bf0" font-family="sans-serif">z</text></g>';
   } else if(mood === 'think'){
     eyes = '<circle cx="47" cy="58" r="4.4" fill="'+ink+'"/><circle cx="73" cy="58" r="4.4" fill="'+ink+'"/><circle cx="48.4" cy="56.4" r="1.5" fill="#fff"/><circle cx="74.4" cy="56.4" r="1.5" fill="#fff"/>';
     brow = '<path d="M66 48q7-4 14 0" fill="none" stroke="'+ink+'" stroke-width="3" stroke-linecap="round"/>';
@@ -1829,7 +1912,7 @@ function kitSVG(mood, cls){
     '<g class="k-fx k-notes"><g transform="translate(14 34)" fill="#6c5ce7"><circle cx="0" cy="4" r="3"/><path d="M3 4V-6l5 2" stroke="#6c5ce7" stroke-width="1.8" fill="none"/></g><g transform="translate(102 26) scale(.85)" fill="#00b894"><circle cx="0" cy="4" r="3"/><path d="M3 4V-6l5 2" stroke="#00b894" stroke-width="1.8" fill="none"/></g></g>'+
     '<g class="k-fx k-leaves"><path transform="translate(14 30)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#e8590c"/><path transform="translate(104 24) scale(.8) rotate(40)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#f08c00"/><path transform="translate(98 58) scale(.6) rotate(-30)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#d9480f"/></g>'+
     '<g class="k-fx k-confetti"><rect x="10" y="26" width="5" height="3" fill="#ff5d8f" transform="rotate(30 12 27)"/><rect x="104" y="20" width="5" height="3" fill="#00b894" transform="rotate(-20 106 21)"/><rect x="98" y="50" width="4" height="3" fill="#ffc233"/><rect x="18" y="12" width="4" height="3" fill="#6c5ce7" transform="rotate(50 20 13)"/><circle cx="108" cy="40" r="2.2" fill="#74c2ff"/><circle cx="8" cy="46" r="2.2" fill="#ffc233"/></g>') : '';
-  return '<svg class="kit '+(cls||'')+'" viewBox="0 0 120 124" aria-hidden="true"><g class="k-all">'+
+  return '<svg class="kit '+(cls||'')+(bm === 'asleep' ? ' asleep' : '')+(mood === 'drowsy' ? ' drowsy' : '')+'" viewBox="0 0 120 124" aria-hidden="true"><g class="k-all">'+
     '<g class="k-ear-l"><path d="M24 50L20 10l34 20z" fill="#ff8a3d"/><path d="M29 42L27 20l16 10z" fill="#ffd2ad"/></g>'+
     '<g class="k-ear-r"><path d="M96 50l4-40-34 20z" fill="#ff8a3d"/><path d="M91 42l2-22-16 10z" fill="#ffd2ad"/></g>'+
     '<path d="M60 28c26 0 40 16 44 34-6-2-10 0-12 4 4 2 6 6 6 10-6-2-10 0-12 4-6 12-16 18-26 18s-20-6-26-18c-2-4-6-6-12-4 0-4 2-8 6-10-2-4-6-6-12-4 4-18 18-34 44-34z" fill="#ff8a3d"/>'+
@@ -1862,7 +1945,7 @@ function kitHTML(mood, cls){ return '<span class="kitwrap">'+kitSVG(mood, cls)+'
     RX.lastIndex = 0;
     while((m = RX.exec(txt))){
       var k = norm(m[0]), html = null;
-      if(k === '🦊'){ html = '<span class="kitface">'+kitSVG('happy')+'</span>'; }
+      if(k === '🦊'){ html = '<span class="kitface">'+kitSVG('happy','face')+'</span>'; }
       else if(!foxOnly && EMOJI_ICON[k]){ html = iconSVG(EMOJI_ICON[k]); }
       if(!html) continue;
       if(m.index > last) frag.appendChild(document.createTextNode(txt.slice(last, m.index)));
@@ -2114,6 +2197,50 @@ function sparkles(card){
 /* =========================================================
    QUEST LOGIC
    ========================================================= */
+/* ---------- points per quest + finish bonus ----------
+   Base points (eco.base) are shared across today's quests and paid the moment a quest is ticked.
+   Finish bonus (eco.finish) comes when all are done: full before the deadline, a fraction (eco.latePct) after.
+   Ticking is paid once per quest per day; unticking the same day takes that quest's points back (never below 0). */
+function baseShares(){
+  var act = activeTasks(), B = state.eco.base|0, N = act.length, m = {};
+  act.forEach(function(t,i){ m[t.id] = N ? Math.floor(B*(i+1)/N) - Math.floor(B*i/N) : 0; });
+  return m;
+}
+function paidBaseSum(){ var n = 0, q = state.paidQ || {}; for(var k in q){ if(k !== '*') n += q[k]; } return n; }
+function pointsMaxToday(){ return (state.eco.base|0) + (state.eco.finish|0); }
+function pointsEarnedToday(){
+  if(state.paidQ && state.paidQ['*']) return pointsMaxToday();
+  return paidBaseSum() + (state.bonusPaid||0);
+}
+function dayRemaining(){
+  if(state.paidQ && state.paidQ['*']) return 0;
+  return Math.max(0, (state.eco.base|0) - paidBaseSum()) + Math.max(0, (state.eco.finish|0) - (state.bonusPaid||0));
+}
+function payQuestPoints(){
+  if(state.pqDate !== dateKey()){ state.paidQ = {}; state.pqDate = dateKey(); state.bonusPaid = 0; }
+  if(state.restToday || !state.paidQ || state.paidQ['*']) return 0;
+  var sh = baseShares(), gained = 0;
+  activeTasks().forEach(function(t){
+    var paid = state.paidQ[t.id];
+    if(state.done[t.id] && paid === undefined){
+      var amt = Math.max(0, Math.min(sh[t.id]||0, (state.eco.base|0) - paidBaseSum()));
+      var g = amt ? addPoints(amt, 'Quest: '+t.name) : 0;
+      state.paidQ[t.id] = g; gained += g;
+    } else if(!state.done[t.id] && paid !== undefined){
+      var back = Math.min(paid, state.points);
+      if(back > 0){ state.points -= back; logPts(-back, 'Unticked: '+t.name); }
+      delete state.paidQ[t.id];
+    }
+  });
+  return gained;
+}
+function floatPts(id, n){
+  try{
+    var el = document.querySelector('.quest[data-id="'+id+'"]'); if(!el || !n) return;
+    var c = document.createElement('span'); c.className = 'ptsfloat'; c.textContent = '+'+n+' ⭐';
+    el.appendChild(c); setTimeout(function(){ if(c.parentNode) c.parentNode.removeChild(c); }, 1400);
+  }catch(e){}
+}
 function toggleTask(id, cardEl){
   if(state.done[id]){
     delete state.done[id]; Sound.untick();
@@ -2122,9 +2249,11 @@ function toggleTask(id, cardEl){
     if(cardEl) sparkles(cardEl);
   }
   afterProgressChange();
+  if(state.done[id] && state.paidQ && state.paidQ[id]) floatPts(id, state.paidQ[id]);
 }
 
 function afterProgressChange(){
+  try{ payQuestPoints(); }catch(e){}
   var act = activeTasks();
   var allDone = act.length > 0 && act.every(function(t){ return state.done[t.id]; });
   if(allDone && !state.completedAt){
@@ -2137,15 +2266,20 @@ function afterProgressChange(){
     markDayComplete();
     if(!state.dailyClaimed) setTimeout(function(){ toast('🎴 Your Daily History Card is ready! Look on the Quests page.', 4200); }, 3000);
     var early = new Date() < deadlineDate();
-    if(early && !state.awardedToday){
-      state.awardedToday = true; addPoints(state.eco.daily, 'All quests done'); state.result = 'star';
-      celebrate(true);
-    } else if(early && state.awardedToday){
+    var fin = state.eco.finish|0, half = Math.round(fin*(state.eco.latePct == null ? 50 : state.eco.latePct)/100);
+    if(!state.awardedToday){
+      state.awardedToday = true;
+      var bp = early ? fin : half;
+      state.bonusPaid = bp ? addPoints(bp, early ? 'Finish bonus' : 'Finish bonus (late)') : 0;
+      state.result = early ? 'star' : 'late';
+      if(early) celebrate(true);
+      else { Sound.soft(); toast('💖 All done! +'+state.bonusPaid+' finish bonus. You stuck with it!', 4200); }
+    } else if(early){
       state.result = 'repeat';
       celebrate(false);
       toast('All done again! Today\'s points were already earned.');
     } else {
-      state.result = state.awardedToday ? 'repeat' : 'late';
+      state.result = 'repeat';
       Sound.soft(); toast('Great job finishing! 💖');
     }
   } else if(!allDone){
@@ -2161,13 +2295,15 @@ function celebrate(withStar){
   if(withStar){
     starBurst();
     setTimeout(function(){ confetti(); }, 900);
-    toast('🎉 All quests done on time! You earned '+state.eco.daily+' points! ⭐', 4200);
+    toast('🎉 All quests done on time! '+pointsEarnedToday()+' points today! ⭐', 4200);
   }
 }
 
 function parentAwardStar(){
-  if(state.awardedToday){ toast('Today\'s points were already given.'); return; }
-  state.awardedToday = true; addPoints(state.eco.daily, 'Parent award'); state.result = 'override';
+  var r = dayRemaining();
+  if(!r){ toast('Today\'s points were already given.'); return; }
+  addPoints(r, 'Parent award');
+  state.awardedToday = true; state.paidQ = {'*':1}; state.pqDate = dateKey(); state.bonusPaid = state.eco.finish|0; state.result = 'override';
   save(); render(); celebrate(true);
 }
 
@@ -2393,10 +2529,33 @@ var LOGIC = [
 ];
 
 var puzzleCache = null;
+// Pick today's puzzle at random, once per day, and remember it.
+// Each kind (math / reading / logic) is drawn from a shuffled "bag" so nothing repeats until every item was used.
+function puzzleBankSize(k){ return k === 'math' ? MATH.length : (k === 'reading' ? READING.length : LOGIC.length); }
+function pickPuzzleSlot(dn){
+  var keys = ['math','reading','logic'];
+  var prev = state.puz && state.puz.k;
+  var cand = keys.filter(function(k){ return k !== prev; });
+  var k = cand[Math.floor(Math.random()*cand.length)];
+  state.puzBag = state.puzBag || {};
+  var bag = state.puzBag[k], n = puzzleBankSize(k);
+  if(!Array.isArray(bag) || !bag.length || bag.some(function(i){ return i >= n; })){
+    bag = []; for(var i=0;i<n;i++) bag.push(i);
+    bag = shuffle(bag, Math.random);
+    if(state.puz && state.puz.k === k && bag.length > 1 && bag[bag.length-1] === state.puz.idx){ bag.unshift(bag.pop()); }
+  }
+  var idx = bag.pop();
+  state.puzBag[k] = bag;
+  state.puz = {dn:dn, k:k, idx:idx, seed:Math.floor(Math.random()*2147483647)};
+  save();
+  return state.puz;
+}
 function getPuzzle(){
   var dn = dayNum();
   if(puzzleCache && puzzleCache.dn === dn) return puzzleCache.p;
-  var type = PUZZLE_TYPES[dn % 3], idx = Math.floor(dn/3), r = rngFor(dn*7919 + 13), p, o;
+  var slot = (state.puz && state.puz.dn === dn) ? state.puz : pickPuzzleSlot(dn);
+  var type = PUZZLE_TYPES.filter(function(t){ return t.k === slot.k; })[0] || PUZZLE_TYPES[0];
+  var idx = slot.idx, r = rngFor(slot.seed), p, o;
   if(type.k === 'math'){
     var m = MATH[idx % MATH.length](r);
     o = buildOptions(m.ans, m.dist || numDistract(m.ans), r);
@@ -2952,7 +3111,7 @@ function renderTop(){
 /* ---------- home ---------- */
 function rateHTML(){
   var e = state.eco;
-  var h = '<b>Earn points!</b> All quests = <b>+'+e.daily+'</b> · 1 point = 1 minute of Free Time';
+  var h = '<b>Earn points!</b> Every quest counts, and finishing them all adds a <b>+'+e.finish+'</b> bonus (up to <b>'+(e.base+e.finish)+'</b> a day) · 1 point = 1 minute of Free Time';
   h += '<br>You have <b>'+state.points+' points</b> ('+fmtMinutes(state.points)+') 🎉 Spend them in Rewards!';
   return h;
 }
@@ -2966,9 +3125,9 @@ function bannersHTML(){
     h += '<div class="banner rest"><div>🌙 Your rest day kept your streak safe on '+parseKey(state.restNote).toLocaleDateString(undefined,{weekday:'long'})+'!</div><button data-act="dismissrest">OK</button></div>';
   }
   if(allQuestsDone()){
-    if(state.result === 'star') h += '<div class="banner win"><div>🏆 Amazing! All quests finished before '+fmt12(state.deadline)+'. You earned '+state.eco.daily+' points! ⭐</div></div>';
-    else if(state.result === 'override') h += '<div class="banner win"><div>💖 Great job finishing! A parent gave you '+state.eco.daily+' points! ⭐</div></div>';
-    else if(state.result === 'late') h += '<div class="banner late"><div>💖 Great job finishing! You stuck with it and that really counts!</div><button data-act="override">👪 Parent: Award points</button></div>';
+    if(state.result === 'star') h += '<div class="banner win"><div>🏆 Amazing! All quests finished before '+fmt12(state.deadline)+'. You earned '+pointsEarnedToday()+' points today! ⭐</div></div>';
+    else if(state.result === 'override') h += '<div class="banner win"><div>💖 Great job finishing! A parent topped up your points: '+pointsEarnedToday()+' today! ⭐</div></div>';
+    else if(state.result === 'late') h += '<div class="banner late"><div>💖 Great job finishing! Finishing after '+fmt12(state.deadline)+' still earns half the finish bonus. You got '+pointsEarnedToday()+' points today. You stuck with it and that really counts!</div></div>';
     else if(state.result === 'repeat') h += '<div class="banner win"><div>🌟 Great job finishing everything!</div></div>';
   }
   var sn = streakNow();
@@ -2997,10 +3156,18 @@ function discoveryHTML(){
 }
 
 var PALETTES = 6;
+function questPtsHTML(t){
+  try{
+    if(state.restToday || (state.paidQ && state.paidQ['*'])) return '';
+    var paid = state.paidQ && state.paidQ[t.id], v = (paid !== undefined && paid > 0) ? paid : baseShares()[t.id];
+    if(!v) return '';
+    return '<small class="qpts">⭐ '+(state.done[t.id] && paid ? '+' : '')+v+(state.done[t.id] && paid ? ' earned' : ' points')+'</small>';
+  }catch(e){ return ''; }
+}
 function questHTML(t, i){
   var done = !!state.done[t.id];
   var h = '<div class="quest p'+(i%PALETTES)+(done?' done':'')+(t.calm?' calm':'')+'" data-id="'+esc(t.id)+'" role="button" aria-pressed="'+done+'">';
-  h += '<div class="q-main"><div class="tile">'+esc(t.emoji)+'</div><div class="q-name">'+esc(t.name)+gQuestBadge(t)+'</div><div class="check">'+(done?'✓':'')+'</div></div>';
+  h += '<div class="q-main"><div class="tile">'+esc(t.emoji)+'</div><div class="q-name">'+esc(t.name)+gQuestBadge(t)+questPtsHTML(t)+'</div><div class="check">'+(done?'✓':'')+'</div></div>';
   if(t.minutes > 0){
     var tm = state.timers[t.id], running = tm && tm.running, rem = timerRemaining(t);
     h += '<div class="timer"><div class="ring'+(running?' running':'')+'"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" id="ring-'+esc(t.id)+'" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><div class="t" id="tt-'+esc(t.id)+'">'+mmss(rem)+'</div></div>';
@@ -3019,6 +3186,9 @@ function bonusCardHTML(){
 }
 
 function kitMood(){
+  var bm = bedMode();
+  if(bm === 'asleep') return {mood:'sleep', say:'Zzz... Kit is asleep. See you in the morning!'};
+  if(bm === 'drowsy') return {mood:'drowsy', say:'*yawn* I am getting sleepy. It is almost bedtime!'};
   var act = activeTasks(), d = doneCount();
   if(state.restToday) return {mood:'sleep', say:'Rest day! I am taking a nap too.'};
   if(!act.length) return {mood:'sleep', say:'No quests today. Enjoy your day!'};
@@ -3039,7 +3209,7 @@ function renderHome(){
   try{ act = activeTasks(); }catch(e){}
   try{ km = kitMood(); }catch(e){}
   var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div><div class="ratebox">'+rateHTML()+'</div></div>'; });
-  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'; })+'</span></div><div class="qgrid">';
+  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'+(state.restToday ? '' : ' · ⭐ '+pointsEarnedToday()+' of '+pointsMaxToday()+' points'); })+'</span></div><div class="qgrid">';
   if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
   act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
   if(state.bonusOn && act.length) h += safeSec('Bonus', bonusCardHTML);
@@ -3177,6 +3347,7 @@ function render(){
     if(v) v.innerHTML = errPanel('This screen', e);
   }
   try{ p4After(); }catch(e){ try{ console.error('after', e); }catch(_){} }
+  updateBed(true);
 }
 function setTab(t){
   tab = t;
@@ -3200,6 +3371,7 @@ function updateTimerDisplays(){
 }
 function tick(){
   if(checkNewDay()){ toast('🌅 New day, new quests!'); render(); }
+  updateBed();
   musicTick();
   var cdTxt = '';
   var now = new Date(), h = now.getHours()%12 || 12;
@@ -3217,6 +3389,15 @@ function tick(){
   }
   if(cdTxt !== cdOld){ cd.setAttribute('data-raw', cdTxt); cd.textContent = cdTxt; }
   if(cd.className !== cdCls) cd.className = cdCls;
+  if(state.screenEndsAt && curfewOn()){
+    var cfT = curfewDate().getTime(), nT = Date.now();
+    if(nT >= cfT && nT < cfT + 3*3600000){
+      state.screenEndsAt = null; save(); Sound.alarm();
+      toast('🌙 Screen time is over for tonight. Sleep well!', 5000); renderBanners();
+    } else if(nT < cfT && cfT - nT <= 5*60000 && window.__cfWarn !== dateKey()){
+      window.__cfWarn = dateKey(); toast('⏰ 5 minutes until screen time ends tonight', 4200);
+    }
+  }
   if(state.screenEndsAt){
     if(Date.now() >= state.screenEndsAt){
       state.screenEndsAt = null; save(); Sound.alarm();
@@ -3304,16 +3485,22 @@ function showParent(scrollTop){
   if(state.screenEndsAt && state.screenEndsAt>Date.now()){
     h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="pclearscreen">⏹ Stop Free Time timer</button></div>';
   }
-  if(!state.awardedToday){
-    h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="paward">🎁 Award today\'s '+state.eco.daily+' points (override)</button></div>';
+  if(dayRemaining() > 0){
+    h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="paward">🎁 Give the rest of today\'s points (+'+dayRemaining()+', override)</button></div>';
   }
 
   h += '<h3>📅 Day controls</h3><div class="row"><button class="btn" data-act="preset">🔄 Reset today\'s board</button><span class="hint">Unchecks everything. Auto-resets at midnight too.</span></div>';
 
   h += '<h3>⚙️ Settings</h3>';
-  h += '<div class="fld"><label>Deadline for the daily points</label><input type="time" id="sDeadline" value="'+esc(state.deadline)+'"></div>';
+  h += '<div class="fld"><label>Full finish bonus before this time (half after)</label><input type="time" id="sDeadline" value="'+esc(state.deadline)+'"></div>';
   h += '<div class="ecogrid">';
-  h += '<div class="fld"><label>Points for all quests</label><input type="number" id="eDaily" min="0" max="200" inputmode="numeric" value="'+state.eco.daily+'"></div>';
+  h += '<div class="fld"><label>Points shared across the day\'s quests</label><input type="number" id="eBase" min="0" max="200" inputmode="numeric" value="'+state.eco.base+'"></div>';
+  h += '<div class="fld"><label>Finish bonus (all quests done)</label><input type="number" id="eFinish" min="0" max="200" inputmode="numeric" value="'+state.eco.finish+'"></div>';
+  h += '<div class="fld"><label>Late finish bonus (% of the finish bonus)</label><input type="number" id="eLatePct" min="0" max="100" inputmode="numeric" value="'+(state.eco.latePct == null ? 50 : state.eco.latePct)+'"></div>';
+  h += '<div class="fld"><label>Screen time ends at</label><input type="time" id="eScreenEnd" value="'+esc(state.eco.screenEnd || '20:45')+'"></div>';
+  h += '<label class="row" style="font-weight:800;margin:10px 0 4px"><span class="switch"><input type="checkbox" id="eBedOn" '+(state.eco.bedOn ? 'checked' : '')+'><span></span></span> 🌙 Bedtime reminder (Kit gets sleepy 15 minutes before, then sleeps)</label>';
+  h += '<div class="fld"><label>Bedtime</label><input type="time" id="eBedTime" value="'+esc(state.eco.bedTime || '21:00')+'"></div>';
+  h += '<div class="fld"><label>Kit wakes up at</label><input type="time" id="eWakeTime" value="'+esc(state.eco.wakeTime || '07:00')+'"></div>';
   h += '<div class="fld"><label>Points for bonus challenge</label><input type="number" id="eBonus" min="0" max="50" inputmode="numeric" value="'+state.eco.bonus+'"></div>';
   h += '<div class="fld"><label>Screen time limit per day (min)</label><input type="number" id="eScreen" min="0" max="600" inputmode="numeric" value="'+state.eco.screenCap+'"></div>';
   h += '<div class="fld"><label>Card packs she can open per day (0 = no limit)</label><input type="number" id="ePackCap" min="0" max="20" inputmode="numeric" value="'+packCap()+'"></div>';
@@ -3329,6 +3516,7 @@ function showParent(scrollTop){
   h += '<div class="fld"><label>Points for learning the kanji (once a day, counts toward the extra limit)</label><input type="number" id="eKanjiPts" min="0" max="5" inputmode="numeric" value="'+(state.eco.kanjiPts == null ? 1 : state.eco.kanjiPts)+'"></div>';
   h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eMusic" '+(state.eco.musicOn!==false?'checked':'')+'><span></span></span> Allow background music</label>';
   h += '<div class="fld"><label>Music stops at this time each evening (leave empty for no limit)</label><input type="time" id="eMusicOff" value="'+esc(state.eco.musicOff||'')+'"></div>';
+  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eCurfew" '+(state.eco.curfewOn !== false ? 'checked' : '')+'><span></span></span> Block screen time that would run past the end time</label>';
   h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eRest" '+(state.eco.restOn?'checked':'')+'><span></span></span> Allow one rest day per week</label>';
   h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eAuto" '+(state.eco.autoRest?'checked':'')+'><span></span></span> Use the rest day automatically if a day is missed</label>';
   h += '<div class="fld"><label>Change parent PIN (4 digits)</label><input type="password" inputmode="numeric" maxlength="4" id="sPin" placeholder="Leave blank to keep current"></div>';
@@ -3388,7 +3576,16 @@ function parentClick(e){
     case 'psave':
       var dl = $('sDeadline').value; if(/^\d{2}:\d{2}$/.test(dl)) state.deadline = dl;
       var num = function(id, lo, hi, d){ var v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(lo, Math.min(hi, v)); };
-      state.eco.daily = num('eDaily', 0, 200, state.eco.daily);
+      state.eco.base = num('eBase', 0, 200, state.eco.base);
+      state.eco.finish = num('eFinish', 0, 200, state.eco.finish);
+      state.eco.latePct = num('eLatePct', 0, 100, state.eco.latePct == null ? 50 : state.eco.latePct);
+      state.eco.daily = state.eco.base + state.eco.finish;
+      var se = $('eScreenEnd').value; if(/^\d{2}:\d{2}$/.test(se)) state.eco.screenEnd = se;
+      state.eco.curfewOn = $('eCurfew').checked;
+      state.eco.bedOn = $('eBedOn').checked;
+      var bt = $('eBedTime').value, wt = $('eWakeTime').value;
+      if(/^\d{2}:\d{2}$/.test(bt)) state.eco.bedTime = bt;
+      if(/^\d{2}:\d{2}$/.test(wt)) state.eco.wakeTime = wt;
       state.eco.bonus = num('eBonus', 0, 50, state.eco.bonus);
       state.eco.screenCap = num('eScreen', 0, 600, state.eco.screenCap);
       state.eco.extraCap = num('eExtra', 0, 200, state.eco.extraCap);
@@ -3800,6 +3997,14 @@ function migrate(s){
       for(var i=0; i<s.streak && i<90; i++){ s.history[addDaysKey(s.lastComplete, -i)] = 'done'; }
     }
   }
+  if(s.eco && typeof s.eco === 'object' && s.eco.base === undefined){
+    var dly = (typeof s.eco.daily === 'number') ? s.eco.daily : 30;
+    s.eco.base = Math.round(dly*2/3); s.eco.finish = dly - s.eco.base;
+  }
+  if(s.eco && s.eco.base !== undefined) s.eco.daily = (s.eco.base|0) + (s.eco.finish|0);
+  if(!('pqDate' in s) && s.awardedToday && s.date === dateKey()){
+    s.paidQ = {'*':1}; s.pqDate = dateKey(); s.bonusPaid = (s.eco && s.eco.finish) || 10;
+  }
   ['eco','ui'].forEach(function(o){
     if(!s[o] || typeof s[o] !== 'object') s[o] = {};
     for(var k in base[o]){ if(!(k in s[o])) s[o][k] = base[o][k]; }
@@ -3887,7 +4092,7 @@ function rewardCardHTML(r){
 function renderShop(){
   var e = state.eco;
   var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(state.points)+' of screen time</div></div></div>';
-  h += '<div class="earn"><span>✅ All quests <b>+'+e.daily+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>+1 to +10</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
+  h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>+1 to +10</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
   var goal = state.goalId ? rewardById(state.goalId) : null;
   if(goal && goal.on){
     var gp = Math.min(100, Math.round(state.points / goal.cost * 100));
@@ -3897,7 +4102,7 @@ function renderShop(){
   var treats = state.rewards.filter(function(r){ return r.on && r.kind === 'treat'; });
   var goals = state.rewards.filter(function(r){ return r.on && r.kind === 'goal'; });
   var running = state.screenEndsAt && state.screenEndsAt > Date.now();
-  h += '<div class="sec"><h2>📺 Screen time</h2><span class="count">'+state.screenToday+' of '+e.screenCap+' min used today'+(running?' · running now':'')+'</span></div><div class="rgrid">';
+  h += '<div class="sec"><h2>📺 Screen time</h2><span class="count">'+state.screenToday+' of '+e.screenCap+' min used today'+(curfewOn() ? ' · ends '+fmt12(e.screenEnd || '20:45') : '')+(running?' · running now':'')+'</span></div><div class="rgrid">';
   scr.forEach(function(r){ h += rewardCardHTML(r); });
   h += '</div>';
   if(treats.length){ h += '<div class="sec"><h2>🎁 Treats &amp; experiences</h2><span class="count">A parent will make it happen</span></div><div class="rgrid">'; treats.forEach(function(r){ h += rewardCardHTML(r); }); h += '</div>'; }
@@ -3923,6 +4128,16 @@ function buyReward(id){
     Sound.untick();
     toast('📺 That is more than today\'s screen time limit ('+state.eco.screenCap+' min). Try again tomorrow!', 4200);
     return;
+  }
+  if(r.kind === 'screen' && curfewOn()){
+    var cf = curfewDate().getTime(), nowT = Date.now(), startAt = Math.max(nowT, state.screenEndsAt || 0), ce = fmt12(state.eco.screenEnd || '20:45');
+    if(nowT >= cf){
+      Sound.untick(); toast('🌙 Screen time is finished for tonight ('+ce+'). Your points are saved for tomorrow!', 4800); return;
+    }
+    if(startAt + r.mins*60000 > cf){
+      var left = Math.floor((cf - startAt)/60000);
+      Sound.untick(); toast('🌙 Screen time ends at '+ce+' tonight, so that is too long. '+(left > 0 ? 'Only '+left+' minutes left. Try a shorter one, or save your points for tomorrow!' : 'Your points are saved for tomorrow!'), 5200); return;
+    }
   }
   var txt = r.kind === 'screen' ? 'Spend '+r.cost+' points for '+r.mins+' minutes of screen time?' : 'Spend '+r.cost+' points on <b>'+esc(r.name)+'</b>? A parent will make it happen!';
   confirmBox(esc(r.icon)+' '+esc(r.name)+'?', txt, 'Yes! 🎉', function(){
@@ -4284,10 +4499,10 @@ function quizTypesFor(c){
   });
 }
 function makeQuiz(){
-  var q = quizToday(), r = rngFor(dayNum()*7919 + ownedCount()*31 + 5);
+  var q = quizToday(), r = rngFor(Math.floor(Math.random()*2147483647));
   var seen = state.quizSeen || {};
   var owned = CARDS.filter(function(c){ return state.cards[c.id] && c.r !== 'FAM'; });
-  owned.forEach(function(c){ c._qs = (seen[c.id] || 0) + r()*0.95; });
+  owned.forEach(function(c){ c._qs = (seen[c.id] || 0) + r()*1.9; });
   owned.sort(function(a,b){ return a._qs - b._qs; });
   var chosen = owned.slice(0, QUIZ_LEN);
   var used = {};
@@ -5920,6 +6135,7 @@ var KIT_HOL = {
   tanabata:['tilt','stars'], tsukimi:['tilt','stars'], mid:['tilt','stars'], obon:['tilt','stars'], culture:['tilt','stars'], dragon:['hop','notes']
 };
 function kitPickAction(){
+  if(bedMode() === 'drowsy' && Math.random() < 0.7) return ['yawn',''];
   var acc = (typeof kitAcc === 'function') ? kitAcc() : '';
   var r = Math.random();
   if(acc === 'party' && r < 0.7) return ['toot','confetti'];
@@ -5946,7 +6162,7 @@ function kitAnimOK(){
 }
 function kitLoop(){
   try{
-    if(kitAnimOK() && !document.hidden && !Tfs.id){
+    if(kitAnimOK() && !document.hidden && !Tfs.id && bedMode() !== 'asleep'){
       var s = document.querySelector('.hero .kit');
       if(s && s.getBoundingClientRect().width > 0 && !$('overlay').classList.contains('show')) kitPlay(s);
     }
@@ -5955,6 +6171,7 @@ function kitLoop(){
 }
 document.addEventListener('click', function(e){
   var w = e.target.closest && e.target.closest('.hero .kitwrap');
+  if(w && bedMode() === 'asleep'){ toast('🤫 Shh... Kit is sleeping. See you in the morning!', 2600); return; }
   if(w && kitAnimOK()){ var s = w.querySelector('.kit'); if(s){ var pick = kitPickAction(); kitPlay(s, pick); } }
 });
 
