@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v46', errs = [], shown = false;
+  var V = 'v47', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -8620,7 +8620,7 @@ function bkAdd(jar, cents, kind, note, grp, dateKeyStr, extra){
 }
 function bkBal(jar){ var n = 0; bk().ledger.forEach(function(e){ if(!jar || e.jar === jar) n += e.cents; }); return n; }
 function bkMonthKey(){ return dateToKey(new Date()).slice(0, 7); }
-var BK_IN = {allowance:1, gift:1};
+var BK_IN = {allowance:1, gift:1, correction:1}; /* parent add (+) and remove (-) both move the Received number */
 function bkMonthStats(){
   var mk = bkMonthKey(), rec = 0, sp = 0;
   bk().ledger.forEach(function(e){
@@ -8628,7 +8628,7 @@ function bkMonthStats(){
     if(e.jar === 'save' && (BK_IN[e.kind] || (e.kind === 'undo' && BK_IN[e.of]))) rec += e.cents;
     if(e.jar === 'spent') sp += e.cents;
   });
-  return {received:rec, spent:sp};
+  return {received:Math.max(0, rec), spent:Math.max(0, sp)};
 }
 function bkCredit(dateKeyStr){ var b = bk(); if(b.weekly > 0) bkAdd('save', b.weekly, 'allowance', 'Allowance', bkId(), dateKeyStr); }
 function bankCatchUp(){
