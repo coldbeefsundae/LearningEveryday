@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v20', errs = [], shown = false;
+  var V = 'v24', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -415,8 +415,8 @@ h1,h2,h3,p{margin:0}
 .opt.right{background:var(--good);color:#fff;box-shadow:0 4px 0 #0e8a58;animation:pop .5s}
 .opt.wrong{background:#ffd9e0;color:#a02a48;box-shadow:none;opacity:.7}
 .bmsg{min-height:30px;margin-top:12px;font-size:19px;font-weight:800;text-align:center}
-.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,140px);background:#1e2142;color:#fff;padding:15px 26px;border-radius:99px;font-weight:800;font-size:18px;z-index:120;transition:transform .35s cubic-bezier(.2,1.4,.4,1);max-width:92vw;text-align:center;box-shadow:var(--shadow-2)}
-.toast.show{transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,260px);opacity:0;visibility:hidden;pointer-events:none;background:#1e2142;color:#fff;padding:15px 26px;border-radius:99px;font-weight:800;font-size:18px;z-index:120;transition:transform .35s cubic-bezier(.2,1.4,.4,1),opacity .25s,visibility 0s .35s;max-width:92vw;text-align:center;box-shadow:var(--shadow-2)}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible;transition-delay:0s}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:100;width:100%;height:100%}
 .starburst{position:fixed;left:50%;top:50%;z-index:110;font-size:min(40vw,250px);transform:translate(-50%,-50%) scale(0);pointer-events:none;filter:drop-shadow(0 10px 30px rgba(255,170,0,.7))}
 .starburst.go{animation:burst 2.2s ease-out forwards}
@@ -2069,7 +2069,7 @@ document.addEventListener('visibilitychange', function(){
    ========================================================= */
 var toastTimer;
 function toast(msg, ms){
-  var el = $('toast'); el.textContent = msg; el.classList.add('show');
+  var el = $('toast'); if(!msg){ el.classList.remove('show'); return; } el.textContent = msg; el.classList.add('show');
   clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.classList.remove('show'); }, ms || 3200);
 }
 
@@ -2740,7 +2740,7 @@ var REGION_ORDER = ['FAM','CN','JP','KR','CA','GL','EU','SA','AF','AU','AS','AM'
 var RAR_ORDER = ['SSSR','SSR','S','A','B','C'];
 var ROLL_ORDER = ['SSSR','FAM','SSR','S','A','B','C'];
 var RATES = {SSSR:0.4, FAM:1.2, SSR:2, S:8, A:20, B:28.4, C:40};
-var FAM_IDS = ['fam01','fam02'], PITY_FAM = 70, PITY_E = 120;
+var FAM_IDS = ['fam01','fam02','fam04'], PITY_FAM = 70, PITY_E = 120;
 var PITY_LIMIT = 10;
 var CARDS_PER_PACK = 3;
 var TYPE_LABEL = {P:'Person', E:'Event', L:'Legend'};
@@ -2762,6 +2762,7 @@ var CARDS = RAW_CARDS.map(function(a,i){
 var BY_ID = {}, BY_RAR = {SSSR:[],SSR:[],S:[],A:[],B:[],C:[]};
 CARDS.forEach(function(c){ BY_ID[c.id] = c; BY_RAR[c.k].push(c); });
 FAM_IDS = FAM_IDS.filter(function(id){ return !!BY_ID[id]; });
+var FAM_ALL = ['fam01','fam02','fam03','fam04'].filter(function(id){ return !!BY_ID[id]; });
 var CARDS_SORTED = (function(){ var o = {}; REGION_ORDER.forEach(function(r,i){ o[r] = i; }); return CARDS.map(function(c,i){ return [c,i]; }).sort(function(a,b){ return (o[a[0].r]-o[b[0].r]) || (a[1]-b[1]); }).map(function(x){ return x[0]; }); })();
 var DAILY_ORDER = (function(){
   var oldIds = shuffle(CARDS.slice(0,110).filter(function(c){ return c.r !== 'FAM'; }).map(function(c){ return c.id; }), rngFor(20261102));
@@ -3046,17 +3047,17 @@ function renderHome(){
   try{ act = activeTasks(); }catch(e){}
   try{ km = kitMood(); }catch(e){}
   var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div><div class="ratebox">'+rateHTML()+'</div></div>'; });
+  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'; })+'</span></div><div class="qgrid">';
+  if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
+  act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
+  if(state.bonusOn && act.length) h += safeSec('Bonus', bonusCardHTML);
+  h += '</div>';
   h += '<div class="banners">'+safeSec('Banners', specialBannersHTML)+safeSec('Streak banner', bannersHTML)+'</div>';
   h += safeSec('Goal cards', goalPanelHTML);
   h += '<div class="duo">'+safeSec('Quote', quoteBlock)+safeSec('Daily card', discoveryHTML)+'</div>';
   h += safeSec('Quiz', quizPanelHTML);
   h += safeSec('Bites', bitesPanelHTML);
   h += safeSec('Kanji of the Day', kanjiPanelHTML);
-  h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'; })+'</span></div><div class="qgrid">';
-  if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
-  act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
-  if(state.bonusOn && act.length) h += safeSec('Bonus', bonusCardHTML);
-  h += '</div>';
   $('view-home').innerHTML = h;
   try{ updateTimerDisplays(); }catch(e){}
 }
@@ -3652,7 +3653,7 @@ $('stage').addEventListener('click', function(e){
 /* ---------- read aloud (Web Speech, built into Android Chrome) ---------- */
 var SPEAK_LANG = {CN:'zh-CN', JP:'ja-JP', KR:'ko-KR'};
 function natLang(c){
-  var o = {fam01:'zh-HK', fam02:'ja-JP', fam03:'ja-JP'}; if(o[c.id]) return o[c.id];
+  var o = {fam01:'zh-HK', fam02:'ja-JP', fam03:'ja-JP', fam04:'ja-JP'}; if(o[c.id]) return o[c.id];
   var s = c.nat || '';
   if(/[\u3040-\u30ff]/.test(s)) return 'ja-JP';
   if(/[\uAC00-\uD7AF]/.test(s)) return 'ko-KR';
@@ -3694,13 +3695,15 @@ function speakText(txt, lang, el){
   if(cap){
     if(el){ speakingEl = el; el.classList.add('speaking'); }
     var clear = function(){ if(el) el.classList.remove('speaking'); if(speakingEl === el) speakingEl = null; };
+    setTimeout(clear, Math.min(25000, 4000 + String(txt).length * 120));
     try{
       cap.nativePromise('TextToSpeech', 'speak', {text:txt, lang:lang || 'en-US', rate:0.92, pitch:1.05, volume:1.0, queueStrategy:0}).then(clear, function(err){
         clear();
         if(webOK){ webSpeak(txt, lang, el); return; }
         var m = String((err && (err.message || err.errorMessage)) || err || '');
-        if(/not implemented|unimplemented|not available|no such plugin/i.test(m)) toast('Reading aloud needs the newest StarQuest app. Please install the latest version.', 4500);
-        else toast('Could not read this aloud. Check that a Text-to-speech engine is installed (Android Settings, search "Text-to-speech").', 5000);
+        var why = m ? ' [' + m.slice(0, 90) + ']' : '';
+        if(/not implemented|unimplemented|not available|no such plugin/i.test(m)) toast('Reading aloud needs the newest StarQuest app. Please install the latest version.' + why, 6500);
+        else toast('Could not read this aloud. Check that a Text-to-speech engine is installed (Android Settings, search "Text-to-speech").' + why, 7000);
       });
     }catch(e){ clear(); if(webOK) webSpeak(txt, lang, el); else toast('This device can\'t read aloud.'); }
     return;
@@ -3750,7 +3753,7 @@ function showRates(){
   RAR_ORDER.forEach(function(k){
     if(!BY_RAR[k].length) return;
     h += '<div class="prow"><span class="tag rr r-'+k+'" style="min-width:56px;text-align:center">'+k+'</span><div class="pn">'+names[k]+'<small>'+(k === 'SSR' ? poolFor('SSR').length : BY_RAR[k].length)+' card'+((k === 'SSR' ? poolFor('SSR').length : BY_RAR[k].length) === 1 ? '' : 's')+' in the collection</small></div><b style="font-size:20px">'+RATES[k]+'%</b></div>';
-    if(k === 'SSR' && FAM_IDS.length) h += '<div class="prow"><span class="tag rr r-SSR" style="min-width:56px;text-align:center">💛</span><div class="pn">Family cards (Dad and Mom)<small>2 cards, super special</small></div><b style="font-size:20px">'+RATES.FAM+'%</b></div>';
+    if(k === 'SSR' && FAM_IDS.length) h += '<div class="prow"><span class="tag rr r-SSR" style="min-width:56px;text-align:center">💛</span><div class="pn">Family cards<small>'+FAM_IDS.length+' cards, super special</small></div><b style="font-size:20px">'+RATES.FAM+'%</b></div>';
   });
   h += '</div><p style="font-weight:700;line-height:1.5">🍀 The last card in every pack is always at least Uncommon (B).<br>🌟 You are guaranteed an S or SSR card at least once every '+PITY_LIMIT+' packs.'+(FAM_IDS.length ? '<br>💛 If luck is slow, a family card is guaranteed after about '+PITY_FAM+' packs and the SSSR star after about '+PITY_E+' packs.' : '')+'<br>🔁 Duplicates are fine. They show a ×2 badge.</p>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn primary" data-x="1">Got it</button></div>';
@@ -5511,7 +5514,7 @@ var BADGES = [
   ['kj100','🈴','Kanji Master','Learn 100 kanji of the day','gold',kanjiCount,100],
   ['kj200','🈴','Kanji Legend','Learn all 200 grade 3 kanji','gold',kanjiCount,200],
   ['call','👑','History Legend','Collect every card','gold',ownedCount,CARDS.length],
-  ['cfam','💛','Our Family','Find all 3 family cards','gold',function(){ return ['fam01','fam02','fam03'].filter(function(i){ return state.cards[i]; }).length; },3],
+  ['cfam','💛','Our Family','Find all '+FAM_ALL.length+' family cards','gold',function(){ return FAM_ALL.filter(function(i){ return state.cards[i]; }).length; },FAM_ALL.length],
   ['cE','🌟','The Star','Find the SSSR star card','gold',function(){ return state.cards.fam03 ? 1 : 0; },1],
   ['q1','🧠','Quiz Whiz','Get a perfect quiz score','bronze',function(){ return (state.quizStats||{}).perfect || 0; },1],
   ['q10','🎓','Quiz Master','10 perfect quizzes','gold',function(){ return (state.quizStats||{}).perfect || 0; },10],
