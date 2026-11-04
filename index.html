@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v39', errs = [], shown = false;
+  var V = 'v40', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -708,6 +708,18 @@ body[data-calm=on] .kit *{animation:none!important}
 .kjgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px;margin-top:10px;max-height:52vh;overflow:auto}
 .kjcell{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;font:700 26px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;background:rgba(128,128,128,.12);color:rgba(128,128,128,.5);border:0}
 .kjcell.on{background:rgba(108,92,231,.16);color:inherit;cursor:pointer}
+/* ---- v40: kanji book by volume and page ---- */
+.kbvol{font-weight:900;font-size:14px;margin:14px 0 4px;opacity:.85}
+.kbrow{display:flex;align-items:center;gap:8px;margin:4px 0}
+.kbrow.here{background:rgba(255,193,7,.14);border-radius:12px;padding:2px 4px;margin-left:-4px;margin-right:-4px}
+.kbp{flex:none;width:34px;font-size:11px;font-weight:800;opacity:.55;text-align:right}
+.kbcells{display:flex;flex-wrap:wrap;gap:6px}
+.kbc{position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;font:700 26px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;border:2px solid transparent;background:rgba(128,128,128,.07);color:rgba(128,128,128,.35);padding:0}
+.kbc.met{background:rgba(108,92,231,.2);color:inherit;border-color:rgba(108,92,231,.55);cursor:pointer}
+.kbc.cov{background:rgba(108,92,231,.07);color:inherit;border-color:rgba(108,92,231,.18);cursor:pointer}
+.kbc .kbi{position:absolute;right:2px;bottom:1px;font-size:10px;line-height:1}
+.kblegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;opacity:.8;margin-top:6px}
+.kblegend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:2px solid transparent}
 /* ---- v39: kanji combos ---- */
 .kfch{grid-column:1/-1;font-weight:900;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.6;margin-top:6px}
 .kcbslots{display:flex;gap:14px;justify-content:center;margin:6px 0 14px}
@@ -6485,7 +6497,7 @@ function kanjiBackfill(){
   if(ks.bf !== dn - 1){ ks.bf = dn - 1; changed = true; }
   if(changed) save();
 }
-function kanjiCount(){ try{ kanjiBackfill(); }catch(e){} return Object.keys(kanjiState().log).length; }
+function kanjiCount(){ try{ kanjiBackfill(); }catch(e){} var n = 0; KANJI.forEach(function(k){ if(kjInBook(k.k)) n++; }); return n; }
 function kjEsc(s){ return esc(s === '-' ? '—' : s); }
 function kanjiPanelHTML(){
   if(state.eco.kanjiOn === false) return '';
@@ -6525,14 +6537,48 @@ function showKanji(k, reward){
   openModal(h);
   window.__kjCur = k;
 }
+/* ---- v40: a kanji is in her book once she has met it in any way (kanji of the day, a card, writing it,
+   a word game) or it is on a page she has already covered at hoshuko ---- */
+function kjMeet(ch){
+  if(!ch || !KJ_BY[ch]) return;
+  var ks = kanjiState(); if(!ks.met) ks.met = {};
+  if(!ks.met[ch]) ks.met[ch] = dateKey();
+}
+function kjHoshukoDone(ch){
+  var h; try{ h = hz(); }catch(e){ return false; }
+  if(!h.on) return false;
+  var b = KB_BY[ch]; if(!b) return false;
+  if(b.v === h.vol) return b.p <= h.page;
+  return b.v === '\u4e0a' && h.vol === '\u4e0b';
+}
+function kjMetState(ch){
+  var ks = kanjiState();
+  if(ks.log[ch] || (ks.met && ks.met[ch])) return 'met';
+  return kjHoshukoDone(ch) ? 'cov' : '';
+}
+function kjInBook(ch){ return !!kjMetState(ch); }
 function showKanjiBook(){
   try{ kanjiBackfill(); }catch(e){}
-  var ks = kanjiState(), h = '<div class="kjmodal"><h2 style="margin:0 0 6px">📖 My Kanji Book</h2><div class="hint">'+kanjiCount()+' of '+KANJI.length+' learned. Tap one to see it again.</div><div class="kjgrid">';
-  KANJI.forEach(function(k, i){
-    var has = !!ks.log[k.k];
-    h += has ? '<button class="kjcell on" lang="ja" data-kjv="'+i+'">'+k.k+'</button>' : '<span class="kjcell" aria-hidden="true">?</span>';
+  var ink = kinkLoad(), hh = hz(), idx = {};
+  KANJI.forEach(function(k, i){ idx[k.k] = i; });
+  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd6 My Kanji Book</h2><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again.</div>';
+  h += '<div class="kblegend"><span><i style="background:rgba(108,92,231,.2);border-color:rgba(108,92,231,.55)"></i>practised here</span><span><i style="background:rgba(108,92,231,.07);border-color:rgba(108,92,231,.18)"></i>done at hoshuko</span><span><i style="background:rgba(128,128,128,.12)"></i>not yet</span><span>\u270d\ufe0f in my writing</span></div>';
+  h += '<div style="max-height:56vh;overflow:auto;margin-top:6px">';
+  ['\u4e0a','\u4e0b'].forEach(function(v){
+    h += '<div class="kbvol">3\u5e74'+v+(hh.on && hh.vol === v ? ' \u00b7 hoshuko is here' : '')+'</div>';
+    kbPages(v).forEach(function(x){
+      var here = hh.on && hh.vol === v && hh.page === x.p;
+      h += '<div class="kbrow'+(here ? ' here' : '')+'"><span class="kbp">p.'+x.p+'</span><span class="kbcells">';
+      x.ks.forEach(function(c){
+        var st = kjMetState(c), i = idx[c];
+        if(i === undefined) return;
+        if(st) h += '<button class="kbc '+st+'" lang="ja" data-kjv="'+i+'">'+c+(ink[c] && ink[c].length ? '<span class="kbi">\u270d\ufe0f</span>' : '')+'</button>';
+        else h += '<span class="kbc" aria-hidden="true">?</span>';
+      });
+      h += '</span></div>';
+    });
   });
-  h += '</div><div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">🃏 Flash cards</button></div></div>';
+  h += '</div><div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">\ud83c\udccf Flash cards</button></div></div>';
   openModal(h);
 }
 document.addEventListener('click', function(e){
@@ -6622,7 +6668,7 @@ function kjRec(ch, ok, wrong){
   var wk = kwk(), e = wk[ch] = wk[ch] || {};
   if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
   if(!ok && wrong && klookOf(ch)){ e.lk = (e.lk || 0) + 1; }
-  e.t = Date.now(); save();
+  e.t = Date.now(); kjMeet(ch); save();
 }
 function kfcPick(n){
   var recent = kjRecent(), focus = kjFocus(), last = window.__kfcLast || {};
@@ -7080,6 +7126,7 @@ function kwOpen(ch, mode){
   kwClose(true);
   var k = KJ_BY[ch], ks = kanjiState();
   if(ks.penOnly === undefined) ks.penOnly = true;
+  kjMeet(ch); save();
   KW = {ch:ch, k:k, polys:kwPolys(ch), mode:'watch', view:'write', ink:[], cur:null, ti:0, fails:0, shown:0, anim:null, attempts:[], sel:-1, peek:0, msg:KW_MSG.watch, fast:0, fastMsgs:0, saved:false, raf:0, size:300, nudged:false, peekUntil:0, penSeen:false, drawing:false, redrawQ:false};
   var el = document.createElement('div'); el.className = 'kw'; el.id = 'kw';
   el.innerHTML = '<div class="kwtop"><button class="kwx" type="button" data-kw="close" aria-label="Close">✕</button><div class="kwtitle" id="kwTitle"></div><div class="kwmodes" id="kwModes"></div></div>' +
@@ -7380,7 +7427,7 @@ function kwKeep(){
   var wk = kwk(), e = wk[s.ch] = wk[s.ch] || {}, bad = at.ck.filter(function(v){ return v === 0; }).length, yes = at.ck.filter(function(v){ return v === 1; }).length;
   if(bad >= 2) e.nw = Math.min(5, (e.nw || 0) + 1);
   else if(yes === 3) e.nw = Math.max(0, (e.nw || 0) - 1);
-  e.wt = (e.wt || 0) + 1; e.t = Date.now(); save();
+  e.wt = (e.wt || 0) + 1; e.t = Date.now(); kjMeet(s.ch); save();
   s.msg = ok ? '⭐ Saved in My writing. See you next time!' : 'Could not save (storage is full).';
   try{ Sound.chime(); }catch(_){}
   kwSide();
@@ -7497,7 +7544,7 @@ function kcbRec(wd, ok){
   var e = ks.wd[wd.w] = ks.wd[wd.w] || {};
   if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
   var wk = kwk();
-  wd.g.forEach(function(c){ var k = wk[c] = wk[c] || {}; if(!ok) k.cm = Math.min(6, (k.cm || 0) + 1); else if(k.cm) k.cm = Math.max(0, k.cm - 0.5); });
+  wd.g.forEach(function(c){ var k = wk[c] = wk[c] || {}; if(!ok) k.cm = Math.min(6, (k.cm || 0) + 1); else if(k.cm) k.cm = Math.max(0, k.cm - 0.5); kjMeet(c); });
   save();
 }
 function kcbRandChars(n, not){
