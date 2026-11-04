@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v41', errs = [], shown = false;
+  var V = 'v43', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -708,6 +708,16 @@ body[data-calm=on] .kit *{animation:none!important}
 .kjgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px;margin-top:10px;max-height:52vh;overflow:auto}
 .kjcell{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;font:700 26px/1 "Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;background:rgba(128,128,128,.12);color:rgba(128,128,128,.5);border:0}
 .kjcell.on{background:rgba(108,92,231,.16);color:inherit;cursor:pointer}
+/* ---- v42: grouped badges ---- */
+.bdsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0 8px;font-weight:900;font-size:15px}
+.bdsec small{font-weight:800;opacity:.6;font-size:12px}
+.bdnext{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:4px}
+.bdn{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:16px;background:rgba(108,92,231,.1);border:2px dashed rgba(108,92,231,.35);color:inherit;font:inherit}
+.bdn .bi{font-size:28px;filter:grayscale(.4)}
+.bdn b{display:block;font-size:13px;font-weight:900;line-height:1.15}
+.bdn small{display:block;font-size:11px;font-weight:700;opacity:.7;margin-top:2px}
+.bdn .bar{height:6px;border-radius:4px;background:rgba(128,128,128,.25);margin-top:5px;overflow:hidden}
+.bdn .bar i{display:block;height:100%;background:var(--brand,#6c5ce7);border-radius:4px}
 /* ---- v40: kanji book by volume and page ---- */
 .kbvol{font-weight:900;font-size:14px;margin:14px 0 4px;opacity:.85}
 .kbrow{display:flex;align-items:center;gap:8px;margin:4px 0}
@@ -1433,6 +1443,11 @@ body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{an
 .callegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px;font-weight:700;color:var(--muted)}
 .settingspanel .setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);font-weight:800}
 .settingspanel .setrow small{color:var(--muted);font-weight:700}
+.rwghead{display:flex;gap:6px;align-items:center;margin:16px 0 8px;padding:6px 8px;border-radius:16px;background:rgba(108,92,231,.1)}
+.rwgi{width:56px;text-align:center;font-size:22px;padding:6px 4px;border-radius:12px;border:2px solid var(--line);font:inherit;font-size:22px}
+.rwgn{flex:1;min-width:0;font:inherit;font-weight:900;font-size:17px;padding:8px 10px;border-radius:12px;border:2px solid var(--line)}
+.rwgrp{font:inherit;font-weight:700;font-size:14px;padding:8px 6px;border-radius:12px;border:2px solid var(--line);max-width:150px;background:#fff;color:#1c1c2e}
+.prow{flex-wrap:wrap}
 .rwcost{width:96px;padding:8px 10px;border-radius:12px;border:2px solid var(--line);font:inherit;font-weight:800;text-align:center}
 .prow.off{opacity:.5}
 .ecogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 14px}
@@ -1445,6 +1460,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .rtile{background:rgba(255,255,2
 body:is([data-skin=hybrid],[data-skin=gallery]) .earn span,body:is([data-skin=hybrid],[data-skin=gallery]) .snext{background:rgba(155,123,255,.2)}
 body:is([data-skin=hybrid],[data-skin=gallery]) .banner.rest{background:linear-gradient(135deg,rgba(155,123,255,.26),rgba(94,231,223,.14));color:#d6cfff}
 body:is([data-skin=hybrid],[data-skin=gallery]) .banner.streak{background:linear-gradient(135deg,rgba(255,184,107,.22),rgba(255,123,208,.16));color:#ffd9b3}
+body:is([data-skin=hybrid],[data-skin=gallery]) :is(.rwgi,.rwgn,.rwgrp){background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
 body:is([data-skin=hybrid],[data-skin=gallery]) .rwcost{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
 body:is([data-skin=hybrid],[data-skin=gallery]) .calnav{background:rgba(255,255,255,.1)}
 body:is([data-skin=hybrid],[data-skin=gallery]) .cday{background:rgba(255,255,255,.06)}
@@ -4243,6 +4259,26 @@ function parseKey(k){ var p = String(k).split('-'); return new Date(+p[0], +p[1]
 function addDaysKey(k, n){ var d = parseKey(k); d.setDate(d.getDate()+n); return dateKey(d); }
 function weekKeyOf(k){ var d = parseKey(k); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return dateKey(d); }
 
+function defaultRwGroups(){
+  return [
+    {id:'screen', icon:'📺', name:'Screen time', sub:''},
+    {id:'treat', icon:'🎁', name:'Treats & experiences', sub:'A parent will make it happen'},
+    {id:'goal', icon:'🎯', name:'Big goals', sub:'Save up for these!'}
+  ];
+}
+/* reward groups: the three built in groups plus any the parent adds. A reward is in its own group (r.grp) or, if none is set, the group for its kind. */
+function rwGroups(){
+  if(!Array.isArray(state.rwGroups)) state.rwGroups = defaultRwGroups();
+  var have = {}; state.rwGroups.forEach(function(g){ have[g.id] = 1; });
+  defaultRwGroups().forEach(function(g){ if(!have[g.id]) state.rwGroups.push(g); });
+  return state.rwGroups;
+}
+function rwGroupOf(r){
+  if(r.kind === 'screen') return 'screen';
+  var gs = rwGroups(), i;
+  if(r.grp) for(i = 0; i < gs.length; i++){ if(gs[i].id === r.grp) return r.grp; }
+  return r.kind === 'goal' ? 'goal' : 'treat';
+}
 function defaultRewards(){
   return [
     {id:'scr15', kind:'screen', mins:15, name:'Screen time', sub:'15 minutes', icon:'📺', cost:15, on:true},
@@ -4293,6 +4329,7 @@ function migrate(s){
   ['journal','badges','seenHol','bdayCards','recaps'].forEach(function(o){ if(!s[o] || typeof s[o] !== 'object') s[o] = {}; });
   if(!s.bday || !s.bday.m) s.bday = base.bday;
   if(!Array.isArray(s.rewards) || !s.rewards.length) s.rewards = defaultRewards();
+  if(!Array.isArray(s.rwGroups) || !s.rwGroups.length) s.rwGroups = defaultRwGroups();
   if(!Array.isArray(s.requests)) s.requests = [];
   if(!Array.isArray(s.pointsLog)) s.pointsLog = [];
   return s;
@@ -4375,15 +4412,19 @@ function renderShopCoins(){
     var gp = Math.min(100, Math.round(state.points / goal.cost * 100));
     h += '<div class="panel goalpanel"><div class="rtile big">'+esc(goal.icon)+'</div><div class="gbody"><div class="qlabel">📌 My goal</div><b>'+esc(goal.name)+'</b><div class="rbar thick"><i style="width:'+gp+'%"></i></div><small>'+(state.points >= goal.cost ? 'You can get it now!' : (goal.cost - state.points)+' more points to go')+'</small></div></div>';
   }
-  var scr = state.rewards.filter(function(r){ return r.on && r.kind === 'screen'; });
-  var treats = state.rewards.filter(function(r){ return r.on && r.kind === 'treat'; });
-  var goals = state.rewards.filter(function(r){ return r.on && r.kind === 'goal'; });
   var running = state.screenEndsAt && state.screenEndsAt > Date.now();
-  h += '<div class="sec"><h2>📺 Screen time</h2><span class="count">'+state.screenToday+' of '+e.screenCap+' min used today'+(curfewOn() ? ' · ends '+fmt12(e.screenEnd || '20:45') : '')+(running?' · running now':'')+'</span></div><div class="rgrid">';
-  scr.forEach(function(r){ h += rewardCardHTML(r); });
-  h += '</div>';
-  if(treats.length){ h += '<div class="sec"><h2>🎁 Treats &amp; experiences</h2><span class="count">A parent will make it happen</span></div><div class="rgrid">'; treats.forEach(function(r){ h += rewardCardHTML(r); }); h += '</div>'; }
-  if(goals.length){ h += '<div class="sec"><h2>🎯 Big goals</h2><span class="count">Save up for these!</span></div><div class="rgrid">'; goals.forEach(function(r){ h += rewardCardHTML(r); }); h += '</div>'; }
+  rwGroups().forEach(function(g){
+    var items = state.rewards.filter(function(r){ return r.on && rwGroupOf(r) === g.id; });
+    if(g.id === 'screen'){
+      h += '<div class="sec"><h2>'+esc(g.icon)+' '+esc(g.name)+'</h2><span class="count">'+state.screenToday+' of '+e.screenCap+' min used today'+(curfewOn() ? ' · ends '+fmt12(e.screenEnd || '20:45') : '')+(running?' · running now':'')+'</span></div><div class="rgrid">';
+      items.forEach(function(r){ h += rewardCardHTML(r); });
+      h += '</div>';
+    } else if(items.length){
+      h += '<div class="sec"><h2>'+esc(g.icon)+' '+esc(g.name)+'</h2>'+(g.sub ? '<span class="count">'+esc(g.sub)+'</span>' : '')+'</div><div class="rgrid">';
+      items.forEach(function(r){ h += rewardCardHTML(r); });
+      h += '</div>';
+    }
+  });
   var pend = state.requests.filter(function(q){ return q.status === 'pending'; });
   var recent = state.requests.filter(function(q){ return q.status === 'done'; }).slice(0, 5);
   if(pend.length || recent.length){
@@ -4525,48 +4566,100 @@ function calShift(n){
   cal.m += n;
   if(cal.m < 0){ cal.m = 11; cal.y--; } else if(cal.m > 11){ cal.m = 0; cal.y++; }
 }
+function rwRowHTML(r, gs){
+  var h = '<div class="prow'+(r.on?'':' off')+'"><label class="switch"><input type="checkbox" data-rw="on" data-id="'+esc(r.id)+'" '+(r.on?'checked':'')+'><span></span></label><div class="pe">'+esc(r.icon)+'</div><div class="pn">'+esc(r.name)+'<small>'+(r.kind==='screen'?r.mins+' min screen time':esc(r.sub || (r.kind==='goal'?'Big goal':'Treat')))+'</small></div>';
+  if(r.kind !== 'screen'){
+    h += '<select class="rwgrp" data-rw="grp" data-id="'+esc(r.id)+'" aria-label="Group">';
+    gs.forEach(function(g){ if(g.id === 'screen') return; h += '<option value="'+esc(g.id)+'"'+(rwGroupOf(r) === g.id ? ' selected' : '')+'>'+esc(g.icon)+' '+esc(g.name)+'</option>'; });
+    h += '</select>';
+  }
+  h += '<input type="number" min="1" max="2000" inputmode="numeric" class="rwcost" data-rw="cost" data-id="'+esc(r.id)+'" value="'+r.cost+'"><span class="hint">pts</span>';
+  h += '<button class="btn small danger" data-act="rwdel" data-id="'+esc(r.id)+'" aria-label="Delete">🗑</button></div>';
+  return h;
+}
 function showRewardEditor(scroll){
-  var h = '<span data-closable></span><h2>🎁 Rewards &amp; prices</h2><p class="hint" style="font-size:15px">Change prices, switch rewards on or off, or add your own. 1 point = 1 minute of screen time.</p>';
-  state.rewards.forEach(function(r){
-    h += '<div class="prow'+(r.on?'':' off')+'"><label class="switch"><input type="checkbox" data-rw="on" data-id="'+esc(r.id)+'" '+(r.on?'checked':'')+'><span></span></label><div class="pe">'+esc(r.icon)+'</div><div class="pn">'+esc(r.name)+'<small>'+(r.kind==='screen'?r.mins+' min screen time':(r.kind==='goal'?'Big goal':'Treat'))+'</small></div>';
-    h += '<input type="number" min="1" max="2000" inputmode="numeric" class="rwcost" data-rw="cost" data-id="'+esc(r.id)+'" value="'+r.cost+'"><span class="hint">pts</span>';
-    h += '<button class="btn small danger" data-act="rwdel" data-id="'+esc(r.id)+'" aria-label="Delete">🗑</button></div>';
+  var gs = rwGroups();
+  var h = '<span data-closable></span><h2>🎁 Rewards &amp; prices</h2><p class="hint" style="font-size:15px">Change prices, switch rewards on or off, move them between groups, or add your own. 1 point = 1 minute of screen time.</p>';
+  gs.forEach(function(g, gi){
+    var custom = ['screen','treat','goal'].indexOf(g.id) < 0;
+    var items = state.rewards.filter(function(r){ return rwGroupOf(r) === g.id; });
+    h += '<div class="rwghead"><input type="text" class="rwgi" maxlength="8" data-gr="icon" data-gid="'+esc(g.id)+'" value="'+esc(g.icon)+'" aria-label="Group icon"><input type="text" class="rwgn" maxlength="28" data-gr="name" data-gid="'+esc(g.id)+'" value="'+esc(g.name)+'" aria-label="Group name">';
+    h += '<span class="hint">'+items.length+'</span>';
+    h += '<button class="btn small" data-act="gup" data-gid="'+esc(g.id)+'" aria-label="Move group up"'+(gi === 0 ? ' disabled' : '')+'>▲</button><button class="btn small" data-act="gdown" data-gid="'+esc(g.id)+'" aria-label="Move group down"'+(gi === gs.length - 1 ? ' disabled' : '')+'>▼</button>';
+    if(custom) h += '<button class="btn small danger" data-act="gdel" data-gid="'+esc(g.id)+'" aria-label="Delete group">🗑</button>';
+    h += '</div>';
+    if(!items.length) h += '<div class="hint" style="margin:0 0 8px 4px">No rewards in this group yet. Use the Group menu on a reward to move one here.</div>';
+    items.forEach(function(r){ h += rwRowHTML(r, gs); });
   });
+  h += '<h3>🗂️ Add a group</h3><div class="row" style="gap:8px;flex-wrap:wrap"><input type="text" id="ngIcon" maxlength="8" value="⭐" style="width:76px;text-align:center;font-size:24px" class="rwgi"><input type="text" id="ngName" maxlength="28" placeholder="e.g. Weekend fun" class="rwgn" style="flex:1;min-width:160px"><button class="btn good" data-act="gadd">Add group</button></div>';
   h += '<h3>➕ Add your own reward</h3><div class="fld"><label>Icon</label><input type="text" id="nrIcon" maxlength="8" value="🎁" style="width:110px;text-align:center;font-size:26px"></div>';
   h += '<div class="fld"><label>Name</label><input type="text" id="nrName" maxlength="40" placeholder="e.g. Pizza night"></div>';
   h += '<div class="fld"><label>Cost (points)</label><input type="number" id="nrCost" min="1" max="2000" inputmode="numeric" value="50" style="width:140px"></div>';
-  h += '<label class="row" style="font-weight:800;margin:6px 0"><span class="switch"><input type="checkbox" id="nrGoal"><span></span></span> This is a big saving goal</label>';
+  h += '<div class="fld"><label>Group</label><select id="nrGroup" class="rwgrp" style="max-width:100%">';
+  gs.forEach(function(g){ if(g.id === 'screen') return; h += '<option value="'+esc(g.id)+'">'+esc(g.icon)+' '+esc(g.name)+'</option>'; });
+  h += '</select></div>';
   h += '<div class="row" style="margin-top:10px"><button class="btn good" data-act="rwadd">Add reward</button><button class="btn" data-act="rwreset">Reset all to default</button></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn primary" data-act="rwback">Back to Parent controls</button></div>';
   openModal(h);
   if(scroll !== undefined) $('modal').scrollTop = scroll;
   $('modal').onchange = function(e){
-    var el = e.target, id = el.getAttribute('data-id'), r = id ? rewardById(id) : null;
+    var el = e.target, sc = $('modal').scrollTop;
+    var gid = el.getAttribute && el.getAttribute('data-gid');
+    if(gid && el.getAttribute('data-gr')){
+      var g = null; rwGroups().forEach(function(x){ if(x.id === gid) g = x; });
+      if(!g) return;
+      var v = String(el.value || '').trim();
+      if(el.getAttribute('data-gr') === 'name'){ if(!v){ el.value = g.name; return; } g.name = v.slice(0, 28); }
+      else { g.icon = v.slice(0, 8) || g.icon; }
+      save(); render(); showRewardEditor(sc); return;
+    }
+    var id = el.getAttribute('data-id'), r = id ? rewardById(id) : null;
     if(!r) return;
-    if(el.getAttribute('data-rw') === 'on'){ r.on = el.checked; save(); showRewardEditor($('modal').scrollTop); }
-    else if(el.getAttribute('data-rw') === 'cost'){ var v = Math.max(1, Math.min(2000, parseInt(el.value, 10) || r.cost)); r.cost = v; save(); render(); }
+    if(el.getAttribute('data-rw') === 'on'){ r.on = el.checked; save(); showRewardEditor(sc); }
+    else if(el.getAttribute('data-rw') === 'cost'){ var cv = Math.max(1, Math.min(2000, parseInt(el.value, 10) || r.cost)); r.cost = cv; save(); render(); }
+    else if(el.getAttribute('data-rw') === 'grp'){ r.grp = el.value; save(); render(); showRewardEditor(sc); toast('Moved ✔', 1400); }
   };
   $('modal').onclick = function(e){
-    var b = e.target.closest('[data-act]'); if(!b || b.tagName === 'INPUT') return;
-    var a = b.getAttribute('data-act'), id = b.getAttribute('data-id'), sc = $('modal').scrollTop;
+    var b = e.target.closest('[data-act]'); if(!b || b.tagName === 'INPUT' || b.disabled) return;
+    var a = b.getAttribute('data-act'), id = b.getAttribute('data-id'), gid = b.getAttribute('data-gid'), sc = $('modal').scrollTop;
     if(a === 'rwback'){ showParent(); return; }
+    if(a === 'gup' || a === 'gdown'){
+      var arr = rwGroups(), i = -1; arr.forEach(function(x, k){ if(x.id === gid) i = k; });
+      var j = a === 'gup' ? i - 1 : i + 1;
+      if(i < 0 || j < 0 || j >= arr.length) return;
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t; save(); render(); showRewardEditor(sc); return;
+    }
+    if(a === 'gdel'){
+      confirmBox('Delete this group?','The rewards in it are kept and move back to Treats or Big goals.','Delete',function(){
+        state.rewards.forEach(function(r){ if(r.grp === gid) delete r.grp; });
+        state.rwGroups = rwGroups().filter(function(x){ return x.id !== gid; });
+        save(); render(); showRewardEditor(sc);
+      }, true);
+      return;
+    }
+    if(a === 'gadd'){
+      var gn = $('ngName').value.trim(), gi2 = $('ngIcon').value.trim() || '⭐';
+      if(!gn){ toast('Please type a name for the group.'); Sound.error(); return; }
+      if(rwGroups().some(function(x){ return x.name.toLowerCase() === gn.toLowerCase(); })){ toast('There is already a group with that name.'); Sound.error(); return; }
+      rwGroups().push({id:'g'+Date.now(), icon:gi2.slice(0, 8), name:gn.slice(0, 28), sub:''});
+      save(); render(); toast('Group added ✔'); showRewardEditor(sc); return;
+    }
     if(a === 'rwdel'){
       confirmBox('Delete this reward?','It will be removed from the Rewards page.','Delete',function(){ state.rewards = state.rewards.filter(function(r){ return r.id !== id; }); if(state.goalId === id) state.goalId = null; save(); render(); showRewardEditor(sc); }, true);
       return;
     }
     if(a === 'rwreset'){
-      confirmBox('Reset rewards?','All reward prices and your own rewards go back to the defaults.','Reset',function(){ state.rewards = defaultRewards(); state.goalId = null; save(); render(); showRewardEditor(); }, true);
+      confirmBox('Reset rewards?','All reward prices, groups and your own rewards go back to the defaults.','Reset',function(){ state.rewards = defaultRewards(); state.rwGroups = defaultRwGroups(); state.goalId = null; save(); render(); showRewardEditor(); }, true);
       return;
     }
     if(a === 'rwadd'){
-      var nm = $('nrName').value.trim(), cost = parseInt($('nrCost').value, 10);
+      var nm = $('nrName').value.trim(), cost = parseInt($('nrCost').value, 10), gsel = $('nrGroup') ? $('nrGroup').value : 'treat';
       if(!nm || !(cost > 0)){ toast('Please type a name and a cost.'); Sound.error(); return; }
-      state.rewards.push({id:'r'+Date.now(), kind:$('nrGoal').checked ? 'goal' : 'treat', name:nm, sub:'', icon:($('nrIcon').value.trim() || '🎁'), cost:Math.min(2000, cost), on:true});
+      state.rewards.push({id:'r'+Date.now(), kind:gsel === 'goal' ? 'goal' : 'treat', grp:gsel, name:nm, sub:'', icon:($('nrIcon').value.trim() || '🎁'), cost:Math.min(2000, cost), on:true});
       save(); render(); toast('Reward added ✔'); showRewardEditor(99999);
     }
   };
 }
-
 
 /* =========================================================
    EVENTS
@@ -6671,7 +6764,7 @@ function kjRec(ch, ok, wrong){
   var wk = kwk(), e = wk[ch] = wk[ch] || {};
   if(ok) e.g = (e.g || 0) + 1; else e.a = (e.a || 0) + 1;
   if(!ok && wrong && klookOf(ch)){ e.lk = (e.lk || 0) + 1; }
-  e.t = Date.now(); kjMeet(ch); if(ok) kjStat('kfcRight'); save(); checkBadgesX();
+  e.t = Date.now(); kjMeet(ch); if(ok){ kjStat('kfcRight'); if(typeof KFC !== 'undefined' && KFC && KFC.mode === 'look') kjStat('lookRight'); } save(); checkBadgesX();
 }
 function kfcPick(n){
   var recent = kjRecent(), focus = kjFocus(), last = window.__kfcLast || {};
@@ -7428,7 +7521,7 @@ function kwKeep(){
   if(s.saved) return;
   var ok = kinkAdd(s.ch, {d:dateKey(), flat:at.flat, ck:at.ck, m:s.mode, n:at.a.n});
   s.saved = true;
-  if(ok){ kjStat('kwKept'); if(at.ck.filter(function(v){ return v === 1; }).length === 3) kjStat('kwNeat'); }
+  if(ok){ kjStat('kwKept'); if(at.ck.filter(function(v){ return v === 1; }).length === 3) kjStat('kwNeat'); if(s.mode === 'mem' && !s.peek && at.a && at.a.n === at.a.expN && at.a.order !== 'off') kjStat('kwMem'); }
   var wk = kwk(), e = wk[s.ch] = wk[s.ch] || {}, bad = at.ck.filter(function(v){ return v === 0; }).length, yes = at.ck.filter(function(v){ return v === 1; }).length;
   if(bad >= 2) e.nw = Math.min(5, (e.nw || 0) + 1);
   else if(yes === 3) e.nw = Math.max(0, (e.nw || 0) - 1);
@@ -8168,8 +8261,19 @@ function bkTrackBadges(){
   if(peak !== (st.bkPeak || 0)){ st.bkPeak = peak; changed = true; }
   if(b.goal && b.goal.price > 0){
     if(!st.bkGoalSet){ st.bkGoalSet = 1; changed = true; }
-    if(!b.goal.hit && bal >= b.goal.price){ b.goal.hit = dateKey(); st.bkGoalsHit = (st.bkGoalsHit || 0) + 1; changed = true; }
+    if(!b.goal.hit && bal >= b.goal.price){
+      b.goal.hit = dateKey(); changed = true;
+      /* a second goal only counts after she has spent something since the last one, so renaming a goal cannot count twice */
+      if(st.bkHitSpends === undefined || bkSpendsLogged() > st.bkHitSpends){ st.bkGoalsHit = (st.bkGoalsHit || 0) + 1; st.bkHitSpends = bkSpendsLogged(); }
+    }
   }
+  var run = 0, best = st.bkPatient || 0;
+  b.ledger.forEach(function(e){
+    if(e.undone) return;
+    if(e.jar === 'save' && e.kind === 'allowance' && e.cents > 0){ run++; if(run > best) best = run; }
+    else if(e.jar === 'spent' && e.kind === 'spend' && e.cents > 0) run = 0;
+  });
+  if(best !== (st.bkPatient || 0)){ st.bkPatient = best; changed = true; }
   if(changed) save();
 }
 function bkSpendsLogged(){
@@ -8200,6 +8304,98 @@ BADGES.push(
   ['mp25','💰','Jar of Twenty-Five','Have $25 in your jar','silver',bkPeakD,25],
   ['mp50','🏦','Jar of Fifty','Have $50 in your jar','gold',bkPeakD,50]
 );
+
+
+/* ---- v42: more badges, grouped panel, Kit easter egg ---- */
+function kjIsMet(c){ var ks = kanjiState(); return !!(ks.log[c] || (ks.met && ks.met[c])); }
+function kbPagesDone(){ var n = 0; KBOOK.forEach(function(x){ if(x.ks.every(kjIsMet)) n++; }); return n; }
+function kbVolMet(v){ var n = 0; KBOOK.forEach(function(x){ if(x.v === v) x.ks.forEach(function(c){ if(kjIsMet(c)) n++; }); }); return n; }
+function kbVolTotal(v){ var n = 0; KBOOK.forEach(function(x){ if(x.v === v) n += x.ks.length; }); return n; }
+function stT(n){ return function(){ return (state.stats && state.stats[n]) || 0; }; }
+BADGES.push(
+  ['pk10','📦','Pack Opener','Open 10 card packs','bronze',function(){ return state.packsOpened || 0; },10],
+  ['pk50','🎁','Pack Collector','Open 50 card packs','silver',function(){ return state.packsOpened || 0; },50],
+  ['qp10','📅','Quiz Regular','Play 10 card quizzes','bronze',function(){ return (state.quizStats || {}).played || 0; },10],
+  ['qp30','🎒','Quiz Habit','Play 30 card quizzes','silver',function(){ return (state.quizStats || {}).played || 0; },30],
+  ['pg1','📘','First Book Page','Meet every kanji on one book page','bronze',kbPagesDone,1],
+  ['pg10','📗','Page Master','Meet every kanji on 10 book pages','silver',kbPagesDone,10],
+  ['pg25','📚','Page Champion','Meet every kanji on 25 book pages','gold',kbPagesDone,25],
+  ['vu','🌸','3年上 Complete','Meet all the kanji in 3年上','gold',function(){ return kbVolMet('上'); },kbVolTotal('上')],
+  ['vd','🍁','3年下 Complete','Meet all the kanji in 3年下','gold',function(){ return kbVolMet('下'); },kbVolTotal('下')],
+  ['mm1','🧠','Memory Star','Write a kanji from memory with every stroke and no peeking','silver',stT('kwMem'),1],
+  ['mm10','🌟','Memory Champion','Do that with 10 writings','gold',stT('kwMem'),10],
+  ['la10','🔍','Look-alike Detective','Get 10 look-alike cards right','silver',stT('lookRight'),10],
+  ['mg3','🏆','Goal Collector','Save up for 3 goals','gold',stT('bkGoalsHit'),3],
+  ['mw4','🐢','Patient Saver','Save 4 allowance weeks in a row without spending','silver',stT('bkPatient'),4],
+  ['kit20','🦊',"Kit's Best Friend",'Tap Kit 20 times in a row','gold',stT('kitFound'),1,'hidden']
+);
+var BD_GROUPS = [
+  ['🔥 Streaks and days', ['s3','s7','s14','s30','s60','s100','s365','p10','p25','p50','p100','r1']],
+  ['🎴 Cards and packs', ['c1','c25','c75','c151','c200','call','cfam','cE','pk10','pk50']],
+  ['🧠 Quizzes and bites', ['q1','q10','qr50','qp10','qp30','b7','b30','b100']],
+  ['🈴 Kanji', ['kj7','kj30','kj100','kj200','pg1','pg10','pg25','vu','vd','kw1','kw10','kw50','kwn5','mm1','mm10','kf25','kf100','kc10','kc50','la10']],
+  ['💵 Money', ['sv100','sv300','mn1','ms1','ms10','mg1','mg2','mg3','mp10','mp25','mp50','mw4']],
+  ['🎯 Goal cards', ['gk1','gk5','gkg']],
+  ['📔 Journal', ['j1','j7','m6','j30','j100']],
+  ['🌏 World and birthday', ['h5','h15','h30','bd1']]
+];
+var BD_MONEY = {mn1:1,ms1:1,ms10:1,mg1:1,mg2:1,mg3:1,mp10:1,mp25:1,mp50:1,mw4:1};
+function bdCur(b){ var c = 0; try{ c = b[5](); }catch(e){} return c; }
+function bdVisible(b){
+  if(b[7] === 'hidden' && !state.badges[b[0]]) return false;
+  if(BD_MONEY[b[0]] && !state.badges[b[0]]){ try{ if(!bankOn()) return false; }catch(e){ return false; } }
+  return true;
+}
+function bdTile(b){
+  var on = state.badges[b[0]], cur = bdCur(b);
+  return '<button class="bdg '+b[4]+(on ? ' on' : ' off')+'" data-badge="'+b[0]+'"><span class="bi">'+(on ? b[1] : '🔒')+'</span><b>'+esc(b[2])+'</b><small>'+(on ? esc(b[3]) : Math.min(cur, b[6])+' / '+b[6])+'</small></button>';
+}
+badgesPanelHTML = function(){
+  var vis = BADGES.filter(bdVisible), byId = {}, got = vis.filter(function(b){ return state.badges[b[0]]; }).length;
+  BADGES.forEach(function(b){ byId[b[0]] = b; });
+  var h = '<div class="panel"><div class="ptitle">🏅 My badges <small class="hint">'+got+' of '+vis.length+'</small></div><div data-noicon>';
+  var nx = vis.filter(function(b){ return !state.badges[b[0]] && b[7] !== 'hidden' && bdCur(b) > 0; }).sort(function(a, b){ return Math.min(1, bdCur(b)/b[6]) - Math.min(1, bdCur(a)/a[6]); }).slice(0, 3);
+  if(nx.length){
+    h += '<div class="bdsec"><span>⭐ Next up</span></div><div class="bdnext">';
+    nx.forEach(function(b){ var cur = Math.min(bdCur(b), b[6]); h += '<button class="bdn" data-badge="'+b[0]+'"><span class="bi">'+b[1]+'</span><span style="flex:1"><b>'+esc(b[2])+'</b><small>'+cur+' / '+b[6]+'</small><span class="bar"><i style="width:'+Math.round(100*cur/b[6])+'%"></i></span></span></button>'; });
+    h += '</div>';
+  }
+  var used = {};
+  function section(title, list){
+    var items = list.map(function(id){ used[id] = 1; return byId[id]; }).filter(function(b){ return b && bdVisible(b); });
+    if(!items.length) return;
+    items.sort(function(a, b){ var oa = state.badges[a[0]] ? 1 : 0, ob = state.badges[b[0]] ? 1 : 0; if(oa !== ob) return ob - oa; return bdCur(b)/b[6] - bdCur(a)/a[6]; });
+    var g = items.filter(function(b){ return state.badges[b[0]]; }).length;
+    h += '<div class="bdsec"><span>'+title+'</span><small>'+g+' of '+items.length+'</small></div><div class="bdgrid">'+items.map(bdTile).join('')+'</div>';
+  }
+  BD_GROUPS.forEach(function(g){ section(g[0], g[1]); });
+  var rest = BADGES.filter(function(b){ return !used[b[0]]; }).map(function(b){ return b[0]; });
+  section('✨ More', rest);
+  return h + '</div></div>';
+};
+/* Kit easter egg: 20 taps in a row, each within 2.5 seconds of the last */
+var KITRUN = {n:0, t:0};
+document.addEventListener('click', function(e){
+  var w = e.target.closest && e.target.closest('.kitwrap');
+  if(!w) return;
+  var now = Date.now();
+  if(now - KITRUN.t > 2500) KITRUN.n = 0;
+  KITRUN.t = now; KITRUN.n++;
+  if(KITRUN.n >= 20){
+    KITRUN.n = 0;
+    var st = (state.stats = state.stats || {});
+    if(!st.kitFound){
+      st.kitFound = 1; save();
+      try{ var sv = w.querySelector('.kit'); if(sv){ sv.__kp = false; kitPlay(sv, ['hop','confetti']); } }catch(_){}
+      try{ confetti(); Sound.fanfare(); }catch(_){}
+      toast('🦊 Kit loves you! You found a secret badge!', 4200);
+      checkBadges();
+    } else {
+      try{ var sv2 = w.querySelector('.kit'); if(sv2){ sv2.__kp = false; kitPlay(sv2, ['wiggle','hearts']); } }catch(_){}
+      toast('🦊💛 Kit loves you!', 2200);
+    }
+  }
+}, true);
 
 
 /* ---------- Private family pack (import / remove) ---------- */
