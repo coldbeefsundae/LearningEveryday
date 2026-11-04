@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v19', errs = [], shown = false;
+  var V = 'v20', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -772,9 +772,6 @@ body[data-calm=on] .kit *{animation:none!important}
 .jw textarea.jwtext{display:block;width:100%;height:160px;border-radius:14px;border:2.5px solid var(--accent);background:#fff;color:var(--ink);font:inherit;font-size:18px;line-height:1.5;padding:12px;resize:none}
 .jw textarea.jwtext:focus{outline:none}
 @media (max-width:640px){.modal{max-height:88vh;max-height:88dvh}}
-/* phone safety: never let a wide child push the whole page sideways */
-html,body{max-width:100%;overflow-x:hidden}
-.main,.page,.view{min-width:0;max-width:100%}
 @media (max-width:520px){
   .rcard{gap:10px;padding:10px}
   .rtile{width:46px;height:46px;font-size:26px;border-radius:14px}
@@ -782,6 +779,10 @@ html,body{max-width:100%;overflow-x:hidden}
   .rcost{font-size:14px}
   .btn.small{padding:8px 10px}
 }
+
+/* journal write button; hide round tool buttons from the phone bottom bar (settings and parent mode are in Me) */
+.jwrite{width:100%;margin-top:10px;min-height:48px;font-size:16px}
+@media (orientation:portrait),(max-width:760px){.railtool{display:none!important}}
 
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
@@ -3121,6 +3122,10 @@ function renderCards(){
 }
 
 /* ---------- profile ---------- */
+document.addEventListener('click', function(e){
+  var b = e.target && e.target.closest && e.target.closest('[data-openparent]'); if(!b) return;
+  e.stopPropagation(); $('parentBtn').click();
+}, true);
 function renderProfile(){
   var ri_ = rankInfo(), r = ri_.rank, nx = ri_.next;
   var pct = nx ? Math.round((ri_.n - r.min)/(nx.min - r.min)*100) : 100;
@@ -4005,7 +4010,7 @@ function settingsPanelHTML(){
   }
   h += '<div class="setrow"><span>Show Kit the fox <small>(your helper)</small></span><label class="switch"><input type="checkbox" data-set="mascot" '+(u.mascot===false?'':'checked')+'><span></span></label></div>';
   h += '<div class="setrow"><span>Kit\'s little animations <small>(winks, sneezes, claps)</small></span><label class="switch"><input type="checkbox" data-set="kitAnim" '+(u.kitAnim===false?'':'checked')+'><span></span></label></div>';
-  h += '<div class="hint" style="margin-top:8px">Parents: more settings are in 🔒 Parent mode.</div></div>';
+  h += '<div class="setrow"><span>Parents: more settings are in Parent mode</span><button class="btn small" data-openparent="1">'+(parentUnlocked ? '🔓 Open' : '🔒 Parent mode')+'</button></div></div>';
   return h;
 }
 
@@ -5320,6 +5325,7 @@ function renderJournal(){
   h += '</div><div class="jsec">My story</div>';
   h += '<div class="jprompt"><span data-noicon>💡</span> <span id="jPrompt">'+esc(J_PROMPTS[jPromptI % J_PROMPTS.length])+'</span> <button class="btn small" data-act="jprompt">Another idea</button> <button class="btn small" data-act="juse">Use it</button></div>';
   h += '<textarea class="jtext" id="jText" data-day="'+k+'" maxlength="600" rows="5" readonly placeholder="Tap here to write about your day..." autocomplete="off" autocapitalize="sentences">'+esc(e.t || '')+'</textarea>';
+  h += '<button class="btn primary jwrite" data-act="jwrite">✏️ '+(e.t ? 'Edit my story' : 'Write my story')+'</button>';
   h += '<div class="jfoot"><span class="hint" id="jSaved">'+(e.t || e.m ? 'Saved ✓' : '')+'</span><span class="hint">Only on this device. Up to 600 letters.</span></div>';
   h += '</div>';
   h += '<div class="panel"><div class="ptitle">📅 My calendar</div>'+calendarHTML()+'</div>';
@@ -5338,6 +5344,7 @@ function renderJournal(){
   $('view-journal').innerHTML = h;
 }
 function jOnClick(e){
+  if(e.target && e.target.id === 'jText') return;
   var dy = e.target.closest('[data-day]');
   if(dy){ Sound.tap(); showDay(dy.getAttribute('data-day')); return; }
   var b = e.target.closest('button'); if(!b) return;
@@ -5365,8 +5372,10 @@ function jOnClick(e){
   if(a === 'jprompt'){ jPromptI = (jPromptI + 1) % J_PROMPTS.length; var pe = $('jPrompt'); if(pe) pe.textContent = J_PROMPTS[jPromptI]; Sound.tap(); }
   else if(a === 'juse'){
     var ta = $('jText');
-    if(ta && !ta.value){ ta.value = J_PROMPTS[jPromptI % J_PROMPTS.length].replace(/\.\.\.$/, '') + ' '; jSetText(k, ta.value); if(ta.focus) ta.focus(); }
+    if(ta && !ta.value){ ta.value = J_PROMPTS[jPromptI % J_PROMPTS.length].replace(/\.\.\.$/, '') + ' '; jSetText(k, ta.value); }
+    jwOpen();
   }
+  else if(a === 'jwrite'){ jwOpen(); }
 }
 function jOnInput(e){
   if(e.target && e.target.id === 'jText') jSetText(e.target.getAttribute('data-day') || jKey(), e.target.value);
@@ -5469,7 +5478,7 @@ function showDay(k, from){
     if(dy && !dy.getAttribute('data-act')){ showDay(dy.getAttribute('data-day'), from); return; }
     var b = e.target.closest('[data-act]'); if(!b) return;
     var a = b.getAttribute('data-act');
-    if(a === 'jedit'){ jFlush(); jdate = b.getAttribute('data-day') === today ? null : b.getAttribute('data-day'); closeModal(); setTab('journal'); window.scrollTo(0,0); }
+    if(a === 'jedit'){ jFlush(); jdate = b.getAttribute('data-day') === today ? null : b.getAttribute('data-day'); closeModal(); setTab('journal'); window.scrollTo(0,0); setTimeout(jwOpen, 60); }
     else if(a === 'dayclose'){ if(from === 'parent') showCalendarModal(); else closeModal(); }
   };
 }
@@ -6486,7 +6495,7 @@ function jwClose(){
   if(typeof tab !== 'undefined' ? tab === 'journal' : true){ try{ renderJournal(); }catch(_){} }
 }
 document.addEventListener('click', function(e){
-  var t = e.target; if(t && t.id === 'jText'){ e.preventDefault(); jwOpen(); }
+  var t = e.target; if(t && t.id === 'jText'){ e.preventDefault(); e.stopPropagation(); jwOpen(); }
 }, true);
 document.addEventListener('focusin', function(e){
   var t = e.target; if(t && t.id === 'jText'){ jwOpen(); }
