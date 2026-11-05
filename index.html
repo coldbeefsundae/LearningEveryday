@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v48', errs = [], shown = false;
+  var V = 'v49', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -738,6 +738,11 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybri
 .kbc.met{background:rgba(108,92,231,.2);color:inherit;border-color:rgba(108,92,231,.55);cursor:pointer}
 .kbc.cov{background:rgba(108,92,231,.07);color:inherit;border-color:rgba(108,92,231,.18);cursor:pointer}
 .kbc .kbi{position:absolute;right:2px;bottom:1px;font-size:10px;line-height:1}
+.knbar{margin:-2px 0 8px}.knbar .btn{min-height:40px}
+.kfcsrc .kcbchip{font:800 15px/1.1 system-ui,sans-serif;padding:9px 12px}
+.kfcpg{background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
+.kbc.sel{outline:3px solid var(--brand,#6c5ce7);background:rgba(108,92,231,.38);color:inherit;border-color:var(--brand,#6c5ce7)}
+.kbfc{margin-left:auto;flex:none;border:0;background:rgba(108,92,231,.12);border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;padding:0}
 .kblegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;opacity:.8;margin-top:6px}
 .kblegend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:2px solid transparent}
 /* ---- v39: kanji combos ---- */
@@ -3220,6 +3225,11 @@ var BY_ID = {}, BY_RAR = {SSSR:[],SSR:[],S:[],A:[],B:[],C:[]};
 CARDS.forEach(function(c){ BY_ID[c.id] = c; BY_RAR[c.k].push(c); });
 FAM_IDS = FAM_IDS.filter(function(id){ return !!BY_ID[id]; });
 var FAM_ALL = ['fam01','fam02','fam03','fam04'].filter(function(id){ return !!BY_ID[id]; });
+if(FAMPACK){ FAMPACK.cards.forEach(function(c){
+  var id = c.row[0]; if(c.row[3] !== 'FAM' || !BY_ID[id]) return;
+  if(id !== 'fam03' && FAM_IDS.indexOf(id) < 0) FAM_IDS.push(id);
+  if(FAM_ALL.indexOf(id) < 0) FAM_ALL.push(id);
+}); }
 var CARDS_SORTED = (function(){ var o = {}; REGION_ORDER.forEach(function(r,i){ o[r] = i; }); return CARDS.map(function(c,i){ return [c,i]; }).sort(function(a,b){ return (o[a[0].r]-o[b[0].r]) || (a[1]-b[1]); }).map(function(x){ return x[0]; }); })();
 var DAILY_ORDER = (function(){
   var oldIds = shuffle(CARDS.slice(0,110).filter(function(c){ return c.r !== 'FAM'; }).map(function(c){ return c.id; }), rngFor(20261102));
@@ -3729,8 +3739,37 @@ function tick(){
 /* =========================================================
    MODALS
    ========================================================= */
-function openModal(html){ $('modal').innerHTML = html; $('overlay').classList.add('show'); }
-function closeModal(){ window.__parSec = null; stopSpeak(); $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
+/* ---- v49: kanji screens remember where you came from, so every screen has a Back button ---- */
+var KN = {stack:[], cur:null, fresh:false, resume:null};
+var KN_BAR = '<div class="knbar"><button class="btn small" type="button" data-knback="1">\u2b05 Back</button></div>';
+function knScreen(id, fn){
+  var c = KN.cur; KN.fresh = true;
+  if(c && c.id === id){ KN.cur = {id:id, fn:fn}; return; }
+  var at = -1; KN.stack.forEach(function(x, i){ if(x.id === id) at = i; });
+  if(at > -1) KN.stack.length = at; else if(c) KN.stack.push(c);
+  KN.cur = {id:id, fn:fn};
+}
+function knReset(){ KN.stack = []; KN.cur = null; KN.fresh = false; }
+function knBack(){
+  var p = KN.stack.pop();
+  if(!p){ closeModal(); return; }
+  KN.cur = null; p.fn();
+}
+function knResume(open){
+  var r = KN.resume; KN.resume = null;
+  if(!r) return;
+  KN.stack = r.stack; KN.cur = r.cur;
+  if(open){ var c = KN.cur; KN.cur = null; c.fn(); }
+}
+function openModal(html){
+  if(KN.fresh){
+    KN.fresh = false;
+    if(html.indexOf('class="kjmodal') < 0) knReset();
+    else if(KN.stack.length) html = html.replace(/(<div class="kjmodal[^"]*">)/, '$1' + KN_BAR);
+  } else if(KN.cur || KN.stack.length){ knReset(); }
+  $('modal').innerHTML = html; $('overlay').classList.add('show');
+}
+function closeModal(){ window.__parSec = null; knReset(); stopSpeak(); $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
 function askPin(onOk){
@@ -4878,6 +4917,7 @@ function modalDirty(){
 function closeModalFromOutside(){
   if(!$('overlay').classList.contains('show')) return;
   if(modalDirty()){ toast('✏️ You typed something. Use Cancel or Save to close.', 2600); return; }
+  if(KN.stack.length){ knBack(); return; }
   stopSpeak(); $('modal').onclick = null; $('modal').onchange = null; closeModal();
 }
 $('overlay').addEventListener('pointerdown', function(e){ ovDownOnBackdrop = (e.target === $('overlay')); });
@@ -6689,6 +6729,7 @@ function kanjiClaim(){
 }
 function checkBadgesX(){ try{ if(typeof checkBadges === 'function') checkBadges(); }catch(e){} }
 function showKanji(k, reward){
+  knScreen('k:' + k.k, function(){ showKanji(k, 0); });
   var h = '<div class="kjmodal">';
   h += '<div class="kjhead"><div class="kjhuge" lang="ja">'+k.k+'</div><div class="kjinfo">';
   h += '<div class="kjm">'+kjEsc(k.m)+'</div>';
@@ -6729,6 +6770,7 @@ function kjInBook(ch){ return !!kjMetState(ch); }
 function kjMetCount(){ var ks = kanjiState(), n = 0; try{ kanjiBackfill(); }catch(e){} KANJI.forEach(function(k){ if(ks.log[k.k] || (ks.met && ks.met[k.k])) n++; }); return n; }
 function kjStat(name, by){ var st = (state.stats = state.stats || {}); st[name] = (st[name] || 0) + (by || 1); }
 function showKanjiBook(){
+  knScreen('book', showKanjiBook);
   try{ kanjiBackfill(); }catch(e){}
   var ink = kinkLoad(), hh = hz(), idx = {};
   KANJI.forEach(function(k, i){ idx[k.k] = i; });
@@ -6746,7 +6788,7 @@ function showKanjiBook(){
         if(st) h += '<button class="kbc '+st+'" lang="ja" data-kjv="'+i+'">'+c+(ink[c] && ink[c].length ? '<span class="kbi">\u270d\ufe0f</span>' : '')+'</button>';
         else h += '<span class="kbc" aria-hidden="true">?</span>';
       });
-      h += '</span></div>';
+      h += '</span><button class="kbfc" aria-label="Practise this page with flash cards" data-kfc="bookpg:'+v+':'+x.p+'">\ud83c\udccf</button></div>';
     });
   });
   h += '</div><div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">\ud83c\udccf Flash cards</button></div></div>';
@@ -6841,28 +6883,56 @@ function kjRec(ch, ok, wrong){
   if(!ok && wrong && klookOf(ch)){ e.lk = (e.lk || 0) + 1; }
   e.t = Date.now(); kjMeet(ch); if(ok){ kjStat('kfcRight'); if(typeof KFC !== 'undefined' && KFC && KFC.mode === 'look') kjStat('lookRight'); } save(); checkBadgesX();
 }
-function kfcPick(n){
-  var recent = kjRecent(), focus = kjFocus(), last = window.__kfcLast || {};
-  var items = KANJI.map(function(k){
-    var w = kjWeight(k.k);
-    if(recent.indexOf(k.k) > -1) w *= 2.5;
-    if(focus.indexOf(k.k) > -1) w *= 3;
-    if(last[k.k]) w *= 0.15;
-    return {k:k, w:w};
-  }), out = [];
+/* v49: which kanji the flash cards use (mix, recent pages, tricky ones, or her own picks) and no more same-five loops */
+function kfcSel(){ var ks = kanjiState(); if(!ks.fcSel) ks.fcSel = {src:'mix', own:[]}; if(!ks.fcSel.own) ks.fcSel.own = []; return ks.fcSel; }
+function kfcTricky(){ return kjUniq(kjFocus().concat(kjWeak())).filter(function(c){ return !!KJ_BY[c]; }); }
+function kfcPool(){
+  var sl = kfcSel(), chars = null;
+  if(sl.src === 'recent') chars = kjRecent();
+  else if(sl.src === 'tricky') chars = kfcTricky();
+  else if(sl.src === 'own') chars = sl.own;
+  if(!chars) return null;
+  var out = kjUniq(chars).map(function(c){ return KJ_BY[c]; }).filter(Boolean);
+  return out.length ? out : null;
+}
+function kfcSeenW(ch){
+  var seen = kanjiState().fcSeen || [], i = seen.lastIndexOf(ch);
+  if(i < 0) return 1;
+  var age = seen.length - i;
+  return age <= 10 ? 0.06 : (age <= 25 ? 0.25 : 0.55);
+}
+function kfcSample(items, n){
+  var out = [];
+  items = items.slice();
   while(out.length < n && items.length){
-    var tot = items.reduce(function(s, x){ return s + x.w; }, 0), r = Math.random()*tot, j = 0;
+    var tot = items.reduce(function(sum, x){ return sum + x.w; }, 0), r = Math.random()*tot, j = 0;
     for(; j < items.length - 1; j++){ r -= items[j].w; if(r <= 0) break; }
     out.push(items[j].k); items.splice(j, 1);
   }
+  return out;
+}
+function kfcPick(n){
+  var pool = kfcPool(), sl = kfcSel();
+  var recent = kjRecent(), focus = kjFocus(), last = window.__kfcLast || {};
+  var items = (pool || KANJI).map(function(k){
+    var w = kjWeight(k.k);
+    if(!pool){
+      if(recent.indexOf(k.k) > -1) w *= 2.5;
+      if(focus.indexOf(k.k) > -1) w *= 3;
+    }
+    if(last[k.k]) w *= 0.15;
+    return {k:k, w:w * kfcSeenW(k.k)};
+  });
+  var out = kfcSample(items, n);
   window.__kfcLast = {}; out.forEach(function(k){ window.__kfcLast[k.k] = 1; });
   return out;
 }
 function kfcLookPick(n){
-  var pool = KANJI.filter(function(k){ return klookOf(k.k); });
-  pool = shuffle(pool, Math.random);
-  pool.sort(function(a, b){ return kjWeight(b.k) - kjWeight(a.k) + (Math.random() - .5)*2; });
-  return pool.slice(0, Math.min(n, pool.length));
+  var pool = kfcPool(), note = false;
+  var base = (pool || KANJI).filter(function(k){ return klookOf(k.k); });
+  if(!base.length){ base = KANJI.filter(function(k){ return klookOf(k.k); }); note = !!pool; }
+  if(note) toast('None of your kanji have look-alike twins, so here are some twins.', 3200);
+  return kfcSample(base.map(function(k){ return {k:k, w:kjWeight(k.k) * kfcSeenW(k.k)}; }), Math.min(n, base.length));
 }
 function kfcOptions(k){
   var g = klookOf(k.k), opts = [k.k];
@@ -6875,6 +6945,7 @@ function kfcOptions(k){
 }
 function kfcStart(mode){
   var cards = mode === 'look' ? kfcLookPick(5) : kfcPick(5);
+  try{ var ksn = kanjiState(); ksn.fcSeen = (ksn.fcSeen || []).concat(cards.map(function(k){ return k.k; })).slice(-40); save(); }catch(_){}
   KFC = {mode:mode, cards:cards, i:0, flip:false, res:[], rq:{}, stage:'card', picked:null, opts:null};
   if(mode === 'pick' || mode === 'look') KFC.opts = kfcOptions(cards[0]);
   kfcShow();
@@ -6885,11 +6956,27 @@ function kfcDots(){
   for(var i = 0; i < s.cards.length; i++){ h += '<i class="'+(i < s.i ? 'd' : (i === s.i ? 'c' : ''))+'"></i>'; }
   return h + '</div>';
 }
+function kfcSelLabel(){
+  var sl = kfcSel();
+  if(sl.src === 'recent') return '📍 Recent pages';
+  if(sl.src === 'tricky') return '🎯 Tricky ones';
+  if(sl.src === 'own') return '👆 '+sl.own.length+' kanji I picked';
+  return '🎲 A mix of everything';
+}
 function kfcShow(){
-  var s = KFC, h = '<div class="kjmodal kfc">';
+  var s = KFC;
+  knScreen((!s || s.stage === 'menu') ? 'fcmenu' : 'fcplay', (!s || s.stage === 'menu') ? function(){ KFC = {stage:'menu'}; kfcShow(); } : function(){ kfcShow(); });
+  var h = '<div class="kjmodal kfc">';
   if(!s || s.stage === 'menu'){
     h += '<h2 style="margin:0 0 4px">🃏 Kanji flash cards</h2>';
-    h += '<div class="hint" style="margin-bottom:10px">Just 5 cards when you feel like it. No timer, no points. Kit keeps the tricky ones for later.</div>';
+    h += '<div class="hint" style="margin-bottom:8px">Just 5 cards when you feel like it. No timer, no points. Kit keeps the tricky ones for later.</div>';
+    var sl = kfcSel(), nT = kfcTricky().length;
+    h += '<div class="kfch" style="margin:0 0 4px">Which kanji?</div><div class="kcbchips kfcsrc">';
+    h += '<button class="kcbchip'+(sl.src === 'mix' ? ' on' : '')+'" data-kfc="src:mix">🎲 Mix</button>';
+    h += '<button class="kcbchip'+(sl.src === 'recent' ? ' on' : '')+'" data-kfc="src:recent">📍 Recent pages</button>';
+    if(nT) h += '<button class="kcbchip'+(sl.src === 'tricky' ? ' on' : '')+'" data-kfc="src:tricky">🎯 Tricky ('+nT+')</button>';
+    h += '<button class="kcbchip'+(sl.src === 'own' ? ' on' : '')+'" data-kfc="pick">👆 '+(sl.own.length ? 'My picks ('+sl.own.length+')' : 'Pick my own')+'</button>';
+    h += '</div><div class="hint" style="margin:0 0 10px">Practising: <b>'+kfcSelLabel()+'</b></div>';
     h += '<div class="kfcmenu">';
     h += '<div class="kfch">Kanji cards</div>';
     h += '<button class="btn kfcm" data-kfc="mode:read"><b>👀 Read it</b><small>See the kanji, flip for the reading</small></button>';
@@ -6963,11 +7050,67 @@ function kfcMark(ok, wrong){
   if(!ok && !s.rq[k.k] && s.cards.length < 8){ s.rq[k.k] = 1; s.cards.push(k); }
   kfcAdvance();
 }
+var KFCP = null;
+function kfcPickShow(keepScroll){
+  knScreen('fcpick', function(){ kfcPickShow(); });
+  if(!KFCP) KFCP = {sel:{}}; 
+  var sel = KFCP.sel, hh = hz(), n = Object.keys(sel).length, idx = {}, bx = $('kfcPickBox'), st = keepScroll && bx ? bx.scrollTop : 0;
+  KANJI.forEach(function(k, i){ idx[k.k] = i; });
+  var h = '<div class="kjmodal kfc"><h2 style="margin:0 0 4px">👆 Pick your kanji</h2>';
+  h += '<div class="hint">Tap the kanji you want to practise. Tap a page number to pick that whole page.</div>';
+  h += '<div class="kcbchips kfcsrc"><button class="kcbchip" data-kfc="pk:here">📍 This page</button><button class="kcbchip" data-kfc="pk:tricky">🎯 Tricky ones</button><button class="kcbchip" data-kfc="pk:clear">✖ Clear</button><span class="hint" style="align-self:center"><b>'+n+'</b> picked</span></div>';
+  h += '<div id="kfcPickBox" style="max-height:48vh;overflow:auto">';
+  ['\u4e0a','\u4e0b'].forEach(function(v){
+    h += '<div class="kbvol">3\u5e74'+v+'</div>';
+    kbPages(v).forEach(function(x){
+      var here = hh.on && hh.vol === v && hh.page === x.p;
+      h += '<div class="kbrow'+(here ? ' here' : '')+'"><button class="kbp kfcpg" data-kfc="pg:'+v+':'+x.p+'">p.'+x.p+'</button><span class="kbcells">';
+      x.ks.forEach(function(c){
+        if(idx[c] === undefined) return;
+        var st2 = kjMetState(c);
+        h += '<button class="kbc '+(st2 || 'cov')+(sel[c] ? ' sel' : '')+'" lang="ja" data-kfc="tg:'+c+'">'+c+'</button>';
+      });
+      h += '</span></div>';
+    });
+  });
+  h += '</div><div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-kfc="pk:cancel">Cancel</button><button class="btn primary"'+(n ? '' : ' disabled')+' data-kfc="pk:go">🃏 Practise '+n+' kanji</button></div></div>';
+  openModal(h);
+  var nb = $('kfcPickBox'); if(nb && st) nb.scrollTop = st;
+}
+function kfcPickHandle(a){
+  if(!KFCP) KFCP = {sel:{}};
+  var sel = KFCP.sel;
+  if(a.indexOf('tg:') === 0){ var c = a.slice(3); if(sel[c]) delete sel[c]; else sel[c] = 1; kfcPickShow(true); return; }
+  if(a.indexOf('pg:') === 0){
+    var pp = a.split(':'), pg = kbPages(pp[1]).filter(function(x){ return x.p === +pp[2]; })[0];
+    if(pg){ var cs = pg.ks.filter(function(c){ return KJ_BY[c]; }), all = cs.every(function(c){ return sel[c]; }); cs.forEach(function(c){ if(all) delete sel[c]; else sel[c] = 1; }); }
+    kfcPickShow(true); return;
+  }
+  var k = a.slice(3);
+  if(k === 'clear'){ KFCP.sel = {}; kfcPickShow(true); return; }
+  if(k === 'here'){ var h0 = hz(); kbPages(h0.vol).forEach(function(x){ if(x.p === h0.page) x.ks.forEach(function(c){ if(KJ_BY[c]) sel[c] = 1; }); }); kfcPickShow(true); return; }
+  if(k === 'tricky'){ kfcTricky().forEach(function(c){ sel[c] = 1; }); kfcPickShow(true); return; }
+  if(k === 'cancel'){ KFCP = null; knBack(); return; }
+  if(k === 'go'){
+    var chars = Object.keys(sel); if(!chars.length) return;
+    var sl = kfcSel(); sl.src = 'own'; sl.own = chars; KFCP = null; window.__kfcLast = {}; save();
+    if(KN.stack.length) knBack(); else { KFC = {stage:'menu'}; kfcShow(); }
+    return;
+  }
+}
 document.addEventListener('click', function(e){
   var t = e.target.closest && e.target.closest('[data-kfc]'); if(!t) return;
   e.preventDefault(); e.stopPropagation();
   var a = t.getAttribute('data-kfc'), s = KFC;
   try{ Sound.tap(); }catch(_){}
+  if(a === 'pick'){ var o = kfcSel().own, m = {}; o.forEach(function(c){ m[c] = 1; }); KFCP = {sel:m}; kfcPickShow(); return; }
+  if(a.indexOf('tg:') === 0 || a.indexOf('pg:') === 0 || a.indexOf('pk:') === 0){ kfcPickHandle(a); return; }
+  if(a.indexOf('src:') === 0){ kfcSel().src = a.slice(4); window.__kfcLast = {}; save(); KFC = {stage:'menu'}; kfcShow(); return; }
+  if(a.indexOf('bookpg:') === 0){
+    var bp = a.split(':'), pgx = kbPages(bp[1]).filter(function(x){ return x.p === +bp[2]; })[0];
+    if(pgx){ var sl2 = kfcSel(); sl2.src = 'own'; sl2.own = pgx.ks.filter(function(c){ return KJ_BY[c]; }); window.__kfcLast = {}; save(); }
+    KFC = {stage:'menu'}; kfcShow(); return;
+  }
   if(a === 'open' || a === 'menu'){ KFC = {stage:'menu'}; kfcShow(); return; }
   if(a.indexOf('mode:') === 0){ kfcStart(a.slice(5)); return; }
   if(!s) return;
@@ -7293,6 +7436,7 @@ var KW_MSG = {
 var KW_CHECKS = ['Is it in the middle of the box?', 'Are the long lines straight?', 'Do the ends stop, flick or sweep like the model?'];
 function kwOpen(ch, mode){
   if(!KVG[ch]){ toast('No stroke data for that kanji yet.'); return; }
+  KN.resume = KN.cur ? {cur:KN.cur, stack:KN.stack.slice()} : null;
   try{ closeModal(); }catch(_){}
   kwClose(true);
   var k = KJ_BY[ch], ks = kanjiState();
@@ -7611,7 +7755,7 @@ function kwClick(e){
   var a = t.getAttribute('data-kw'), s = KW;
   try{ Sound.tap(); }catch(_){}
   if(t.disabled) return;
-  if(a === 'close'){ kwClose(); return; }
+  if(a === 'close'){ kwClose(); knResume(true); return; }
   if(a.indexOf('mode:') === 0){ kwSetMode(a.slice(5)); return; }
   if(a === 'replay'){ s.shown = 0; kwDraw(); kwPlay(0, s.polys.length, 'watch'); return; }
   if(a === 'step'){ if(s.shown < s.polys.length) kwPlay(s.shown, s.shown + 1, 'watch'); return; }
@@ -7627,10 +7771,11 @@ function kwClick(e){
   if(a.indexOf('ck:') === 0){ var p = a.split(':'), at = s.attempts[s.attempts.length - 1]; at.ck[+p[1]] = +p[2]; kwSide(); return; }
   if(a === 'palm'){ var ks = kanjiState(); ks.penOnly = !ks.penOnly; save(); s.nudged = true; kwSide(); return; }
   if(a === 'mine'){ s.prevView = s.view; s.view = 'mine'; kwChrome(); kwSide(); return; }
-  if(a === 'album'){ var ch0 = s.ch; kwClose(); showInkAlbum(); return; }
+  if(a === 'album'){ var ch0 = s.ch; kwClose(); knResume(false); showInkAlbum(); return; }
 }
 /* ---- album of saved writing (kid and parent) ---- */
 function showInkAlbum(){
+  knScreen('album', showInkAlbum);
   var o = kinkLoad(), keys = Object.keys(o).filter(function(k){ return o[k].length; });
   var h = '<div class="kjmodal"><h2 style="margin:0 0 4px">📓 My writing</h2>';
   if(!keys.length) h += '<div class="hint">Nothing saved yet. Open a kanji, tap Write it, and tap Keep on your neatest one.</div>';
@@ -7643,6 +7788,7 @@ function showInkAlbum(){
   openModal(h);
 }
 function showInkOne(ch){
+  knScreen('ink:' + ch, function(){ showInkOne(ch); });
   var l = kinkLoad()[ch] || [], k = KJ_BY[ch];
   var h = '<div class="kjmodal"><h2 style="margin:0 0 4px">📓 <span lang="ja">'+ch+'</span> '+(k ? kjEsc(k.m) : '')+'</h2>';
   if(l.length > 1) h += '<div class="kwcmp"><div><small>First time ('+kjLog(l[0].d)+')</small>'+kwThumb(l[0].flat, 150)+'</div><div><small>Latest ('+kjLog(l[l.length - 1].d)+')</small>'+kwThumb(l[l.length - 1].flat, 150)+'</div></div>';
@@ -7773,6 +7919,7 @@ function kcbWordCard(wd){
   return '<div class="kcbword"><span class="kcbw" lang="ja">'+esc(wd.w)+'</span><span class="kcbr" lang="ja">'+esc(wd.r)+'</span><span class="kcbm">'+esc(wd.m)+'</span> <button class="btn small" data-kcb="say">🔊</button></div>';
 }
 function kcbShow(){
+  knScreen('kcb', function(){ kcbShow(); });
   var s = KCB, h = '<div class="kjmodal kfc">';
   if(s.stage === 'fam'){ kcbFamShow(); return; }
   if(s.stage === 'end'){
@@ -7911,6 +8058,7 @@ function kcbFam(ch){
   KCB = {stage:'fam', ch:ch}; kcbFamShow();
 }
 function kcbFamShow(){
+  knScreen('kcb', function(){ kcbShow(); });
   var s = KCB, k = KJ_BY[s.ch], words = KWORDS.filter(function(x){ return x.w.indexOf(s.ch) > -1; });
   var h = '<div class="kjmodal kfc"><h2 style="margin:0 0 4px">🔗 Words with <span lang="ja" class="kcbbig">'+esc(s.ch)+'</span></h2>';
   if(k) h += '<div class="hint">'+esc(k.m)+' · <span lang="ja">'+kjEsc(k.kun)+' · '+kjEsc(k.on)+'</span></div>';
@@ -8530,9 +8678,31 @@ function showFamPack(){
   var on = !!FAMPACK, n = on ? FAMPACK.cards.length : 0;
   var h = '<div class="gmodal"><h2>👪 Family pack</h2>';
   h += '<p style="font-weight:700;line-height:1.5">'+(on ? '✅ Loaded: '+n+' family cards and her birthday details are on this device.' : 'Not loaded. This adds your family cards and birthday details. The file stays on this device and is never published.')+'</p>';
-  h += '<div class="fld"><label>Choose the family pack file</label><input type="file" id="fpFile" accept=".json,application/json"></div><div class="hint" id="fpMsg"></div>';
+  if(on){
+    h += '<div style="margin:0 0 8px">';
+    FAMPACK.cards.forEach(function(c){ var id = c.row[0], got = !!state.cards[id]; h += '<div class="prow" style="padding:6px 10px;margin-bottom:4px"><span style="font-size:20px">'+esc(c.row[6] || '💛')+'</span><div class="pn">'+esc(c.row[1])+'<small>'+(got ? '🔓 found' : '🔒 not found yet')+'</small></div></div>'; });
+    h += '</div>';
+  }
+  h += '<div class="fld"><label>'+(on ? 'Add more cards: choose another family pack file' : 'Choose the family pack file')+'</label><input type="file" id="fpFile" accept=".json,application/json"></div>';
+  if(on) h += '<div class="hint">Adding a file never replaces what is here. New cards are added, and everything she has already found stays found.</div>';
+  h += '<div class="hint" id="fpMsg"></div>';
   h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button>'+(on ? '<button class="btn danger" data-fp="remove">Remove pack</button>' : '')+'</div></div>';
   gOpen(h);
+}
+/* v49: adding a family pack MERGES into the one on this device. Cards you already have (and everything you unlocked) stay.
+   A card with a new id is added; a card with the same id is updated; nothing is removed. A backup of the old pack is kept. */
+function fpMerge(old, add){
+  var out = JSON.parse(JSON.stringify(old)), at = {}, added = 0, updated = 0, newIds = [];
+  out.cards.forEach(function(c, i){ at[c.row[0]] = i; });
+  add.cards.forEach(function(c){
+    var id = c.row[0];
+    if(at[id] !== undefined){ if(JSON.stringify(out.cards[at[id]]) !== JSON.stringify(c)){ out.cards[at[id]] = c; updated++; } }
+    else { at[id] = out.cards.length; out.cards.push(c); added++; newIds.push(id); }
+  });
+  out.imgs = out.imgs || {};
+  Object.keys(add.imgs || {}).forEach(function(id){ if(out.imgs[id] !== add.imgs[id]){ out.imgs[id] = add.imgs[id]; if(newIds.indexOf(id) < 0 && at[id] !== undefined) updated += 0; } });
+  ['seed', 'bday', 'birthFacts'].forEach(function(f){ if(out[f] === undefined && add[f] !== undefined) out[f] = add[f]; });
+  return {pack:out, added:added, updated:updated};
 }
 function fpImport(file){
   var msg = function(t){ var m = $('fpMsg'); if(m) m.textContent = t; };
@@ -8542,11 +8712,20 @@ function fpImport(file){
   r.onload = function(){
     var txt = String(r.result), pk;
     try{ pk = JSON.parse(txt); }catch(e){ msg('That file could not be read.'); return; }
-    if(!pk || pk.kind !== 'starquest-family-pack' || !Array.isArray(pk.cards) || !pk.cards.length || !pk.cards.every(function(c){ return c && Array.isArray(c.row) && c.row.length >= 10 && typeof c.at === 'number'; })){ msg('That is not a StarQuest family pack.'); return; }
-    try{ localStorage.setItem('sq_family_pack', txt); }catch(e){ msg('Could not save on this device (storage full).'); return; }
+    if(!pk || pk.kind !== 'starquest-family-pack' || !Array.isArray(pk.cards) || !pk.cards.length || !pk.cards.every(function(c){ return c && Array.isArray(c.row) && c.row.length >= 10 && typeof c.at === 'number' && typeof c.row[0] === 'string'; })){ msg('That is not a StarQuest family pack.'); return; }
+    var oldTxt = null, oldPk = null, outTxt = txt, note = '';
+    try{ oldTxt = localStorage.getItem('sq_family_pack'); oldPk = oldTxt ? JSON.parse(oldTxt) : null; }catch(e){ oldPk = null; }
+    if(oldPk && oldPk.kind === 'starquest-family-pack' && Array.isArray(oldPk.cards)){
+      var m = fpMerge(oldPk, pk);
+      if(!m.added && !m.updated && JSON.stringify(m.pack.imgs) === JSON.stringify(oldPk.imgs || {})){ msg('Nothing new in that file. All '+oldPk.cards.length+' cards are already here.'); return; }
+      outTxt = JSON.stringify(m.pack);
+      note = 'Added '+m.added+' new card'+(m.added === 1 ? '' : 's')+(m.updated ? ', updated '+m.updated : '')+' ('+m.pack.cards.length+' in total). Your unlocked cards are kept. ';
+      try{ localStorage.setItem('sq_family_pack_prev', oldTxt); }catch(e){}
+    } else { note = 'Loaded '+pk.cards.length+' cards. '; }
+    try{ localStorage.setItem('sq_family_pack', outTxt); }catch(e){ msg('Could not save on this device (storage full).'); return; }
     if(pk.bday && pk.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:pk.bday.y, m:pk.bday.m, d:pk.bday.d}; state.eco.bdayOn = true; }
-    save(); msg('Loaded! Restarting…');
-    setTimeout(function(){ location.reload(); }, 700);
+    save(); msg(note+'Restarting…');
+    setTimeout(function(){ location.reload(); }, 1400);
   };
   r.onerror = function(){ msg('That file could not be read.'); };
   r.readAsText(file);
@@ -8554,7 +8733,7 @@ function fpImport(file){
 document.addEventListener('click', function(e){
   var t = e.target.closest && e.target.closest('[data-fp]'); if(!t) return;
   var a = t.getAttribute('data-fp');
-  if(a === 'remove'){ confirmBox('Remove the family pack?', 'The family cards will disappear from this device until you load the file again.', 'Remove', function(){ try{ localStorage.removeItem('sq_family_pack'); }catch(_){} save(); location.reload(); }); return; }
+  if(a === 'remove'){ confirmBox('Remove the family pack?', 'The family cards will disappear from this device until you load the file again.', 'Remove', function(){ try{ localStorage.removeItem('sq_family_pack'); localStorage.removeItem('sq_family_pack_prev'); }catch(_){} save(); location.reload(); }); return; }
   showFamPack();
 });
 document.addEventListener('change', function(e){ var t = e.target; if(t && t.id === 'fpFile') fpImport(t.files && t.files[0]); });
