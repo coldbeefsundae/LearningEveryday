@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v53', errs = [], shown = false;
+  var V = 'v54', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3309,9 +3309,9 @@ function addCard(id){
   var had = state.cards[id] || 0;
   state.cards[id] = had + 1;
   if(!had){ (state.cardDates = state.cardDates || {})[id] = dateKey(); }
-  lastDupPts = 0;
+  lastDupPts = 0; lastDupCr = 0;
   if(!had) state.newCards[id] = true;
-  else { var dc = BY_ID[id]; lastDupPts = addPoints(DUP_POINTS[dc ? dc.k : 'C'] || 1, 'Duplicate card', true); }
+  else { var dc = BY_ID[id]; lastDupCr = dupCredits(dc ? dc.k : 'C'); lastDupPts = dupJarAdd(lastDupCr); }
   return !had;
 }
 function dailyCard(){
@@ -4006,6 +4006,10 @@ function showParentSection(key, scrollTop){
     h += pNum('Points for bonus challenge', 'eBonus', 0, 50, e.bonus);
     h += pNum('Extra points limit per day', 'eExtra', 0, 200, e.extraCap);
     h += '</div><div class="hint" style="margin-bottom:6px">Extra points = bonus challenge, duplicate cards, quizzes, bites and kanji. All share the daily extra limit.</div>';
+    h += '<h3>Duplicate cards</h3><div class="hint" style="margin-bottom:6px">Each duplicate drops credits in a jar. Every time the jar reaches the number below, it turns into 1 point (leftovers carry over). Credits per duplicate:</div><div class="ecogrid">';
+    h += pNum('Credits for 1 point', 'eDupPer', 1, 50, dupPer());
+    ['C','B','A','S','SSR','SSSR'].forEach(function(k){ h += pNum(k+' duplicate', 'eDup'+k, 0, 500, dupCredits(k)); });
+    h += '</div>';
     h += '<h3>Rest day</h3>';
     h += pTog('Allow one rest day per week', 'eRest', e.restOn);
     h += pTog('Use the rest day automatically if a day is missed', 'eAuto', e.autoRest);
@@ -4087,6 +4091,7 @@ function applyParentSettings(){
   e.bonus = num('eBonus', 0, 50, e.bonus);
   e.screenCap = num('eScreen', 0, 600, e.screenCap);
   e.extraCap = num('eExtra', 0, 200, e.extraCap);
+  if($('eDupPer')){ e.dupPer = num('eDupPer', 1, 50, dupPer()); ['C','B','A','S','SSR','SSSR'].forEach(function(k){ e['dup'+k] = num('eDup'+k, 0, 500, dupCredits(k)); }); }
   e.packCap = num('ePackCap', 0, 20, packCap());
   e.bankCap = num('eBank', 50, 5000, e.bankCap);
   e.restOn = ck('eRest', e.restOn); e.autoRest = ck('eAuto', e.autoRest);
@@ -4299,8 +4304,8 @@ function tearPack(){
   stg.torn = true;
   state.packs -= 1; state.packsOpened += 1; state.packDay.n += 1;
   stg.cards = rollPack();
-  stg.dup = 0;
-  stg.news = stg.cards.map(function(c){ var nn = addCard(c.id); stg.dup += lastDupPts; return nn; });
+  stg.dup = 0; stg.dupCr = 0;
+  stg.news = stg.cards.map(function(c){ var nn = addCard(c.id); stg.dup += lastDupPts; stg.dupCr += lastDupCr; return nn; });
   save();
   var pk = $('packart'); if(pk) pk.classList.add('tearing');
   Sound.pack();
@@ -4313,7 +4318,7 @@ function claimDaily(){
   var nw = addCard(c.id);
   state.packs += 1;
   save(); renderTop();
-  stg = {kind:'daily', cards:[c], news:[nw], dup:lastDupPts, flipped:0, torn:true, rank:rankInfo().rank.title};
+  stg = {kind:'daily', cards:[c], news:[nw], dup:lastDupPts, dupCr:lastDupCr, flipped:0, torn:true, rank:rankInfo().rank.title};
   $('stage').classList.add('show');
   Sound.pack(); flashFx();
   drawReveal();
@@ -4351,12 +4356,12 @@ function stageDone(){
   var sh = $('shint'), sa = $('sact'); if(!sa) return;
   var h = '';
   if(stg.kind === 'daily'){
-    if(sh) sh.textContent = '🎁 You also got +1 Card Pack!'+(stg.dup ? ' ♻️ Duplicate card: +'+stg.dup+' points!' : '');
+    if(sh) sh.textContent = '🎁 You also got +1 Card Pack!'+(stg.dup ? ' ♻️ Duplicate card: +'+stg.dup+' point'+(stg.dup === 1 ? '' : 's')+'!' : (stg.dupCr ? ' ♻️ Duplicate card! Jar '+dupJarText() : ''));
     h += '<button class="btn-gold" data-act="sread">📖 Read the story</button>';
   } else {
     var best = stg.cards.reduce(function(b,c){ return RAR_ORDER.indexOf(c.k) < RAR_ORDER.indexOf(b.k) ? c : b; }, stg.cards[0]);
     var newN = stg.news.filter(Boolean).length;
-    if(sh) sh.textContent = (newN ? ('🎉 '+newN+' new card'+(newN>1?'s':'')+' added! Best pull: '+best.k) : 'No new cards this time. Try again!') + (stg.dup ? ' ♻️ Duplicates became +'+stg.dup+' points!' : '');
+    if(sh) sh.textContent = (newN ? ('🎉 '+newN+' new card'+(newN>1?'s':'')+' added! Best pull: '+best.k) : 'No new cards this time. Try again!') + (stg.dup ? ' ♻️ Duplicates became +'+stg.dup+' point'+(stg.dup === 1 ? '' : 's')+'! Jar '+dupJarText() : (stg.dupCr ? ' ♻️ Duplicates are filling the jar: '+dupJarText() : ''));
     if(state.packs > 0 && packsLeftToday() > 0) h += '<button class="btn-gold" data-act="again">🎴 Open another ('+state.packs+')</button>';
     else if(state.packs > 0) h += '<div class="stage-hint" style="margin:8px 0">🌙 That’s all the packs for today. '+state.packs+' saved for tomorrow!</div>';
   }
@@ -4504,7 +4509,20 @@ function showRates(){
 var DUP_POINTS = {C:1, B:2, A:3, S:5, SSR:10, SSSR:30};
 var STREAK_BONUS = {3:5, 7:15, 14:30, 30:100};
 var STREAK_STEPS = [3, 7, 14, 30];
-var lastDupPts = 0;
+var lastDupPts = 0, lastDupCr = 0;
+/* v52+: duplicate jar. Each duplicate adds credits; every N credits (default 5) becomes 1 point. Leftovers carry over. */
+var DUP_CREDITS = {C:1, B:2, A:4, S:8, SSR:20, SSSR:60};
+function dupPer(){ var v = state.eco && state.eco.dupPer; return v > 0 ? v : 5; }
+function dupCredits(k){ var v = state.eco && state.eco['dup'+k]; return (v === undefined || v === null || isNaN(v)) ? (DUP_CREDITS[k] || 1) : v; }
+function dupJarAdd(cr){
+  var per = dupPer(); state.dupJar = Math.max(0, (state.dupJar || 0) + cr);
+  var want = Math.floor(state.dupJar / per); if(want < 1) return 0;
+  var paid = addPoints(want, 'Duplicate cards', true);
+  state.dupJar -= paid * per;
+  if(state.dupJar > per * 10) state.dupJar = per * 10;
+  return paid;
+}
+function dupJarText(){ var per = dupPer(); return '🫙 '+(state.dupJar || 0)+'/'+per; }
 var cal = {y:new Date().getFullYear(), m:new Date().getMonth()};
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -4716,7 +4734,7 @@ function rewardCardHTML(r){
 function renderShopCoins(){
   var e = state.eco;
   var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(wkNow() ? Math.floor(state.points * wkCfg().per / wkCfg().pts) : state.points)+' of screen time'+(wkNow() ? ' (weekend price!)' : '')+'</div></div></div>';
-  h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>+1 to +10</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
+  h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>'+dupPer()+' = 1 pt, rarer pay more</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
   var goal = state.goalId ? rewardById(state.goalId) : null;
   if(goal && goal.on){
     var gp = Math.min(100, Math.round(state.points / rewardCost(goal) * 100));
