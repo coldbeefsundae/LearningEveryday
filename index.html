@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.11', errs = [], shown = false;
+  var V = '26.11.12', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -9776,6 +9776,7 @@ var BKP = (function(){
   }
   /* one small step of time. gx, gy are in "g" (1 = normal gravity pointing down the screen) */
   function step(bs, dt, gx, gy, hit){
+    if(!(dt > 0.0002) || !isFinite(gx) || !isFinite(gy)) return;   /* a zero-length step would divide by zero and lose every coin */
     var i, n = bs.length, b, k = G0*dt, damp = 0.9996, it;
     DT = dt;
     for(i = 0; i < n; i++){ b = bs[i]; b.ox = b.x; b.oy = b.y; b.bx = 0; b.by = 0; b.vx = (b.vx + gx*k)*damp; b.vy = (b.vy + gy*k)*damp; b.x += b.vx*dt; b.y += b.vy*dt; }
@@ -9802,7 +9803,8 @@ var BKP = (function(){
   function spawn(bs){
     var x0 = 44 + Math.random()*32, b = {x:x0, y:27, ox:x0, oy:27, bx:0, by:0, vx:(Math.random() - .5)*40, vy:90 + Math.random()*60}; bs.push(b); return b;
   }
-  return {R:R, step:step, pile:pile, spawn:spawn, inside:inside, maxSpeed:maxSpeed, POLY:POLY};
+  function ok(bs){ for(var i = 0; i < bs.length; i++){ var b = bs[i]; if(!isFinite(b.x) || !isFinite(b.y) || !isFinite(b.vx) || !isFinite(b.vy) || !inside(b.x, b.y)) return false; } return true; }
+  return {R:R, step:step, pile:pile, spawn:spawn, inside:inside, maxSpeed:maxSpeed, POLY:POLY, ok:ok};
 })();
 
 /* ----- the jars: one coin per dollar, $100 = a full jar ----- */
@@ -9844,9 +9846,13 @@ function bkCoinInner(id){
 }
 function bkCoinG(id, b){ return '<g transform="translate('+b.x.toFixed(2)+' '+b.y.toFixed(2)+')">'+bkCoinInner(id)+'</g>'; }
 /* make the world hold the right number of coins (extra coins pour in after the page is drawn) */
+function bkHeal(w){
+  var n = w.bs.length; w.bs = BKP.pile(n); w.sx = w.sy = 0;
+  if(w.g && w.g.isConnected !== false){ w.g.innerHTML = w.bs.map(function(b){ return bkCoinG(w.id, b); }).join(''); w.nodes = Array.prototype.slice.call(w.g.childNodes); }
+}
 function bkPhSync(id, n){
   var w = bkWorld(id); w.target = n;
-  if(!w.init){ w.bs = BKP.pile(n); w.init = true; return w; }
+  if(!w.init || !BKP.ok(w.bs)){ w.bs = BKP.pile(Math.min(n, w.init ? w.bs.length || n : n)); w.init = true; return w; }
   if(window.__bkDrop && id === 'L') return w;
   if(w.bs.length > n){ w.bs.sort(function(a, b){ return a.y - b.y; }); w.bs.splice(0, w.bs.length - n); }
   return w;
@@ -9887,8 +9893,9 @@ function bkHit(v){ if(v > bkHitMax) bkHitMax = v; }
 function bkPhFrame(ts){
   bkRaf = 0;
   if(!bkPhOn()) return;
-  var dt = bkLastT ? Math.min(0.034, (ts - bkLastT)/1000) : 0.016, id, w, i, k, live = false, moving = false, sub = Math.max(2, Math.min(5, Math.ceil(dt/0.0085))), f = Math.min(1, dt*14);
-  bkLastT = ts;
+  var raw = bkLastT ? (ts - bkLastT)/1000 : 0, dt = raw > 0.001 ? Math.min(0.034, raw) : 0.016, id, w, i, k, live = false, moving = false, sub = Math.max(2, Math.min(5, Math.ceil(dt/0.0085))), f = Math.min(1, dt*14);
+  bkLastT = Math.max(bkLastT, ts);
+  if(!isFinite(BKG.x) || !isFinite(BKG.y)){ BKG.x = BKG.tx = BKG.rx = 0; BKG.y = BKG.ty = BKG.ry = 1; }
   BKG.x += (BKG.tx - BKG.x)*f; BKG.y += (BKG.ty - BKG.y)*f;
   for(id in BKW){
     w = BKW[id];
@@ -9896,6 +9903,7 @@ function bkPhFrame(ts){
     live = true; w.sx *= 0.86; w.sy *= 0.86;
     var gx = BKG.x + w.sx, gy = BKG.y + w.sy;
     for(k = 0; k < sub; k++) BKP.step(w.bs, dt/sub, gx, gy, bkHit);
+    if(!BKP.ok(w.bs)) bkHeal(w);
     for(i = 0; i < w.bs.length && i < w.nodes.length; i++) w.nodes[i].setAttribute('transform', 'translate('+w.bs[i].x.toFixed(2)+' '+w.bs[i].y.toFixed(2)+')');
     if(BKP.maxSpeed(w.bs) > 6 || Math.abs(w.sx) + Math.abs(w.sy) > 0.05) moving = true;
   }
@@ -9925,7 +9933,7 @@ function bkGravityFrom(ax, ay, ang){
 }
 function bkMotion(e){
   var a = e && e.accelerationIncludingGravity;
-  if(!a || a.x == null || a.y == null || !bkPhOn()) return;
+  if(!a || a.x == null || a.y == null || !isFinite(a.x) || !isFinite(a.y) || !bkPhOn()) return;
   window.__bkSensor = true;
   if(!BKW.L && !BKW.R) return;
   var live = false, id; for(id in BKW){ if(BKW[id].g && BKW[id].g.isConnected !== false) live = true; }
