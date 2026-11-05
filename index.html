@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v55', errs = [], shown = false;
-  window.__SQV = V;
+  var V = '26.11.1', errs = [], shown = false;
+  window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
     try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
@@ -23,6 +23,7 @@
     for(var j = 0; j < errs.length; j++) L.push(' - ' + errs[j]);
     return L.join('\n');
   }
+  window.__SQRefresh = function(){ clearCaches(); };
   function clearCaches(){
     var jobs = [];
     try{ if(navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){ return Promise.all(rs.map(function(r){ return r.unregister(); })); })); }catch(e){}
@@ -1668,6 +1669,8 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 .hlp .ha ul{margin:6px 0 0 20px;padding:0}.hlp .ha li{margin:3px 0}
 .hlp code{background:rgba(127,127,160,.2);border-radius:6px;padding:1px 5px;font-size:13px}
 .helppanel .btn{margin-top:2px}
+.verrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:14px;opacity:.8}
+.verpanel{padding:12px 16px}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -3729,7 +3732,28 @@ function renderCards(){
   $('view-cards').innerHTML = h;
 }
 
-/* ---------- v55: help / how-to guide (for Eleanor and for parents) ---------- */
+/* ---------- app version + update check ---------- */
+function appVersion(){ return window.__SQV || ''; }
+function appDateText(){
+  try{ var p = String(window.__SQDATE || '').split('-'); if(p.length !== 3) return '';
+    return new Date(+p[0], +p[1]-1, +p[2]).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}); }catch(e){ return ''; }
+}
+function versionLine(){ var d = appDateText(); return 'StarQuest '+appVersion()+(d ? ' · '+d : ''); }
+function versionRowHTML(){
+  return '<div class="verrow"><span>'+esc(versionLine())+'</span><button class="btn small" data-act="chkupdate">🔄 Check for updates</button></div>';
+}
+function checkForUpdate(){
+  toast('Checking for updates…', 1500);
+  var url = (location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '')) + 'sw.js?check=' + Date.now();
+  fetch(url, {cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.text(); }).then(function(t){
+    var m = /VERSION\s*=\s*'([^']+)'/.exec(t); if(!m) throw new Error('no version');
+    if(m[1] === appVersion()){ toast('✅ You have the newest version ('+appVersion()+').', 3200); return; }
+    confirmBox('🆕 Update ready', 'Version <b>'+esc(m[1])+'</b> is ready. You have '+esc(appVersion())+'. Update now?', 'Update', function(){
+      if(window.__SQRefresh) window.__SQRefresh(); else location.reload();
+    });
+  }).catch(function(){ toast('Could not check right now. Are you online?', 3600); });
+}
+/* ---------- help / how-to guide (for Eleanor and for parents) ---------- */
 var HELP_FROM = '';
 function helpSafe(f, d){ try{ return f(); }catch(e){ return d; } }
 function helpData(){
@@ -3851,7 +3875,8 @@ function helpHTML(tab){
     h += '</div>';
   });
   h += '<div class="empty" id="hlpNone" style="display:none">Nothing found. Try a different word.</div>';
-  h += '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-help="close">✅ Got it</button></div></div>';
+  h += '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-help="close">✅ Got it</button></div>';
+  h += '<div class="verrow" style="margin-top:14px"><span>'+esc(versionLine())+'</span><button class="btn small" data-help="chk">🔄 Check for updates</button></div></div>';
   return h;
 }
 function showHelp(tab, from){
@@ -3864,6 +3889,7 @@ function showHelp(tab, from){
     if(a === 'kid') showHelp('kid');
     else if(a === 'par'){ if(parentUnlocked) showHelp('par'); else askPin(function(){ showHelp('par'); }); }
     else if(a === 'parent'){ $('modal').oninput = null; showParent(); }
+    else if(a === 'chk'){ $('modal').oninput = null; checkForUpdate(); }
     else { $('modal').onclick = null; $('modal').onchange = null; $('modal').oninput = null; closeModal(); }
   };
   $('modal').onchange = null;
@@ -3934,6 +3960,7 @@ function renderProfile(){
   h += '<div class="panel themepanel"><div class="ptitle">🎨 Pick your color</div><div class="themes">';
   THEMES.forEach(function(t){ h += '<button class="sw'+(state.theme===t.k?' on':'')+'" data-theme-pick="'+t.k+'" style="background:'+t.c+'" aria-label="'+t.k+'"></button>'; });
   h += '</div></div></div>';
+  h += '<div class="panel verpanel">'+versionRowHTML()+'</div>';
   $('view-profile').innerHTML = h;
 }
 
@@ -4157,7 +4184,8 @@ function showParent(scrollTop){
   h += '</div>';
   h += '<h3>❓ Help</h3><div class="row"><button class="btn" data-act="phelp">❓ Parent guide &amp; FAQ</button></div>';
   h += '<h3>📅 Day tools</h3><div class="row"><button class="btn" data-act="pcalendar">📅 Streak calendar</button><button class="btn" data-act="preset">🔄 Reset today\'s board</button></div><div class="hint" style="margin-top:6px">Reset unchecks everything. The board also resets at midnight.</div>';
-  h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pclose">✅ Done</button><button class="btn danger" data-act="plock">🔒 Lock &amp; exit</button></div>';
+  h += '<div class="verrow" style="margin-top:20px"><span>'+esc(versionLine())+'</span><button class="btn small" data-act="chkupdate">🔄 Check for updates</button></div>';
+  h += '<div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn" data-act="pclose">✅ Done</button><button class="btn danger" data-act="plock">🔒 Lock &amp; exit</button></div>';
   openModal(h);
   if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
   $('modal').onclick = parentClick;
@@ -4307,6 +4335,7 @@ function parentClick(e){
     case 'rweditor': showRewardEditor(); break;
     case 'pcalendar': showCalendarModal(); break;
     case 'phelp': showHelp('par', 'parent'); break;
+    case 'chkupdate': checkForUpdate(); break;
     case 'pnews': var nr = importNewsPack($('pNews').value); toast(nr.msg, 3000); render(); showParent(st); break;
     case 'pp4': showCelebrate(); break;
     case 'pbackup': showBackup(); break;
@@ -5255,6 +5284,7 @@ $('view-profile').addEventListener('click', function(e){
   if(b.hasAttribute('data-lang')){ state.ui.lang = b.getAttribute('data-lang'); save(); Sound.tap(); render(); return; }
   if(b.hasAttribute('data-track')){ state.ui.track = b.getAttribute('data-track'); save(); Sound.tap(); musicSync(); render(); return; }
   if(b.hasAttribute('data-sleep')){ musicSetSleep(+b.getAttribute('data-sleep')); save(); Sound.tap(); render(); return; }
+  if(b.getAttribute('data-act') === 'chkupdate'){ checkForUpdate(); return; }
   if(b.getAttribute('data-act') === 'help'){ Sound.tap(); showHelp('kid', ''); return; }
   if(b.getAttribute('data-act') === 'restday'){ confirmBox('Use your rest day?','Today you can rest. Your streak stays safe, but there are no points today. You get one rest day each week.','Yes, rest 🌙',useRestDay); }
 });
