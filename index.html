@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v54', errs = [], shown = false;
+  var V = 'v55', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -1652,6 +1652,22 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkamt.neg{color:#ff9a90}
 
 body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 
+.hlp h2{margin:0 0 6px}
+.hlptabs{display:flex;gap:6px;margin:8px 0 10px;background:rgba(127,127,160,.12);border-radius:16px;padding:4px}
+.hlptabs .segbtn{flex:1;background:transparent;color:inherit}
+.hlptabs .segbtn.on{background:var(--accent);color:#fff}
+.hlpsearch{width:100%;box-sizing:border-box;height:46px;border-radius:14px;border:2.5px solid rgba(127,127,160,.35);padding:0 14px;font:inherit;font-size:16px;font-weight:700;background:rgba(127,127,160,.08);color:inherit;margin-bottom:6px}
+.hlpsearch:focus{outline:none;border-color:var(--accent)}
+.hlph{font-weight:900;font-size:17px;margin:18px 0 6px}
+.hlp details{border:2px solid rgba(127,127,160,.28);border-radius:16px;margin:6px 0;background:rgba(127,127,160,.07)}
+.hlp summary{cursor:pointer;font-weight:800;font-size:16px;padding:12px 14px;list-style:none}
+.hlp summary::-webkit-details-marker{display:none}
+.hlp summary:before{content:'\25B8  ';color:var(--accent)}
+.hlp details[open] summary:before{content:'\25BE  '}
+.hlp .ha{padding:0 14px 12px;font-size:15px;line-height:1.5;font-weight:600}
+.hlp .ha ul{margin:6px 0 0 20px;padding:0}.hlp .ha li{margin:3px 0}
+.hlp code{background:rgba(127,127,160,.2);border-radius:6px;padding:1px 5px;font-size:13px}
+.helppanel .btn{margin-top:2px}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -1681,6 +1697,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
     <button class="railtool" id="skinBtn" aria-label="Change look" title="Change look">🎨</button>
     <button class="railtool" id="musicBtn" aria-label="Music" title="Background music">🎵</button>
     <button class="railtool" id="muteBtn" aria-label="Sound effects" title="Sound effects">🔊</button>
+    <button class="railtool" id="helpBtn" aria-label="How it works" title="How StarQuest works">❓</button>
     <button class="railtool" id="parentBtn" aria-label="Parent mode">🔒</button>
   </nav>
 
@@ -3712,6 +3729,163 @@ function renderCards(){
   $('view-cards').innerHTML = h;
 }
 
+/* ---------- v55: help / how-to guide (for Eleanor and for parents) ---------- */
+var HELP_FROM = '';
+function helpSafe(f, d){ try{ return f(); }catch(e){ return d; } }
+function helpData(){
+  var e = state.eco || {}, wc = helpSafe(wkCfg, {on:false,pts:10,per:30,cap:240,days:[]}), fc = helpSafe(ftCfg, {on:false,days:[],start:'15:00',end:'19:00',mins:120});
+  var packMax = helpSafe(packCap, 3), dl = helpSafe(function(){ return fmt12(state.deadline || '20:30'); }, '8:30 PM');
+  var cur = helpSafe(function(){ return curfewOn() ? fmt12(e.screenEnd || '20:45') : ''; }, '');
+  var wkDays = []; (wc.days || []).forEach(function(d){ wkDays.push(d === 6 ? 'Saturday' : 'Sunday'); }); wkDays.sort();
+  var ftDays = []; (fc.days || []).forEach(function(d){ ftDays.push(d === 6 ? 'Saturday' : 'Sunday'); }); ftDays.sort();
+  var dper = helpSafe(dupPer, 5);
+  var streakText = STREAK_STEPS.map(function(n){ return n+' days = +'+STREAK_BONUS[n]; }).join(', ');
+  function li(a){ return '<ul><li>'+a.join('</li><li>')+'</li></ul>'; }
+  var kid = [
+   {t:'🌟 The basics', i:[
+    {q:'What is StarQuest?', a:'StarQuest turns your daily to-dos into <b>points</b>, <b>history cards</b> and <b>rewards</b>. Kit the fox is your buddy and cheers you on.'},
+    {q:'What do I do each day?', a:'Go to <b>Quests</b>. Do each quest in real life, then tap it to tick it off. Some quests have a timer. Finish them all to unlock today’s card and a free pack!'},
+    {q:'How do I earn points?', a:li([
+      'Each quest you finish gives you a few points ('+e.base+' points are shared across the day’s quests).',
+      'Finish <b>all</b> your quests for a <b>+'+e.finish+'</b> bonus. Finish before <b>'+dl+'</b> for the full bonus.',
+      'The <b>Bonus Challenge</b> gives <b>+'+e.bonus+'</b> points and a free pack.',
+      'Quizzes, Today’s Bites, Kanji of the Day and duplicate cards give small extra points. Those “extras” have a limit of <b>'+e.extraCap+'</b> a day.',
+      'Streaks give big bonuses. 🔥 '+streakText+'.'])},
+    {q:'What are the things at the top?', a:li(['🔥 <b>Streak</b>: days in a row with all quests done.','🎴 <b>Packs</b>: card packs ready to open. Tap to open one.','⭐ <b>Points</b>: tap <b>Rewards</b> to spend them.','The bar under your name is your level. It grows as you find cards.'])},
+    {q:'What if I miss a day?', a:'Don’t worry! You get <b>one rest day each week</b> (tap the rest day button in Me). Your streak stays safe, but there are no points that day.'}
+   ]},
+   {t:'🎴 Cards and packs', i:[
+    {q:'How do I get cards?', a:li(['Finish all quests: you get <b>today’s history card</b> and a <b>free pack</b>.','Finish the Bonus Challenge: another free pack.','A grown-up can also give you packs.']) },
+    {q:'What is in a pack?', a:li(['Each pack has <b>3 cards</b>.','The last card is always <b>Uncommon or better</b>.','Every '+PITY_LIMIT+' packs you are <b>guaranteed</b> a Super Rare (S) or better.','You can open up to <b>'+(packMax > 0 ? packMax : 'lots of')+' pack'+(packMax === 1 ? '' : 's')+' a day</b>.'])},
+    {q:'What do C, B, A, S, SSR and SSSR mean?', a:'They show how rare a card is:'+li(['<b>C</b> Common (lots of these)','<b>B</b> Uncommon','<b>A</b> Rare','<b>S</b> Super Rare','<b>SSR</b> Super Super Rare','<b>SSSR</b> Legendary: one very special card','In the <b>Cards</b> tab, tap the pack panel to see the exact chances.'])},
+    {q:'I got a card I already have. What happens?', a:'A duplicate goes in your <b>🫙 jar</b>. Every time the jar gets to <b>'+dper+'</b>, you earn <b>1 point</b>. Rarer duplicates fill the jar faster, and the leftovers stay for next time.'},
+    {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
+    {q:'What is my level title?', a:'Your title grows as you find cards: Rookie Explorer, Time Traveler, History Hunter, and all the way to <b>History Legend</b> 👑. Check Me → My Adventure.'}
+   ]},
+   {t:'🎁 Rewards and screen time', i:[
+    {q:'What are points for?', a:'Spend them in the <b>Rewards</b> tab on screen time and treats. On school days, <b>1 point = 1 minute</b> of screen time.'},
+    {q:'How do I get screen time?', a:li(['Tap <b>Rewards</b>, then <b>Get it!</b> on a screen time reward.','Tap <b>Start</b> when you are ready. A timer counts down.','On school days you can get up to <b>'+e.screenCap+' minutes</b> a day.'+(cur ? ' Screen time ends at <b>'+cur+'</b>.' : '')])},
+    {q:'Is screen time cheaper on weekends?', a: wc.on ? 'Yes! On <b>'+wkDays.join(' and ')+'</b>, <b>'+wc.per+' minutes costs only '+wc.pts+' points</b> and you can get up to <b>'+fmtMinutes(wc.cap)+'</b>. Try to keep screens to about 2 hours, though!' : 'Not right now. Ask a grown-up.'},
+    {q:'What is Free Time?', a: fc.on ? 'After hoshuko on <b>'+ftDays.join(' and ')+'</b> (<b>'+fmt12(fc.start)+' to '+fmt12(fc.end)+'</b>) you can do what you like! You get <b>'+fmtMinutes(fc.mins)+' of free screen time</b> that costs no points. Tap ▶ to start it. Kit puts on headphones to celebrate. 🎧<br>Before you relax: take a shower, tidy your room and put away your hoshuko things.' : 'Free Time is off right now.'},
+    {q:'How do I get a treat or event reward?', a:li(['Tap <b>Get it!</b> and say yes.','A grown-up gets a message and gives you the reward.','Each treat can be earned <b>once a week</b>, and the big goals <b>once a month</b>. A locked reward says <b>🔒 Back Monday</b> (or the date).'])},
+    {q:'Can I save up for something?', a:'Yes! Tap a reward you can’t afford yet to <b>📌 pin it as your goal</b>. A progress bar on Home shows how close you are.'},
+    {q:'Why can’t I get a reward?', a:li(['You don’t have enough points yet. The button shows how many more you need.','It’s locked until next week or next month.','You’ve used all of today’s screen time.','It’s too late in the evening for screen time.'])}
+   ]},
+   {t:'📚 Learning', i:[
+    {q:'What are Quick Quizzes?', a:'Once you have a few cards, a short <b>daily quiz</b> about your history cards unlocks. Right answers give points, and a perfect score gives a bonus.'},
+    {q:'What are Today’s Bites?', a:'Short, fun reads. One is “on this day” and one is from around the world, like kid-friendly news. Tap one to read it and earn <b>+'+(e.bitesPts == null ? 1 : e.bitesPts)+'</b> point. In <b>Me</b> you can choose the language for the bites.'},
+    {q:'What is Kanji of the Day?', a:'A new kanji from your grade each day. Tap it to learn the word and earn a point. Then try:'+li(['🃏 <b>Flash cards</b>: pick Mix, Recent pages, Tricky ones, or <b>Pick my own</b> kanji.','✍️ <b>Writing</b>: trace it with your finger.','📖 <b>Kanji Book</b>: all your kanji by page. Tap 🃏 on a page to practise just that page.','Word games: build a word, find the missing kanji, or read the word.','Tap <b>⬅ Back</b> to go back one step.'])}
+   ]},
+   {t:'💗 More things to explore', i:[
+    {q:'What is the Journal?', a:'Your calendar shows every perfect day. You can also pick how you feel and write about your day. Your past pages are kept there.'},
+    {q:'What are “I saw you…” goal cards?', a:'Special cards from your grown-ups that say something good they noticed you doing. 💛'},
+    {q:'Who is Kit?', a:'Kit is your fox buddy. Tap him to see what he does! He cheers when you finish things. You can turn Kit off in <b>Me</b> if you like.'},
+    {q:'What are badges?', a:'Badges are awards for things like streaks, collecting cards, quizzes and kanji. Find them in <b>Me</b>. Gold, silver and bronze show how far you got.'},
+    {q:'What happens on my birthday?', a:'You get a party banner, confetti, Kit in a party hat, and a <b>Birthday Star card</b> to keep. Look in <b>Me → Birthday Book</b> to see all your birthday cards and your “year in review”.'},
+    {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up.'}
+   ]},
+   {t:'🛠️ If something looks odd', i:[
+    {q:'My points or cards look wrong', a:'Ask a grown-up. They can fix points and packs in Parent mode. Your progress is saved on this device.'},
+    {q:'The app looks different or old', a:'Close the app all the way and open it again. Sometimes you need to do it twice to get the newest version.'}
+   ]}
+  ];
+  var par = [
+   {t:'🔐 Getting started', i:[
+    {q:'How do I open Parent mode?', a:'Tap 🔒 on the side bar (tablet), or <b>Me → Parent mode</b> (phone). Enter your PIN. The starting PIN is <b>1234</b>. Change it in <b>Backup &amp; PIN</b>. Tap <b>Done</b> or <b>Lock &amp; exit</b> when you finish.'},
+    {q:'What is on the Parent home screen?', a:li(['<b>Today’s assigned quests</b>: switch quests on or off for today, edit them or add new ones.','<b>Points &amp; card packs</b>: add or remove points and packs.','<b>Free break</b>: start Free Time now at no cost.','<b>Rewards to give</b>: what Eleanor has asked for.','<b>Settings</b>: nine tiles (below).','<b>Day tools</b>: streak calendar and reset today’s board.'])},
+    {q:'How does saving work?', a:'Each Settings tile opens its own screen. Tap <b>💾 Save</b> or <b>← Parent</b> to save. Saving a screen only changes the settings on that screen.'},
+    {q:'How do I add or edit a quest?', a:'On the Parent home, tap <b>✏️ Edit</b> on a quest, or <b>➕ Add new quest</b>. Use the switch to choose which quests are assigned today.'}
+   ]},
+   {t:'⭐ Points and bonuses', i:[
+    {q:'How are points calculated?', a:li(['<b>'+e.base+'</b> points are shared across the day’s quests.','<b>+'+e.finish+'</b> finish bonus when all are done. It is full before <b>'+dl+'</b> and <b>'+(e.latePct == null ? 50 : e.latePct)+'%</b> after.','Streak bonuses: '+streakText+'.','Most she can save: <b>'+e.bankCap+'</b> points.'])+'Change these in <b>Points &amp; bonuses</b>.'},
+    {q:'What are “extra points”?', a:'Bonus Challenge (+'+e.bonus+'), quizzes, bites, kanji and duplicate cards all count as extras. Together they are capped at <b>'+e.extraCap+'</b> points a day.'},
+    {q:'How do duplicate cards pay out?', a:'Each duplicate adds credits to a jar: C 1, B 2, A 4, S 8, SSR 20, SSSR 60 (you can change these). Every <b>'+dper+'</b> credits becomes 1 point and leftovers carry over.'},
+    {q:'What is the rest day?', a:'One rest day per week keeps the streak alive (no points that day). It can be used automatically if a day is missed. Both options are in Points &amp; bonuses.'},
+    {q:'How do I fix points or packs?', a:'Use the − and + buttons on the Parent home. You can also give the rest of today’s points.'}
+   ]},
+   {t:'🎴 Cards and packs', i:[
+    {q:'How does she get packs?', a:'Finishing all quests gives today’s history card plus 1 pack. The Bonus Challenge gives 1 more. You can add or remove packs on the Parent home. Packs she can open per day: <b>'+(packMax > 0 ? packMax : 'no limit')+'</b> (Points &amp; bonuses).'},
+    {q:'What are the pull odds?', a:'C '+RATES.C+'%, B '+RATES.B+'%, A '+RATES.A+'%, S '+RATES.S+'%, SSR '+RATES.SSR+'%, SSSR '+RATES.SSSR+'%, plus a '+RATES.FAM+'% chance of an “Our Family” card. Last card in a pack is B or better, and an S or better is guaranteed every '+PITY_LIMIT+' packs.'},
+    {q:'What are the Our Family cards?', a:'Private cards that come from your family pack file. They never go online. See <b>Family pack</b> below.'}
+   ]},
+   {t:'⏱️ Screen time', i:[
+    {q:'How does screen time work?', a:li(['Screen time rewards cost 1 point per minute on weekdays.','Weeknight limit: <b>'+e.screenCap+' min</b> a day at full price.',(cur ? 'Screen time ends at <b>'+cur+'</b>.' : 'No curfew is set.'),'Eleanor taps <b>Start</b> to run a timer. You can stop it from the Parent home.'])+'Edit these in <b>Time &amp; limits</b>.'},
+    {q:'What are weekend prices?', a: wc.on ? li(['On <b>'+wkDays.join(' and ')+'</b>, <b>'+wc.pts+' points for '+wc.per+' minutes</b>, up to <b>'+fmtMinutes(wc.cap)+'</b> bought a day.','A 1-hour reward appears on weekend days.','Edit in <b>Time &amp; limits → Weekend screen prices</b>.']) : 'Weekend prices are off. Turn them on in <b>Time &amp; limits → Weekend screen prices</b>.'},
+    {q:'What is Free Time?', a: fc.on ? 'On <b>'+ftDays.join(' and ')+'</b>, <b>'+fmt12(fc.start)+' to '+fmt12(fc.end)+'</b>, she gets <b>'+fmtMinutes(fc.mins)+' of free screen time</b> (no points, and it does not use her daily limit). It is a soft limit only. The home screen reminds her to shower, tidy her room and put away her hoshuko things. Kit also does a headphones animation. Edit the times, minutes and reminders in <b>Time &amp; limits</b>.' : 'Free Time is off. Turn it on in <b>Time &amp; limits</b>.'},
+    {q:'What is a Free break?', a:'On the Parent home, tap 30 min, 1 hour, 1.5 hours or 2 hours to start Free Time right now. It costs no points and does not use her daily limit. You get a warning if it runs past the curfew.'}
+   ]},
+   {t:'🎁 Rewards', i:[
+    {q:'How do I give a reward she asked for?', a:'When she taps <b>Get it!</b>, the points are spent and a request appears under <b>Rewards to give</b> on the Parent home. Mark it as given, or refund it to give her points back (and free up the weekly or monthly slot).'},
+    {q:'How do I change rewards and prices?', a:'Open <b>Rewards &amp; prices</b>. You can edit, group, price, add or hide rewards. Groups are the sections she sees in the shop.'},
+    {q:'What are the weekly and monthly limits?', a:li(['Non-screen rewards: once a week each (weeks start on Monday).','The <b>Big goals</b> group: once a month (resets on the 1st).','Each group, and each reward, has its own menu: 1× a week, 1× a month, or no limit.','<b>🔓 Let her get everything again now</b> clears all limits.','Screen time is never limited this way.'])}
+   ]},
+   {t:'📚 Learning and news', i:[
+    {q:'What can I turn on or off?', a:'In <b>Learning &amp; news</b>: the daily quiz, Today’s Bites, Kanji of the Day, points for each, and the news pack.'},
+    {q:'How do I add news bites?', a:'Paste a news pack (text starting with <code>SQNEWS:</code>) into <b>Learning &amp; news → News pack</b>. Each day she sees one world bite from a fresh pool. Re-importing the same pack adds nothing twice.'},
+    {q:'How does the kanji section work?', a:'She gets one kanji a day, then can use flash cards (Mix, Recent pages, Tricky, or pick her own), writing practice, the Kanji Book by page, and word games. The Back button steps back one screen.'}
+   ]},
+   {t:'💵 Money, goals and family', i:[
+    {q:'What is the Money tab?', a:'A simple allowance tracker (jar, allowance, goal). Set it up in <b>Allowance money</b>. Adding or removing money updates the “Received” total and Kit comments on new coins.'},
+    {q:'What are Goal cards?', a:'The <b>Goal cards</b> tile lets you write “I saw you…” notes that show up on her home screen.'},
+    {q:'How does the Family pack work?', a:li(['It is a private file with family cards and details. It stays on this device and is never uploaded.','Import it in <b>Family pack</b>. Adding another file <b>only adds or updates</b> cards. Nothing is removed, and her unlocked cards are safe.','Importing the same file twice says “Nothing new in that file.”'])},
+    {q:'Birthdays and holidays?', a:'In <b>Celebrations &amp; alerts</b> you can set her birthday (party banner, confetti, a Birthday Star card, her Birthday Book) and add family birthdays for gentle reminders.'}
+   ]},
+   {t:'💾 Backup, updates and problems', i:[
+    {q:'Where is her progress saved?', a:'On this device only. Make a backup code in <b>Backup &amp; PIN</b> so you can restore on another device.'},
+    {q:'How do updates work?', a:'The app loads from the web, so new versions arrive when you upload new files. Close the app fully and reopen it (sometimes twice) to get the update.'},
+    {q:'Something isn’t right', a:'Check the setting on its screen first (for example limits, weekend prices or reward rules). Points and packs can always be corrected on the Parent home. Keep a recent backup.'}
+   ]}
+  ];
+  return {kid:kid, par:par};
+}
+function helpHTML(tab){
+  var D = helpData(), secs = D[tab === 'par' ? 'par' : 'kid'], nm = helpSafe(displayName, '') || 'Eleanor';
+  var h = '<div class="hlp">';
+  if(HELP_FROM === 'parent') h += '<div class="row" style="margin-bottom:6px"><button class="btn small" data-help="parent">← Parent</button></div>';
+  h += '<h2>❓ How StarQuest works</h2>';
+  h += '<div class="hlptabs"><button class="segbtn'+(tab === 'par' ? '' : ' on')+'" data-help="kid">🦊 For '+esc(nm)+'</button><button class="segbtn'+(tab === 'par' ? ' on' : '')+'" data-help="par">👪 For parents</button></div>';
+  h += '<input type="search" class="hlpsearch" id="hlpSearch" placeholder="🔎 Search (for example: screen, packs, kanji)" autocomplete="off">';
+  secs.forEach(function(s){
+    h += '<div class="hsec"><div class="hlph">'+s.t+'</div>';
+    s.i.forEach(function(it){ h += '<details><summary>'+it.q+'</summary><div class="ha">'+it.a+'</div></details>'; });
+    h += '</div>';
+  });
+  h += '<div class="empty" id="hlpNone" style="display:none">Nothing found. Try a different word.</div>';
+  h += '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-help="close">✅ Got it</button></div></div>';
+  return h;
+}
+function showHelp(tab, from){
+  if(from !== undefined) HELP_FROM = from;
+  tab = tab === 'par' ? 'par' : 'kid';
+  openModal(helpHTML(tab));
+  $('modal').onclick = function(e){
+    var b = e.target.closest && e.target.closest('button'); if(!b) return;
+    var a = b.getAttribute('data-help'); if(!a) return;
+    if(a === 'kid') showHelp('kid');
+    else if(a === 'par'){ if(parentUnlocked) showHelp('par'); else askPin(function(){ showHelp('par'); }); }
+    else if(a === 'parent'){ $('modal').oninput = null; showParent(); }
+    else { $('modal').onclick = null; $('modal').onchange = null; $('modal').oninput = null; closeModal(); }
+  };
+  $('modal').onchange = null;
+  $('modal').oninput = function(e){
+    if(!e.target || e.target.id !== 'hlpSearch') return;
+    var q = e.target.value.trim().toLowerCase(), any = false;
+    [].forEach.call($('modal').querySelectorAll('.hsec'), function(sec){
+      var vis = 0;
+      [].forEach.call(sec.querySelectorAll('details'), function(d){
+        var m = !q || d.textContent.toLowerCase().indexOf(q) > -1;
+        d.style.display = m ? '' : 'none'; if(m) vis++;
+        if(q && m && d.textContent.length < 2000) d.open = true; else if(!q) d.open = false;
+      });
+      sec.style.display = vis ? '' : 'none'; if(vis) any = true;
+    });
+    $('hlpNone').style.display = any ? 'none' : '';
+  };
+}
+function helpPanelHTML(){
+  return '<div class="panel helppanel"><div class="ptitle">❓ How StarQuest works</div><p style="margin:2px 0 10px;font-weight:700">Quests, cards, rewards and more, explained step by step.</p><button class="btn good" data-act="help">Open the guide</button></div>';
+}
+
 /* ---------- profile ---------- */
 document.addEventListener('click', function(e){
   var b = e.target && e.target.closest && e.target.closest('[data-openparent]'); if(!b) return;
@@ -3724,6 +3898,7 @@ function renderProfile(){
   CARDS.forEach(function(c){ if(state.cards[c.id] && (!best || RAR_ORDER.indexOf(c.k) < RAR_ORDER.indexOf(best.k))) best = c; });
   var h = '<div class="pgrid">';
   h += streakPanelHTML();
+  h += helpPanelHTML();
   h += '<div class="panel lookpanel"><div class="ptitle">🖼️ Choose your look</div><div class="skingrid">';
   SKINS.forEach(function(s){ h += '<button class="skinopt'+(skinKey()===s.k?' on':'')+'" data-skin-pick="'+s.k+'"><div class="skprev sk-'+s.k+'"></div><b>'+s.n+'</b><small>'+s.d+'</small></button>'; });
   h += '</div></div>';
@@ -3980,6 +4155,7 @@ function showParent(scrollTop){
   h += pTile('🎉', 'Celebrations &amp; alerts', 'Birthday, holidays, journal', 'data-act="pp4"');
   h += pTile('💾', 'Backup &amp; PIN', 'Backup code, restore, PIN', 'data-act="psec" data-sec="safe"');
   h += '</div>';
+  h += '<h3>❓ Help</h3><div class="row"><button class="btn" data-act="phelp">❓ Parent guide &amp; FAQ</button></div>';
   h += '<h3>📅 Day tools</h3><div class="row"><button class="btn" data-act="pcalendar">📅 Streak calendar</button><button class="btn" data-act="preset">🔄 Reset today\'s board</button></div><div class="hint" style="margin-top:6px">Reset unchecks everything. The board also resets at midnight.</div>';
   h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pclose">✅ Done</button><button class="btn danger" data-act="plock">🔒 Lock &amp; exit</button></div>';
   openModal(h);
@@ -4130,6 +4306,7 @@ function parentClick(e){
     case 'rrefund': state.requests.forEach(function(q){ if(q.id===id && q.status==='pending'){ q.status='refunded'; rwUnlog(q.rid, q.at); state.points += q.cost; logPts(q.cost,'Refund: '+q.name); } }); save(); render(); toast('↩ Points refunded'); showParent(st); break;
     case 'rweditor': showRewardEditor(); break;
     case 'pcalendar': showCalendarModal(); break;
+    case 'phelp': showHelp('par', 'parent'); break;
     case 'pnews': var nr = importNewsPack($('pNews').value); toast(nr.msg, 3000); render(); showParent(st); break;
     case 'pp4': showCelebrate(); break;
     case 'pbackup': showBackup(); break;
@@ -5078,6 +5255,7 @@ $('view-profile').addEventListener('click', function(e){
   if(b.hasAttribute('data-lang')){ state.ui.lang = b.getAttribute('data-lang'); save(); Sound.tap(); render(); return; }
   if(b.hasAttribute('data-track')){ state.ui.track = b.getAttribute('data-track'); save(); Sound.tap(); musicSync(); render(); return; }
   if(b.hasAttribute('data-sleep')){ musicSetSleep(+b.getAttribute('data-sleep')); save(); Sound.tap(); render(); return; }
+  if(b.getAttribute('data-act') === 'help'){ Sound.tap(); showHelp('kid', ''); return; }
   if(b.getAttribute('data-act') === 'restday'){ confirmBox('Use your rest day?','Today you can rest. Your streak stays safe, but there are no points today. You get one rest day each week.','Yes, rest 🌙',useRestDay); }
 });
 $('view-profile').addEventListener('change', function(e){
@@ -5125,6 +5303,7 @@ function toggleMusic(on){
 }
 $('musicBtn').addEventListener('click', function(){ toggleMusic(!state.ui.music); });
 $('parentBtn').addEventListener('click', function(){ requireParent(showParent); });
+$('helpBtn').addEventListener('click', function(){ showHelp('kid', ''); });
 /* Tap outside any window to close it (unless something was typed that would be lost). */
 var ovDownOnBackdrop = false;
 (function(){
