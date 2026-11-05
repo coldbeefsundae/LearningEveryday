@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v47', errs = [], shown = false;
+  var V = 'v48', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -1465,6 +1465,9 @@ body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{an
 .rwcost{width:96px;padding:8px 10px;border-radius:12px;border:2px solid var(--line);font:inherit;font-weight:800;text-align:center}
 .prow.off{opacity:.5}
 .ecogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 14px}
+.ptiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0}
+.ptile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:92px;padding:10px 8px;text-align:center;line-height:1.2;font-size:15px}
+.ptile .pti{font-size:28px;line-height:1}.ptile small{font-size:12px;font-weight:700;opacity:.7}
 @media (max-width:760px){.rgrid{grid-template-columns:1fr}.balnum{font-size:42px}.earn{max-width:none}}
 
 /* dark skins */
@@ -3727,7 +3730,7 @@ function tick(){
    MODALS
    ========================================================= */
 function openModal(html){ $('modal').innerHTML = html; $('overlay').classList.add('show'); }
-function closeModal(){ stopSpeak(); $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
+function closeModal(){ window.__parSec = null; stopSpeak(); $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
 function askPin(onOk){
@@ -3775,7 +3778,25 @@ function taskSub(t){
   var d = t.days.length===7 ? 'Every day' : (t.days.length===0 ? 'No days' : t.days.map(function(x){return DAY_NAMES[x];}).join(' '));
   return (t.minutes>0 ? '⏱ '+t.minutes+' min timer · ' : '')+d;
 }
+/* ---- Parent Controls: home (today's jobs + tiles) and section screens ---- */
+function pTog(label, id, on){ return '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="'+id+'" '+(on ? 'checked' : '')+'><span></span></span> '+label+'</label>'; }
+function pNum(label, id, lo, hi, val){ return '<div class="fld"><label>'+label+'</label><input type="number" id="'+id+'" min="'+lo+'" max="'+hi+'" inputmode="numeric" value="'+val+'"></div>'; }
+function pTime(label, id, val){ return '<div class="fld"><label>'+label+'</label><input type="time" id="'+id+'" value="'+esc(val)+'"></div>'; }
+function pTile(ico, title, sub, attr){ return '<button class="btn ptile" '+attr+'><span class="pti">'+ico+'</span><b>'+title+'</b><small>'+sub+'</small></button>'; }
+function parentOnChange(e){
+  var el = e.target;
+  if(el.getAttribute('data-act')==='ptoggle'){
+    var id = el.getAttribute('data-id'), t = findTask(id);
+    var want = el.checked, def = t.days.indexOf(new Date().getDay()) !== -1;
+    if(want === def) delete state.overrides[id]; else state.overrides[id] = want;
+    save(); afterProgressChange(); showParent($('modal').scrollTop);
+  } else if(el.getAttribute('data-act')==='pbonuson'){
+    state.bonusOn = el.checked; save(); render();
+  }
+}
+function showParentHome(scrollTop){ window.__parSec = null; showParent(scrollTop); }
 function showParent(scrollTop){
+  if(window.__parSec){ showParentSection(window.__parSec, scrollTop); return; }
   var h = '<h2>👪 Parent Controls</h2>';
   h += '<h3>Today\'s assigned quests <span class="hint">(switch on = assigned today)</span></h3>';
   state.tasks.forEach(function(t){
@@ -3786,13 +3807,7 @@ function showParent(scrollTop){
   });
   h += '<div class="row" style="margin-top:8px"><button class="btn good" data-act="padd">➕ Add new quest</button></div>';
 
-  h += '<h3>⭐ Points</h3><div class="starctl"><button class="btn danger small" data-act="pminus10">− 10</button><button class="btn danger" data-act="pminus">− 1</button><div class="n" id="pstars">'+state.points+'</div><button class="btn good" data-act="pplus">+ 1</button><button class="btn good small" data-act="pplus10">+ 10</button><span class="hint">= '+fmtMinutes(state.points)+' of screen time</span></div>';
-  var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
-  h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#ff7bd0;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
-  h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="rweditor">✏️ Edit rewards &amp; prices</button><button class="btn" data-act="pcalendar">📅 Streak calendar</button></div>';
-  h += '<label class="row" style="font-weight:800;margin:12px 0 0"><span class="switch"><input type="checkbox" data-act="pbonuson" '+(state.bonusOn?'checked':'')+'><span></span></span> Show the daily Bonus Challenge</label>';
-  h += '<div class="row" style="margin-top:8px"><button class="btn" data-glparent="1">🎯 Goal cards &amp; “I saw you…”</button> <button class="btn" data-fp="1">👪 Family pack</button></div>';
-  h += '<div class="row" style="margin-top:8px"><button class="btn" data-bkp="1">💵 Allowance money</button> <button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko</button></div>';
+  h += '<h3>⭐ Points &amp; card packs</h3><div class="starctl"><button class="btn danger small" data-act="pminus10">− 10</button><button class="btn danger" data-act="pminus">− 1</button><div class="n" id="pstars">'+state.points+'</div><button class="btn good" data-act="pplus">+ 1</button><button class="btn good small" data-act="pplus10">+ 10</button><span class="hint">= '+fmtMinutes(state.points)+' of screen time</span></div>';
   h += '<div class="starctl" style="margin-top:12px"><button class="btn danger small" data-act="pkminus">− 1</button><div class="n" style="font-size:28px;min-width:150px">'+state.packs+'<small style="font-size:14px"> card packs</small></div><button class="btn good small" data-act="pkplus">+ 1</button></div>';
   if(state.screenEndsAt && state.screenEndsAt>Date.now()){
     h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="pclearscreen">⏹ Stop Free Time timer</button></div>';
@@ -3800,60 +3815,126 @@ function showParent(scrollTop){
   if(dayRemaining() > 0){
     h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="paward">🎁 Give the rest of today\'s points (+'+dayRemaining()+', override)</button></div>';
   }
+  var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
+  h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#ff7bd0;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
 
-  h += '<h3>📅 Day controls</h3><div class="row"><button class="btn" data-act="preset">🔄 Reset today\'s board</button><span class="hint">Unchecks everything. Auto-resets at midnight too.</span></div>';
-
-  h += '<h3>⚙️ Settings</h3>';
-  h += '<div class="fld"><label>Full finish bonus before this time (half after)</label><input type="time" id="sDeadline" value="'+esc(state.deadline)+'"></div>';
-  h += '<div class="ecogrid">';
-  h += '<div class="fld"><label>Points shared across the day\'s quests</label><input type="number" id="eBase" min="0" max="200" inputmode="numeric" value="'+state.eco.base+'"></div>';
-  h += '<div class="fld"><label>Finish bonus (all quests done)</label><input type="number" id="eFinish" min="0" max="200" inputmode="numeric" value="'+state.eco.finish+'"></div>';
-  h += '<div class="fld"><label>Late finish bonus (% of the finish bonus)</label><input type="number" id="eLatePct" min="0" max="100" inputmode="numeric" value="'+(state.eco.latePct == null ? 50 : state.eco.latePct)+'"></div>';
-  h += '<div class="fld"><label>Screen time ends at</label><input type="time" id="eScreenEnd" value="'+esc(state.eco.screenEnd || '20:45')+'"></div>';
-  h += '<label class="row" style="font-weight:800;margin:10px 0 4px"><span class="switch"><input type="checkbox" id="eBedOn" '+(state.eco.bedOn ? 'checked' : '')+'><span></span></span> 🌙 Bedtime reminder (Kit gets sleepy 15 minutes before, then sleeps)</label>';
-  h += '<div class="fld"><label>Bedtime</label><input type="time" id="eBedTime" value="'+esc(state.eco.bedTime || '21:00')+'"></div>';
-  h += '<div class="fld"><label>Kit wakes up at</label><input type="time" id="eWakeTime" value="'+esc(state.eco.wakeTime || '07:00')+'"></div>';
-  h += '<div class="fld"><label>Points for bonus challenge</label><input type="number" id="eBonus" min="0" max="50" inputmode="numeric" value="'+state.eco.bonus+'"></div>';
-  h += '<div class="fld"><label>Screen time limit per day (min)</label><input type="number" id="eScreen" min="0" max="600" inputmode="numeric" value="'+state.eco.screenCap+'"></div>';
-  h += '<div class="fld"><label>Card packs she can open per day (0 = no limit)</label><input type="number" id="ePackCap" min="0" max="20" inputmode="numeric" value="'+packCap()+'"></div>';
-  h += '<div class="fld"><label>Extra points limit per day</label><input type="number" id="eExtra" min="0" max="200" inputmode="numeric" value="'+state.eco.extraCap+'"></div>';
-  h += '<div class="fld"><label>Most points she can save</label><input type="number" id="eBank" min="50" max="5000" inputmode="numeric" value="'+state.eco.bankCap+'"></div>';
-  h += '<div class="fld"><label>Quiz points per right answer</label><input type="number" id="eQPts" min="0" max="5" inputmode="numeric" value="'+state.eco.quizPts+'"></div>';
-  h += '<div class="fld"><label>Quiz bonus for a perfect score</label><input type="number" id="eQPerf" min="0" max="10" inputmode="numeric" value="'+state.eco.quizPerfect+'"></div>';
-  h += '</div><div class="hint" style="margin-bottom:6px">Extra points = bonus challenge, duplicate cards and quizzes. All share the daily extra limit.</div>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eQuiz" '+(state.eco.quizOn!==false?'checked':'')+'><span></span></span> Show the daily card quiz (3 questions, once a day)</label>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eBites" '+(state.eco.bitesOn!==false?'checked':'')+'><span></span></span> Show “Today’s Bites” (on this day and world facts)</label>';
-  h += '<div class="fld"><label>Points for reading the bites (once a day, counts toward the extra limit)</label><input type="number" id="eBitesPts" min="0" max="5" inputmode="numeric" value="'+state.eco.bitesPts+'"></div>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eKanji" '+(state.eco.kanjiOn!==false?'checked':'')+'><span></span></span> Show “Kanji of the Day” and the English Word of the Day</label>';
-  h += '<div class="fld"><label>Points for learning the kanji (once a day, counts toward the extra limit)</label><input type="number" id="eKanjiPts" min="0" max="5" inputmode="numeric" value="'+(state.eco.kanjiPts == null ? 1 : state.eco.kanjiPts)+'"></div>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eMusic" '+(state.eco.musicOn!==false?'checked':'')+'><span></span></span> Allow background music</label>';
-  h += '<div class="fld"><label>Music stops at this time each evening (leave empty for no limit)</label><input type="time" id="eMusicOff" value="'+esc(state.eco.musicOff||'')+'"></div>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eCurfew" '+(state.eco.curfewOn !== false ? 'checked' : '')+'><span></span></span> Block screen time that would run past the end time</label>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eRest" '+(state.eco.restOn?'checked':'')+'><span></span></span> Allow one rest day per week</label>';
-  h += '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="eAuto" '+(state.eco.autoRest?'checked':'')+'><span></span></span> Use the rest day automatically if a day is missed</label>';
-  h += '<div class="fld"><label>Change parent PIN (4 digits)</label><input type="password" inputmode="numeric" maxlength="4" id="sPin" placeholder="Leave blank to keep current"></div>';
-  h += '<div class="row" style="margin-top:6px"><button class="btn primary" data-act="psave">💾 Save settings</button></div>';
-
-  h += '<h3>📰 Add news bites</h3><div class="hint" style="margin-bottom:6px">Ask Dust for a “news pack”, then paste it here. Each bite is a short English and Japanese summary of kid-safe news, with no links.</div>';
-  h += '<textarea id="pNews" rows="3" placeholder="Paste a news pack here" style="width:100%"></textarea><div class="row" style="margin-top:6px"><button class="btn small" data-act="pnews">➕ Add to Today’s Bites</button><span class="hint">'+((state.news||[]).length)+' added so far</span></div>';
-  h += '<h3>🎉 Celebrations, journal &amp; alerts</h3><div class="hint" style="margin-bottom:6px">Birthday, holidays, journal feelings, and a message to you when all quests are done.</div><div class="row"><button class="btn" data-act="pp4">Open settings</button></div>';
-  h += '<h3>💾 Backup &amp; safety</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
+  h += '<h3>🗂️ Settings</h3><div class="ptiles">';
+  h += pTile('🎁', 'Rewards &amp; prices', 'Edit, group, price', 'data-act="rweditor"');
+  h += pTile('⭐', 'Points &amp; bonuses', 'Daily points, bonus, rest day', 'data-act="psec" data-sec="pts"');
+  h += pTile('⏱️', 'Time &amp; limits', 'Screen time, bedtime, music', 'data-act="psec" data-sec="time"');
+  h += pTile('📚', 'Learning &amp; news', 'Quiz, bites, kanji, news pack', 'data-act="psec" data-sec="learn"');
+  h += pTile('💵', 'Allowance money', 'Jar, allowance, goal', 'data-bkp="1"');
+  h += pTile('🎯', 'Goal cards', '“I saw you…”', 'data-glparent="1"');
+  h += pTile('👪', 'Family pack', 'Private family cards', 'data-fp="1"');
+  h += pTile('🎉', 'Celebrations &amp; alerts', 'Birthday, holidays, journal', 'data-act="pp4"');
+  h += pTile('💾', 'Backup &amp; PIN', 'Backup code, restore, PIN', 'data-act="psec" data-sec="safe"');
+  h += '</div>';
+  h += '<h3>📅 Day tools</h3><div class="row"><button class="btn" data-act="pcalendar">📅 Streak calendar</button><button class="btn" data-act="preset">🔄 Reset today\'s board</button></div><div class="hint" style="margin-top:6px">Reset unchecks everything. The board also resets at midnight.</div>';
   h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pclose">✅ Done</button><button class="btn danger" data-act="plock">🔒 Lock &amp; exit</button></div>';
   openModal(h);
   if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
   $('modal').onclick = parentClick;
-  fillStorageStatus();
-  $('modal').onchange = function(e){
-    var el = e.target;
-    if(el.getAttribute('data-act')==='ptoggle'){
-      var id = el.getAttribute('data-id'), t = findTask(id);
-      var want = el.checked, def = t.days.indexOf(new Date().getDay()) !== -1;
-      if(want === def) delete state.overrides[id]; else state.overrides[id] = want;
-      save(); afterProgressChange(); showParent($('modal').scrollTop);
-    } else if(el.getAttribute('data-act')==='pbonuson'){
-      state.bonusOn = el.checked; save(); render();
+  $('modal').onchange = parentOnChange;
+}
+var PAR_SECTIONS = {pts:'⭐ Points &amp; bonuses', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
+function showParentSection(key, scrollTop){
+  window.__parSec = key;
+  var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Parent</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
+  h += '<h2 style="margin-top:12px">'+PAR_SECTIONS[key]+'</h2><div class="hint" style="margin-bottom:4px">Changes are saved when you tap Save or ← Parent.</div>';
+  if(key === 'pts'){
+    h += '<h3>Daily points</h3><div class="ecogrid">';
+    h += pNum('Points shared across the day\'s quests', 'eBase', 0, 200, e.base);
+    h += pNum('Finish bonus (all quests done)', 'eFinish', 0, 200, e.finish);
+    h += pTime('Full finish bonus before this time (half after)', 'sDeadline', state.deadline);
+    h += pNum('Late finish bonus (% of the finish bonus)', 'eLatePct', 0, 100, e.latePct == null ? 50 : e.latePct);
+    h += pNum('Most points she can save', 'eBank', 50, 5000, e.bankCap);
+    h += '</div>';
+    h += '<h3>Extra points</h3>';
+    h += pTog('Show the daily Bonus Challenge', 'eBonusOn', state.bonusOn);
+    h += '<div class="ecogrid">';
+    h += pNum('Points for bonus challenge', 'eBonus', 0, 50, e.bonus);
+    h += pNum('Extra points limit per day', 'eExtra', 0, 200, e.extraCap);
+    h += '</div><div class="hint" style="margin-bottom:6px">Extra points = bonus challenge, duplicate cards, quizzes, bites and kanji. All share the daily extra limit.</div>';
+    h += '<h3>Rest day</h3>';
+    h += pTog('Allow one rest day per week', 'eRest', e.restOn);
+    h += pTog('Use the rest day automatically if a day is missed', 'eAuto', e.autoRest);
+  } else if(key === 'time'){
+    h += '<h3>Screen time</h3><div class="ecogrid">';
+    h += pTime('Screen time ends at', 'eScreenEnd', e.screenEnd || '20:45');
+    h += pNum('Screen time limit per day (min)', 'eScreen', 0, 600, e.screenCap);
+    h += '</div>';
+    h += pTog('Block screen time that would run past the end time', 'eCurfew', e.curfewOn !== false);
+    h += '<h3>Bedtime</h3>';
+    h += pTog('🌙 Bedtime reminder (Kit gets sleepy 15 minutes before, then sleeps)', 'eBedOn', e.bedOn);
+    h += '<div class="ecogrid">'+pTime('Bedtime', 'eBedTime', e.bedTime || '21:00')+pTime('Kit wakes up at', 'eWakeTime', e.wakeTime || '07:00')+'</div>';
+    h += '<h3>Music</h3>';
+    h += pTog('Allow background music', 'eMusic', e.musicOn !== false);
+    h += pTime('Music stops at this time each evening (leave empty for no limit)', 'eMusicOff', e.musicOff || '');
+    h += '<h3>Card packs</h3>';
+    h += pNum('Card packs she can open per day (0 = no limit)', 'ePackCap', 0, 20, packCap());
+  } else if(key === 'learn'){
+    h += '<h3>Daily card quiz</h3>';
+    h += pTog('Show the daily card quiz (3 questions, once a day)', 'eQuiz', e.quizOn !== false);
+    h += '<div class="ecogrid">'+pNum('Quiz points per right answer', 'eQPts', 0, 5, e.quizPts)+pNum('Quiz bonus for a perfect score', 'eQPerf', 0, 10, e.quizPerfect)+'</div>';
+    h += '<h3>Today\u2019s Bites</h3>';
+    h += pTog('Show “Today’s Bites” (on this day and world facts)', 'eBites', e.bitesOn !== false);
+    h += pNum('Points for reading the bites (once a day, counts toward the extra limit)', 'eBitesPts', 0, 5, e.bitesPts);
+    h += '<div class="hint" style="margin:10px 0 6px"><b>Add news bites.</b> Ask Dust for a “news pack”, then paste it here. Each bite is a short English and Japanese summary of kid-safe news, with no links.</div>';
+    h += '<textarea id="pNews" rows="3" placeholder="Paste a news pack here" style="width:100%"></textarea><div class="row" style="margin-top:6px"><button class="btn small" data-act="pnews">➕ Add to Today’s Bites</button><span class="hint">'+((state.news||[]).length)+' added so far</span></div>';
+    h += '<h3>Kanji</h3>';
+    h += pTog('Show “Kanji of the Day” and the English Word of the Day', 'eKanji', e.kanjiOn !== false);
+    h += pNum('Points for learning the kanji (once a day, counts toward the extra limit)', 'eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
+    h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
+  } else if(key === 'safe'){
+    h += '<h3>Backup</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
+    h += '<h3>Parent PIN</h3><div class="fld"><label>Change parent PIN (4 digits)</label><input type="password" inputmode="numeric" maxlength="4" id="sPin" placeholder="Leave blank to keep current"></div>';
+  }
+  h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pbackhome">← Parent</button><button class="btn primary" data-act="psave">💾 Save</button></div>';
+  openModal(h);
+  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  $('modal').onclick = parentClick;
+  $('modal').onchange = parentOnChange;
+  if(key === 'safe') fillStorageStatus();
+}
+/* apply whichever settings fields are on screen; returns false if the PIN is invalid */
+function applyParentSettings(){
+  var num = function(id, lo, hi, d){ var el = $(id); if(!el) return d; var v = parseInt(el.value, 10); return isNaN(v) ? d : Math.max(lo, Math.min(hi, v)); };
+  var tm = function(id, cur){ var el = $(id); return (el && /^\d{2}:\d{2}$/.test(el.value)) ? el.value : cur; };
+  var ck = function(id, cur){ var el = $(id); return el ? !!el.checked : cur; };
+  var e = state.eco, pinSet = false;
+  state.deadline = tm('sDeadline', state.deadline);
+  e.base = num('eBase', 0, 200, e.base);
+  e.finish = num('eFinish', 0, 200, e.finish);
+  e.latePct = num('eLatePct', 0, 100, e.latePct == null ? 50 : e.latePct);
+  e.daily = e.base + e.finish;
+  e.screenEnd = tm('eScreenEnd', e.screenEnd);
+  e.curfewOn = ck('eCurfew', e.curfewOn);
+  e.bedOn = ck('eBedOn', e.bedOn);
+  e.bedTime = tm('eBedTime', e.bedTime);
+  e.wakeTime = tm('eWakeTime', e.wakeTime);
+  e.bonus = num('eBonus', 0, 50, e.bonus);
+  e.screenCap = num('eScreen', 0, 600, e.screenCap);
+  e.extraCap = num('eExtra', 0, 200, e.extraCap);
+  e.packCap = num('ePackCap', 0, 20, packCap());
+  e.bankCap = num('eBank', 50, 5000, e.bankCap);
+  e.restOn = ck('eRest', e.restOn); e.autoRest = ck('eAuto', e.autoRest);
+  e.quizPts = num('eQPts', 0, 5, e.quizPts);
+  e.quizPerfect = num('eQPerf', 0, 10, e.quizPerfect);
+  e.bitesOn = ck('eBites', e.bitesOn); e.bitesPts = num('eBitesPts', 0, 5, e.bitesPts);
+  e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
+  e.quizOn = ck('eQuiz', e.quizOn); e.musicOn = ck('eMusic', e.musicOn);
+  if($('eMusicOff')){ var mo = $('eMusicOff').value; e.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : ''; }
+  if($('eBonusOn')) state.bonusOn = !!$('eBonusOn').checked;
+  musicSync();
+  if($('sPin')){
+    var pin = $('sPin').value.trim();
+    if(pin){
+      if(/^\d{4}$/.test(pin)){ state.pin = pin; pinSet = true; }
+      else { toast('PIN must be exactly 4 digits'); Sound.error(); return false; }
     }
-  };
+  }
+  save(); render();
+  return pinSet ? 'pin' : true;
 }
 function findTask(id){ return state.tasks.filter(function(t){return t.id===id;})[0]; }
 
@@ -3886,37 +3967,12 @@ function parentClick(e){
       }, true);
       break;
     case 'psave':
-      var dl = $('sDeadline').value; if(/^\d{2}:\d{2}$/.test(dl)) state.deadline = dl;
-      var num = function(id, lo, hi, d){ var v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(lo, Math.min(hi, v)); };
-      state.eco.base = num('eBase', 0, 200, state.eco.base);
-      state.eco.finish = num('eFinish', 0, 200, state.eco.finish);
-      state.eco.latePct = num('eLatePct', 0, 100, state.eco.latePct == null ? 50 : state.eco.latePct);
-      state.eco.daily = state.eco.base + state.eco.finish;
-      var se = $('eScreenEnd').value; if(/^\d{2}:\d{2}$/.test(se)) state.eco.screenEnd = se;
-      state.eco.curfewOn = $('eCurfew').checked;
-      state.eco.bedOn = $('eBedOn').checked;
-      var bt = $('eBedTime').value, wt = $('eWakeTime').value;
-      if(/^\d{2}:\d{2}$/.test(bt)) state.eco.bedTime = bt;
-      if(/^\d{2}:\d{2}$/.test(wt)) state.eco.wakeTime = wt;
-      state.eco.bonus = num('eBonus', 0, 50, state.eco.bonus);
-      state.eco.screenCap = num('eScreen', 0, 600, state.eco.screenCap);
-      state.eco.extraCap = num('eExtra', 0, 200, state.eco.extraCap);
-      state.eco.packCap = num('ePackCap', 0, 20, packCap());
-      state.eco.bankCap = num('eBank', 50, 5000, state.eco.bankCap);
-      state.eco.restOn = $('eRest').checked; state.eco.autoRest = $('eAuto').checked;
-      state.eco.quizPts = num('eQPts', 0, 5, state.eco.quizPts);
-      state.eco.quizPerfect = num('eQPerf', 0, 10, state.eco.quizPerfect);
-      state.eco.bitesOn = $('eBites').checked; state.eco.bitesPts = num('eBitesPts', 0, 5, state.eco.bitesPts);
-      state.eco.kanjiOn = $('eKanji').checked; state.eco.kanjiPts = num('eKanjiPts', 0, 5, state.eco.kanjiPts == null ? 1 : state.eco.kanjiPts);
-      state.eco.quizOn = $('eQuiz').checked; state.eco.musicOn = $('eMusic').checked;
-      var mo = $('eMusicOff').value; state.eco.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : '';
-      musicSync();
-      var pin = $('sPin').value.trim();
-      if(pin){
-        if(/^\d{4}$/.test(pin)) { state.pin = pin; toast('PIN updated ✔'); }
-        else { toast('PIN must be exactly 4 digits'); Sound.error(); return; }
-      } else toast('Settings saved ✔');
-      save(); render(); showParent(st); break;
+      var ar = applyParentSettings();
+      if(ar === false) break;
+      toast(ar === 'pin' ? 'PIN updated ✔' : 'Settings saved ✔');
+      showParent(st); break;
+    case 'psec': window.__parSec = b.getAttribute('data-sec'); showParentSection(window.__parSec); break;
+    case 'pbackhome': if(applyParentSettings() === false) break; showParentHome(); break;
     case 'pclose': $('modal').onclick=null; $('modal').onchange=null; closeModal(); break;
     case 'plock': parentUnlocked=false; $('modal').onclick=null; $('modal').onchange=null; closeModal(); renderHeader(); toast('🔒 Parent mode locked'); break;
   }
