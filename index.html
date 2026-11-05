@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.4', errs = [], shown = false;
+  var V = '26.11.5', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -239,6 +239,19 @@ h1,h2,h3,p{margin:0}
 .fchip small{color:var(--muted);font-weight:800}
 .fchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .fchip.on small{color:rgba(255,255,255,.8)}
+.pcvbanner{padding:9px 12px;border-radius:12px;font-weight:800;font-size:14px;margin-bottom:12px}
+.pcvbanner.have{background:#dff7e6;color:#116b34}
+.pcvbanner.miss{background:#fff1d6;color:#8a5200}
+.pcvfilters{display:grid;gap:6px}
+.pcvrow{flex-wrap:wrap}
+.pcgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+.pcv{display:flex;flex-direction:column;gap:3px;align-items:center;text-align:center;padding:6px;border-radius:14px;background:#fff;border:2px solid var(--line);box-shadow:var(--shadow-1)}
+.pcv.miss{background:#f3f1fb}
+.pcv-art{width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
+.pcv-art img{width:100%;height:100%;object-fit:cover;display:block}
+.pcv-e{font-size:38px}
+.pcv-n{font-weight:800;font-size:12px;line-height:1.15;min-height:28px;display:flex;align-items:center}
+.pcv-s{font-size:11px;font-weight:700;color:#6b6790}
 .cgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));margin-top:14px}
 .cardtile{display:block;width:100%;transition:transform .15s}
 .cardtile:active{transform:scale(.95)}
@@ -3884,6 +3897,7 @@ function helpData(){
    ]},
    {t:'📚 Learning and news', i:[
     {q:'What can I turn on or off?', a:'In <b>Learning &amp; news</b>: the daily quiz, Today’s Bites, Kanji of the Day, points for each, and the news pack.'},
+    {q:'How can I see a card Eleanor has not found yet?', a:'Open <b>Card viewer</b> on the Parent home. You can search, filter by found or not found, type (Person, Event, Legend, Place), rarity and region, then tap any card to see it full size. It is read only and never adds the card to her collection or clears her New badges.'},
     {q:'Do news bites update by themselves?', a:'No. Nothing is fetched from the internet. Fresh bites only appear when you paste a news pack in <b>Learning &amp; news</b>. You can read the whole pool or remove a bite there too.'},
     {q:'How do I add news bites?', a:'Paste a news pack (text starting with <code>SQNEWS:</code>) into <b>Learning &amp; news → News pack</b>. Each day she sees one world bite from a fresh pool. Re-importing the same pack adds nothing twice.'},
     {q:'How does the kanji section work?', a:'She gets one kanji a day, then can use flash cards (Mix, Recent pages, Tricky, or pick her own), writing practice, the Kanji Book by page, and word games. The Back button steps back one screen.'}
@@ -4218,6 +4232,7 @@ function showParent(scrollTop){
   h += pTile('📚', 'Learning &amp; news', 'Quiz, bites, kanji, news pack', 'data-act="psec" data-sec="learn"');
   h += pTile('💵', 'Allowance money', 'Jar, allowance, goal', 'data-bkp="1"');
   h += pTile('🎯', 'Goal cards', '“I saw you…”', 'data-glparent="1"');
+  h += pTile('🔎', 'Card viewer', 'See any card, even unfound', 'data-act="pcards"');
   h += pTile('👪', 'Family pack', 'Private family cards', 'data-fp="1"');
   h += pTile('🎉', 'Celebrations &amp; alerts', 'Birthday, holidays, journal', 'data-act="pp4"');
   h += pTile('💾', 'Backup &amp; PIN', 'Backup code, restore, PIN', 'data-act="psec" data-sec="safe"');
@@ -4378,6 +4393,13 @@ function parentClick(e){
     case 'phelp': showHelp('par', 'parent'); break;
     case 'chkupdate': checkForUpdate(); break;
     case 'pnewslist': showNewsList(); break;
+    case 'pcards': showParentCards(0); break;
+    case 'pcvown': PCV.own = b.getAttribute('data-v'); showParentCards(st); break;
+    case 'pcvtyp': PCV.typ = b.getAttribute('data-v'); showParentCards(st); break;
+    case 'pcvrar': PCV.rar = b.getAttribute('data-v'); showParentCards(st); break;
+    case 'pcvreg': PCV.reg = b.getAttribute('data-v'); showParentCards(st); break;
+    case 'pcvopen': PCV.scroll = st; showCardDetail(id, true); break;
+    case 'pcvclose': showParent(); break;
     case 'pnewsback': showParent(); break;
     case 'pnewsdel': var ni = parseInt(id, 10); if(!isNaN(ni) && state.news && state.news[ni]){ state.newsBlock = state.newsBlock || []; state.newsBlock.push(state.news[ni].en); if(state.newsBlock.length > 300) state.newsBlock.shift(); state.news.splice(ni, 1); save(); render(); } showNewsList(st); break;
     case 'pnews': var nr = importNewsPack($('pNews').value); toast(nr.msg, 3000); render(); showParent(st); break;
@@ -4719,11 +4741,13 @@ document.addEventListener('click', function(e){
 });
 
 /* ---------- card detail ---------- */
-function showCardDetail(id){
+function showCardDetail(id, fromParent){
   var c = BY_ID[id]; if(!c) return;
-  if(state.newCards[id]){ delete state.newCards[id]; save(); if(tab === 'cards') renderCards(); }
+  if(!fromParent && state.newCards[id]){ delete state.newCards[id]; save(); if(tab === 'cards') renderCards(); }
   var lbl = c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:');
-  var h = '<span data-closable></span><div class="detail"><div class="dc">'+faceHTML(c,{count:state.cards[id]})+'</div><div class="dt">';
+  var h = '<span data-closable></span>';
+  if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Eleanor has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Eleanor has not found this card yet')+'. Looking here changes nothing.</div>'; }
+  h += '<div class="detail"><div class="dc">'+faceHTML(c,{count:state.cards[id]})+'</div><div class="dt">';
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
@@ -4733,10 +4757,59 @@ function showCardDetail(id){
   h += '<div class="row" style="margin-top:14px"><button class="btn good" data-say="story:'+id+'">🔊 Read it aloud</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div>';
   h += '<div class="hint" style="margin-top:8px">Tip: tap the name, place or year to hear it.</div>';
   h += '</div></div>';
-  h += '<div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn primary" data-x="1">Close</button></div>';
+  h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
   openModal(h);
   $('modal').onchange = null;
-  $('modal').onclick = function(e){ if(e.target.closest('[data-x]')){ stopSpeak(); $('modal').onclick = null; closeModal(); } };
+  $('modal').onclick = function(e){
+    if(e.target.closest('[data-pback]')){ stopSpeak(); showParentCards(PCV.scroll); return; }
+    if(e.target.closest('[data-x]')){ stopSpeak(); $('modal').onclick = null; closeModal(); }
+  };
+}
+/* ---------- parent card viewer: see any card, found or not. Read only. ---------- */
+var PCV = {q:'', reg:'ALL', rar:'ALL', own:'ALL', typ:'ALL', scroll:0};
+function pcvList(){
+  var q = PCV.q.trim().toLowerCase();
+  return CARDS_SORTED.filter(function(c){
+    var has = !!state.cards[c.id];
+    if(PCV.reg !== 'ALL' && c.r !== PCV.reg) return false;
+    if(PCV.rar !== 'ALL' && c.k !== PCV.rar) return false;
+    if(PCV.typ !== 'ALL' && c.t !== PCV.typ) return false;
+    if(PCV.own === 'HAVE' && !has) return false;
+    if(PCV.own === 'NEED' && has) return false;
+    if(q && (c.n+' '+(c.nat||'')+' '+c.y+' '+c.s).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+}
+function pcvGridHTML(){
+  var list = pcvList(), h = '';
+  list.forEach(function(c){
+    var n = state.cards[c.id] || 0, u = imgURL(c.id);
+    h += '<button class="pcv r-'+c.k+(n ? '' : ' miss')+'" data-act="pcvopen" data-id="'+c.id+'"><span class="pcv-art">'+(u ? '<img src="'+u+'" alt="" draggable="false">' : '<span class="pcv-e">'+c.e+'</span>')+'</span><span class="pcv-n">'+esc(c.n)+'</span><span class="pcv-s"><b class="tag rr r-'+c.k+'">'+c.k+'</b> '+(n ? '✓'+(n > 1 ? ' x'+n : '') : 'not yet')+'</span></button>';
+  });
+  return list.length ? h : '<div class="empty" style="grid-column:1/-1">No cards match.</div>';
+}
+function showParentCards(scrollTop){
+  var h = '<h2>🔎 Card viewer</h2><div class="hint" style="margin-bottom:8px">Parents only. Tap any card to see it full size, even if Eleanor has not found it. Looking at a card does not add it to her collection.</div>';
+  h += '<input id="pcvq" type="search" placeholder="Search by name or place" value="'+esc(PCV.q)+'" style="width:100%;margin-bottom:8px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;font-size:16px">';
+  h += '<div class="pcvfilters">';
+  h += '<div class="seg pcvrow"><span class="seglabel">Show</span>';
+  [['ALL','All'],['HAVE','Found'],['NEED','Not found']].forEach(function(o){ h += '<button class="segbtn'+(PCV.own===o[0]?' on':'')+'" data-act="pcvown" data-v="'+o[0]+'">'+o[1]+'</button>'; });
+  h += '</div><div class="seg pcvrow"><span class="seglabel">Type</span><button class="segbtn'+(PCV.typ==='ALL'?' on':'')+'" data-act="pcvtyp" data-v="ALL">All</button>';
+  Object.keys(TYPE_LABEL).forEach(function(k){ h += '<button class="segbtn'+(PCV.typ===k?' on':'')+'" data-act="pcvtyp" data-v="'+k+'">'+TYPE_LABEL[k]+'</button>'; });
+  h += '</div><div class="seg pcvrow"><span class="seglabel">Rarity</span><button class="segbtn'+(PCV.rar==='ALL'?' on':'')+'" data-act="pcvrar" data-v="ALL">Any</button>';
+  RAR_ORDER.forEach(function(k){ if(BY_RAR[k].length) h += '<button class="segbtn'+(PCV.rar===k?' on':'')+'" data-act="pcvrar" data-v="'+k+'">'+k+'</button>'; });
+  h += '</div><div class="seg pcvrow"><span class="seglabel">Region</span><button class="segbtn'+(PCV.reg==='ALL'?' on':'')+'" data-act="pcvreg" data-v="ALL">All</button>';
+  REGION_ORDER.forEach(function(r){ if(r === 'FAM' && !FAM_IDS.length) return; h += '<button class="segbtn'+(PCV.reg===r?' on':'')+'" data-act="pcvreg" data-v="'+r+'">'+REGIONS[r].flag+' '+REGIONS[r].name+'</button>'; });
+  h += '</div></div>';
+  h += '<div class="hint" id="pcvcount" style="margin:6px 0">'+pcvList().length+' of '+CARDS.length+' cards</div>';
+  h += '<div class="pcgrid" id="pcvgrid">'+pcvGridHTML()+'</div>';
+  h += '<div class="row" style="margin-top:14px"><button class="btn" data-act="pcvclose">← Back to Parent</button></div>';
+  openModal(h);
+  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  $('modal').onclick = parentClick; $('modal').onchange = null;
+  $('modal').oninput = function(e){
+    if(e.target && e.target.id === 'pcvq'){ PCV.q = e.target.value; $('pcvgrid').innerHTML = pcvGridHTML(); $('pcvcount').textContent = pcvList().length+' of '+CARDS.length+' cards'; }
+  };
 }
 function showRates(){
   var h = '<span data-closable></span><h2>🎴 Pull rates</h2><p class="hint" style="font-size:15px">Every card in a pack is picked at random. Here is the chance for each rarity:</p><div style="display:grid;gap:8px;margin:14px 0">';
