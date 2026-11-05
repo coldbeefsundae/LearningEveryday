@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = 'v49', errs = [], shown = false;
+  var V = 'v52', errs = [], shown = false;
   window.__SQV = V;
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -647,6 +647,19 @@ body[data-calm=off] .hero .kit{animation:kitbob 3.2s ease-in-out infinite}
 @keyframes kSquintY{0%,100%{transform:scaleY(1)}30%,65%{transform:scaleY(.1)}}
 @keyframes kFloat{0%{opacity:0;transform:translateY(8px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-14px) scale(1.15) rotate(12deg)}}
 @keyframes kJingle{0%,100%{transform:rotate(0)}12%{transform:rotate(-8deg)}25%{transform:rotate(8deg)}38%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}62%{transform:rotate(-5deg)}75%{transform:rotate(4deg)}}
+/* Kit: headphones + music (only during the weekend Free Time window) */
+.kit .k-phones,.kit .k-hn{opacity:0;transform-box:fill-box}
+.kit.a-chill .k-phones{animation:kPhones 3.8s ease-in-out 1}
+.kit.a-chill .k-all{transform-origin:60px 112px;animation:kBeat 3.8s ease-in-out 1}
+.kit.a-chill .k-eyes{animation:kChillEyes 3.8s ease-in-out 1}
+.kit.a-chill .k-hn1{animation:kHN 1.5s ease-out 1 .7s}
+.kit.a-chill .k-hn2{animation:kHN 1.5s ease-out 1 1.2s}
+.kit.a-chill .k-hn3{animation:kHN 1.5s ease-out 1 1.8s}
+.kit.a-chill .k-hn4{animation:kHN 1.5s ease-out 1 2.3s}
+@keyframes kPhones{0%{opacity:0;transform:translateY(-34px)}10%{opacity:1;transform:translateY(3px)}14%,88%{opacity:1;transform:translateY(0)}97%,100%{opacity:0;transform:translateY(-10px)}}
+@keyframes kBeat{0%,16%{transform:none}18%{transform:translateY(2.5px) rotate(-2deg)}26%{transform:translateY(-1px) rotate(2deg)}34%{transform:translateY(2.5px) rotate(-2deg)}42%{transform:translateY(-1px) rotate(2deg)}50%{transform:translateY(2.5px) rotate(-2deg)}58%{transform:translateY(-1px) rotate(2deg)}66%{transform:translateY(2.5px) rotate(-2deg)}74%{transform:translateY(-1px) rotate(2deg)}82%{transform:translateY(2.5px) rotate(-2deg)}92%,100%{transform:none}}
+@keyframes kChillEyes{0%,100%{transform:scaleY(1)}18%,84%{transform:scaleY(.12)}}
+@keyframes kHN{0%{opacity:0;transform:translateY(6px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-16px) scale(1.1) rotate(10deg)}}
 @keyframes kToot{0%,100%{transform:scale(1)}30%,60%{transform:scale(1.06,.96)}}
 .kit.a-blink .k-eyes{animation:kBlink .9s ease-in-out 1}
 .kit.a-wink .k-er{animation:kBlink 1.2s ease-in-out 1}
@@ -742,6 +755,12 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybri
 .kfcsrc .kcbchip{font:800 15px/1.1 system-ui,sans-serif;padding:9px 12px}
 .kfcpg{background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
 .kbc.sel{outline:3px solid var(--brand,#6c5ce7);background:rgba(108,92,231,.38);color:inherit;border-color:var(--brand,#6c5ce7)}
+.ftpanel{background:linear-gradient(135deg,rgba(255,214,102,.35),rgba(255,160,200,.25));margin:0 0 14px}
+.fthead{display:flex;gap:12px;align-items:center}.ftico{font-size:36px}.fthead b{font-size:20px}
+.ftsub{font-weight:800;margin:12px 0 6px}.ftlist{display:grid;gap:6px}
+.ftt{display:flex;gap:10px;align-items:center;text-align:left;font:700 17px/1.2 system-ui,sans-serif;background:rgba(255,255,255,.7);border:2px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 14px;min-height:48px;cursor:pointer;color:inherit}
+.ftt.on{background:rgba(120,220,150,.4);text-decoration:line-through;opacity:.85}.ftt span{font-size:22px}
+.ftdone{font-weight:900;margin-top:8px}.ftbtns{gap:8px;margin-top:4px}
 .kbfc{margin-left:auto;flex:none;border:0;background:rgba(108,92,231,.12);border-radius:10px;width:38px;height:38px;font-size:18px;cursor:pointer;padding:0}
 .kblegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;opacity:.8;margin-top:6px}
 .kblegend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:2px solid transparent}
@@ -2222,6 +2241,11 @@ function kitSVG(mood, cls){
     '<g class="k-fx k-hearts"><path transform="translate(14 36)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff5d8f"/><path transform="translate(104 28) scale(.8)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff8aa8"/><path transform="translate(98 60) scale(.6)" d="M0 4C-8-2-5-8 0-4 5-8 8-2 0 4z" fill="#ff5d8f"/></g>'+
     '<g class="k-fx k-notes"><g transform="translate(14 34)" fill="#6c5ce7"><circle cx="0" cy="4" r="3"/><path d="M3 4V-6l5 2" stroke="#6c5ce7" stroke-width="1.8" fill="none"/></g><g transform="translate(102 26) scale(.85)" fill="#00b894"><circle cx="0" cy="4" r="3"/><path d="M3 4V-6l5 2" stroke="#00b894" stroke-width="1.8" fill="none"/></g></g>'+
     '<g class="k-fx k-leaves"><path transform="translate(14 30)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#e8590c"/><path transform="translate(104 24) scale(.8) rotate(40)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#f08c00"/><path transform="translate(98 58) scale(.6) rotate(-30)" d="M0-6C6-2 6 4 0 7-6 4-6-2 0-6z" fill="#d9480f"/></g>'+
+    '<g class="k-phones"><path d="M22 68C18 34 38 17 60 17C82 17 102 34 98 68" fill="none" stroke="#3b2a5a" stroke-width="5.5" stroke-linecap="round"/><path d="M24 62C23 38 40 22 60 22" fill="none" stroke="#fff" opacity=".22" stroke-width="1.6" stroke-linecap="round"/><rect x="8" y="55" width="20" height="32" rx="9" fill="#6c5ce7" stroke="#3b2a5a" stroke-width="2"/><rect x="12" y="60" width="9" height="22" rx="4.5" fill="#8b7df2"/><rect x="92" y="55" width="20" height="32" rx="9" fill="#6c5ce7" stroke="#3b2a5a" stroke-width="2"/><rect x="99" y="60" width="9" height="22" rx="4.5" fill="#8b7df2"/></g>'+
+    '<g class="k-hn k-hn1"><g transform="translate(6 40)" fill="#6c5ce7"><ellipse cx="0" cy="5" rx="3.6" ry="2.8"/><path d="M3.2 5V-7l6 2.5" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round"/></g></g>'+
+    '<g class="k-hn k-hn2"><g transform="translate(108 34)" fill="#ff7a45"><ellipse cx="0" cy="5" rx="3.6" ry="2.8"/><path d="M3.2 5V-7l6 2.5" fill="none" stroke="#ff7a45" stroke-width="2" stroke-linecap="round"/></g></g>'+
+    '<g class="k-hn k-hn3"><g transform="translate(110 62)" fill="#2fbf9b"><ellipse cx="0" cy="5" rx="3.6" ry="2.8"/><path d="M3.2 5V-7l6 2.5" fill="none" stroke="#2fbf9b" stroke-width="2" stroke-linecap="round"/></g></g>'+
+    '<g class="k-hn k-hn4"><g transform="translate(4 66)" fill="#e85d9a"><ellipse cx="0" cy="5" rx="3.6" ry="2.8"/><path d="M3.2 5V-7l6 2.5" fill="none" stroke="#e85d9a" stroke-width="2" stroke-linecap="round"/></g></g>'+
     '<g class="k-fx k-confetti"><rect x="10" y="26" width="5" height="3" fill="#ff5d8f" transform="rotate(30 12 27)"/><rect x="104" y="20" width="5" height="3" fill="#00b894" transform="rotate(-20 106 21)"/><rect x="98" y="50" width="4" height="3" fill="#ffc233"/><rect x="18" y="12" width="4" height="3" fill="#6c5ce7" transform="rotate(50 20 13)"/><circle cx="108" cy="40" r="2.2" fill="#74c2ff"/><circle cx="8" cy="46" r="2.2" fill="#ffc233"/></g>') : '';
   return '<svg class="kit '+(cls||'')+(bm === 'asleep' ? ' asleep' : '')+(mood === 'drowsy' ? ' drowsy' : '')+'" viewBox="0 0 120 124" aria-hidden="true"><g class="k-all">'+
     '<g class="k-ear-l"><path d="M24 50L20 10l34 20z" fill="#ff8a3d"/><path d="M29 42L27 20l16 10z" fill="#ffd2ad"/></g>'+
@@ -3505,6 +3529,7 @@ function kitMood(){
   if(bm === 'asleep') return {mood:'sleep', say:'Zzz... Kit is asleep. See you in the morning!'};
   if(bm === 'drowsy') return {mood:'drowsy', say:'*yawn* I am getting sleepy. It is almost bedtime!'};
   var act = activeTasks(), d = doneCount();
+  try{ if(ftActive() && !state.restToday) return {mood:'happy', say:'Phew, hoshuko is done! Break time. 😎'+(d < act.length ? ' Your quests will wait for you.' : '')}; }catch(e){}
   if(state.restToday) return {mood:'sleep', say:'Rest day! Your streak is safe. Quests are optional today, but there are no points. I am taking a nap too. 💤'};
   if(!act.length) return {mood:'sleep', say:'No quests today. Enjoy your day!'};
   if(d === act.length){
@@ -3524,12 +3549,86 @@ function errPanel(label, e){
   return '<div class="panel" style="border:2px solid #ff6b6b"><b>⚠️ '+esc(label)+' could not load</b><div style="margin-top:4px;font-size:13px;word-break:break-word">'+esc(m)+'</div><div style="margin-top:4px;font-size:10px;opacity:.7;word-break:break-all">'+esc(st.slice(0,300))+'</div></div>';
 }
 function safeSec(label, fn){ try{ return fn(); }catch(e){ return errPanel(label, e); } }
+/* ---------- v50: weekend Free Time window (a reminder + a free screen-time bank) ---------- */
+var FT_TODO_DEFAULT = 'Take a shower\nTidy your room\nPut away your hoshuko things';
+function ftCfg(){
+  var e = state.eco || {};
+  var days = []; if(e.ftSat !== false) days.push(6); if(e.ftSun === true) days.push(0);
+  return {on:e.ftOn !== false, days:days, start:e.ftStart || '15:00', end:e.ftEnd || '19:00', mins:e.ftMin == null ? 120 : e.ftMin,
+          todo:String(e.ftTodo == null ? FT_TODO_DEFAULT : e.ftTodo).split('\n').map(function(x){ return x.trim(); }).filter(Boolean).slice(0, 6)};
+}
+function ftMinOf(hhmm){ var a = String(hhmm).split(':'); return (+a[0])*60 + (+a[1] || 0); }
+function ftActive(){
+  var c = ftCfg(); if(!c.on || !c.days.length) return false;
+  var n = new Date(), m = n.getHours()*60 + n.getMinutes();
+  return c.days.indexOf(n.getDay()) > -1 && m >= ftMinOf(c.start) && m < ftMinOf(c.end);
+}
+function ftState(){
+  var k = dateKey();
+  if(!state.ft || state.ft.k !== k) state.ft = {k:k, used:0, ticks:[]};
+  return state.ft;
+}
+function ftHours(m){ return m % 60 === 0 ? (m/60)+(m === 60 ? ' hour' : ' hours') : (m < 60 ? m+' min' : Math.floor(m/60)+'h '+(m%60)+'m'); }
+function freeWindowHTML(){
+  if(!ftActive()) return '';
+  var c = ftCfg(), f = ftState(), n = new Date(), nowM = n.getHours()*60 + n.getMinutes(), endM = ftMinOf(c.end);
+  var remain = Math.max(0, c.mins - f.used), untilEnd = Math.max(0, endM - nowM), maxNow = Math.min(remain, untilEnd), winLen = endM - ftMinOf(c.start);
+  var running = state.screenEndsAt && state.screenEndsAt > Date.now();
+  var h = '<div class="panel ftpanel"><div class="fthead"><span class="ftico">🎉</span><div><b>Free Time until '+fmt12(c.end)+'!</b><div class="hint">Do what you like! Try to keep screens to about <b>'+ftHours(c.mins)+'</b> of these '+ftHours(winLen)+'.</div></div></div>';
+  if(c.todo.length){
+    h += '<div class="ftsub">Before you relax, don\'t forget:</div><div class="ftlist">';
+    c.todo.forEach(function(t, i){ var on = f.ticks.indexOf(i) > -1; h += '<button class="ftt'+(on ? ' on' : '')+'" data-ft="tick:'+i+'"><span>'+(on ? '✅' : '⬜')+'</span> '+esc(t)+'</button>'; });
+    h += '</div>';
+    if(f.ticks.length >= c.todo.length) h += '<div class="ftdone">Everything is done. Enjoy your Free Time! 🌟</div>';
+  }
+  if(c.mins > 0){
+    h += '<div class="ftsub">📺 Free screen time: <b>'+ftHours(remain)+'</b> left'+(running ? ' · running now' : '')+'</div>';
+    if(maxNow > 0){
+      h += '<div class="row ftbtns">';
+      if(maxNow >= 30) h += '<button class="btn small" data-ft="start:30">▶ 30 min</button>';
+      if(maxNow >= 60) h += '<button class="btn small" data-ft="start:60">▶ 1 hour</button>';
+      if(maxNow !== 30 && maxNow !== 60) h += '<button class="btn small" data-ft="start:'+maxNow+'">▶ '+ftHours(maxNow)+'</button>';
+      h += '</div>';
+    } else if(remain <= 0){
+      h += '<div class="hint">You used your screen time. Time for other fun things! 🎨📚🛝</div>';
+    } else {
+      h += '<div class="hint">Free Time is almost over.</div>';
+    }
+  }
+  return h + '</div>';
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-ft]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  var a = t.getAttribute('data-ft'), f = ftState(), c = ftCfg();
+  try{ Sound.tap(); }catch(_){}
+  if(a.indexOf('tick:') === 0){
+    var i = +a.slice(5), at = f.ticks.indexOf(i);
+    if(at > -1) f.ticks.splice(at, 1); else { f.ticks.push(i); try{ Sound.tick(); }catch(_){} }
+    save(); renderHome(); return;
+  }
+  if(a.indexOf('start:') === 0){
+    var m = parseInt(a.slice(6), 10) || 0, n = new Date(), nowM = n.getHours()*60 + n.getMinutes();
+    var maxNow = Math.min(Math.max(0, c.mins - f.used), Math.max(0, ftMinOf(c.end) - nowM));
+    if(!ftActive() || m < 1 || m > maxNow){ toast('That is more than your Free Time left.'); renderHome(); return; }
+    addScreenTime(m); f.used += m; save(); renderHome(); try{ Sound.fanfare(); }catch(_){}
+    toast('📺 Enjoy '+ftHours(m)+' of free screen time!', 3800);
+  }
+}, true);
+var __ftWas = null;
+function ftChillNow(){ try{ if(!kitAnimOK() || bedMode() === 'asleep') return; var sv = document.querySelector('.hero .kit'); if(sv && sv.getBoundingClientRect().width > 0) kitPlay(sv, ['chill','']); }catch(e){} }
+function ftWatch(){
+  var a = ftActive();
+  if(__ftWas === null){ __ftWas = a; if(a) setTimeout(ftChillNow, 1800); return; }
+  if(a !== __ftWas){ __ftWas = a; if(tab === 'home' && !$('overlay').classList.contains('show')){ renderHome(); if(a) setTimeout(ftChillNow, 700); } }
+}
 function renderHome(){
   var nm = '', act = [], km = {mood:'happy', say:''};
   try{ nm = displayName(); }catch(e){}
   try{ act = activeTasks(); }catch(e){}
   try{ km = kitMood(); }catch(e){}
   var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div></div>'; });
+  h += safeSec('Free Time', freeWindowHTML);
   h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'+(state.restToday ? '' : ' · ⭐ '+pointsEarnedToday()+' of '+pointsMaxToday()+' points'); })+'</span></div><div class="qgrid">';
   if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
   act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
@@ -3733,6 +3832,7 @@ function tick(){
   tickTimers();
   updateTimerDisplays();
   updateTfs();
+  try{ ftWatch(); }catch(_){}
 }
 
 
@@ -3820,6 +3920,7 @@ function taskSub(t){
 /* ---- Parent Controls: home (today's jobs + tiles) and section screens ---- */
 function pTog(label, id, on){ return '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="'+id+'" '+(on ? 'checked' : '')+'><span></span></span> '+label+'</label>'; }
 function pNum(label, id, lo, hi, val){ return '<div class="fld"><label>'+label+'</label><input type="number" id="'+id+'" min="'+lo+'" max="'+hi+'" inputmode="numeric" value="'+val+'"></div>'; }
+function pText(label, id, val, rows){ return '<div class="fld"><label>'+label+'</label><textarea id="'+id+'" rows="'+(rows||3)+'" maxlength="240" style="width:100%">'+esc(val)+'</textarea></div>'; }
 function pTime(label, id, val){ return '<div class="fld"><label>'+label+'</label><input type="time" id="'+id+'" value="'+esc(val)+'"></div>'; }
 function pTile(ico, title, sub, attr){ return '<button class="btn ptile" '+attr+'><span class="pti">'+ico+'</span><b>'+title+'</b><small>'+sub+'</small></button>'; }
 function parentOnChange(e){
@@ -3854,6 +3955,9 @@ function showParent(scrollTop){
   if(dayRemaining() > 0){
     h += '<div class="row" style="margin-top:10px"><button class="btn small" data-act="paward">🎁 Give the rest of today\'s points (+'+dayRemaining()+', override)</button></div>';
   }
+  h += '<h3>🎁 Free break</h3><div class="hint" style="margin-bottom:6px">Starts Free Time right now. No points, and it does not use her daily screen limit. For any day you want to give extra.</div><div class="row">';
+  [30, 60, 90, 120].forEach(function(m){ h += '<button class="btn" data-act="pbreak" data-m="'+m+'">'+(m === 90 ? '1.5 hours' : (m < 60 ? m+' min' : (m/60)+(m === 60 ? ' hour' : ' hours')))+'</button>'; });
+  h += '</div>';
   var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
   h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#ff7bd0;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
 
@@ -3900,9 +4004,20 @@ function showParentSection(key, scrollTop){
   } else if(key === 'time'){
     h += '<h3>Screen time</h3><div class="ecogrid">';
     h += pTime('Screen time ends at', 'eScreenEnd', e.screenEnd || '20:45');
-    h += pNum('Screen time limit per day (min)', 'eScreen', 0, 600, e.screenCap);
+    h += pNum('Weeknight screen time limit (min)', 'eScreen', 0, 600, e.screenCap);
     h += '</div>';
     h += pTog('Block screen time that would run past the end time', 'eCurfew', e.curfewOn !== false);
+    var wc = wkCfg();
+    h += '<h3>Weekend screen prices</h3><div class="hint" style="margin-bottom:6px">On these days, bought screen time costs less and she can buy more. Weeknights keep the normal price and the limit above.</div>';
+    h += pTog('Weekend prices', 'eWkOn', wc.on);
+    h += pTog('Saturday', 'eWkSat', wc.days.indexOf(6) > -1)+pTog('Sunday', 'eWkSun', wc.days.indexOf(0) > -1);
+    h += '<div class="ecogrid">'+pNum('Points', 'eWkPts', 1, 500, wc.pts)+pNum('...for this many minutes', 'eWkPer', 5, 240, wc.per)+pNum('Most she can buy on a weekend day (min)', 'eWkCap', 0, 720, wc.cap)+'</div>';
+    var fc = ftCfg();
+    h += '<h3>Weekend Free Time</h3><div class="hint" style="margin-bottom:6px">Shows a Free Time panel on her home screen during this window, with a checklist and a free screen time bank. No points are spent.</div>';
+    h += pTog('Show the Free Time window', 'eFtOn', fc.on);
+    h += pTog('Saturday', 'eFtSat', fc.days.indexOf(6) > -1)+pTog('Sunday', 'eFtSun', fc.days.indexOf(0) > -1);
+    h += '<div class="ecogrid">'+pTime('Starts at', 'eFtStart', fc.start)+pTime('Ends at', 'eFtEnd', fc.end)+pNum('Free screen time in the window (min)', 'eFtMin', 0, 480, fc.mins)+'</div>';
+    h += pText('Reminders for her (one per line, up to 6)', 'eFtTodo', fc.todo.join('\n'), 4);
     h += '<h3>Bedtime</h3>';
     h += pTog('🌙 Bedtime reminder (Kit gets sleepy 15 minutes before, then sleeps)', 'eBedOn', e.bedOn);
     h += '<div class="ecogrid">'+pTime('Bedtime', 'eBedTime', e.bedTime || '21:00')+pTime('Kit wakes up at', 'eWakeTime', e.wakeTime || '07:00')+'</div>';
@@ -3948,6 +4063,16 @@ function applyParentSettings(){
   e.daily = e.base + e.finish;
   e.screenEnd = tm('eScreenEnd', e.screenEnd);
   e.curfewOn = ck('eCurfew', e.curfewOn);
+  if($('eWkOn')){
+    e.wkOn = ck('eWkOn', true); e.wkSat = ck('eWkSat', true); e.wkSun = ck('eWkSun', true);
+    e.wkPts = num('eWkPts', 1, 500, e.wkPts > 0 ? e.wkPts : 10); e.wkPer = num('eWkPer', 5, 240, e.wkPer > 0 ? e.wkPer : 30); e.wkCap = num('eWkCap', 0, 720, e.wkCap == null ? 240 : e.wkCap);
+  }
+  if($('eFtOn')){
+    e.ftOn = ck('eFtOn', true); e.ftSat = ck('eFtSat', true); e.ftSun = ck('eFtSun', false);
+    e.ftStart = tm('eFtStart', e.ftStart || '15:00'); e.ftEnd = tm('eFtEnd', e.ftEnd || '19:00'); e.ftMin = num('eFtMin', 0, 480, e.ftMin == null ? 120 : e.ftMin);
+    if($('eFtTodo')) e.ftTodo = String($('eFtTodo').value || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean).slice(0, 6).join('\n');
+    if(state.ft) state.ft.ticks = [];
+  }
   e.bedOn = ck('eBedOn', e.bedOn);
   e.bedTime = tm('eBedTime', e.bedTime);
   e.wakeTime = tm('eWakeTime', e.wakeTime);
@@ -3989,7 +4114,7 @@ function parentClick(e){
     case 'pminus': if(state.points>0){ state.points--; logPts(-1,'Parent adjustment'); save(); render(); } showParent(st); break;
     case 'pminus10': var dm = Math.min(10, state.points); state.points -= dm; if(dm) logPts(-dm,'Parent adjustment'); save(); render(); showParent(st); break;
     case 'rgive': state.requests.forEach(function(q){ if(q.id===id) q.status='done'; }); save(); render(); toast('✅ Marked as given'); showParent(st); break;
-    case 'rrefund': state.requests.forEach(function(q){ if(q.id===id && q.status==='pending'){ q.status='refunded'; state.points += q.cost; logPts(q.cost,'Refund: '+q.name); } }); save(); render(); toast('↩ Points refunded'); showParent(st); break;
+    case 'rrefund': state.requests.forEach(function(q){ if(q.id===id && q.status==='pending'){ q.status='refunded'; rwUnlog(q.rid, q.at); state.points += q.cost; logPts(q.cost,'Refund: '+q.name); } }); save(); render(); toast('↩ Points refunded'); showParent(st); break;
     case 'rweditor': showRewardEditor(); break;
     case 'pcalendar': showCalendarModal(); break;
     case 'pnews': var nr = importNewsPack($('pNews').value); toast(nr.msg, 3000); render(); showParent(st); break;
@@ -4009,6 +4134,12 @@ function parentClick(e){
       var ar = applyParentSettings();
       if(ar === false) break;
       toast(ar === 'pin' ? 'PIN updated ✔' : 'Settings saved ✔');
+      showParent(st); break;
+    case 'pbreak':
+      var bm = parseInt(b.getAttribute('data-m'), 10) || 30;
+      addScreenTime(bm); state.stats = state.stats || {}; state.stats.freeBreakMin = (state.stats.freeBreakMin || 0) + bm;
+      save(); render(); Sound.fanfare();
+      toast('🎁 Free break started: '+bm+' minutes.'+(curfewOn() && state.screenEndsAt > curfewDate().getTime() ? ' Note: that runs past '+fmt12(state.eco.screenEnd || '20:45')+'.' : ''), 4200);
       showParent(st); break;
     case 'psec': window.__parSec = b.getAttribute('data-sec'); showParentSection(window.__parSec); break;
     case 'pbackhome': if(applyParentSettings() === false) break; showParentHome(); break;
@@ -4502,36 +4633,96 @@ function nextStreakStep(){
   return null;
 }
 
+/* ---------- v51: weekend screen prices (cheaper, and she can buy more) ---------- */
+function wkCfg(){
+  var e = state.eco || {}, d = []; if(e.wkSat !== false) d.push(6); if(e.wkSun !== false) d.push(0);
+  return {on:e.wkOn !== false, days:d, pts:e.wkPts > 0 ? e.wkPts : 10, per:e.wkPer > 0 ? e.wkPer : 30, cap:e.wkCap == null ? 240 : e.wkCap};
+}
+function wkNow(){ var c = wkCfg(); return c.on && c.days.indexOf(new Date().getDay()) > -1; }
+function screenCapNow(){ return wkNow() ? wkCfg().cap : state.eco.screenCap; }
+var WK_VIRT = [{id:'scrwk60', kind:'screen', mins:60, name:'Screen time', sub:'1 hour', icon:'🕹️', cost:60, on:true, virt:true}];
+function rewardCost(r){
+  if(r && r.kind === 'screen' && wkNow()){ var c = wkCfg(); return Math.max(1, Math.round(r.mins * c.pts / c.per)); }
+  return r.cost;
+}
+/* ---------- v52: purchase limits (non-screen rewards: once a week; big goals: once a month) ---------- */
+function rwGroupLim(g){
+  if(g && (g.lim === 'week' || g.lim === 'month' || g.lim === 'none')) return g.lim;
+  var id = g ? g.id : 'treat';
+  return id === 'screen' ? 'none' : (id === 'goal' ? 'month' : 'week');
+}
+function rwLimOf(r){
+  if(!r || r.kind === 'screen') return 'none';
+  if(r.lim === 'week' || r.lim === 'month' || r.lim === 'none') return r.lim;
+  var gid = rwGroupOf(r), g = null; rwGroups().forEach(function(x){ if(x.id === gid) g = x; });
+  return rwGroupLim(g || {id:gid});
+}
+function rwTimes(rid){
+  var from = state.rwFrom || 0, out = [];
+  (state.requests || []).forEach(function(q){ if(q.rid === rid && q.status !== 'refunded' && q.at >= from) out.push(q.at); });
+  ((state.rwLast && state.rwLast[rid]) || []).forEach(function(t){ if(t >= from && out.indexOf(t) < 0) out.push(t); });
+  return out;
+}
+/* returns null when she can buy it, or {lim, back:'Monday' | 'Dec 1'} when it is used up */
+function rwLocked(r){
+  var lim = rwLimOf(r); if(lim === 'none') return null;
+  var n = new Date(), start, back;
+  if(lim === 'week'){
+    start = new Date(n.getFullYear(), n.getMonth(), n.getDate() - ((n.getDay()+6)%7)).getTime();
+    back = 'Monday';
+  } else {
+    start = new Date(n.getFullYear(), n.getMonth(), 1).getTime();
+    back = new Date(n.getFullYear(), n.getMonth()+1, 1).toLocaleDateString(undefined, {month:'short', day:'numeric'});
+  }
+  var hit = rwTimes(r.id).some(function(t){ return t >= start; });
+  return hit ? {lim:lim, back:back} : null;
+}
+function rwLimNote(r){ var l = rwLimOf(r); return l === 'week' ? 'once a week' : (l === 'month' ? 'once a month' : ''); }
+function rwLog(rid, t){
+  state.rwLast = state.rwLast || {};
+  var a = state.rwLast[rid] = state.rwLast[rid] || []; a.push(t); if(a.length > 6) a.splice(0, a.length - 6);
+}
+function rwUnlog(rid, t){
+  var a = state.rwLast && state.rwLast[rid]; if(!a) return;
+  var i = a.indexOf(t); if(i > -1) a.splice(i, 1);
+}
 /* ---------- reward shop ---------- */
 function rewardById(id){
   for(var i=0;i<state.rewards.length;i++){ if(state.rewards[i].id === id) return state.rewards[i]; }
+  if(wkNow()){ for(var j=0;j<WK_VIRT.length;j++){ if(WK_VIRT[j].id === id) return WK_VIRT[j]; } }
   return null;
 }
 function rewardCardHTML(r){
-  var afford = state.points >= r.cost, pct = Math.min(100, Math.round(state.points / r.cost * 100));
+  var cost = rewardCost(r), disc = (cost !== r.cost);
+  var afford = state.points >= cost, pct = Math.min(100, Math.round(state.points / cost * 100));
   var isGoal = state.goalId === r.id;
-  var h = '<div class="rcard'+(afford?' can':'')+(isGoal?' goal':'')+'"><div class="rtile">'+esc(r.icon)+'</div><div class="rbody"><b>'+esc(r.name)+'</b>';
-  if(r.sub) h += '<small>'+esc(r.sub)+'</small>';
-  h += '<div class="rbar"><i style="width:'+pct+'%"></i></div></div><div class="rbuy"><div class="rcost">'+r.cost+' pts</div>';
-  h += '<button class="btn small '+(afford?'good':'')+'" data-buy="'+esc(r.id)+'">'+(afford ? 'Get it!' : (r.cost - state.points)+' to go')+'</button>';
+  var lk = rwLocked(r), ln = rwLimNote(r);
+  var h = '<div class="rcard'+(afford && !lk ?' can':'')+(isGoal?' goal':'')+'"><div class="rtile">'+esc(r.icon)+'</div><div class="rbody"><b>'+esc(r.name)+'</b>';
+  if(r.sub || ln) h += '<small>'+esc(r.sub || '')+(disc ? ' · weekend price!' : '')+(ln ? (r.sub || disc ? ' · ' : '')+(lk ? '🔒 ' : '')+ln : '')+'</small>';
+  h += '<div class="rbar"><i style="width:'+pct+'%"></i></div></div><div class="rbuy"><div class="rcost">'+(disc && r.cost > cost ? '<s style="opacity:.5;font-weight:700;font-size:12px">'+r.cost+'</s> ' : '')+cost+' pts</div>';
+  if(lk) h += '<button class="btn small" style="opacity:.65" data-buy="'+esc(r.id)+'">🔒 Back '+esc(lk.back)+'</button>';
+  else h += '<button class="btn small '+(afford?'good':'')+'" data-buy="'+esc(r.id)+'">'+(afford ? 'Get it!' : (cost - state.points)+' to go')+'</button>';
   if(r.kind !== 'screen') h += '<button class="pinbtn'+(isGoal?' on':'')+'" data-goal="'+esc(r.id)+'" aria-label="Pin as my goal" title="Pin as my goal">📌</button>';
   return h + '</div></div>';
 }
 function renderShopCoins(){
   var e = state.eco;
-  var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(state.points)+' of screen time</div></div></div>';
+  var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(wkNow() ? Math.floor(state.points * wkCfg().per / wkCfg().pts) : state.points)+' of screen time'+(wkNow() ? ' (weekend price!)' : '')+'</div></div></div>';
   h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>+1 to +10</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
   var goal = state.goalId ? rewardById(state.goalId) : null;
   if(goal && goal.on){
-    var gp = Math.min(100, Math.round(state.points / goal.cost * 100));
-    h += '<div class="panel goalpanel"><div class="rtile big">'+esc(goal.icon)+'</div><div class="gbody"><div class="qlabel">📌 My goal</div><b>'+esc(goal.name)+'</b><div class="rbar thick"><i style="width:'+gp+'%"></i></div><small>'+(state.points >= goal.cost ? 'You can get it now!' : (goal.cost - state.points)+' more points to go')+'</small></div></div>';
+    var gp = Math.min(100, Math.round(state.points / rewardCost(goal) * 100));
+    h += '<div class="panel goalpanel"><div class="rtile big">'+esc(goal.icon)+'</div><div class="gbody"><div class="qlabel">📌 My goal</div><b>'+esc(goal.name)+'</b><div class="rbar thick"><i style="width:'+gp+'%"></i></div><small>'+(rwLocked(goal) ? '🔒 You already got this '+(rwLocked(goal).lim === 'month' ? 'month' : 'week')+'. Back '+rwLocked(goal).back+'.' : state.points >= rewardCost(goal) ? 'You can get it now!' : (rewardCost(goal) - state.points)+' more points to go')+'</small></div></div>';
   }
   var running = state.screenEndsAt && state.screenEndsAt > Date.now();
   rwGroups().forEach(function(g){
     var items = state.rewards.filter(function(r){ return r.on && rwGroupOf(r) === g.id; });
     if(g.id === 'screen'){
-      h += '<div class="sec"><h2>'+esc(g.icon)+' '+esc(g.name)+'</h2><span class="count">'+state.screenToday+' of '+e.screenCap+' min used today'+(curfewOn() ? ' · ends '+fmt12(e.screenEnd || '20:45') : '')+(running?' · running now':'')+'</span></div><div class="rgrid">';
+      h += '<div class="sec"><h2>'+esc(g.icon)+' '+esc(g.name)+'</h2><span class="count">'+state.screenToday+' of '+screenCapNow()+' min used today'+(curfewOn() ? ' · ends '+fmt12(e.screenEnd || '20:45') : '')+(running?' · running now':'')+'</span></div>';
+      if(wkNow()){ var wc = wkCfg(); h += '<div class="hint" style="margin:-4px 2px 8px">🎉 Weekend price: '+wc.per+' minutes for '+wc.pts+' points!</div>'; }
+      h += '<div class="rgrid">';
       items.forEach(function(r){ h += rewardCardHTML(r); });
+      if(wkNow()) WK_VIRT.forEach(function(r){ if(!items.some(function(x){ return x.kind === 'screen' && x.mins === r.mins; })) h += rewardCardHTML(r); });
       h += '</div>';
     } else if(items.length){
       h += '<div class="sec"><h2>'+esc(g.icon)+' '+esc(g.name)+'</h2>'+(g.sub ? '<span class="count">'+esc(g.sub)+'</span>' : '')+'</div><div class="rgrid">';
@@ -4551,14 +4742,21 @@ function renderShopCoins(){
 }
 function buyReward(id){
   var r = rewardById(id); if(!r || !r.on) return;
-  if(state.points < r.cost){
-    state.goalId = r.id; save(); Sound.untick(); render();
-    toast('📌 Saving for '+r.name+'! '+(r.cost - state.points)+' more points to go.');
+  var cost = rewardCost(r);
+  var lkb = rwLocked(r);
+  if(lkb){
+    Sound.untick();
+    toast('🔒 You already got '+r.name+' this '+(lkb.lim === 'month' ? 'month' : 'week')+'. It is back on '+lkb.back+'!', 4600);
     return;
   }
-  if(r.kind === 'screen' && state.screenToday + r.mins > state.eco.screenCap){
+  if(state.points < cost){
+    state.goalId = r.id; save(); Sound.untick(); render();
+    toast('📌 Saving for '+r.name+'! '+(cost - state.points)+' more points to go.');
+    return;
+  }
+  if(r.kind === 'screen' && state.screenToday + r.mins > screenCapNow()){
     Sound.untick();
-    toast('📺 That is more than today\'s screen time limit ('+state.eco.screenCap+' min). Try again tomorrow!', 4200);
+    toast('📺 That is more than today\'s screen time limit ('+screenCapNow()+' min). Try again tomorrow!', 4200);
     return;
   }
   if(r.kind === 'screen' && curfewOn()){
@@ -4571,14 +4769,15 @@ function buyReward(id){
       Sound.untick(); toast('🌙 Screen time ends at '+ce+' tonight, so that is too long. '+(left > 0 ? 'Only '+left+' minutes left. Try a shorter one, or save your points for tomorrow!' : 'Your points are saved for tomorrow!'), 5200); return;
     }
   }
-  var txt = r.kind === 'screen' ? 'Spend '+r.cost+' points for '+r.mins+' minutes of screen time?' : 'Spend '+r.cost+' points on <b>'+esc(r.name)+'</b>? A parent will make it happen!';
+  var txt = r.kind === 'screen' ? 'Spend '+cost+' points for '+r.mins+' minutes of screen time?' : 'Spend '+r.cost+' points on <b>'+esc(r.name)+'</b>? A parent will make it happen!';
   confirmBox(esc(r.icon)+' '+esc(r.name)+'?', txt, 'Yes! 🎉', function(){
-    if(!spendPoints(r.cost, r.name)) return;
+    if(!spendPoints(cost, r.name)) return;
     if(r.kind === 'screen'){
       addScreenTime(r.mins); state.screenToday += r.mins;
       toast('📺 Enjoy '+r.mins+' minutes of screen time!', 3800);
     } else {
-      state.requests.unshift({id:'q'+Date.now(), rid:r.id, name:r.name, icon:r.icon, cost:r.cost, at:Date.now(), status:'pending'});
+      var nowT2 = Date.now(); rwLog(r.id, nowT2);
+      state.requests.unshift({id:'q'+nowT2, rid:r.id, name:r.name, icon:r.icon, cost:cost, at:nowT2, status:'pending'});
       if(state.requests.length > 40) state.requests.length = 40;
       toast('🎉 '+r.name+'! Show a parent so they can make it happen.', 4600);
     }
@@ -4687,6 +4886,10 @@ function rwRowHTML(r, gs){
     gs.forEach(function(g){ if(g.id === 'screen') return; h += '<option value="'+esc(g.id)+'"'+(rwGroupOf(r) === g.id ? ' selected' : '')+'>'+esc(g.icon)+' '+esc(g.name)+'</option>'; });
     h += '</select>';
   }
+  if(r.kind !== 'screen'){
+    var rl = (r.lim === 'week' || r.lim === 'month' || r.lim === 'none') ? r.lim : '';
+    h += '<select class="rwgrp" data-rw="lim" data-id="'+esc(r.id)+'" aria-label="How often"><option value=""'+(rl===''?' selected':'')+'>Group rule</option><option value="week"'+(rl==='week'?' selected':'')+'>1× a week</option><option value="month"'+(rl==='month'?' selected':'')+'>1× a month</option><option value="none"'+(rl==='none'?' selected':'')+'>No limit</option></select>';
+  }
   h += '<input type="number" min="1" max="2000" inputmode="numeric" class="rwcost" data-rw="cost" data-id="'+esc(r.id)+'" value="'+r.cost+'"><span class="hint">pts</span>';
   h += '<button class="btn small danger" data-act="rwdel" data-id="'+esc(r.id)+'" aria-label="Delete">🗑</button></div>';
   return h;
@@ -4699,6 +4902,7 @@ function showRewardEditor(scroll){
     var items = state.rewards.filter(function(r){ return rwGroupOf(r) === g.id; });
     h += '<div class="rwghead"><input type="text" class="rwgi" maxlength="8" data-gr="icon" data-gid="'+esc(g.id)+'" value="'+esc(g.icon)+'" aria-label="Group icon"><input type="text" class="rwgn" maxlength="28" data-gr="name" data-gid="'+esc(g.id)+'" value="'+esc(g.name)+'" aria-label="Group name">';
     h += '<span class="hint">'+items.length+'</span>';
+    if(g.id !== 'screen'){ var gl = rwGroupLim(g); h += '<select class="rwgrp" data-gr="lim" data-gid="'+esc(g.id)+'" aria-label="How often she can get each reward in this group"><option value="week"'+(gl==='week'?' selected':'')+'>1× a week</option><option value="month"'+(gl==='month'?' selected':'')+'>1× a month</option><option value="none"'+(gl==='none'?' selected':'')+'>No limit</option></select>'; }
     h += '<button class="btn small" data-act="gup" data-gid="'+esc(g.id)+'" aria-label="Move group up"'+(gi === 0 ? ' disabled' : '')+'>▲</button><button class="btn small" data-act="gdown" data-gid="'+esc(g.id)+'" aria-label="Move group down"'+(gi === gs.length - 1 ? ' disabled' : '')+'>▼</button>';
     if(custom) h += '<button class="btn small danger" data-act="gdel" data-gid="'+esc(g.id)+'" aria-label="Delete group">🗑</button>';
     h += '</div>';
@@ -4713,6 +4917,7 @@ function showRewardEditor(scroll){
   gs.forEach(function(g){ if(g.id === 'screen') return; h += '<option value="'+esc(g.id)+'">'+esc(g.icon)+' '+esc(g.name)+'</option>'; });
   h += '</select></div>';
   h += '<div class="row" style="margin-top:10px"><button class="btn good" data-act="rwadd">Add reward</button><button class="btn" data-act="rwreset">Reset all to default</button></div>';
+  h += '<div class="hint" style="margin-top:10px">Treats are 1× a week and big goals 1× a month by default (weeks start Monday, months on the 1st). Screen time has no limit here.</div><div class="row" style="margin-top:6px"><button class="btn" data-act="rwlimreset">🔓 Let her get everything again now</button></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn primary" data-act="rwback">Back to Parent controls</button></div>';
   openModal(h);
   if(scroll !== undefined) $('modal').scrollTop = scroll;
@@ -4724,6 +4929,7 @@ function showRewardEditor(scroll){
       if(!g) return;
       var v = String(el.value || '').trim();
       if(el.getAttribute('data-gr') === 'name'){ if(!v){ el.value = g.name; return; } g.name = v.slice(0, 28); }
+      else if(el.getAttribute('data-gr') === 'lim'){ g.lim = (v === 'month' || v === 'none') ? v : 'week'; }
       else { g.icon = v.slice(0, 8) || g.icon; }
       save(); render(); showRewardEditor(sc); return;
     }
@@ -4731,6 +4937,7 @@ function showRewardEditor(scroll){
     if(!r) return;
     if(el.getAttribute('data-rw') === 'on'){ r.on = el.checked; save(); showRewardEditor(sc); }
     else if(el.getAttribute('data-rw') === 'cost'){ var cv = Math.max(1, Math.min(2000, parseInt(el.value, 10) || r.cost)); r.cost = cv; save(); render(); }
+    else if(el.getAttribute('data-rw') === 'lim'){ if(el.value === 'week' || el.value === 'month' || el.value === 'none') r.lim = el.value; else delete r.lim; save(); render(); showRewardEditor(sc); }
     else if(el.getAttribute('data-rw') === 'grp'){ r.grp = el.value; save(); render(); showRewardEditor(sc); toast('Moved ✔', 1400); }
   };
   $('modal').onclick = function(e){
@@ -4760,6 +4967,10 @@ function showRewardEditor(scroll){
     }
     if(a === 'rwdel'){
       confirmBox('Delete this reward?','It will be removed from the Rewards page.','Delete',function(){ state.rewards = state.rewards.filter(function(r){ return r.id !== id; }); if(state.goalId === id) state.goalId = null; save(); render(); showRewardEditor(sc); }, true);
+      return;
+    }
+    if(a === 'rwlimreset'){
+      confirmBox('Allow everything again?','Every reward becomes available right away, as if nothing was bought this week or month.','Allow',function(){ state.rwFrom = Date.now(); save(); render(); toast('Rewards unlocked ✔'); showRewardEditor(sc); });
       return;
     }
     if(a === 'rwreset'){
@@ -6617,7 +6828,7 @@ function afterTimerStop(t, why){
 document.addEventListener('visibilitychange', function(){ if(!document.hidden && Tfs.id) tfsAcquire(); });
 
 /* ---------- Kit's little animations ---------- */
-var KIT_DUR = {calc:3600, blink:900, wink:1300, ears:1300, wiggle:1200, hop:1400, tilt:1800, clap:1600, sneeze:2000, yawn:2600, bow:2400, jingle:1500, toot:1700};
+var KIT_DUR = {chill:3900, calc:3600, blink:900, wink:1300, ears:1300, wiggle:1200, hop:1400, tilt:1800, clap:1600, sneeze:2000, yawn:2600, bow:2400, jingle:1500, toot:1700};
 var KIT_BASE = ['blink','wink','ears','wiggle','hop','tilt','clap','sneeze','yawn'];
 var KIT_SKIN = {
   /* theme signature moves: [action, effect] */
@@ -6640,6 +6851,7 @@ var KIT_HOL = {
 };
 function kitPickAction(){
   if(bedMode() === 'drowsy' && Math.random() < 0.7) return ['yawn',''];
+  try{ if(ftActive() && Math.random() < 0.55) return ['chill','']; }catch(e){}
   var acc = (typeof kitAcc === 'function') ? kitAcc() : '';
   var r = Math.random();
   if(acc === 'party' && r < 0.7) return ['toot','confetti'];
