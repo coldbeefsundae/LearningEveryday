@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.7', errs = [], shown = false;
+  var V = '26.11.8', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -327,6 +327,36 @@ h1,h2,h3,p{margin:0}
 .tbadge.nw{left:-4px;top:-6px;background:#ff3d71;font-size:12px;padding:3px 9px;animation:bob 1.2s ease-in-out infinite}
 .tbadge.ct{right:-3px;bottom:-5px;background:#2a2540;font-size:12px;padding:3px 9px}
 @keyframes bob{50%{transform:translateY(-3px) scale(1.06)}}
+
+/* ---------- holo foil (live light: tilt, swipe, gentle drift) ---------- */
+.hlsc{--mx:.5;--my:.5}
+.hlx{position:absolute;inset:0;pointer-events:none;z-index:2}
+.tcg.hlf .tcg-in{z-index:1}
+.hlx-fg{z-index:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.95) 47%,rgba(255,250,220,.5) 53%,transparent 66%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);opacity:var(--fgo,.9)}
+.hlx-holo{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.55) 0 1.2px,transparent 1.2px 4px),repeating-linear-gradient(110deg,#ff7773 0%,#ffed5f 7%,#a8ff5f 14%,#83fff7 21%,#7894ff 28%,#d875ff 35%,#ff7773 42%);background-size:100% 100%,400% 400%;background-position:0 0,calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:var(--ho,.42)}
+.hlx-holo.hole{-webkit-mask-image:radial-gradient(circle at 50% 44.3%,transparent 0 27cqw,#000 31cqw);mask-image:radial-gradient(circle at 50% 44.3%,transparent 0 27cqw,#000 31cqw)}
+.hlx-glare{background:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),rgba(255,255,255,.85) 0,rgba(255,255,255,.25) 22%,transparent 52%);mix-blend-mode:overlay;opacity:var(--go,.6)}
+.hlx-spark{mix-blend-mode:color-dodge;-webkit-mask-image:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 42%);mask-image:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 42%)}
+.hlx-spark i{position:absolute;width:3.2cqw;height:3.2cqw;margin:-1.6cqw;background:radial-gradient(circle,#fff 0 12%,transparent 13%),linear-gradient(0deg,transparent 46%,#fff 50%,transparent 54%),linear-gradient(90deg,transparent 46%,#fff 50%,transparent 54%);animation:hltw 1.8s ease-in-out infinite}
+@keyframes hltw{0%,100%{transform:scale(.35);opacity:.4}50%{transform:scale(1);opacity:1}}
+.hb-matte .tcg.back{background:linear-gradient(135deg,#e9dcb0,#c9a256 55%,#8e6a2a)}
+.hb-foil{--go:.45}
+.hb-holo{--ho:.42;--go:.6}
+.hb-ssr{--ho:.62;--go:.75}
+.hb-ssr .tcg.back,.hf-ssr .tcg.r-SSR{background:linear-gradient(115deg,#fff3c0,#ffb3d9 20%,#b6f0ff 40%,#fff3c0 55%,#c9b6ff 75%,#ffe08a);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);animation:none}
+.hf-foil{--fgo:.8;--go:.3}
+.hf-holo{--fgo:.8;--ho:.2;--go:.45}
+.hf-ssr{--fgo:.8;--ho:.28;--go:.55}
+.hf-holo .tcg-shine,.hf-ssr .tcg-shine{display:none}
+.flip.on.fx-SSR .flip-front .hf-ssr .tcg.r-SSR{animation:ssrpop 1.4s ease-out}
+/* card detail: swipe or tap to flip */
+.dflip{position:relative;width:100%;aspect-ratio:5/7;perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.dflip-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--fa,0deg) + var(--ry,0deg)))}
+.dflip .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.dflip .dback{transform:rotateY(180deg);pointer-events:none}
+.dflip.bk .dback{pointer-events:auto}.dflip.bk .dfront{pointer-events:none}
+.dfliphint{text-align:center;font-size:13px;font-weight:800;opacity:.6;margin-top:10px}
+@media (prefers-reduced-motion:reduce){.hlx-spark i{animation:none}}
 
 /* ---------- pack opening stage ---------- */
 .stage{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 25%,#4a3bb0,#171340 70%);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px;overflow:auto}
@@ -3438,12 +3468,14 @@ function rollPack(){
 function faceHTML(c, o){
   o = o || {};
   var rg = REGIONS[c.r];
-  var h = '<div class="tcgbox"><div class="tcg r-'+c.k+' reg-'+c.r+'"><div class="tcg-in">';
+  var ht = o.holo ? hlTier(c.k) : '', hf = ht && ht !== 'matte';
+  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">';
   var u = imgURL(c.id);
   h += '<div class="tcg-top"><div><div class="tcg-name" data-say="name:'+c.id+'">'+esc(c.n)+'</div>'+(c.nat ? '<div class="tcg-nat" data-say="nat:'+c.id+'">'+esc(c.nat)+'</div>' : '')+'</div><div class="tcg-rar">'+c.k+'</div></div>';
   h += '<div class="tcg-art'+(u?' has-img':'')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')+'</div>';
   h += '<div class="tcg-tag" data-say="tag:'+c.id+'">'+esc(c.s)+'</div>';
   h += '<div class="tcg-foot"><span data-say="place:'+c.id+'">'+rg.flag+' '+TYPE_LABEL[c.t]+'</span><span class="tcg-year" data-say="year:'+c.id+'">'+esc(c.y)+'</span></div>';
+  if(hf) h += hlLayers(ht, false);
   h += '</div><i class="tcg-shine"></i></div>';
   if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
   if(o.count > 1) h += '<span class="tbadge ct">×'+o.count+'</span>';
@@ -3532,8 +3564,92 @@ function backArtSVG(){
   h += pkStar(100, 260, 4.4, g);
   return h + '</svg>';
 }
-function backHTML(){
-  return '<div class="tcgbox"><div class="tcg back"><div class="tcg-in">'+backArtSVG()+'</div></div></div>';
+function hlTier(k){ return (k === 'SSR' || k === 'SSSR') ? 'ssr' : k === 'S' ? 'holo' : k === 'A' ? 'foil' : 'matte'; }
+function hlSparks(){
+  var h = '', x = 7; function r(){ x = (x*1103515245+12345)&0x7fffffff; return x/0x7fffffff; }
+  for(var i = 0; i < 34; i++) h += '<i style="left:'+(4+r()*92).toFixed(1)+'%;top:'+(4+r()*92).toFixed(1)+'%;animation-delay:-'+(r()*1.8).toFixed(2)+'s"></i>';
+  return h;
+}
+function hlLayers(t, isBack){
+  if(t === 'matte') return '';
+  var h = '';
+  if(t === 'holo' || t === 'ssr') h += '<div class="hlx hlx-holo'+(isBack ? ' hole' : '')+'"></div>';
+  if(t === 'ssr') h += '<div class="hlx hlx-spark">'+hlSparks()+'</div>';
+  return h + '<div class="hlx hlx-glare"></div>';
+}
+/* backHTML(k): with a rarity, the back gets live foil (C/B matte, A foil, S holo, SSR prismatic). Without, the plain back. */
+function backHTML(k){
+  if(!k) return '<div class="tcgbox"><div class="tcg back"><div class="tcg-in">'+backArtSVG()+'</div></div></div>';
+  var t = hlTier(k);
+  return '<div class="tcgbox hb-'+t+'"><div class="tcg back hlf">'+(t !== 'matte' ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+backArtSVG()+hlLayers(t, true)+'</div></div></div>';
+}
+/* ---------- holo light engine: one loop, runs only while a .hlsc is on screen ---------- */
+var HL = {x:.5, y:.5, tx:.5, ty:.5, tilt:0, base:null, run:false, ptr:null, t0:0};
+var HL_RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function hlClamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+window.addEventListener('deviceorientation', function(e){
+  if(e.beta == null || e.gamma == null) return;
+  var ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0, lr = e.gamma, fb = e.beta;
+  if(ang == 90){ lr = e.beta; fb = -e.gamma; } else if(ang == -90 || ang == 270){ lr = -e.beta; fb = e.gamma; } else if(ang == 180){ lr = -e.gamma; fb = -e.beta; }
+  if(!HL.base) HL.base = {lr:lr, fb:fb};
+  HL.base.lr += (lr - HL.base.lr)*.004; HL.base.fb += (fb - HL.base.fb)*.004;
+  HL.tx = hlClamp(.5 + (lr - HL.base.lr)/36); HL.ty = hlClamp(.5 + (fb - HL.base.fb)/36);
+  HL.tilt = Date.now();
+});
+var HLF = {el:null, ang:0, target:0, drag:null, just:false};
+function hlLoop(now){
+  var sc = document.querySelectorAll('.hlsc');
+  if(!sc.length){ HL.run = false; HLF.el = null; return; }
+  if(!HL.t0) HL.t0 = now;
+  var tx = .5, ty = .5, live = Date.now() - HL.tilt < 1500;
+  if(HL.ptr){ tx = HL.ptr.x; ty = HL.ptr.y; }
+  else if(live){ tx = HL.tx; ty = HL.ty; }
+  else if(!HL_RM){ var t = (now - HL.t0)/1000; tx = .5 + .32*Math.sin(t*.55); ty = .5 + .26*Math.sin(t*.37 + 1); }
+  HL.x += (tx - HL.x)*.14; HL.y += (ty - HL.y)*.14;
+  for(var i = 0; i < sc.length; i++){
+    var st = sc[i].style, rot = +(sc[i].getAttribute('data-rot') || 0) * (live ? .4 : 1);
+    st.setProperty('--mx', HL.x.toFixed(4)); st.setProperty('--my', HL.y.toFixed(4));
+    if(rot){ st.setProperty('--ry', ((HL.x - .5)*rot).toFixed(2)+'deg'); st.setProperty('--rx', ((.5 - HL.y)*rot).toFixed(2)+'deg'); }
+  }
+  if(HLF.el){
+    if(!document.body.contains(HLF.el)) HLF.el = null;
+    else {
+      if(!HLF.drag || !HLF.drag.on){ HLF.ang += (HLF.target - HLF.ang)*.16; if(Math.abs(HLF.target - HLF.ang) < .2) HLF.ang = HLF.target; }
+      HLF.el.style.setProperty('--fa', HLF.ang.toFixed(2)+'deg');
+      var n = ((HLF.ang % 360) + 360) % 360; HLF.el.classList.toggle('bk', n > 90 && n < 270);
+    }
+  }
+  requestAnimationFrame(hlLoop);
+}
+function hlStart(){ if(!HL.run){ HL.run = true; HL.t0 = 0; requestAnimationFrame(hlLoop); } }
+function hlFlipBind(el){
+  HLF.el = el; HLF.ang = 0; HLF.target = 0; HLF.drag = null; HLF.just = false;
+  el.addEventListener('pointerdown', function(e){ HLF.drag = {x:e.clientX, y:e.clientY, a:HLF.ang, on:false, id:e.pointerId, w:el.offsetWidth || 250}; });
+  el.addEventListener('pointermove', function(e){
+    var d = HLF.drag; if(!d) return;
+    var dx = e.clientX - d.x, dy = e.clientY - d.y;
+    if(!d.on){
+      if(Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)*1.2){ d.on = true; try{ el.setPointerCapture(d.id); }catch(_){} }
+      else if(Math.abs(dy) > 14){ HLF.drag = null; }
+      return;
+    }
+    HLF.ang = d.a + dx/d.w*180; HLF.target = HLF.ang;
+    HL.ptr = {x:hlClamp(.5 + dx/d.w), y:HL.y};
+  });
+  function end(){
+    var d = HLF.drag; HLF.drag = null; HL.ptr = null;
+    if(!d || !d.on) return;
+    HLF.just = true; setTimeout(function(){ HLF.just = false; }, 350);
+    var moved = HLF.ang - d.a, steps = Math.abs(moved) > 55 ? (moved > 0 ? 1 : -1)*Math.max(1, Math.round(Math.abs(moved)/180)) : 0;
+    HLF.target = d.a + steps*180;
+    if(steps){ try{ Sound.flip(); }catch(_){} }
+  }
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  el.addEventListener('click', function(e){
+    if(HLF.just){ e.stopPropagation(); e.preventDefault(); return; }
+    if(e.target.closest('[data-say]')) return;
+    HLF.target += 180; try{ Sound.flip(); }catch(_){}
+  });
 }
 
 /* =========================================================
@@ -4673,13 +4789,14 @@ function claimDaily(){
 }
 function drawReveal(){
   var cs = stg.cards, big = cs.length === 1;
-  var h = '<div class="stage-title">'+(stg.kind === 'daily' ? '🌅 Today\'s History Hero!' : '✨ Your new cards!')+'</div><div class="reveal-row">';
+  var h = '<div class="stage-title">'+(stg.kind === 'daily' ? '🌅 Today\'s History Hero!' : '✨ Your new cards!')+'</div><div class="reveal-row hlsc">';
   cs.forEach(function(c,i){
-    var hint = (c.k === 'SSSR' || c.k === 'SSR' || c.k === 'S') ? ' hint-'+c.k : '';
-    h += '<div class="flip'+(big?' big':'')+hint+'" data-i="'+i+'" style="animation-delay:'+(i*.14)+'s"><div class="flip-in"><div class="flip-face flip-back">'+backHTML()+'</div><div class="flip-face flip-front">'+faceHTML(c,{isNew:stg.news[i]})+'</div></div></div>';
+    var hint = c.k === 'SSSR' ? ' hint-SSSR' : '';
+    h += '<div class="flip'+(big?' big':'')+hint+'" data-i="'+i+'" style="animation-delay:'+(i*.14)+'s"><div class="flip-in"><div class="flip-face flip-back">'+backHTML(c.k)+'</div><div class="flip-face flip-front">'+faceHTML(c,{isNew:stg.news[i], holo:true})+'</div></div></div>';
   });
   h += '</div><div class="stage-hint" id="shint">'+(big ? 'Tap the card to flip it!' : 'Tap each card to flip it!')+'</div><div class="stage-actions" id="sact">'+(cs.length > 1 ? '<button class="btn-ghostl" data-act="flipall">Flip all</button>' : '')+'</div>';
   $('stage').innerHTML = h;
+  hlStart();
 }
 function sssrFlash(){
   var d = document.createElement('div'); d.className = 'sssrflash'; document.body.appendChild(d);
@@ -4823,7 +4940,7 @@ function showCardDetail(id, fromParent){
   var lbl = c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:');
   var h = '<span data-closable></span>';
   if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
-  h += '<div class="detail"><div class="dc">'+faceHTML(c,{count:state.cards[id]})+'</div><div class="dt">';
+  h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">↔ Swipe or tap the card to flip it</div></div><div class="dt">';
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
@@ -4835,6 +4952,7 @@ function showCardDetail(id, fromParent){
   h += '</div></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
   openModal(h);
+  if($('dflip')){ hlFlipBind($('dflip')); hlStart(); }
   $('modal').onchange = null;
   $('modal').onclick = function(e){
     if(e.target.closest('[data-pback]')){ stopSpeak(); showParentCards(PCV.scroll); return; }
