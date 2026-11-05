@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.6', errs = [], shown = false;
+  var V = '26.11.7', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3881,7 +3881,7 @@ function checkForUpdate(){
     });
   }).catch(function(){ toast('Could not check right now. Are you online?', 3600); });
 }
-/* ---------- help / how-to guide (for Eleanor and for parents) ---------- */
+/* ---------- help / how-to guide (for kids and for parents) ---------- */
 var HELP_FROM = '';
 function helpSafe(f, d){ try{ return f(); }catch(e){ return d; } }
 function helpData(){
@@ -3944,7 +3944,7 @@ function helpData(){
   var par = [
    {t:'🔐 Getting started', i:[
     {q:'How do I open Parent mode?', a:'Tap 🔒 on the side bar (tablet), or <b>Me → Parent mode</b> (phone). Enter your PIN. The starting PIN is <b>1234</b>. Change it in <b>Backup &amp; PIN</b>. Tap <b>Done</b> or <b>Lock &amp; exit</b> when you finish.'},
-    {q:'What is on the Parent home screen?', a:li(['<b>Today’s assigned quests</b>: switch quests on or off for today, edit them or add new ones.','<b>Points &amp; card packs</b>: add or remove points and packs.','<b>Free break</b>: start Free Time now at no cost.','<b>Rewards to give</b>: what Eleanor has asked for.','<b>Settings</b>: nine tiles (below).','<b>Day tools</b>: streak calendar and reset today’s board.'])},
+    {q:'What is on the Parent home screen?', a:li(['<b>Today’s assigned quests</b>: switch quests on or off for today, edit them or add new ones.','<b>Points &amp; card packs</b>: add or remove points and packs.','<b>Free break</b>: start Free Time now at no cost.','<b>Rewards to give</b>: what your child has asked for.','<b>Settings</b>: nine tiles (below).','<b>Day tools</b>: streak calendar and reset today’s board.'])},
     {q:'How does saving work?', a:'Each Settings tile opens its own screen. Tap <b>💾 Save</b> or <b>← Parent</b> to save. Saving a screen only changes the settings on that screen.'},
     {q:'How do I add or edit a quest?', a:'On the Parent home, tap <b>✏️ Edit</b> on a quest, or <b>➕ Add new quest</b>. Use the switch to choose which quests are assigned today.'}
    ]},
@@ -3961,7 +3961,7 @@ function helpData(){
     {q:'What are the Our Family cards?', a:'Private cards that come from your family pack file. They never go online. See <b>Family pack</b> below.'}
    ]},
    {t:'⏱️ Screen time', i:[
-    {q:'How does screen time work?', a:li(['Screen time rewards cost 1 point per minute on weekdays.','Weeknight limit: <b>'+e.screenCap+' min</b> a day at full price.',(cur ? 'Screen time ends at <b>'+cur+'</b>.' : 'No curfew is set.'),'Eleanor taps <b>Start</b> to run a timer. You can stop it from the Parent home.'])+'Edit these in <b>Time &amp; limits</b>.'},
+    {q:'How does screen time work?', a:li(['Screen time rewards cost 1 point per minute on weekdays.','Weeknight limit: <b>'+e.screenCap+' min</b> a day at full price.',(cur ? 'Screen time ends at <b>'+cur+'</b>.' : 'No curfew is set.'),'Your child taps <b>Start</b> to run a timer. You can stop it from the Parent home.'])+'Edit these in <b>Time &amp; limits</b>.'},
     {q:'What are weekend prices?', a: wc.on ? li(['On <b>'+wkDays.join(' and ')+'</b>, <b>'+wc.pts+' points for '+wc.per+' minutes</b>, up to <b>'+fmtMinutes(wc.cap)+'</b> bought a day.','A 1-hour reward appears on weekend days.','Edit in <b>Time &amp; limits → Weekend screen prices</b>.']) : 'Weekend prices are off. Turn them on in <b>Time &amp; limits → Weekend screen prices</b>.'},
     {q:'What is Free Time?', a: fc.on ? 'On <b>'+ftDays.join(' and ')+'</b>, <b>'+fmt12(fc.start)+' to '+fmt12(fc.end)+'</b>, she gets <b>'+fmtMinutes(fc.mins)+' of free screen time</b> (no points, and it does not use her daily limit). It is a soft limit only. The home screen reminds her to shower, tidy her room and put away her hoshuko things. Kit also does a headphones animation. Edit the times, minutes and reminders in <b>Time &amp; limits</b>.' : 'Free Time is off. Turn it on in <b>Time &amp; limits</b>.'},
     {q:'What is a Free break?', a:'On the Parent home, tap 30 min, 1 hour, 1.5 hours or 2 hours to start Free Time right now. It costs no points and does not use her daily limit. You get a warning if it runs past the curfew.'}
@@ -3973,7 +3973,7 @@ function helpData(){
    ]},
    {t:'📚 Learning and news', i:[
     {q:'What can I turn on or off?', a:'In <b>Learning &amp; news</b>: the daily quiz, Today’s Bites, Kanji of the Day, points for each, and the news pack.'},
-    {q:'How can I see a card Eleanor has not found yet?', a:'Open <b>Card viewer</b> on the Parent home. You can search, filter by found or not found, type (Person, Event, Legend, Place), rarity and region, then tap any card to see it full size. It is read only and never adds the card to her collection or clears her New badges.'},
+    {q:'How can I see a card your child has not found yet?', a:'Open <b>Card viewer</b> on the Parent home. You can search, filter by found or not found, type (Person, Event, Legend, Place), rarity and region, then tap any card to see it full size. It is read only and never adds the card to her collection or clears her New badges.'},
     {q:'Do news bites update by themselves?', a:'No. Nothing is fetched from the internet. Fresh bites only appear when you paste a news pack in <b>Learning &amp; news</b>. You can read the whole pool or remove a bite there too.'},
     {q:'How do I add news bites?', a:'Paste a news pack (text starting with <code>SQNEWS:</code>) into <b>Learning &amp; news → News pack</b>. Each day she sees one world bite from a fresh pool. Re-importing the same pack adds nothing twice.'},
     {q:'How does the kanji section work?', a:'She gets one kanji a day, then can use flash cards (Mix, Recent pages, Tricky, or pick her own), writing practice, the Kanji Book by page, and word games. The Back button steps back one screen.'}
@@ -3993,11 +3993,11 @@ function helpData(){
   return {kid:kid, par:par};
 }
 function helpHTML(tab){
-  var D = helpData(), secs = D[tab === 'par' ? 'par' : 'kid'], nm = helpSafe(displayName, '') || 'Eleanor';
+  var D = helpData(), secs = D[tab === 'par' ? 'par' : 'kid'];
   var h = '<div class="hlp">';
   if(HELP_FROM === 'parent') h += '<div class="row" style="margin-bottom:6px"><button class="btn small" data-help="parent">← Parent</button></div>';
   h += '<h2>❓ How StarQuest works</h2>';
-  h += '<div class="hlptabs"><button class="segbtn'+(tab === 'par' ? '' : ' on')+'" data-help="kid">🦊 For '+esc(nm)+'</button><button class="segbtn'+(tab === 'par' ? ' on' : '')+'" data-help="par">👪 For parents</button></div>';
+  h += '<div class="hlptabs"><button class="segbtn'+(tab === 'par' ? '' : ' on')+'" data-help="kid">🦊 For kids</button><button class="segbtn'+(tab === 'par' ? ' on' : '')+'" data-help="par">👪 For parents</button></div>';
   h += '<input type="search" class="hlpsearch" id="hlpSearch" placeholder="🔎 Search (for example: screen, packs, kanji)" autocomplete="off">';
   secs.forEach(function(s){
     h += '<div class="hsec"><div class="hlph">'+s.t+'</div>';
@@ -4822,7 +4822,7 @@ function showCardDetail(id, fromParent){
   if(!fromParent && state.newCards[id]){ delete state.newCards[id]; save(); if(tab === 'cards') renderCards(); }
   var lbl = c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:');
   var h = '<span data-closable></span>';
-  if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Eleanor has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Eleanor has not found this card yet')+'. Looking here changes nothing.</div>'; }
+  if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
   h += '<div class="detail"><div class="dc">'+faceHTML(c,{count:state.cards[id]})+'</div><div class="dt">';
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
@@ -4865,7 +4865,7 @@ function pcvGridHTML(){
   return list.length ? h : '<div class="empty" style="grid-column:1/-1">No cards match.</div>';
 }
 function showParentCards(scrollTop){
-  var h = '<h2>🔎 Card viewer</h2><div class="hint" style="margin-bottom:8px">Parents only. Tap any card to see it full size, even if Eleanor has not found it. Looking at a card does not add it to her collection.</div>';
+  var h = '<h2>🔎 Card viewer</h2><div class="hint" style="margin-bottom:8px">Parents only. Tap any card to see it full size, even if your child has not found it. Looking at a card does not add it to her collection.</div>';
   h += '<input id="pcvq" type="search" placeholder="Search by name or place" value="'+esc(PCV.q)+'" style="width:100%;margin-bottom:8px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;font-size:16px">';
   h += '<div class="pcvfilters">';
   h += '<div class="seg pcvrow"><span class="seglabel">Show</span>';
