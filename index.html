@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.5', errs = [], shown = false;
+  var V = '26.11.6', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -319,8 +319,8 @@ h1,h2,h3,p{margin:0}
 .tcg.locked .tcg-name{color:#9a98b4;letter-spacing:.1em}
 .tcg.locked .tcg-rar{filter:grayscale(1) opacity(.5)}
 .tcg.locked{box-shadow:none;opacity:.9}
-.tcg.back .tcg-in{background:radial-gradient(circle at 50% 35%,#8a7bff,#2b2377 72%);color:#fff;align-items:center;justify-content:center;text-align:center;gap:.6em}
-.tcg.back{--fr:linear-gradient(135deg,#d9d4ff,#8c7cf0)}
+.tcg.back .tcg-in{background:#10163f;color:#fff;padding:0;position:relative}
+.tcg.back{--fr:linear-gradient(135deg,#fff0b0,#e8b43c 55%,#a9731a)}
 .back-star{font-size:4.4em;filter:drop-shadow(0 0 .3em rgba(255,226,120,.9))}
 .back-txt{font-weight:900;font-size:.8em;letter-spacing:.14em;line-height:1.4;opacity:.92}
 .tbadge{position:absolute;z-index:3;font-weight:900;font-size:.9em;border-radius:99px;padding:.15em .6em;color:#fff;box-shadow:0 .1em .3em rgba(0,0,0,.35)}
@@ -334,9 +334,10 @@ h1,h2,h3,p{margin:0}
 .stage::before{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 30%,#fff8,transparent),radial-gradient(2px 2px at 70% 20%,#fff8,transparent),radial-gradient(3px 3px at 85% 70%,#fff6,transparent),radial-gradient(2px 2px at 35% 80%,#fff7,transparent),radial-gradient(2px 2px at 55% 55%,#fff5,transparent);pointer-events:none}
 .stage-title{font-size:clamp(24px,3.4vw,36px);font-weight:900;text-align:center;text-shadow:0 4px 18px rgba(0,0,0,.4);position:relative}
 .stage-hint{font-weight:800;opacity:.85;text-align:center;position:relative;font-size:17px}
-.packart{position:relative;width:min(48vw,230px);aspect-ratio:5/7;border-radius:22px;background:linear-gradient(150deg,#ffd35a,#ff8d3a 45%,#e8467c);box-shadow:0 20px 50px -10px rgba(0,0,0,.6),inset 0 0 0 5px rgba(255,255,255,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;animation:floaty 2.6s ease-in-out infinite;overflow:hidden;color:#fff}
-.packart::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.14) 0 14px,transparent 14px 28px)}
-.packart::after{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);animation:packshine 2.6s ease-in-out infinite}
+.packart{position:relative;width:min(48vw,230px);aspect-ratio:5/7;border-radius:22px;background:#10163f;box-shadow:0 20px 50px -10px rgba(0,0,0,.65),0 0 0 1px rgba(255,226,140,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;animation:floaty 2.6s ease-in-out infinite;overflow:hidden;color:#fff}
+.packart::before{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2px rgba(255,255,255,.28),inset 0 2px 6px rgba(255,255,255,.18);z-index:2;pointer-events:none}
+.pkart-svg{position:absolute;inset:0;width:100%;height:100%;display:block;font-family:inherit}
+.packart::after{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;z-index:3;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.34),transparent);animation:packshine 2.6s ease-in-out infinite}
 @keyframes packshine{60%,100%{left:130%}}
 @keyframes floaty{50%{transform:translateY(-14px) rotate(1.5deg)}}
 .packart .pl{font-size:76px;position:relative;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
@@ -453,7 +454,7 @@ h1,h2,h3,p{margin:0}
 @media (max-width:640px){.qgrid{grid-template-columns:1fr}.pad{grid-template-columns:repeat(3,78px)}.disc{flex-direction:column;text-align:center}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 .flip{position:relative}
-.packart.packmini{width:86px;animation:none;border-radius:14px;flex:none;box-shadow:0 10px 24px -6px rgba(0,0,0,.5),inset 0 0 0 3px rgba(255,255,255,.55);cursor:default}
+.packart.packmini{width:86px;animation:none;border-radius:14px;flex:none;box-shadow:0 10px 24px -6px rgba(0,0,0,.5),0 0 0 1px rgba(255,226,140,.35);cursor:default}
 .packart.packmini::after{display:none}
 .packmini .pl{font-size:38px}
 
@@ -3456,8 +3457,83 @@ function lockedHTML(c){
     '<div class="tcg-foot"><span>#'+String(c.no).padStart(3,'0')+'</span><span>Not found yet</span></div>'+
     '</div></div></div>';
 }
+/* ---------- pack and card-back art (night sky design) ---------- */
+var PK_UID = 0;
+var PK_KIT = '<g><g><path d="M24 50L20 10l34 20z" fill="#ff8a3d"/><path d="M29 42L27 20l16 10z" fill="#ffd2ad"/></g><g><path d="M96 50l4-40-34 20z" fill="#ff8a3d"/><path d="M91 42l2-22-16 10z" fill="#ffd2ad"/></g><path d="M60 28c26 0 40 16 44 34-6-2-10 0-12 4 4 2 6 6 6 10-6-2-10 0-12 4-6 12-16 18-26 18s-20-6-26-18c-2-4-6-6-12-4 0-4 2-8 6-10-2-4-6-6-12-4 4-18 18-34 44-34z" fill="#ff8a3d"/><path d="M60 63c12 0 26 8 24 18-6 12-14 17-24 17s-18-5-24-17c-2-10 12-18 24-18z" fill="#fff6ea"/><ellipse cx="60" cy="72" rx="5.4" ry="3.8" fill="#3b2a4a"/><circle cx="36" cy="72" r="5" fill="#ff9fb0" opacity=".55"/><circle cx="84" cy="72" r="5" fill="#ff9fb0" opacity=".55"/><g><g><circle cx="46" cy="60" r="4.6" fill="#3b2a4a"/><circle cx="47.5" cy="58.3" r="1.6" fill="#fff"/></g><g><circle cx="74" cy="60" r="4.6" fill="#3b2a4a"/><circle cx="75.5" cy="58.3" r="1.6" fill="#fff"/></g></g><g><path d="M52 80q8 8 16 0" fill="none" stroke="#3b2a4a" stroke-width="3" stroke-linecap="round"/></g><path d="M32 100q28 12 56 0l5 12q-33 14-66 0z" fill="#6c5ce7"/><path d="M80 106l8 14-9 2-5-12z" fill="#5648c9"/></g>';
+function pkStar(cx, cy, R, fill, op){
+  var pts = [];
+  for(var i = 0; i < 10; i++){ var r = i % 2 ? R * .45 : R, a = -Math.PI/2 + i*Math.PI/5; pts.push((cx + r*Math.cos(a)).toFixed(1)+','+(cy + r*Math.sin(a)).toFixed(1)); }
+  return '<polygon points="'+pts.join(' ')+'" fill="'+fill+'"'+(op ? ' opacity="'+op+'"' : '')+'/>';
+}
+function pkDots(n, w, y0, y1, seed){
+  var h = '', x = seed;
+  function rnd(){ x = (x * 1103515245 + 12345) & 0x7fffffff; return x / 0x7fffffff; }
+  for(var i = 0; i < n; i++){ var px = 8 + rnd()*(w-16), py = y0 + rnd()*(y1-y0), r = .5 + rnd()*1.1; h += '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+r.toFixed(2)+'" fill="#fff" opacity="'+(.35 + rnd()*.6).toFixed(2)+'"/>'; }
+  return h;
+}
+function pkRays(cx, cy, n, len, op){
+  var h = '';
+  for(var i = 0; i < n; i++){ var a0 = i*2*Math.PI/n, a1 = a0 + Math.PI/n*.45; h += '<polygon points="'+cx+','+cy+' '+(cx+len*Math.cos(a0)).toFixed(1)+','+(cy+len*Math.sin(a0)).toFixed(1)+' '+(cx+len*Math.cos(a1)).toFixed(1)+','+(cy+len*Math.sin(a1)).toFixed(1)+'" fill="#ffe28a" opacity="'+op+'"/>'; }
+  return h;
+}
+function pkDefs(u){
+  return '<defs>'+
+    '<linearGradient id="'+u+'bg" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#10163f"/><stop offset=".55" stop-color="#2a2a86"/><stop offset="1" stop-color="#4b2a8f"/></linearGradient>'+
+    '<radialGradient id="'+u+'gl" cx=".5" cy=".48" r=".62"><stop offset="0" stop-color="#7a6bff" stop-opacity=".95"/><stop offset=".55" stop-color="#3a2fa0" stop-opacity=".55"/><stop offset="1" stop-color="#10163f" stop-opacity="0"/></radialGradient>'+
+    '<linearGradient id="'+u+'gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c0"/><stop offset=".5" stop-color="#f0bf45"/><stop offset="1" stop-color="#b87a1c"/></linearGradient>'+
+    '<linearGradient id="'+u+'gv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c0"/><stop offset=".55" stop-color="#f0bf45"/><stop offset="1" stop-color="#c28a24"/></linearGradient>'+
+    '<radialGradient id="'+u+'pl" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#ffe8c2"/><stop offset="1" stop-color="#ffb36b"/></radialGradient>'+
+    '<filter id="'+u+'bl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2"/></filter>'+
+    '<filter id="'+u+'sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2.4" stdDeviation="2.2" flood-color="#6e3210" flood-opacity=".5"/></filter>'+
+    '<filter id="'+u+'ts" x="-10%" y="-30%" width="120%" height="180%"><feDropShadow dx="0" dy="1.2" stdDeviation=".9" flood-color="#000" flood-opacity=".6"/></filter>'+
+    '<pattern id="'+u+'cr" width="5" height="14" patternUnits="userSpaceOnUse"><rect width="5" height="14" fill="#0c1033"/><rect x="1" width="1.2" height="14" fill="#fff" opacity=".13"/><rect x="3" width="1.2" height="14" fill="#000" opacity=".4"/></pattern>'+
+  '</defs>';
+}
+function packArtSVG(){
+  var u = 'pk'+(PK_UID++), cx = 115, cy = 156, g = 'url(#'+u+'gd)';
+  var h = '<svg class="pkart-svg" viewBox="0 0 230 322" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+pkDefs(u);
+  h += '<rect width="230" height="322" fill="url(#'+u+'bg)"/><rect width="230" height="322" fill="url(#'+u+'gl)"/>';
+  h += pkRays(cx, cy, 36, 330, .09) + pkDots(46, 230, 22, 300, 11);
+  var top = [[26,86],[56,64],[92,74],[130,56],[168,70],[200,88]], bot = [[24,236],[60,254],[96,244],[132,256],[170,242],[204,230]];
+  [top, bot].forEach(function(P){
+    var d = ''; P.forEach(function(q, k){ d += (k ? 'L' : 'M')+q[0]+' '+q[1]; });
+    h += '<path d="'+d+'" fill="none" stroke="#ffe28a" stroke-opacity=".5" stroke-width=".9"/>';
+    P.forEach(function(q){ h += pkStar(q[0], q[1], 4.6, g); });
+  });
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="76" fill="none" stroke="#ffd966" stroke-width="5" opacity=".8" filter="url(#'+u+'bl)"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="73" fill="url(#'+u+'pl)"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="73" fill="none" stroke="'+g+'" stroke-width="5"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="70" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".8"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="75.6" fill="none" stroke="#7a4d0b" stroke-opacity=".55" stroke-width=".7"/>';
+  h += '<svg x="'+(cx-60)+'" y="'+(cy-66)+'" width="120" height="124" viewBox="0 0 120 124" filter="url(#'+u+'sh)">'+PK_KIT+'</svg>';
+  h += '<text x="115" y="41" text-anchor="middle" font-size="25" font-weight="900" letter-spacing="3.2" fill="url(#'+u+'gv)" stroke="#8a5a0e" stroke-width=".5" filter="url(#'+u+'ts)">STARQUEST</text>';
+  h += '<text x="115" y="278" text-anchor="middle" font-size="15.5" font-weight="900" letter-spacing="2.4" fill="url(#'+u+'gv)" stroke="#8a5a0e" stroke-width=".4" filter="url(#'+u+'ts)">HISTORY HEROES</text>';
+  h += '<text x="115" y="297" text-anchor="middle" font-size="8.4" font-weight="800" letter-spacing="1.8" fill="#d6d9ff" opacity=".85">A PACK OF '+CARDS_PER_PACK+' CARDS</text>';
+  h += '<rect width="230" height="13" fill="url(#'+u+'cr)"/><rect y="309" width="230" height="13" fill="url(#'+u+'cr)"/>';
+  h += '<rect y="12" width="230" height="1.2" fill="#fff" opacity=".18"/><rect y="309" width="230" height="1.2" fill="#fff" opacity=".18"/>';
+  return h + '</svg>';
+}
+function backArtSVG(){
+  var u = 'pk'+(PK_UID++), cx = 100, cy = 124, g = 'url(#'+u+'gd)';
+  var h = '<svg class="pkart-svg" viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+pkDefs(u);
+  h += '<rect width="200" height="280" fill="url(#'+u+'bg)"/><rect width="200" height="280" fill="url(#'+u+'gl)"/>';
+  h += pkRays(cx, cy, 30, 300, .09) + pkDots(34, 200, 10, 270, 23);
+  var top = [[22,52],[50,34],[84,44],[116,30],[150,42],[178,56]];
+  var d = ''; top.forEach(function(q, k){ d += (k ? 'L' : 'M')+q[0]+' '+q[1]; });
+  h += '<path d="'+d+'" fill="none" stroke="#ffe28a" stroke-opacity=".5" stroke-width=".9"/>';
+  top.forEach(function(q){ h += pkStar(q[0], q[1], 4.2, g); });
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="66" fill="none" stroke="#ffd966" stroke-width="5" opacity=".75" filter="url(#'+u+'bl)"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="63" fill="url(#'+u+'pl)"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="63" fill="none" stroke="'+g+'" stroke-width="4.5"/>';
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="60" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".7"/>';
+  h += '<svg x="'+(cx-52)+'" y="'+(cy-57)+'" width="104" height="107.5" viewBox="0 0 120 124" filter="url(#'+u+'sh)">'+PK_KIT+'</svg>';
+  h += '<text x="100" y="222" text-anchor="middle" font-size="19" font-weight="900" letter-spacing="2.6" fill="url(#'+u+'gv)" stroke="#8a5a0e" stroke-width=".4" filter="url(#'+u+'ts)">STARQUEST</text>';
+  h += '<text x="100" y="242" text-anchor="middle" font-size="10.5" font-weight="900" letter-spacing="2" fill="url(#'+u+'gv)" stroke="#8a5a0e" stroke-width=".3">HISTORY HEROES</text>';
+  h += pkStar(100, 260, 4.4, g);
+  return h + '</svg>';
+}
 function backHTML(){
-  return '<div class="tcgbox"><div class="tcg back"><div class="tcg-in"><div class="back-star">⭐</div><div class="back-txt">STARQUEST<br>HISTORY<br>HEROES</div></div></div></div>';
+  return '<div class="tcgbox"><div class="tcg back"><div class="tcg-in">'+backArtSVG()+'</div></div></div>';
 }
 
 /* =========================================================
@@ -3739,7 +3815,7 @@ function renderCards(){
   var left = Math.max(1, PITY_LIMIT - state.pity);
   var h = '<div class="chead">';
   h += '<div class="panel"><div class="qlabel">My Collection</div><h2 style="font-size:26px;font-weight:900;margin-top:4px">History Heroes</h2><div class="bigprog"><i style="width:'+pct+'%"></i></div><b style="font-size:18px">'+owned+' / '+total+'</b> <span class="hint">cards found ('+pct+'%)</span><div class="rarchips">'+rc+'</div></div>';
-  h += '<div class="panel packpanel"><div class="packart packmini"><div class="pl">⭐</div></div><div><h3>'+state.packs+' Card Pack'+(state.packs===1?'':'s')+'</h3><p>Each pack has '+CARDS_PER_PACK+' history cards. Get packs by finishing all your quests and by solving the Bonus Challenge!</p><div class="links"><button class="btn-light" data-act="openpack"'+(state.packs<1?' disabled':'')+'>🎴 Open a pack</button><button class="linkbtn" data-act="rates">Pull rates</button></div><p style="margin-top:8px;font-size:12px">'+(packCap()>0 ? (packsLeftToday()>0 ? '📅 Packs left to open today: <b>'+packsLeftToday()+'</b> of '+packCap() : '🌙 Done for today! Saved packs open tomorrow.') : '')+'</p><p style="margin-top:4px;font-size:12px">Lucky guarantee: an S or SSR card within '+left+' pack'+(left===1?'':'s')+'.</p></div></div>';
+  h += '<div class="panel packpanel"><div class="packart packmini">'+packArtSVG()+'</div><div><h3>'+state.packs+' Card Pack'+(state.packs===1?'':'s')+'</h3><p>Each pack has '+CARDS_PER_PACK+' history cards. Get packs by finishing all your quests and by solving the Bonus Challenge!</p><div class="links"><button class="btn-light" data-act="openpack"'+(state.packs<1?' disabled':'')+'>🎴 Open a pack</button><button class="linkbtn" data-act="rates">Pull rates</button></div><p style="margin-top:8px;font-size:12px">'+(packCap()>0 ? (packsLeftToday()>0 ? '📅 Packs left to open today: <b>'+packsLeftToday()+'</b> of '+packCap() : '🌙 Done for today! Saved packs open tomorrow.') : '')+'</p><p style="margin-top:4px;font-size:12px">Lucky guarantee: an S or SSR card within '+left+' pack'+(left===1?'':'s')+'.</p></div></div>';
   h += '</div>';
 
   h += '<div class="row" style="margin:0 0 10px"><button class="btn" data-gl="book">🎴 My character cards</button></div>';
@@ -4566,7 +4642,7 @@ function drawPackStep(){
   stg.torn = false; stg.cards = []; stg.news = []; stg.flipped = 0;
   $('stage').innerHTML =
     '<div class="stage-title">🎴 History Pack</div>'+
-    '<div class="packart" id="packart" data-act="tear"><div class="pl">⭐</div><div class="pt">STARQUEST<br>HISTORY HEROES</div></div>'+
+    '<div class="packart" id="packart" data-act="tear">'+packArtSVG()+'</div>'+
     '<div class="stage-hint">Tap the pack to open it!</div>'+
     '<div class="stage-actions"><button class="btn-ghostl" data-act="sclose">Not now</button></div>';
 }
