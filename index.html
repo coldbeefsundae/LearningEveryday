@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.8', errs = [], shown = false;
+  var V = '26.11.9', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-05';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -337,6 +337,10 @@ h1,h2,h3,p{margin:0}
 .hlx-holo.hole{-webkit-mask-image:radial-gradient(circle at 50% 44.3%,transparent 0 27cqw,#000 31cqw);mask-image:radial-gradient(circle at 50% 44.3%,transparent 0 27cqw,#000 31cqw)}
 .hlx-glare{background:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),rgba(255,255,255,.85) 0,rgba(255,255,255,.25) 22%,transparent 52%);mix-blend-mode:overlay;opacity:var(--go,.6)}
 .hlx-spark{mix-blend-mode:color-dodge;-webkit-mask-image:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 42%);mask-image:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 42%)}
+.tcg.hlf .tcg-in>:not(.hlx){position:relative;z-index:1}
+.hlx-pearl{z-index:0;background:linear-gradient(105deg,#ffb0c8 0%,#ffe08f 14%,#b5f3c1 28%,#9fe3ff 42%,#c7b2ff 56%,#ffb0c8 70%,#ffe08f 84%,#b5f3c1 100%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:multiply;opacity:var(--po,.6);-webkit-mask-image:radial-gradient(ellipse 85% 70% at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,rgba(0,0,0,.45) 50%,rgba(0,0,0,.12) 100%);mask-image:radial-gradient(ellipse 85% 70% at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,rgba(0,0,0,.45) 50%,rgba(0,0,0,.12) 100%)}
+.hlx-spark.pf{z-index:0;mix-blend-mode:normal}
+.hlx-spark.pf i{background:radial-gradient(circle,#ffc23d 0 14%,transparent 15%),linear-gradient(0deg,transparent 46%,#f5a623 50%,transparent 54%),linear-gradient(90deg,transparent 46%,#f5a623 50%,transparent 54%)}
 .hlx-spark i{position:absolute;width:3.2cqw;height:3.2cqw;margin:-1.6cqw;background:radial-gradient(circle,#fff 0 12%,transparent 13%),linear-gradient(0deg,transparent 46%,#fff 50%,transparent 54%),linear-gradient(90deg,transparent 46%,#fff 50%,transparent 54%);animation:hltw 1.8s ease-in-out infinite}
 @keyframes hltw{0%,100%{transform:scale(.35);opacity:.4}50%{transform:scale(1);opacity:1}}
 .hb-matte .tcg.back{background:linear-gradient(135deg,#e9dcb0,#c9a256 55%,#8e6a2a)}
@@ -345,8 +349,8 @@ h1,h2,h3,p{margin:0}
 .hb-ssr{--ho:.62;--go:.75}
 .hb-ssr .tcg.back,.hf-ssr .tcg.r-SSR{background:linear-gradient(115deg,#fff3c0,#ffb3d9 20%,#b6f0ff 40%,#fff3c0 55%,#c9b6ff 75%,#ffe08a);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);animation:none}
 .hf-foil{--fgo:.8;--go:.3}
-.hf-holo{--fgo:.8;--ho:.2;--go:.45}
-.hf-ssr{--fgo:.8;--ho:.28;--go:.55}
+.hf-holo{--fgo:.8;--po:.55;--go:.32}
+.hf-ssr{--fgo:.8;--po:.75;--go:.4}
 .hf-holo .tcg-shine,.hf-ssr .tcg-shine{display:none}
 .flip.on.fx-SSR .flip-front .hf-ssr .tcg.r-SSR{animation:ssrpop 1.4s ease-out}
 /* card detail: swipe or tap to flip */
@@ -3469,7 +3473,7 @@ function faceHTML(c, o){
   o = o || {};
   var rg = REGIONS[c.r];
   var ht = o.holo ? hlTier(c.k) : '', hf = ht && ht !== 'matte';
-  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">';
+  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+(hf ? hlPaper(ht) : '');
   var u = imgURL(c.id);
   h += '<div class="tcg-top"><div><div class="tcg-name" data-say="name:'+c.id+'">'+esc(c.n)+'</div>'+(c.nat ? '<div class="tcg-nat" data-say="nat:'+c.id+'">'+esc(c.nat)+'</div>' : '')+'</div><div class="tcg-rar">'+c.k+'</div></div>';
   h += '<div class="tcg-art'+(u?' has-img':'')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')+'</div>';
@@ -3573,9 +3577,14 @@ function hlSparks(){
 function hlLayers(t, isBack){
   if(t === 'matte') return '';
   var h = '';
-  if(t === 'holo' || t === 'ssr') h += '<div class="hlx hlx-holo'+(isBack ? ' hole' : '')+'"></div>';
-  if(t === 'ssr') h += '<div class="hlx hlx-spark">'+hlSparks()+'</div>';
+  if(isBack && (t === 'holo' || t === 'ssr')) h += '<div class="hlx hlx-holo hole"></div>';
+  if(isBack && t === 'ssr') h += '<div class="hlx hlx-spark">'+hlSparks()+'</div>';
   return h + '<div class="hlx hlx-glare"></div>';
+}
+/* hlPaper(t): front shimmer that sits on the cream paper only (behind the art and the words). S = pearl, SSR = pearl + gold sparkles. */
+function hlPaper(t){
+  if(t !== 'holo' && t !== 'ssr') return '';
+  return '<div class="hlx hlx-pearl"></div>'+(t === 'ssr' ? '<div class="hlx hlx-spark pf">'+hlSparks()+'</div>' : '');
 }
 /* backHTML(k): with a rarity, the back gets live foil (C/B matte, A foil, S holo, SSR prismatic). Without, the plain back. */
 function backHTML(k){
