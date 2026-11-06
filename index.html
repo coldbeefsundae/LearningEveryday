@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.19', errs = [], shown = false;
+  var V = '26.11.22', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-06';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2131,6 +2131,95 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 .kit.a-tangyuan .kp-tyheart{animation:kTwk 1.2s ease-out 1;animation-delay:2.7s}
 @keyframes kTySteam{0%,8%{opacity:0;transform:none}16%,34%{opacity:.9;transform:translateY(-3px)}50%{opacity:0;transform:translate(-14px,-6px) skewX(-25deg)}70%{opacity:0;transform:none}80%{opacity:.6;transform:translateY(-2px)}100%{opacity:0;transform:translateY(-6px)}}
 @keyframes kTyEyes{0%,26%{transform:scaleY(1)}30%,56%{transform:scaleY(.12)}60%{transform:scaleY(1)}66%,92%{transform:scaleY(.18)}100%{transform:scaleY(1)}}
+
+/* 26.11.20: kanji page chip + picker */
+.kjwhere{display:block;margin:6px 0 0;padding:6px 10px;border:0;border-radius:12px;background:rgba(108,92,231,.08);color:inherit;font:inherit;font-size:14px;font-weight:700;text-align:left;cursor:pointer;width:100%}
+.kjwhere u{color:var(--brand,#6c5ce7)}
+.kjwgrid{max-height:46vh;overflow:auto}
+.kjwgrid .kjpg{min-height:52px}
+
+/* 26.11.21: Kanji tab */
+.kjtab{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.kjhead{display:flex;align-items:center;gap:14px}
+.kjkit{flex:none;border:0;background:none;padding:18px 4px 0;cursor:pointer;line-height:0}
+.kjkit .kit{width:104px}
+.kjsay{flex:1;min-width:0}
+.kjbub{position:relative;background:var(--accent-soft,rgba(108,92,231,.1));border-radius:18px;padding:12px 14px;font-size:17px;font-weight:700;line-height:1.35}
+.kjbub::before{content:"";position:absolute;left:-9px;top:22px;border:9px solid transparent;border-right-color:var(--accent-soft,rgba(108,92,231,.1));border-left:0}
+.kjsay small{display:block;margin:4px 0 0 6px;opacity:.6;font-weight:700}
+.kjseg{display:flex;gap:6px;flex-wrap:wrap}
+.kjseg button{flex:1 1 92px;border:0;border-radius:16px;padding:12px 10px;font:inherit;font-weight:800;font-size:16px;background:rgba(108,92,231,.08);color:inherit;cursor:pointer}
+.kjstrong{background:linear-gradient(135deg,rgba(255,183,77,.16),rgba(108,92,231,.10))}
+.kjsq{font-size:19px;line-height:1.45;font-weight:800;margin:4px 0 2px}
+.kjsby{font-size:13px;opacity:.7;font-weight:700}
+.kjstry{margin-top:8px;font-size:15px;line-height:1.4;background:rgba(0,184,148,.10);border-radius:12px;padding:8px 10px}
+.kotohead{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:4px 0 8px}
+.kotoj{font-size:22px;font-weight:900;line-height:1.3}
+.kotohead.big .kotoj{font-size:28px}
+.kotor{font-size:15px;opacity:.75;letter-spacing:.04em}
+.kotot{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:rgba(108,92,231,.12);margin-top:4px}
+.kotorow{font-size:15px;line-height:1.45;margin:6px 0}
+.kotolab{display:inline-block;font-size:12px;font-weight:800;opacity:.65;margin-right:4px;text-transform:none}
+.kotoex{margin:8px 0;padding:8px 10px;border-radius:12px;background:rgba(9,132,227,.08)}
+.kotoexj{font-size:17px;line-height:1.5;margin-top:2px}
+.kotoexe{font-size:14px;opacity:.75;margin-top:2px}
+.kotonote{font-size:14px;background:rgba(253,203,110,.18);border-radius:12px;padding:8px 10px}
+.kotolink{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.kotoq{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:2px solid rgba(108,92,231,.25);background:transparent;color:inherit;margin:4px 0 8px}
+.kotofs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.kotofs button{border:0;border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:800;background:rgba(108,92,231,.08);color:inherit;cursor:pointer}
+.kotofs button.on{background:var(--accent,#6c5ce7);color:#fff}
+.kotoit{border-top:1px solid rgba(127,127,127,.18);padding:8px 2px}
+.kotoit summary{cursor:pointer;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;list-style:none}
+.kotoit summary::-webkit-details-marker{display:none}
+.kotoit summary b{font-size:18px}
+.kotoit summary small{opacity:.65}
+.kotoit summary i{font-style:normal;margin-left:auto;font-size:13px}
+.kotobody{padding:6px 2px 4px}
+.kotoopts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.kotoopt{text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-size:15px;line-height:1.35}
+.kotoopt.ok{background:#00b894;color:#fff}.kotoopt.no{background:#fab1a0}
+.kotoopt b{font-size:18px}
+.kotofb{margin-top:10px;padding:10px;border-radius:12px;font-weight:700}
+.kotofb.ok{background:rgba(0,184,148,.14)}.kotofb.no{background:rgba(253,203,110,.22)}
+.kotoqm{font-size:17px;line-height:1.45}
+.kotokit{display:flex;align-items:center;gap:10px}.kotokit svg{width:90px;height:90px;flex:none}.kotokit p{font-size:17px;font-weight:700}
+.kjkq{position:relative;padding:8px 40px 8px 10px;border-radius:12px;background:rgba(255,183,77,.12);margin:6px 0}
+.kjkq p{margin:0;font-weight:700;line-height:1.4}.kjkq small{opacity:.65}
+.kjkq .btn{position:absolute;right:6px;top:6px;padding:4px 8px}
+.csay{margin-top:12px;padding:10px;border-radius:14px;background:rgba(108,92,231,.07)}
+.csayh{font-weight:900;font-size:15px;margin-bottom:6px}.csayh span{font-weight:700;opacity:.6;font-size:13px}
+.csayl{display:flex;flex-direction:column;gap:6px}
+.csayc{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;text-align:left;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;font-size:15px;background:#fff;color:inherit;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.csayc small{opacity:.65;font-size:12px}
+#ksay{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(20,16,40,.45)}
+#ksay.show{display:flex;animation:ksin .18s ease-out}
+@keyframes ksin{from{opacity:0}to{opacity:1}}
+#ksay .ksbox{max-width:440px;width:100%;max-height:86vh;overflow:auto;background:#fff;color:var(--ink);border-radius:20px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+#ksay .ksclose{text-align:center;font-size:12px;opacity:.55;margin-top:10px;font-weight:700}
+.kjseg button.on{background:var(--accent,#6c5ce7);color:#fff}
+.kjthink p{font-size:17px;line-height:1.45;margin:4px 0 0}
+.kjacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.kjacts .btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;text-align:left}
+.kjacts .btn small{opacity:.7;font-weight:700}
+.kjacts .btn.did{box-shadow:inset 0 0 0 2px #2fb380}
+.kjpgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.kjpgrid .kfch{grid-column:1/-1;margin-top:6px}
+.kjbreak{background:rgba(47,179,128,.12);border-radius:14px;padding:10px 12px;margin:0 0 10px;font-weight:700}
+.kjtree{display:block;width:100%;max-width:420px;margin:0 auto}
+.kjstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.kjst{background:rgba(108,92,231,.07);border-radius:16px;padding:10px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.kjst span{font-size:22px}.kjst b{font-size:26px;line-height:1.1}.kjst small{opacity:.7;font-weight:700}
+.kjmiles{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.kjmile{padding:6px 10px;border-radius:999px;background:rgba(128,128,128,.12);font-weight:800;font-size:14px;opacity:.6}
+.kjmile.on{background:rgba(47,179,128,.18);opacity:1}
+.kjmile small{opacity:.7}
+.kjfeelrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kjfeelrow button{border:0;border-radius:16px;padding:10px 4px;background:rgba(108,92,231,.07);font:inherit;font-weight:800;color:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.kjfeelrow button span{font-size:30px}
+.kjfeelrow button.on{background:var(--accent,#6c5ce7);color:#fff}
+.kjfeelsay{font-size:16px;font-weight:700;margin:10px 0}
+@media (max-width:640px){.kjkit .kit{width:80px}.kjbub{font-size:15px}.kjseg button{flex-basis:45%;font-size:15px;padding:10px 6px}}
 /* parent preview of Kit's moves */
 .kmprev{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 6px}
 .kmstage{flex:none;padding:26px 10px 4px;border-radius:18px;background:rgba(108,92,231,.08);line-height:0}
@@ -2145,6 +2234,9 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
     <div class="logo">⭐</div>
     <button class="navbtn on" data-tab="home" aria-label="Quests">
       <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Quests
+    </button>
+    <button class="navbtn" data-tab="kanji" aria-label="Kanji">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><text x="12" y="16.6" text-anchor="middle" font-size="12" font-weight="900" style="fill:currentColor;stroke:none" lang="ja">字</text></svg>Kanji
     </button>
     <button class="navbtn" data-tab="cards" aria-label="Cards">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="12" height="17" rx="2.5"/><path d="M8 7.5h4M8 11h4"/><path d="M19 7.5v11a2.5 2.5 0 0 1-2.5 2.5H9"/></svg>Cards
@@ -2197,6 +2289,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
     <div class="page">
       <div id="bedstrip" class="bedstrip" hidden></div>
       <section class="view show" id="view-home"></section>
+      <section class="view" id="view-kanji"></section>
       <section class="view" id="view-cards"></section>
       <section class="view" id="view-shop"></section>
       <section class="view" id="view-money"></section>
@@ -4580,16 +4673,18 @@ function helpData(){
     {q:'What if I miss a day?', a:'Don’t worry! You get <b>one rest day each week</b> (tap the rest day button in Me). Your streak stays safe, but there are no points that day.'}
    ]},
    {t:'🎴 Cards and packs', i:[
-    {q:'How do I get cards?', a:li(['Finish all quests: you get <b>today’s history card</b> and a <b>free pack</b>.','Finish the Bonus Challenge: another free pack.','A grown-up can also give you packs.']) },
+    {q:'How do I get cards?', a:li(['A <b>free daily pack</b> is waiting for you each morning when you open the app.','Finish all quests: you get <b>today’s history card</b> and a <b>free pack</b>.','Finish the Bonus Challenge: another free pack.','Finish your morning or evening routine on time to collect 🧩 pack pieces.','A grown-up can also give you packs.']) },
     {q:'What is in a pack?', a:li(['Each pack has <b>3 cards</b>.','The last card is always <b>Uncommon or better</b>.','Every '+PITY_LIMIT+' packs you are <b>guaranteed</b> a Super Rare (S) or better.','You can open up to <b>'+(packMax > 0 ? packMax : 'lots of')+' pack'+(packMax === 1 ? '' : 's')+' a day</b>.'])},
     {q:'What do C, B, A, S, SSR and SSSR mean?', a:'They show how rare a card is:'+li(['<b>C</b> Common (lots of these)','<b>B</b> Uncommon','<b>A</b> Rare','<b>S</b> Super Rare','<b>SSR</b> Super Super Rare','<b>SSSR</b> Legendary: one very special card','In the <b>Cards</b> tab, tap the pack panel to see the exact chances.'])},
     {q:'I got a card I already have. What happens?', a:'A duplicate goes in your <b>🫙 jar</b>. Every time the jar gets to <b>'+dper+'</b>, you earn <b>1 point</b>. Rarer duplicates fill the jar faster, and the leftovers stay for next time.'},
     {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
+      {q:'Why do some cards shine?', a:'Rare cards (A and up) have a shiny <b>holo</b> foil. Tilt the tablet or move your finger over the card to make it sparkle. The rarer the card, the fancier the shine! Tap a card in a new pack to <b>flip</b> it over.'},
+      {q:'What are the sayings on my cards?', a:'Some history cards have a <b>🗣️ Sayings</b> box near the bottom: a Japanese saying (🇯🇵) or an English one (💬) that comes from that person or place. Tap a saying to see what it means and how to use it. Tap anywhere to close it.'},
     {q:'What is my level title?', a:'Your title grows as you find cards: Rookie Explorer, Time Traveler, History Hunter, and all the way to <b>History Legend</b> 👑. Check Me → My Adventure.'}
    ]},
    {t:'🎁 Rewards and screen time', i:[
     {q:'What are points for?', a:'Spend them in the <b>Rewards</b> tab on screen time and treats. On school days, <b>1 point = 1 minute</b> of screen time.'},
-    {q:'How do I get screen time?', a:li(['Tap <b>Rewards</b>, then <b>Get it!</b> on a screen time reward.','Tap <b>Start</b> when you are ready. A timer counts down.','On school days you can get up to <b>'+e.screenCap+' minutes</b> a day.'+(cur ? ' Screen time ends at <b>'+cur+'</b>.' : '')])},
+    {q:'How do I get screen time?', a:li(['Tap <b>Rewards</b>, then <b>Get it!</b> on a screen time reward.','Tap <b>Start</b> when you are ready. A timer counts down.','On school days you can get up to <b>'+e.screenCap+' minutes</b> a day.'+(cur ? ' Screen time ends at <b>'+cur+'</b>.' : ''),'You will hear a little chime when there is <b>1 minute left</b>, and a song when time is up.'])},
     {q:'Is screen time cheaper on weekends?', a: wc.on ? 'Yes! On <b>'+wkDays.join(' and ')+'</b>, <b>'+wc.per+' minutes costs only '+wc.pts+' points</b> and you can get up to <b>'+fmtMinutes(wc.cap)+'</b>. Try to keep screens to about 2 hours, though!' : 'Not right now. Ask a grown-up.'},
     {q:'What is Free Time?', a: fc.on ? 'After hoshuko on <b>'+ftDays.join(' and ')+'</b> (<b>'+fmt12(fc.start)+' to '+fmt12(fc.end)+'</b>) you can do what you like! You get <b>'+fmtMinutes(fc.mins)+' of free screen time</b> that costs no points. Tap ▶ to start it. Kit puts on headphones to celebrate. 🎧<br>Before you relax: take a shower, tidy your room and put away your hoshuko things.' : 'Free Time is off right now.'},
     {q:'How do I get a treat or event reward?', a:li(['Tap <b>Get it!</b> and say yes.','A grown-up gets a message and gives you the reward.','Each treat can be earned <b>once a week</b>, and the big goals <b>once a month</b>. A locked reward says <b>🔒 Back Monday</b> (or the date).'])},
@@ -4599,26 +4694,30 @@ function helpData(){
    {t:'📚 Learning', i:[
     {q:'What are Quick Quizzes?', a:'Once you have a few cards, a short <b>daily quiz</b> about your history cards unlocks. Right answers give points, and a perfect score gives a bonus.'},
     {q:'What are Today’s Bites?', a:'Short, fun reads. One is “on this day” and one is from around the world, like kid-friendly news. Tap one to read it and earn <b>+'+(e.bitesPts == null ? 1 : e.bitesPts)+'</b> point. In <b>Me</b> you can choose the language for the bites.'},
-    {q:'What is Kanji of the Day?', a:'A new kanji from your grade each day. Tap it to learn the word and earn a point. Then try:'+li(['🃏 <b>Flash cards</b>: pick Mix, Recent pages, Tricky ones, or <b>Pick my own</b> kanji.','✍️ <b>Writing</b>: trace it with your finger.','📖 <b>Kanji Book</b>: all your kanji by page. Tap 🃏 on a page to practise just that page.','Word games: build a word, find the missing kanji, or read the word.','Tap <b>⬅ Back</b> to go back one step.'])}
+    {q:'What is the 字 Kanji tab?', a:'Your own kanji corner, with Kit at the top. Tap Kit for a thought! It has five parts:'+li(['☀️ <b>Today</b>: a <b>strong thought</b> to help you feel brave, today’s kanji (tap it to learn it and earn a point), a heart question, and the <b>Japanese saying of the day</b>.','📖 <b>My Book</b>: all your kanji by page. Tap <b>Change page</b> to pick the page you are on at Saturday school.','🎯 <b>Practice</b>: flash cards, writing, word games and more. Kit will remind you to rest after a few rounds. Resting helps your brain remember!','🗣️ <b>ことわざ</b>: look up any saying, and play a quick saying quiz.','🌳 <b>Growing</b>: your kanji tree, your kept strong thoughts, and how kanji feels today.'])},
+      {q:'What is the strong thought?', a:'Every day there is a new thought to help you be brave, bounce back from mistakes and be kind to yourself, plus a tiny thing to try. Tap 🤍 <b>Keep it</b> to save the ones you love in 🌳 Growing. On a hard day, Kit picks an extra gentle one.'},
+      {q:'What is the Japanese saying of the day?', a:'A new ことわざ (proverb), 慣用句 (idiom) or 四字熟語 every day, starting with the ones people in Japan use the most. You see what it means, a picture of the words, and how to use it. Tap 🔊 to hear it. When you use it for real, tap ✅ <b>I used it today!</b> for a bonus point. Look up any saying in the 🗣️ ことわざ part of the Kanji tab: search in hiragana, kanji or English.'},
+      {q:'How do I change my kanji book page?', a:'Tap the <b>page chip</b> under Kanji of the Day (or in My Book), then pick your book (上 or 下) and page. Use <b>Next page</b> when your class moves on.'},
    ]},
    {t:'💗 More things to explore', i:[
     {q:'What is the Journal?', a:'Your calendar shows every perfect day. You can also pick how you feel and write about your day. Your past pages are kept there.'},
     {q:'What are “I saw you…” goal cards?', a:'Special cards from your grown-ups that say something good they noticed you doing. 💛'},
-    {q:'Who is Kit?', a:'Kit is your fox buddy. Tap him to see what he does! He cheers when you finish things. You can turn Kit off in <b>Me</b> if you like.'},
+    {q:'Who is Kit?', a:'Kit is your fox buddy. Tap him to see what he does! He cheers when you finish things, dresses up for seasons and holidays, and does special seasonal and holiday moves. If you have been looking at cards or rewards for a while, he may pop in to suggest a quest. You can turn Kit off in <b>Me</b> if you like.'},
+      {q:'What are my morning and evening routines?', a:'A checklist shows on your home screen at routine time. Tick each step. Finish everything before the time on the card to earn a reward (often 🧩 pack pieces: collect enough for a free pack!). Late still counts as done.'},
     {q:'What are badges?', a:'Badges are awards for things like streaks, collecting cards, quizzes and kanji. Find them in <b>Me</b>. Gold, silver and bronze show how far you got.'},
-    {q:'What happens on my birthday?', a:'You get a party banner, confetti, Kit in a party hat, and a <b>Birthday Star card</b> to keep. Look in <b>Me → Birthday Book</b> to see all your birthday cards and your “year in review”.'},
-    {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up.'}
+    {q:'What happens on my birthday?', a:'You get a party banner, confetti, balloons, Kit in a party hat (tap him to make a wish!), and a <b>Birthday Star card</b> to keep. Look in <b>Me → Birthday Book</b> to see all your birthday cards and your “year in review”.'},
+    {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up. Find S, SSR or SSSR cards to unlock <b>hero pictures</b>.'}
    ]},
    {t:'🛠️ If something looks odd', i:[
     {q:'My points or cards look wrong', a:'Ask a grown-up. They can fix points and packs in Parent mode. Your progress is saved on this device.'},
-    {q:'The app looks different or old', a:'Close the app all the way and open it again. Sometimes you need to do it twice to get the newest version.'}
+    {q:'The app looks different or old', a:'Ask a grown-up to tap <b>🔄 Check for updates</b> at the bottom of the Me tab, or close the app all the way and open it again (sometimes twice).'}
    ]}
   ];
   var par = [
    {t:'🔐 Getting started', i:[
     {q:'How do I open Parent mode?', a:'Tap 🔒 on the side bar (tablet), or <b>Me → Parent mode</b> (phone). Enter your PIN. The starting PIN is <b>1234</b>. Change it in <b>Backup &amp; PIN</b>. Tap <b>Done</b> or <b>Lock &amp; exit</b> when you finish.'},
-    {q:'What is on the Parent home screen?', a:li(['<b>Today’s assigned quests</b>: switch quests on or off for today, edit them or add new ones.','<b>Points &amp; card packs</b>: add or remove points and packs.','<b>Free break</b>: start Free Time now at no cost.','<b>Rewards to give</b>: what your child has asked for.','<b>Settings</b>: nine tiles (below).','<b>Day tools</b>: streak calendar and reset today’s board.'])},
-    {q:'How does saving work?', a:'Each Settings tile opens its own screen. Tap <b>💾 Save</b> or <b>← Parent</b> to save. Saving a screen only changes the settings on that screen.'},
+    {q:'What is on the Parent home screen?', a:li(['<b>Today’s assigned quests</b>: switch quests on or off for today, edit them or add new ones.','<b>Points &amp; card packs</b>: add or remove points and packs.','<b>Free break</b>: start Free Time now at no cost.','<b>Rewards to give</b>: what your child has asked for.','<b>Settings</b>: twelve tiles (Rewards, Points, Routines, Kit’s wardrobe &amp; moves, Time, Learning, Allowance, Goal cards, Card viewer, Family pack, Celebrations, Backup &amp; PIN).','<b>Day tools</b>: streak calendar and reset today’s board.'])},
+    {q:'How does saving work?', a:'Each Settings tile opens its own screen. Changes save automatically when you tap <b>💾 Save</b>, <b>← Parent</b> or the back arrow, and <b>Done</b> saves and locks Parent mode. Saving a screen only changes the settings on that screen.'},
     {q:'How do I add or edit a quest?', a:'On the Parent home, tap <b>✏️ Edit</b> on a quest, or <b>➕ Add new quest</b>. Use the switch to choose which quests are assigned today.'}
    ]},
    {t:'⭐ Points and bonuses', i:[
@@ -4629,7 +4728,9 @@ function helpData(){
     {q:'How do I fix points or packs?', a:'Use the − and + buttons on the Parent home. You can also give the rest of today’s points.'}
    ]},
    {t:'🎴 Cards and packs', i:[
-    {q:'How does she get packs?', a:'Finishing all quests gives today’s history card plus 1 pack. The Bonus Challenge gives 1 more. You can add or remove packs on the Parent home. Packs she can open per day: <b>'+(packMax > 0 ? packMax : 'no limit')+'</b> (Points &amp; bonuses).'},
+    {q:'How does she get packs?', a:'Finishing all quests gives today’s history card plus 1 pack. The Bonus Challenge gives 1 more. You can add or remove packs on the Parent home. Packs she can open per day: <b>'+(packMax > 0 ? packMax : 'no limit')+'</b>. She also gets <b>'+freePacks()+'</b> free pack(s) on first open each day, and routines can earn pack pieces. Change these in <b>Time &amp; limits</b> and <b>Routines</b>.'},
+      {q:'How do routines work?', a:'In <b>Routines</b>, set a morning and evening checklist (up to 8 steps), which days they show, when they appear and the finish-by time. Finishing on time earns the reward you choose: 🧩 pack pieces (you set how many make a pack), 1 point per item, or just praise.'},
+      {q:'What does Kit do on his own?', a:li(['<b>Outfits and moves</b>: seasonal, holiday (Canadian, Japanese and Chinese) and birthday moves. Turn them off or preview them in <b>Kit’s wardrobe &amp; moves</b>.','<b>Quest reminders</b>: after a set time browsing Cards, Rewards, Money or Me, Kit suggests a quest. Never on the Kanji tab or during learning. Set it in <b>Time &amp; limits → Kit reminders</b>.','<b>Bedtime</b>: optional sleepy Kit 15 minutes before bedtime.'])},
     {q:'What are the pull odds?', a:'C '+RATES.C+'%, B '+RATES.B+'%, A '+RATES.A+'%, S '+RATES.S+'%, SSR '+RATES.SSR+'%, SSSR '+RATES.SSSR+'%, plus a '+RATES.FAM+'% chance of an “Our Family” card. Last card in a pack is B or better, and an S or better is guaranteed every '+PITY_LIMIT+' packs.'},
     {q:'What are the Our Family cards?', a:'Private cards that come from your family pack file. They never go online. See <b>Family pack</b> below.'}
    ]},
@@ -4645,11 +4746,11 @@ function helpData(){
     {q:'What are the weekly and monthly limits?', a:li(['Non-screen rewards: once a week each (weeks start on Monday).','The <b>Big goals</b> group: once a month (resets on the 1st).','Each group, and each reward, has its own menu: 1× a week, 1× a month, or no limit.','<b>🔓 Let her get everything again now</b> clears all limits.','Screen time is never limited this way.'])}
    ]},
    {t:'📚 Learning and news', i:[
-    {q:'What can I turn on or off?', a:'In <b>Learning &amp; news</b>: the daily quiz, Today’s Bites, Kanji of the Day, points for each, and the news pack.'},
+    {q:'What can I turn on or off?', a:'In <b>Learning &amp; news</b>: the daily quiz, Today’s Bites, the Kanji tab, points for each (including the Japanese saying of the day), and the news pack.'},
     {q:'How can I see a card your child has not found yet?', a:'Open <b>Card viewer</b> on the Parent home. You can search, filter by found or not found, type (Person, Event, Legend, Place), rarity and region, then tap any card to see it full size. It is read only and never adds the card to her collection or clears her New badges.'},
     {q:'Do news bites update by themselves?', a:'No. Nothing is fetched from the internet. Fresh bites only appear when you paste a news pack in <b>Learning &amp; news</b>. You can read the whole pool or remove a bite there too.'},
     {q:'How do I add news bites?', a:'Paste a news pack (text starting with <code>SQNEWS:</code>) into <b>Learning &amp; news → News pack</b>. Each day she sees one world bite from a fresh pool. Re-importing the same pack adds nothing twice.'},
-    {q:'How does the kanji section work?', a:'She gets one kanji a day, then can use flash cards (Mix, Recent pages, Tricky, or pick her own), writing practice, the Kanji Book by page, and word games. The Back button steps back one screen.'}
+    {q:'How does the kanji section work?', a:'The 字 Kanji tab is built around effort and feelings, not scores:'+li(['<b>Today</b>: a daily strong thought (resilience, feelings, rest, self-kindness), today’s kanji, a heart question, and a Japanese saying of the day with meaning, example and audio.','<b>My Book</b>: kanji by page. She can change her own page (turn this off in <b>Parent → Kanji</b>, which also shows who moved it last).','<b>Practice</b>: flash cards, writing, word games, with rest reminders.','<b>ことわざ</b>: a searchable book of '+KOTO.length+' common sayings, most-used first, plus a no-points quiz. Some link to history cards.','<b>Growing</b>: kanji tree, kept thoughts, and a feelings check-in. Parent → Kanji shows the last 2 weeks of feelings and a tip if she often feels it is hard.'])+'History cards also show linked Japanese and English sayings she can tap to understand.'}
    ]},
    {t:'💵 Money, goals and family', i:[
     {q:'What is the Money tab?', a:'A simple allowance tracker (jar, allowance, goal). Set it up in <b>Allowance money</b>. Adding or removing money updates the “Received” total and Kit comments on new coins.'},
@@ -4659,7 +4760,7 @@ function helpData(){
    ]},
    {t:'💾 Backup, updates and problems', i:[
     {q:'Where is her progress saved?', a:'On this device only. Make a backup code in <b>Backup &amp; PIN</b> so you can restore on another device.'},
-    {q:'How do updates work?', a:'The app loads from the web, so new versions arrive when you upload new files. Close the app fully and reopen it (sometimes twice) to get the update.'},
+    {q:'How do updates work?', a:'The app loads from the web, so new versions arrive when you upload new files. Tap <b>🔄 Check for updates</b> (bottom of Me or Parent home), or close the app fully and reopen it (sometimes twice). The version number is shown next to the button.'},
     {q:'Something isn’t right', a:'Check the setting on its screen first (for example limits, weekend prices or reward rules). Points and packs can always be corrected on the Parent home. Keep a recent backup.'}
    ]}
   ];
@@ -4776,6 +4877,7 @@ function render(){
     else if(tab === 'shop') renderShop();
     else if(tab === 'money') renderMoney();
     else if(tab === 'journal') renderJournal();
+    else if(tab === 'kanji') renderKanjiTab();
     else renderProfile();
   }catch(e){
     var v = $('view-'+(tab === 'profile' ? 'profile' : tab));
@@ -4787,7 +4889,7 @@ function render(){
 function setTab(t){
   if(t === 'money' && !bankOn()) t = 'home';
   tab = t;
-  ['home','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
+  ['home','kanji','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
   render();
   window.scrollTo(0,0);
 }
@@ -4943,9 +5045,16 @@ function nudgeExempt(){
   if(window.__parSec || ($('modal') && $('modal').querySelector('.ptiles, .pinpad, .psec'))) return true;
   return false;
 }
+function nudgeKanjiBusy(){
+  if(tab === 'kanji') return true;
+  var p = $('ksay'); if(p && p.classList.contains('show')) return true;
+  if(!$('overlay').classList.contains('show')) return false;
+  return !!$('modal').querySelector('.kjmodal,.kotoqz,[class*="kfc"],[class*="kw"],[class*="kcb"],[class*="kbk"],[class*="kjw"]');
+}
 function nudgeTick(){
   var browsing = ['cards','shop','money','profile'].indexOf(tab) > -1, inOv = $('overlay').classList.contains('show');
-  if(inOv && KN2.learn){ KN2.sec = 0; KN2.t = Date.now(); return; }                          /* doing a quiz, kanji, story: that counts as practice */
+  if(inOv && KN2.learn){ KN2.sec = 0; KN2.t = Date.now(); return; }
+  if(nudgeKanjiBusy()){ KN2.sec = 0; KN2.t = Date.now(); return; }                            /* Kanji tab, kanji screens and saying pop-ups are learning: no quest reminder, and the timer starts over */                          /* doing a quiz, kanji, story: that counts as practice */
   var now = Date.now(), dt = KN2.t ? Math.min(2000, now - KN2.t) : 0; KN2.t = now;
   if(!browsing || nudgeExempt()) return;
   KN2.sec += dt/1000;
@@ -5187,6 +5296,7 @@ function showParentSection(key, scrollTop){
     h += '<h3>Kanji</h3>';
     h += pTog('Show “Kanji of the Day” and the English Word of the Day', 'eKanji', e.kanjiOn !== false);
     h += pNum('Points for learning the kanji (once a day, counts toward the extra limit)', 'eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
+    h += pNum('Points for using the Japanese saying of the day (once a day, counts toward the extra limit)', 'eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
     h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
   } else if(key === 'safe'){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
@@ -5252,7 +5362,7 @@ function applyParentSettings(){
   e.quizPts = num('eQPts', 0, 5, e.quizPts);
   e.quizPerfect = num('eQPerf', 0, 10, e.quizPerfect);
   e.bitesOn = ck('eBites', e.bitesOn); e.bitesPts = num('eBitesPts', 0, 5, e.bitesPts);
-  e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
+  e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts); if($('eKotoPts')) e.kotoPts = num('eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
   e.quizOn = ck('eQuiz', e.quizOn); e.musicOn = ck('eMusic', e.musicOn);
   if($('eMusicOff')){ var mo = $('eMusicOff').value; e.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : ''; }
   if($('eBonusOn')) state.bonusOn = !!$('eBonusOn').checked;
@@ -5683,7 +5793,7 @@ function showCardDetail(id, fromParent){
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
   h += '<div class="era say" data-say="year:'+id+'"><b>'+lbl+'</b> '+esc(c.y)+' <span class="spk">🔊</span></div>';
   h += '<div class="tagline say" data-say="tag:'+id+'">'+esc(c.s)+' <span class="spk">🔊</span></div>';
-  h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>';
+  h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>'+cardSayHTML(c.id);
   h += '<div class="row" style="margin-top:14px"><button class="btn good" data-say="story:'+id+'">🔊 Read it aloud</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div>';
   h += '<div class="hint" style="margin-top:8px">Tip: tap the name, place or year to hear it.</div>';
   h += '</div></div>';
@@ -8308,6 +8418,8 @@ function p4After(){
   if(document.body && document.body.setAttribute) document.body.setAttribute('data-bday', i.today ? '1' : '0');
   [].forEach.call(document.querySelectorAll('[data-tab="journal"]'), function(b){ b.style.display = state.eco.journalOn === false ? 'none' : ''; });
   if(tab === 'journal' && state.eco.journalOn === false){ setTab('home'); return; }
+  [].forEach.call(document.querySelectorAll('[data-tab="kanji"]'), function(b){ b.style.display = state.eco.kanjiOn === false ? 'none' : ''; });
+  if(tab === 'kanji' && state.eco.kanjiOn === false){ setTab('home'); return; }
   if(i.today && state.bdayConf !== dateKey()){
     state.bdayConf = dateKey(); save();
     if(kitAnimOK() && kitMovesOn()) setTimeout(function(){ kitBdayCelebrate(false); }, 600);
@@ -8601,16 +8713,18 @@ function kanjiPanelHTML(){
   if(state.eco.kanjiOn === false) return '';
   var k = kanjiToday(), pts = state.eco.kanjiPts == null ? 1 : state.eco.kanjiPts, done = kanjiState().date === dateKey();
   var h = '<div class="panel kjpanel"><div class="ptitle">🈴 Kanji of the Day</div>';
+  var hw = kjWhereChip(); 
   h += '<button class="bite kj" data-kj="today"><span class="kjbig" lang="ja">'+k.k+'</span><div class="btxt"><small>Grade '+k.g+' · '+kjEsc(k.m)+'</small><span lang="ja"><b>'+esc(k.w)+'</b>（'+esc(k.wr)+'）</span> · Word of the day: <b>'+esc(k.e)+'</b></div></button>';
+  h += hw;
   if(!done && pts) h += '<div class="hint bitehint">Tap to learn it and earn +'+pts+' point'+(pts === 1 ? '' : 's')+'.</div>';
   else h += '<div class="hint bitehint">📖 '+kanjiCount()+' of '+KANJI.length+' kanji learned</div>';
-  h += '<div class="row" style="margin-top:6px"><button class="btn small" data-kfc="open">🃏 Flash cards, if you like</button> <button class="btn small" data-kw-open="today">✍️ Write today\u2019s kanji</button></div>';
+  if(tab !== 'kanji') h += '<div class="row" style="margin-top:6px"><button class="btn small" data-kfc="open">🃏 Flash cards, if you like</button> <button class="btn small" data-kw-open="today">✍️ Write today\u2019s kanji</button> <button class="btn small" data-tabgo="kanji">字 More kanji \u203a</button></div>';
   return h + '</div>';
 }
 function kanjiClaim(){
   var ks = kanjiState(), k = kanjiToday();
   if(ks.date === dateKey()) return 0;
-  ks.date = dateKey(); ks.log[k.k] = dateKey();
+  ks.date = dateKey(); ks.log[k.k] = dateKey(); ks.todayK = k.k;
   (state.stats = state.stats || {}).kanjiDays = (state.stats.kanjiDays || 0) + 1; save();
   var want = state.eco.kanjiPts == null ? 1 : state.eco.kanjiPts, got = 0;
   if(want) got = addPoints(want, 'Learned today’s kanji', true);
@@ -8659,14 +8773,12 @@ function kjInBook(ch){ return !!kjMetState(ch); }
 /* badges count only what she has done in the app, never what hoshuko covered */
 function kjMetCount(){ var ks = kanjiState(), n = 0; try{ kanjiBackfill(); }catch(e){} KANJI.forEach(function(k){ if(ks.log[k.k] || (ks.met && ks.met[k.k])) n++; }); return n; }
 function kjStat(name, by){ var st = (state.stats = state.stats || {}); st[name] = (st[name] || 0) + (by || 1); }
-function showKanjiBook(){
-  knScreen('book', showKanjiBook);
-  try{ kanjiBackfill(); }catch(e){}
-  var ink = kinkLoad(), hh = hz(), idx = {};
+function kjBookBody(maxh, noWhere){
+  var ink = kinkLoad(), hh = hz(), idx = {}, h = '';
   KANJI.forEach(function(k, i){ idx[k.k] = i; });
-  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd6 My Kanji Book</h2><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again.</div>';
   h += '<div class="kblegend"><span><i style="background:rgba(108,92,231,.2);border-color:rgba(108,92,231,.55)"></i>practised here</span><span><i style="background:rgba(108,92,231,.07);border-color:rgba(108,92,231,.18)"></i>done at hoshuko</span><span><i style="background:rgba(128,128,128,.12)"></i>not yet</span><span>\u270d\ufe0f in my writing</span></div>';
-  h += '<div style="max-height:56vh;overflow:auto;margin-top:6px">';
+  if(!noWhere && hh.on && kjKidPage()) h += '<div class="row" style="margin-top:8px;gap:8px;align-items:center"><span class="hint" style="margin:0">📍 You are on <b lang="ja">3年'+hh.vol+'</b> page <b>'+hh.page+'</b></span><button class="btn small" data-kjw="open">Change page</button></div>';
+  h += '<div style="max-height:'+maxh+';overflow:auto;margin-top:6px">';
   ['\u4e0a','\u4e0b'].forEach(function(v){
     h += '<div class="kbvol">3\u5e74'+v+(hh.on && hh.vol === v ? ' \u00b7 hoshuko is here' : '')+'</div>';
     kbPages(v).forEach(function(x){
@@ -8681,7 +8793,16 @@ function showKanjiBook(){
       h += '</span><button class="kbfc" aria-label="Practise this page with flash cards" data-kfc="bookpg:'+v+':'+x.p+'">\ud83c\udccf</button></div>';
     });
   });
-  h += '</div><div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">\ud83c\udccf Flash cards</button></div></div>';
+  return h + '</div>';
+}
+function showKanjiBook(){
+  knScreen('book', showKanjiBook);
+  try{ kanjiBackfill(); }catch(e){}
+  var ink = kinkLoad(), hh = hz(), idx = {};
+  KANJI.forEach(function(k, i){ idx[k.k] = i; });
+  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd6 My Kanji Book</h2><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again.</div>';
+  h += kjBookBody('56vh');
+  h += '<div class="row" style="margin-top:12px"><button class="btn" data-x="1">Close</button><button class="btn" data-kfc="open">\ud83c\udccf Flash cards</button></div></div>';
   openModal(h);
 }
 document.addEventListener('click', function(e){
@@ -8714,6 +8835,759 @@ var KBOOK = [], KB_BY = {}, KJ_BY = {};
   });
   KANJI.forEach(function(k){ KJ_BY[k.k] = k; });
 })();
+
+
+/* =========================================================
+   KANJI TAB (26.11.21): Today, My Book, Practice, Growing.
+   Built around effort over perfection, feelings, rest and kindness.
+   ========================================================= */
+var KJ_HEART = {
+  '幸':'What made you happy today? Little things count, like a hug or a yummy snack.',
+  '福':'Who brings good feelings into your life? You could tell them thank you.',
+  '助':'Who helped you today? Is there someone you could help tomorrow?',
+  '感':'How are you feeling right now? All feelings are okay, even the grumpy ones.',
+  '礼':'Saying thank you is a kind of magic. Who could you thank today?',
+  '和':'和 means peace and getting along. What helps you calm down when you are upset?',
+  '命':'Every living thing has a life: people, animals and plants. How could you take care of one today?',
+  '守':'What do you look after? Maybe a pet, a plant, or a friend\u2019s feelings.',
+  '育':'Things grow when we take care of them: plants, pets, and your brain too!',
+  '勉':'Learning takes effort. What is something you are working hard at?',
+  '習':'Practice makes hard things easier, little by little. What got easier for you this year?',
+  '練':'Even grown-up experts practise. Practice is how hard things become easy.',
+  '進':'A tiny step every day adds up. What is one small step for tomorrow?',
+  '悲':'Feeling sad is okay. Who can you talk to when you feel sad?',
+  '苦':'When something is hard, it is okay to ask for help. Who could you ask?',
+  '温':'What makes you feel warm inside?',
+  '安':'安 means calm and safe. Where do you feel the most calm and safe?',
+  '遊':'Play is good for your brain too! What is your favourite way to play?',
+  '世':'The world is big! Which country would you like to visit one day?',
+  '息':'Take one slow breath in through your nose... and out. How does your body feel now?',
+  '身':'Your body works hard for you. Did you drink water and move today?',
+  '病':'When someone is sick, kind words help. Who could you send a kind thought to?',
+  '美':'What is something beautiful you saw today?',
+  '平':'平 can mean calm. What helps you feel calm and steady?',
+  '族':'Family can be the people who love you. Who is in your family?',
+  '童':'Being a kid is great! What is the best thing about being you?',
+  '集':'What do you like to collect? Kanji are a collection too!',
+  '始':'Every expert was once a beginner. What would you like to start learning?'
+};
+var KJ_THINK = [
+  'Look for 「{k}」 around you today: on signs, books, or food packets!',
+  'Make up a tiny story that uses 「{w}」.',
+  'Teach 「{k}」 to someone at home. Can they guess what it means?',
+  'Write 「{k}」 in the air with your finger, nice and big.',
+  'Does 「{k}」 look like anything to you? Make up a picture to remember it.'
+];
+var KJ_FEEL = [['great','😄','Great'], ['ok','🙂','Okay'], ['meh','😐','So-so'], ['hard','😣','Hard']];
+var KJ_FEEL_SAY = {
+  great:'Yay! That happy feeling is your brain enjoying learning. 🌟',
+  ok:'Okay is good! Steady little steps are how kanji stick.',
+  meh:'Thanks for telling me. Want to try something different, like Word family or writing in the air?',
+  hard:'Thanks for telling me. Hard means your brain is stretching, and that is okay. You are doing great just by trying. 💛'
+};
+var KJ_GROW = [
+  'Mistakes are how brains learn. Every oops is a step forward.',
+  'You do not have to be perfect. Neat-ish is great!',
+  'Tricky kanji are where your brain grows the most. 🌱',
+  'Teaching someone is one of the best ways to remember.',
+  'Brains save new things while you sleep. Rest is part of learning! 💤',
+  'Slow and steady wins. One kanji a day adds up to hundreds.',
+  'Being curious is a superpower. Ask about anything you wonder about!',
+  'It is okay to take a break and come back later.'
+];
+/* Proverb of the day: the best-known sayings in everyday Japanese, in daily order (most familiar first).
+   [saying, reading, type, literal picture, meaning, やさしい いみ, example (ja), example (en), linked card ids, card note]
+   type: k ことわざ, i 慣用句, y 四字熟語, g 故事成語, m 名言 */
+var KOTO = [
+ ['七転び八起き','ななころびやおき','k','Fall down seven times, get up eight times.','However many times you fail, you get back up and keep trying.','なんど しっぱいしても、あきらめずに また がんばること。','テストはむずかしかったけど、七転び八起き。またがんばろう！','The test was hard, but fall seven times, get up eight. I will try again!'],
+ ['猿も木から落ちる','さるもきからおちる','k','Even monkeys fall from trees.','Even people who are really good at something make mistakes sometimes.','とくいな 人でも、ときどき しっぱいする。','先生が字をまちがえた。猿も木から落ちるね。','The teacher wrote a character wrong. Even monkeys fall from trees!'],
+ ['一石二鳥','いっせきにちょう','y','One stone, two birds.','Getting two good things from doing one thing.','一つの ことで、二つ いい ことが ある。','歩いて学校に行くと、体にいいし、空気もきれいになる。一石二鳥だね。','Walking to school is good for your body and the air. Two birds, one stone!'],
+ ['継続は力なり','けいぞくはちからなり','k','Keeping going is power.','Doing something a little every day makes you strong at it.','つづける ことが、大きな 力に なる。','毎日一つずつ漢字を書いている。継続は力なり！','I write one kanji every day. Keeping going is power!'],
+ ['朝飯前','あさめしまえ','i','Before breakfast.','Something so easy you could do it before breakfast. Easy-peasy!','とても かんたんな こと。','この計算なんて朝飯前だよ。','This sum is easy-peasy!'],
+ ['失敗は成功のもと','しっぱいはせいこうのもと','k','Failure is the seed of success.','Mistakes teach you how to do better next time.','しっぱいから 学ぶと、つぎは うまく いく。','ケーキがこげちゃった。でも失敗は成功のもと。次はもっと上手にできるよ。','The cake got burnt. But failure is the seed of success. Next time it will be better.'],
+ ['十人十色','じゅうにんといろ','y','Ten people, ten colours.','Everyone is different: different likes, ideas and ways. And that is good!','人は みんな ちがって いい。','好きな食べものは十人十色だね。','Everyone has a different favourite food. Ten people, ten colours!'],
+ ['早起きは三文の徳','はやおきはさんもんのとく','k','Getting up early earns three coins.','Good things happen when you get up early.','早く おきると、いい ことが ある。','早起きしたら、きれいな朝日が見えた。早起きは三文の徳だね。','I got up early and saw a beautiful sunrise. Early rising pays!',['am11'],'Benjamin Franklin wrote a saying with the same idea: “Early to bed and early to rise makes a man healthy, wealthy and wise.”'],
+ ['急がば回れ','いそがばまわれ','k','If you are in a hurry, take the long way round.','Careful and steady is faster in the end than rushing.','いそぐ ときほど、ていねいに やる ほうが いい。','宿題を急いでやるとまちがえる。急がば回れ、ゆっくりていねいにね。','Rushing homework makes mistakes. Slow and careful is faster in the end.'],
+ ['石の上にも三年','いしのうえにもさんねん','k','Sit on a cold stone for three years and even it gets warm.','If you are patient and keep at it, things get better.','がまんして つづければ、いつか うまく いく。','ピアノはむずかしいけど、石の上にも三年。毎日れんしゅうしよう。','Piano is hard, but patience pays. I will practise every day.'],
+ ['猫舌','ねこじた','i','Cat tongue.','Someone who cannot eat or drink hot things (like a cat!).','あつい ものが にがてな こと。','わたしは猫舌だから、ラーメンをふーふーしてから食べる。','I have a cat tongue, so I blow on my ramen before I eat it.'],
+ ['塵も積もれば山となる','ちりもつもればやまとなる','k','Even dust piles up into a mountain.','Lots of tiny things add up to something big.','小さな ものでも、たくさん あつまれば 大きく なる。','一日十円でも、塵も積もれば山となる。','Even 10 yen a day adds up. Dust piles into a mountain!',['jp31'],'Ninomiya Kinjirō taught the same idea with the words 積小為大 (せきしょういだい): small things, done again and again, become big.'],
+ ['千里の道も一歩から','せんりのみちもいっぽから','k','Even a thousand-mile road starts with one step.','Any big goal starts with one small step.','大きな ことも、まず 一歩から はじまる。','漢字をぜんぶおぼえるのは大変だけど、千里の道も一歩から。','Learning all the kanji is a lot, but a long road starts with one step.',['cn03'],'This saying comes from Laozi’s book, the Tao Te Ching: “A journey of a thousand li begins with a single step.”'],
+ ['一期一会','いちごいちえ','y','One time, one meeting.','Every meeting with someone is special and happens only once, so treasure it.','人との 出会いを 大切に しよう。','旅行で会ったおばあさんと、たくさん話した。一期一会だね。','I talked a lot with a grandma I met on our trip. Treasure every meeting!',['jp14'],'It comes from the tea ceremony. Sen no Rikyū’s student wrote that every tea gathering should be treated as if it happens only once in a lifetime.'],
+ ['噂をすれば影','うわさをすればかげ','k','Talk about someone and their shadow appears.','When you are talking about someone, they show up! (“Speak of the devil!”)','人の 話を して いると、その 人が 来る。','「ケンくん、おそいね」と言ったら、ケンくんが来た。噂をすれば影だね。','“Ken is late,” I said, and Ken walked in. Speak of the devil!'],
+ ['笑う門には福来る','わらうかどにはふくきたる','k','Good luck comes through the gate of a laughing home.','Happy, smiling people and homes attract good things.','いつも 笑って いる 家には、いい ことが やって くる。','笑う門には福来る。家族みんなで笑おう！','Good luck comes to laughing homes. Let’s all laugh together!'],
+ ['鬼に金棒','おににかなぼう','k','Giving an iron club to an ogre.','Something already strong gets even stronger.','強い ものが、もっと 強く なる こと。','足が速いのに、新しいくつをはいたら鬼に金棒だ！','You are already fast, and with new shoes too? Unstoppable!'],
+ ['花より団子','はなよりだんご','k','Dumplings rather than flowers.','Preferring something useful or yummy over something just pretty.','見て きれいな ものより、じっさいに 役に 立つ ものが いい。','お花見に行ったのに、ずっとおだんごを食べていた。花より団子だね。','We went to see the blossoms, but I just ate dumplings. Dumplings over flowers!'],
+ ['雨降って地固まる','あめふってじかたまる','k','After the rain, the ground gets firm.','After a problem or a fight, things can become even stronger than before.','いやな ことの あとは、前より よく なる。','友だちとけんかしたけど、なかなおりしてもっとなかよくなった。雨降って地固まるだね。','We had a fight, made up, and are even better friends now. After rain the ground gets firm.'],
+ ['百聞は一見にしかず','ひゃくぶんはいっけんにしかず','g','Hearing a hundred times is not as good as seeing once.','Seeing something with your own eyes teaches you more than hearing about it.','なんども 聞くより、一ど 自分の 目で 見る ほうが よく わかる。','本で読んだ富士山を本当に見た！百聞は一見にしかずだね。','I really saw Mount Fuji, not just in a book! Seeing is believing.'],
+ ['灯台下暗し','とうだいもとくらし','k','It is dark right under the lighthouse.','Things right next to you can be the hardest to notice.','近くの ことほど、気が つかない。','ずっとさがしていたえんぴつが、ふでばこの中にあった。灯台下暗し！','The pencil I was looking for was in my pencil case all along!'],
+ ['好きこそものの上手なれ','すきこそもののじょうずなれ','k','Loving something is how you get good at it.','You get really good at things you enjoy.','好きな ことは、どんどん 上手に なる。','絵をかくのが大好きだから、どんどん上手になる。好きこそものの上手なれ。','I love drawing, so I keep getting better. Love makes you skilled.'],
+ ['案ずるより産むが易し','あんずるよりうむがやすし','k','Giving birth is easier than worrying about it.','Doing something is often easier than worrying about it beforehand.','しんぱいするより、やって みると かんたんな ことが 多い。','発表がこわかったけど、やってみたらできた。案ずるより産むが易しだね。','I was scared of my presentation, but I did it! Doing is easier than worrying.'],
+ ['三人寄れば文殊の知恵','さんにんよればもんじゅのちえ','k','Three people together are as wise as Monju (the wise Buddhist figure).','When people think together, they come up with great ideas.','みんなで 考えると、いい アイデアが 出る。','一人ではわからなかったけど、三人で考えたらとけた！','I couldn’t solve it alone, but three of us did it together!'],
+ ['二兎を追う者は一兎をも得ず','にとをおうものはいっとをもえず','k','Chase two rabbits and you catch neither.','If you try to do two things at once, you might finish neither. Do one thing at a time.','二つの ことを 一どに やろうと すると、どちらも うまく いかない。','テレビを見ながら宿題をしたら、どっちもできなかった。二兎を追う者は一兎をも得ず。','I watched TV while doing homework and did neither well. One rabbit at a time!'],
+ ['能ある鷹は爪を隠す','のうあるたかはつめをかくす','k','A clever hawk hides its claws.','People who are really talented don’t need to show off.','本当に すごい 人は、じまん しない。','あの子はピアノがすごく上手なのに、じまんしない。能ある鷹は爪を隠すだね。','She is amazing at piano but never shows off. A clever hawk hides its claws.'],
+ ['猫の手も借りたい','ねこのてもかりたい','k','So busy you would even borrow a cat’s paws.','Super, super busy and needing help.','とても いそがしくて、だれでも いいから 手つだって ほしい。','大そうじの日は、猫の手も借りたいほどいそがしい。','On big cleaning day we are so busy we would borrow a cat’s paws!'],
+ ['犬も歩けば棒に当たる','いぬもあるけばぼうにあたる','k','A dog that walks around bumps into a stick.','If you go out and try things, unexpected things happen (today, people often mean lucky surprises).','いろいろ やって みると、思わぬ ことに 出会う。','公園に行ったら、前の学校の友だちに会えた。犬も歩けば棒に当たるだね。','I went to the park and met a friend from my old school. A walking dog finds a stick!'],
+ ['井の中の蛙大海を知らず','いのなかのかわずたいかいをしらず','g','A frog in a well does not know the great ocean.','If you only stay in your small world, you don’t know how big the world is. Keep exploring!','せまい 中に いると、広い 世界を 知らない まま。','いろいろな国のことを知りたい。井の中の蛙にはなりたくない。','I want to learn about many countries. I don’t want to be a frog in a well.',['cn47'],'This idea comes from the book of Zhuangzi: a frog in a well cannot imagine the sea.'],
+ ['時は金なり','ときはかねなり','k','Time is money.','Time is precious, so don’t waste it.','時間は お金と 同じくらい 大切。','時は金なり。ゲームの前に、宿題をすませよう。','Time is money. Let’s finish homework before games.',['am11'],'Japanese got this saying from Benjamin Franklin, who wrote “Remember that time is money” in 1748.'],
+ ['目から鱗が落ちる','めからうろこがおちる','i','Scales fall from your eyes.','Suddenly understanding something clearly. “Aha!”','とつぜん よく わかるように なる。','先生のせつめいを聞いて、目から鱗が落ちた！','When the teacher explained it, it suddenly all made sense!'],
+ ['首を長くする','くびをながくする','i','To stretch your neck long (to see far away).','Waiting for something you are really excited about.','楽しみに まって いる。','夏休みを首を長くしてまっている。','I can’t wait for summer holidays!'],
+ ['鼻が高い','はながたかい','i','Your nose is high.','Feeling proud.','じまんに 思う。','妹がコンクールでがんばって、わたしも鼻が高い。','My little sister did great in the contest, and I feel proud.'],
+ ['顔から火が出る','かおからひがでる','i','Fire comes out of your face.','So embarrassed your face goes red and hot. (Everyone feels this sometimes!)','とても はずかしい。','みんなの前でころんで、顔から火が出た。','I fell in front of everyone and my face went bright red.'],
+ ['腹が立つ','はらがたつ','i','Your belly stands up.','Feeling angry. (It is okay to feel angry. Take a slow breath!)','おこる。','腹が立ったときは、ゆっくり深呼吸しよう。','When you feel angry, take a slow, deep breath.'],
+ ['気が合う','きがあう','i','Your feelings match.','Getting along really well with someone.','なかよく できる。','あの子とは気が合うから、いっしょにいると楽しい。','We get along so well, it’s fun being together.'],
+ ['手を貸す','てをかす','i','To lend your hand.','To help someone.','手つだう。','おもい荷物を持っているおばあさんに手を貸した。','I helped a grandma carry her heavy bag.'],
+ ['耳が痛い','みみがいたい','i','Your ears hurt.','Hearing something true about yourself that is a bit hard to hear.','自分の よくない ところを 言われて、聞くのが つらい。','「へやをかたづけなさい」と言われて、耳が痛い。','Being told to tidy my room makes my ears hurt (because it’s true!).'],
+ ['口が堅い','くちがかたい','i','Your mouth is hard.','Good at keeping secrets.','ひみつを ほかの 人に 言わない。','あの子は口が堅いから、ひみつを話せる。','She’s good at keeping secrets, so I can tell her mine.'],
+ ['歯が立たない','はがたたない','i','Your teeth can’t bite into it.','Something is too hard to handle (for now!).','むずかしくて かなわない。','このパズルは歯が立たない。でも、また明日やってみよう！','This puzzle is too hard for now. I’ll try again tomorrow!'],
+ ['目が回る','めがまわる','i','Your eyes spin.','Being super busy.','とても いそがしい。','今日は目が回るほどいそがしかった。','Today was so busy my eyes were spinning.'],
+ ['足が棒になる','あしがぼうになる','i','Your legs turn into sticks.','Legs very tired from walking or standing a long time.','たくさん 歩いて、足が つかれる。','どうぶつえんを一日中歩いて、足が棒になった。','We walked around the zoo all day and my legs turned to sticks.'],
+ ['肩の荷が下りる','かたのにがおりる','i','The load comes off your shoulders.','Feeling relieved when a worry or job is finished.','しんぱいや 大変な ことが おわって、ほっと する。','発表がおわって、肩の荷が下りた。','My presentation is done. What a relief!'],
+ ['胸を張る','むねをはる','i','To puff out your chest.','Standing tall and feeling proud and confident.','じしんを もつ。','がんばったんだから、胸を張っていいよ。','You worked hard, so stand tall and be proud.'],
+ ['息をのむ','いきをのむ','i','To swallow your breath.','Being so amazed you stop breathing for a second.','びっくりして、いきを とめる。','花火があまりにきれいで、息をのんだ。','The fireworks were so beautiful, I gasped.'],
+ ['手に汗を握る','てにあせをにぎる','i','To hold sweat in your hands.','Watching something really exciting and tense.','どきどき しながら 見る。','手に汗を握るサッカーの試合だった。','It was a super exciting soccer game.'],
+ ['水に流す','みずにながす','i','To wash it away in the water.','To forgive and forget, and start fresh.','前の ことを ゆるして、わすれる。','けんかのことは水に流して、また遊ぼう。','Let’s forgive and forget the fight and play again.'],
+ ['腕が上がる','うでがあがる','i','Your arm goes up.','Your skill gets better.','上手に なる。','毎日れんしゅうして、なわとびの腕が上がった。','I practised every day and got better at skipping rope.'],
+ ['道草を食う','みちくさをくう','i','To eat grass on the road (like a horse stopping to snack).','Dawdling or stopping to play on the way somewhere.','とちゅうで よりみちを する。','道草を食わないで、まっすぐ帰ってきてね。','Come straight home, no dawdling!'],
+ ['猫をかぶる','ねこをかぶる','i','To wear a cat (on your head).','Pretending to be quieter or nicer than you really are.','本当の 自分を かくして、おとなしく する。','あの子は先生の前だと猫をかぶっている。','She acts extra quiet in front of the teacher.'],
+ ['調子に乗る','ちょうしにのる','i','To ride the rhythm.','Getting carried away when things are going well.','うまく いって、いい 気に なりすぎる。','調子に乗って走ったら、ころんでしまった。','I got carried away running and fell over.'],
+ ['気が重い','きがおもい','i','Your feelings are heavy.','Not looking forward to something; feeling heavy inside. (Talk to someone about it!)','いやで、気もちが 重い。','歯医者に行くのは気が重い。','I’m not looking forward to the dentist.'],
+ ['胸がいっぱい','むねがいっぱい','i','Your chest is full.','So full of feelings (happy or moved) that you can hardly speak.','うれしさや かんどうで いっぱいに なる。','みんなにおいわいしてもらって、胸がいっぱいになった。','Everyone celebrated me, and my heart was so full.'],
+ ['目と鼻の先','めとはなのさき','i','Between your eyes and the tip of your nose.','Very, very close by.','とても 近い。','学校は家から目と鼻の先だ。','School is super close to my house.'],
+ ['寝耳に水','ねみみにみず','k','Water in your ear while you sleep.','A big, sudden surprise.','とつぜんの ことで、とても おどろく。','転校の話は寝耳に水だった。','The news about changing schools was a total surprise.'],
+ ['一生懸命','いっしょうけんめい','y','With your whole life.','Trying with all your might.','力いっぱい がんばる。','一生懸命がんばったから、けっかはどうでも、すごいよ。','You tried with all your might, so whatever happens, that is amazing.'],
+ ['以心伝心','いしんでんしん','y','From heart to heart.','Understanding each other without words.','ことばに しなくても、気もちが つたわる。','お母さんと目が合っただけでわかった。以心伝心だね。','Mom and I just looked at each other and understood. Heart to heart!'],
+ ['一日一善','いちにちいちぜん','y','One day, one good deed.','Do one kind thing every day.','一日に 一つ、いい ことを する。','今日の一日一善は、ごみをひろったこと。','Today’s good deed: I picked up some litter.'],
+ ['心機一転','しんきいってん','y','Your heart turns around.','Making a fresh start with a new feeling.','気もちを 新しく して、がんばる。','新しい年だから、心機一転がんばろう。','It’s a new year, so let’s make a fresh start.'],
+ ['有言実行','ゆうげんじっこう','y','Say it and do it.','Doing what you said you would do.','言った ことを、ちゃんと やる。','「毎日本を読む」と言ったから、有言実行するよ。','I said I’d read every day, so I’ll do it!'],
+ ['日進月歩','にっしんげっぽ','y','Advance by the day, step by the month.','Getting better and better, steadily.','毎日 どんどん よく なる。','漢字の力は日進月歩、どんどんのびているよ。','Your kanji is getting better day by day.'],
+ ['大器晩成','たいきばんせい','y','A big bowl takes a long time to make.','Some people bloom later, and that is okay. Great things take time.','大きな 才のうは、ゆっくり そだつ。','今はゆっくりでも大丈夫。大器晩成って言うよ。','It’s okay to be slow now. Great things take time.',['cn03'],'These four kanji come from Laozi’s book, the Tao Te Ching.'],
+ ['温故知新','おんこちしん','y','Warm up the old, know the new.','Learning about the past helps you discover new ideas. (Just like your history cards!)','むかしの ことを 学んで、新しい ことを 知る。','むかしの人のことを学ぶと、新しい考えがうかぶ。温故知新だね。','Learning about people long ago gives me new ideas.',['cn02'],'This comes from Confucius’ sayings, the Analects: “Review the old and learn the new, and you can be a teacher.”'],
+ ['五十歩百歩','ごじっぽひゃっぽ','g','Fifty steps or a hundred steps.','Two things that are almost the same, even if someone says one is better.','少しの ちがいは あっても、だいたい 同じ。','わすれものが一つでも二つでも、五十歩百歩だよ。','Forgetting one thing or two things, it’s about the same!',['cn46'],'Mencius told this story: in a battle, a soldier who ran away 50 steps laughed at one who ran 100 steps. But both ran away!'],
+ ['猫に小判','ねこにこばん','k','Giving a gold coin to a cat.','Giving something valuable to someone who doesn’t know its value.','ねうちが わからない 人に、いい ものを あげても むだ。','赤ちゃんに高い本をあげても、猫に小判だね。','Giving a baby an expensive book is like giving a cat a gold coin.'],
+ ['馬の耳に念仏','うまのみみにねんぶつ','k','Reading prayers into a horse’s ear.','Advice that goes in one ear and out the other.','いくら 言っても、聞いて もらえない。','弟に「かたづけて」と言っても、馬の耳に念仏だ。','Telling my little brother to tidy up goes in one ear and out the other.'],
+ ['弘法も筆の誤り','こうぼうもふでのあやまり','k','Even Kōbō (a famous calligrapher) made mistakes with his brush.','Even experts make mistakes, so don’t be too hard on yourself.','名人でも、ときには まちがえる。','書道の先生も字をまちがえた。弘法も筆の誤りだね。','Even my calligraphy teacher made a mistake. Even experts slip!'],
+ ['泣きっ面に蜂','なきっつらにはち','k','A bee stings your crying face.','One bad thing after another. (Bad days end. Tomorrow is new!)','わるい ことが かさなる。','ころんだうえに雨までふってきた。泣きっ面に蜂だ。','I fell, and then it started raining too. One thing after another!'],
+ ['類は友を呼ぶ','るいはともをよぶ','k','Like calls like.','People who are similar become friends. (Birds of a feather flock together.)','にた 人どうしが、あつまる。','ぼくの友だちはみんな虫が好き。類は友を呼ぶだね。','All my friends love bugs. Birds of a feather!'],
+ ['隣の芝生は青い','となりのしばふはあおい','k','The neighbour’s lawn looks greener.','Other people’s things always seem better than yours, even when they aren’t.','人の ものは、よく 見える。','友だちのおやつがおいしそうに見える。隣の芝生は青いね。','My friend’s snack always looks yummier. The grass is greener!'],
+ ['棚からぼたもち','たなからぼたもち','k','A rice cake falls off the shelf (right into your mouth).','Good luck that comes without any effort. (People also say 棚ぼた.)','何も しないのに、いい ことが ある。','くじびきで一等が当たった。棚からぼたもちだ！','I won first prize in the lucky draw. What luck!'],
+ ['縁の下の力持ち','えんのしたのちからもち','k','The strong person under the floor.','Someone who quietly helps and supports others without being seen. A hidden hero!','見えない ところで、みんなの ために がんばる 人。','うんどう会の準備をしてくれる人は、縁の下の力持ちだ。','The people who set up sports day are our hidden heroes.'],
+ ['親しき仲にも礼儀あり','したしきなかにもれいぎあり','k','Even between close friends there are manners.','Even with family and best friends, be polite and kind.','なかよしでも、れいぎを 大切に。','家族でも「ありがとう」を言おう。親しき仲にも礼儀あり。','Say thank you even to family. Manners matter with everyone.'],
+ ['蛙の子は蛙','かえるのこはかえる','k','A frog’s child is a frog.','Children often grow up to be like their parents.','子どもは 親に にる。','お父さんもサッカーが上手。蛙の子は蛙だね。','Her dad is great at soccer too. Like parent, like child!'],
+ ['後悔先に立たず','こうかいさきにたたず','k','Regret never comes first.','You can only feel sorry after something happens, so think before you act.','あとで くやんでも おそい。よく 考えて から やろう。','わすれものをしないように、前の日にじゅんびしよう。後悔先に立たず。','Pack your bag the night before. Regret always comes too late.'],
+ ['口は災いの元','くちはわざわいのもと','k','The mouth is where trouble starts.','Careless words can cause trouble, so think before you speak.','言っては いけない ことを 言うと、わるい ことが おきる。','わる口はやめよう。口は災いの元だよ。','Let’s not say mean things. Words can cause trouble.'],
+ ['習うより慣れよ','ならうよりなれよ','k','Get used to it rather than be taught it.','You learn best by doing it again and again.','教わるより、じっさいに やって みる ほうが 身に つく。','一輪車は、習うより慣れよ。たくさんのってみよう。','Unicycling is learned by doing. Just keep riding!'],
+ ['鉄は熱いうちに打て','てつはあついうちにうて','k','Strike the iron while it is hot.','Do things while you are keen, and learn while you are young.','やる気の ある うちに、すぐ やろう。','習ったばかりの漢字を、すぐ書いてみよう。鉄は熱いうちに打て。','Write the new kanji right away, while it’s fresh!'],
+ ['備えあれば憂いなし','そなえあればうれいなし','k','If you are prepared, there is nothing to worry about.','Getting ready ahead of time means less worry later.','じゅんびを して おけば、しんぱい ない。','前の日に学校のじゅんびをしておこう。備えあれば憂いなし。','Get your school things ready the night before. Be prepared, no worries.'],
+ ['聞くは一時の恥、聞かぬは一生の恥','きくはいっときのはじ、きかぬはいっしょうのはじ','k','Asking is a moment of embarrassment; not asking is a lifetime of it.','It’s always okay to ask when you don’t know. Asking is brave!','わからない ことは、はずかしがらずに 聞こう。','わからないところは先生に聞こう。聞くは一時の恥、聞かぬは一生の恥。','If you don’t understand, ask your teacher. Asking is brave!'],
+ ['情けは人のためならず','なさけはひとのためならず','k','Kindness is not only for the other person.','Being kind to others comes back to you in the end.','人に やさしく すると、いつか 自分にも いい ことが かえって くる。','友だちを手つだったら、今度はわたしが助けてもらった。情けは人のためならず。','I helped my friend, and later she helped me. Kindness comes back!'],
+ ['三度目の正直','さんどめのしょうじき','k','The third time is the true one.','Even if you fail twice, the third try might work! (Third time lucky!)','二回 だめでも、三回目は うまく いく。','二回しっぱいしたけど、三度目の正直でとべた！','I failed twice, but on the third try I made the jump!'],
+ ['住めば都','すめばみやこ','k','Wherever you live becomes the capital.','Any place can feel like the best home once you get used to it.','どこでも、なれれば いい ところに なる。','新しい町もすぐ好きになった。住めば都だね。','I quickly came to love our new town. Home is where you live!'],
+ ['所変われば品変わる','ところかわればしなかわる','k','Change the place and things change.','Different places have different ways, words and customs.','場所が かわれば、ことばや しゅうかんも かわる。','カナダと日本では、お正月のすごし方がちがう。所変われば品変わる。','New Year is different in Canada and Japan. Different places, different ways!'],
+ ['果報は寝て待て','かほうはねてまて','k','Wait for good news while you sleep.','After you do your best, wait calmly. Good things take time.','がんばった あとは、あせらず まとう。','テストはがんばった。果報は寝て待て、だね。','I did my best on the test. Now I’ll wait calmly.'],
+ ['良薬は口に苦し','りょうやくはくちににがし','k','Good medicine tastes bitter.','Helpful advice can be hard to hear.','ためになる ことばは、聞くのが つらい ことも ある。','コーチの注意はきびしいけど、良薬は口に苦しだ。','The coach’s advice is tough, but it helps me.'],
+ ['光陰矢の如し','こういんやのごとし','k','Time flies like an arrow.','Time goes by really fast, so enjoy every day.','時間は あっと いう まに すぎる。','もう三年生もおわりだ。光陰矢の如し。','Grade 3 is nearly over. Time flies like an arrow!'],
+ ['腹八分目','はらはちぶんめ','i','Belly eight-tenths full.','Stop eating when you feel about 80% full. It’s healthy!','おなかいっぱいに なる 少し 前で やめる。','おいしくても、腹八分目にしておこう。','Even if it’s yummy, stop when you’re about 80% full.'],
+ ['桃栗三年柿八年','ももくりさんねんかきはちねん','k','Peach and chestnut trees take three years to fruit, persimmons eight.','Good things take time to grow, so be patient.','何かを なしとげるには、時間が かかる。','ピアノもすぐにはうまくならない。桃栗三年柿八年だよ。','You won’t get great at piano right away. Good things take time to grow.'],
+ ['一寸の虫にも五分の魂','いっすんのむしにもごぶのたましい','k','Even a tiny bug has a spirit half its size.','Even small or weak beings have feelings and pride. Respect everyone.','小さな ものにも、心が ある。大切に しよう。','小さい子にもやさしくしよう。一寸の虫にも五分の魂。','Be kind to little kids too. Even small beings have big hearts.'],
+ ['人のふり見て我がふり直せ','ひとのふりみてわがふりなおせ','k','Watch how others act and fix how you act.','Learn from what other people do, good or bad.','人の する ことを 見て、自分を よく しよう。','ろうかを走って注意された子を見て、わたしも気をつけようと思った。','I saw someone get told off for running in the hall, so I’ll be careful too.'],
+ ['三つ子の魂百まで','みつごのたましいひゃくまで','k','The spirit of a three-year-old lasts until a hundred.','Habits and personality from when you are little stay for life. So little good habits matter!','小さい ころの せいかくは、大人に なっても かわらない。','三つ子の魂百まで。いい習かんを今からつけよう。','What you learn when little lasts forever. Let’s build good habits now.'],
+ ['顔が広い','かおがひろい','i','A wide face.','Knowing lots of people.','知り合いが 多い。','おじいちゃんは顔が広いから、町の人をみんな知っている。','Grandpa knows everyone in town.'],
+ ['根も葉もない','ねもはもない','i','No roots and no leaves.','Something with no truth in it, like a made-up rumour.','本当では ない。','それは根も葉もないうわさだよ。','That rumour isn’t true at all.'],
+ ['足を引っ張る','あしをひっぱる','i','To pull on someone’s leg from behind.','To hold someone or a team back.','人の じゃまを する。','チームの足を引っ張らないように、れんしゅうしよう。','Let’s practise so we don’t hold the team back.'],
+ ['油を売る','あぶらをうる','i','To sell oil.','Chatting and wasting time when you should be working.','おしゃべりして、なまける。','油を売っていないで、早くかたづけてね。','Stop chatting and tidy up, please.'],
+ ['一か八か','いちかばちか','i','One or eight.','Trying something even though you don’t know if it will work. Taking a chance!','うまく いくか わからないけど、やって みる。','一か八か、ゴールに向かってシュートした！','I took a chance and shot at the goal!'],
+ ['実るほど頭を垂れる稲穂かな','みのるほどこうべをたれるいなほかな','k','The more the rice ripens, the lower it bows its head.','The wiser and better someone becomes, the more humble and kind they are.','えらく なる 人ほど、ひくい しせいで いる。','あのせんしゅは強いのに、いつもていねい。実るほど頭を垂れる稲穂かな。','That athlete is so strong but always polite. The ripest rice bows lowest.'],
+ ['雨垂れ石を穿つ','あまだれいしをうがつ','k','Raindrops wear a hole in a stone.','Small efforts, again and again, can do something that seemed impossible.','小さな ことでも、つづければ 大きな ことが できる。','毎日五分の音読でも、雨垂れ石を穿つ。','Even 5 minutes of reading aloud a day adds up, like raindrops on stone.'],
+ ['四面楚歌','しめんそか','g','Songs of Chu on all four sides.','Feeling like everyone around you is against you. (If you ever feel this way, tell a grown-up you trust.)','まわりが みんな てきで、ひとりぼっち。','みんなに反対されて、四面楚歌の気分だった。','Everyone disagreed with me, and I felt all alone.',['cn49'],'Liu Bang’s army surrounded his rival Xiang Yu and sang songs from Xiang Yu’s home on every side, so Xiang Yu felt all alone.'],
+ ['背水の陣','はいすいのじん','g','Battle lines with your back to the river.','Giving it everything because there’s no going back.','もう あとが ないので、全力で がんばる。','これが最後のチャンス。背水の陣でがんばるぞ！','This is my last chance. I’ll give it everything!',['cn49'],'Liu Bang’s general, Han Xin, lined up his soldiers with a river behind them so they would fight with all their might, and they won.'],
+ ['三顧の礼','さんこのれい','g','Visiting three times, with respect.','Asking someone very politely and patiently because you really respect them.','まごころを こめて、なんども おねがいする。','三顧の礼で、有名なコーチにチームに来てもらった。','We politely asked again and again, and the famous coach joined our team.',['cn38','cn11','cn45'],'Liu Bei visited Zhuge Liang’s little house three times to ask him for help. Zhuge Liang was so moved that he agreed.'],
+ ['彼を知り己を知れば百戦殆うからず','かれをしりおのれをしればひゃくせんあやうからず','g','Know the other side and know yourself, and in a hundred battles you will be safe.','If you understand the challenge and also yourself (what you are good at and not yet good at), you can handle anything.','あいてと 自分の ことを よく 知って いれば、だいじょうぶ。','テストのはんいと、自分のにがてをしらべよう。彼を知り己を知れば百戦殆うからず。','Check what’s on the test and what you find tricky. Know both and you will be ready.',['cn04'],'Sun Tzu wrote this in his famous book, The Art of War.'],
+ ['敵に塩を送る','てきにしおをおくる','i','Sending salt to your enemy.','Helping your rival when they are in trouble. Being a good sport!','ライバルが こまって いる ときに、助けて あげる。','ライバルのチームにボールをかしてあげた。敵に塩を送るだね。','We lent the rival team a ball. That’s sending salt to your enemy!',['jp39','jp38'],'When Takeda Shingen’s land ran out of salt, his rival Uesugi Kenshin is said to have sent him salt, saying he fought with swords, not salt.'],
+ ['和を以て貴しとなす','わをもってとうとしとなす','m','Harmony is the most precious thing.','Getting along and working things out together is very important.','みんなが なかよく する ことが、いちばん 大切。','けんかしないで話し合おう。和を以て貴しとなす。','Let’s talk instead of fighting. Getting along matters most.',['jp02'],'These are the first words of Prince Shōtoku’s Seventeen-Article Constitution, written about 1400 years ago.'],
+ ['天は人の上に人を造らず','てんはひとのうえにひとをつくらず','m','Heaven does not make one person above another.','Every person is equal and important.','人は みんな びょうどう。','天は人の上に人を造らず。だれにでもやさしくしよう。','Everyone is equal. Let’s be kind to everyone.',['jp21'],'Fukuzawa Yukichi wrote this at the start of his famous book about the importance of learning.'],
+ ['弁慶の泣き所','べんけいのなきどころ','i','The spot that makes even Benkei cry.','Your shin (it hurts when you bump it!), or anyone’s weak spot.','すねの こと。また、強い 人の よわい ところ。','つくえに弁慶の泣き所をぶつけて、いたかった！','I bumped my shin on the desk. Even Benkei would cry!',['jp37'],'Benkei was a super strong warrior monk, but they say even he would cry if he got hit on the shin.'],
+ ['内弁慶','うちべんけい','i','Benkei at home.','Someone who is bold and loud at home but shy outside. (Lots of people are like this, and it’s okay!)','家では 元気だけど、外では おとなしい 人。','弟は内弁慶で、学校ではとてもしずか。','My little brother is loud at home but very quiet at school.',['jp37'],'Benkei was a famously brave warrior, so someone who is only brave at home is called an “at-home Benkei”.'],
+ ['判官びいき','ほうがんびいき','i','Cheering for the Hōgan.','Cheering for the underdog, the one who is losing or weaker.','よわい ほうや まけて いる ほうを おうえん する こと。','まけているチームをおうえんしたくなるのは、判官びいきだね。','Wanting to cheer for the losing team is rooting for the underdog.',['jp36'],'Hōgan was Minamoto no Yoshitsune’s title. People felt sorry for him when his own brother turned against him, and they still cheer for him today.'],
+ ['天下分け目','てんかわけめ','i','The split of the whole country.','A big, deciding moment that will settle who wins.','かちまけが きまる 大事な とき。','決勝戦は天下分け目の戦いだ！','The final match is the big deciding battle!',['jp40'],'People call the Battle of Sekigahara “天下分け目の戦い”, the battle that decided who would rule all of Japan.'],
+ ['浦島太郎','うらしまたろう','i','Being like Urashima Tarō.','Coming back after a long time away and finding everything has changed.','ひさしぶりに もどったら、なにもかも かわって いた。','長い入院からもどったら、浦島太郎の気分だった。','After a long time in hospital, I felt like Urashima Tarō: everything had changed.',['jp42'],'In the story, Urashima Tarō visits the Dragon Palace for what feels like a few days, but when he gets home, hundreds of years have passed.'],
+ ['一富士二鷹三茄子','いちふじにたかさんなすび','k','One Fuji, two hawks, three eggplants.','The three luckiest things to see in your first dream of the New Year.','はつゆめに 見ると えんぎが いい もの。','はつゆめで富士山を見た！一富士二鷹三茄子だ！','I saw Mount Fuji in my first dream of the year. Lucky!',['jp53'],'Mount Fuji is the luckiest of all first dreams, because it is tall, beautiful and one of a kind.'],
+ ['鳴かぬなら鳴くまで待とうホトトギス','なかぬならなくまでまとうほととぎす','m','If the cuckoo won’t sing, wait until it sings.','Being patient: good things come if you wait calmly.','あせらず、じっと まつ ことが 大切。','鳴かぬなら鳴くまで待とうホトトギス。花がさくまで、ゆっくりまとう。','If the bird won’t sing, wait until it does. Let’s wait patiently for the flowers.',['jp10','jp09','jp08'],'A famous old verse shows three leaders: Nobunaga was impatient, Hideyoshi would find a clever way to make the bird sing (鳴かせてみよう), and Tokugawa Ieyasu would patiently wait.'],
+ ['仏の顔も三度まで','ほとけのかおもさんどまで','k','Even the Buddha’s face (patience) lasts only three times.','Even the kindest person gets upset if you keep doing the same bad thing.','やさしい 人でも、なんども されると おこる。','三回もやくそくをやぶったら、仏の顔も三度までだよ。','If you break a promise three times, even the kindest person gets upset.',['as10'],'The Buddha is famous for being calm and patient, so this saying means even the most patient person has limits.'],
+ ['釈迦に説法','しゃかにせっぽう','k','Preaching to the Buddha.','Explaining something to someone who already knows it much better than you.','よく 知って いる 人に、教えようと する こと。','プロのせんしゅにサッカーを教えるなんて、釈迦に説法だよ。','Teaching soccer to a pro player? That’s preaching to the Buddha!',['as10'],'釈迦 (Shaka) is the Japanese name for the Buddha, the greatest teacher of all, so you would never need to preach to him.'],
+ ['終わりよければすべてよし','おわりよければすべてよし','k','If the end is good, everything is good.','If things end well, the troubles along the way don’t matter so much.','さいごが よければ、とちゅうの ことは いい。','道にまよったけど、ちゃんとついた。終わりよければすべてよし！','We got lost, but we made it. All’s well that ends well!',['eu13'],'This is the Japanese title of Shakespeare’s play “All’s Well That Ends Well”.'],
+ ['ローマは一日にして成らず','ろーまはいちにちにしてならず','k','Rome was not built in a day.','Big things take lots of time and effort.','大きな ことは、長い 時間を かけて できる。','ローマは一日にして成らず。毎日少しずつれんしゅうしよう。','Rome wasn’t built in a day. Let’s practise a little every day.',['eu32','eu10'],'Ancient Rome grew over hundreds of years, so this saying came from Europe to Japan.'],
+ ['郷に入っては郷に従え','ごうにいってはごうにしたがえ','k','When you enter a village, follow the village’s ways.','When you visit somewhere new, respect and follow how people do things there. (“When in Rome, do as the Romans do.”)','その 場所の ルールや しゅうかんに あわせよう。','日本の家ではくつをぬごう。郷に入っては郷に従え。','In Japanese homes, take off your shoes. When in Rome!',['eu32'],'In English, people say “When in Rome, do as the Romans do.”'],
+ ['すべての道はローマに通ず','すべてのみちはろーまにつうず','k','All roads lead to Rome.','There are many different ways to reach the same goal.','やり方は ちがっても、同じ ところに たどりつく。','漢字のおぼえ方はいろいろ。すべての道はローマに通ずだよ。','There are many ways to learn kanji. All roads lead to Rome!',['eu32'],'The Romans built roads that connected their whole empire to the city of Rome.'],
+ ['賽は投げられた','さいはなげられた','m','The dice have been thrown.','You have made your choice, so now you go for it. No turning back!','もう きめたから、やるしか ない。','発表にもうしこんだ。賽は投げられた！','I signed up for the presentation. The dice are thrown!',['eu18'],'Julius Caesar is said to have said this when he crossed the Rubicon River with his army.'],
+ ['目には目を歯には歯を','めにはめをはにははを','m','An eye for an eye, a tooth for a tooth.','In an old law, the punishment had to match what was done, no more. Today, we try to solve problems with fairness and kindness instead of getting even.','されたのと 同じ ことを かえす こと。(今は、話し合いで かいけつ しよう。)','目には目を、ではなく、話し合いでなかなおりしよう。','Instead of getting even, let’s talk and make up.',['as12'],'This comes from the Code of Hammurabi, one of the oldest written laws, carved in stone almost 4000 years ago.'],
+ ['過ぎたるは猶及ばざるが如し','すぎたるはなおおよばざるがごとし','g','Too much is just as bad as not enough.','Doing too much of something is no better than doing too little. Find the balance!','やりすぎは、たりないのと 同じくらい よくない。','ゲームも勉強もやりすぎはよくない。過ぎたるは猶及ばざるが如し。','Too much gaming or even too much studying isn’t good. Balance!',['cn02'],'Confucius said this in the Analects when his students asked which of two people was better.']
+];
+
+/* Strong thought of the day (Kanji tab): resilience, feelings, rest and self-kindness.
+   [thought, who said it ('' = Kit), a tiny thing to try, c = extra gentle (shown on hard days)] */
+var STRONG = [
+ ['A mistake is not a “no”. It is a “not yet”.','','Think of one thing you could not do last year but can do now.'],
+ ['You’re braver than you believe, and stronger than you seem, and smarter than you think.','Christopher Robin, Winnie the Pooh','Say it to yourself in the mirror, nice and loud.'],
+ ['Feelings are like weather. Storms come, and storms pass.','','If you feel stormy today, name the feeling out loud. Naming it makes it smaller.',1],
+ ['Rest is not giving up. Rest is getting ready to try again.','','Take a 5-minute break today, even if you feel fine.',1],
+ ['Asking for help is a strong thing to do, not a weak one.','','Who could you ask when something feels too tricky?'],
+ ['Isn’t it nice to think that tomorrow is a new day with no mistakes in it yet?','Anne of Green Gables (L. M. Montgomery, a Canadian writer)','At bedtime, let go of one oops from today.',1],
+ ['Talk to yourself like you would talk to your best friend.','','When you make a mistake today, say “That’s okay, I’m learning.”'],
+ ['Bouncing back is a skill. Every time you get back up, it gets stronger.','','Remember a time you felt sad and then felt better. What helped?'],
+ ['Take chances, make mistakes, get messy!','Ms. Frizzle, The Magic School Bus','Try one thing today that you are not sure you can do.'],
+ ['Big things are made of small steps. Just do the next small one.','','Pick the smallest first step of something big, and do only that.'],
+ ['It’s okay to cry. Tears help your body let the hard feelings out.','','If you feel like crying, find a hug or a cosy spot. Then a glass of water.',1],
+ ['Your brain is like a muscle. Tricky things make it stronger.','','When something feels hard today, say “My brain is growing!”'],
+ ['You may encounter many defeats, but you must not be defeated.','Maya Angelou','Think of something that went wrong, and one thing you learned from it.'],
+ ['Some days you shine, and some days you rest. Both are okay.','','Ask your body: does it need play, food, water or rest right now?',1],
+ ['Instead of “I can’t do it”, try “I can’t do it YET”.','','Catch yourself saying “I can’t” today and add “yet”.'],
+ ['Oh yes, the past can hurt. But the way I see it, you can either run from it or learn from it.','Rafiki, The Lion King','What did yesterday teach you?'],
+ ['A bad moment is not a bad day. A bad day is not a bad life.','','If something goes wrong, take 3 slow breaths and start the next minute fresh.',1],
+ ['Compare yourself to the you of yesterday, not to anyone else.','','Look at your kanji tree. Look how much YOU have grown!'],
+ ['You are loved even on the days you don’t get everything right.','','Give someone at home a hug today. It works both ways!',1],
+ ['One child, one teacher, one book, one pen can change the world.','Malala Yousafzai','Write one sentence about something you care about.'],
+ ['Strong people are not people who never fall. They are people who get back up.','','Think of a sports star. How many times do you think they fell while learning?'],
+ ['When something feels too big, break it into tiny pieces.','','Split your next homework into 3 little parts with a stretch between each.'],
+ ['Your feelings matter. Telling someone how you feel takes courage.','','Tell a grown-up one feeling you had today, good or bad.',1],
+ ['Courage can be quiet. Sometimes it sounds like “I’ll try again tomorrow.”','','If something didn’t work today, plan when you will try again.',1],
+ ['There’s no person in the whole world like you, and I like you just the way you are.','Fred Rogers (Mister Rogers)','Name 3 things you like about yourself.'],
+ ['You don’t have to be the best. Just be your best, and your best changes every day.','','Do one thing today with your best effort, however it turns out.'],
+ ['The flower that blooms in adversity is the most rare and beautiful of all.','The Emperor, Mulan','“Adversity” means hard times. What is a hard time you got through?'],
+ ['Today’s tricky thing is tomorrow’s easy thing.','','Write down one thing that feels hard. Check it again in a month!'],
+ ['Being nervous means you care. Breathe, and go for it.','','Before something scary, breathe in for 4, hold for 4, out for 4.'],
+ ['Done with care is better than perfect.','','Finish one thing today without worrying about making it perfect.'],
+ ['Kindness to yourself counts as kindness too.','','Do something nice for yourself today: a song, a stretch, a snack.',1],
+ ['Every expert you know made thousands of mistakes first.','','Ask a grown-up about a mistake they made while learning something.'],
+ ['When you fall, you learn how to get up. That is a superpower.','','Think of a time you got back up. Give yourself a high five!'],
+ ['Worry is like a rocking chair. It gives you something to do, but it doesn’t take you anywhere.','','If you are worried, tell someone, or draw the worry and fold it away.',1],
+ ['Hard days end. The sun comes up again.','','Look out of the window. Find one nice thing in the sky.',1],
+ ['You can be scared and brave at the same time.','','Think of a time you were scared but did it anyway.'],
+ ['Little by little, a little becomes a lot.','','Do 5 minutes of something you want to get better at.'],
+ ['Being kind is always a good choice, especially when it’s hard.','','Say something kind to someone who looks a bit sad.'],
+ ['Gratitude turns what we have into enough.','','Name 3 things you are thankful for right now.'],
+ ['You can’t always choose what happens, but you can choose what you do next.','','When something goes wrong today, ask “What can I do next?”'],
+ ['Try, learn, try again. That is the whole secret.','','Is there something you gave up on? Try it once more today.'],
+ ['Your mistakes don’t make you less smart. They make you more experienced.','','Look at an old mistake in your notebook. Can you fix it now?'],
+ ['It’s okay to not be okay. You don’t have to pretend.','','If you feel sad today, it’s okay to say so. Someone will listen.',1],
+ ['Stars can’t shine without darkness.','','Think of something good that came after something hard.'],
+ ['You have done hard things before. You can do hard things again.','','Make a list of 3 hard things you have already done.'],
+ ['Patience is a superpower. Seeds don’t grow into trees overnight.','','Notice something growing slowly: a plant, your hair, or your kanji tree!'],
+ ['Saying sorry and trying again makes friendships stronger.','','If you had a fight with someone, think about how you could make up.'],
+ ['When you help someone else, your own heart gets stronger too.','','Help someone at home without being asked.'],
+ ['Breathe in calm, breathe out worry.','','Try 5 slow breaths. Smell a flower in, blow out a candle.',1],
+ ['You are growing every single day, even when you can’t see it.','','Look at an old drawing or writing of yours. See how you have grown!'],
+ ['A wrong answer is just the brain warming up.','','In practice today, notice a wrong answer and say “Warming up!”'],
+ ['The best way to feel brave is to do one small brave thing.','','Do one small brave thing today: ask a question, try a new food, or say hi.'],
+ ['Even on a cloudy day, the sun is still there behind the clouds.','','If today feels grey, think of something you are looking forward to.',1],
+ ['Learning is not a race. Everyone blooms at their own time.','','Remember 大器晩成: great things take time.'],
+ ['Being yourself is the bravest thing you can be.','','Do something today that is totally, happily you.'],
+ ['When you don’t know, say “Let’s find out!”','','Ask a “why” question today and find the answer together.'],
+ ['Sleep, water, food, play and hugs: that is the recipe for a strong mind.','','Which part of the recipe do you need most today?',1]
+];
+
+/* Well-known English sayings and idioms linked to history cards (tap on the card for a kid-friendly popup).
+   [saying, card ids, what it means (for an 8-year-old), how it links to the card, example] */
+var CARD_SAY = [
+ ['Rome wasn’t built in a day.',['eu32','eu10'],'Big, amazing things take a long time and lots of work. Be patient!','Ancient Rome, with its roads, temples and the Colosseum, took hundreds of years to build.','Learning all your kanji takes time. Rome wasn’t built in a day!'],
+ ['When in Rome, do as the Romans do.',['eu32'],'When you visit a new place, follow the way people do things there. It shows respect.','The saying comes from long-ago advice about visiting Rome and following its customs.','At a Japanese home we take off our shoes. When in Rome!'],
+ ['All roads lead to Rome.',['eu32'],'There are lots of different ways to get to the same answer or goal.','The Romans built thousands of kilometres of roads that all connected back to Rome.','You solved it a different way, and that’s fine. All roads lead to Rome!'],
+ ['Crossing the Rubicon',['eu18'],'Making a big choice that you can’t take back.','Julius Caesar crossed the Rubicon River with his army, and after that there was no going back.','Signing up for the talent show was my Rubicon. Now I’m doing it!'],
+ ['The die is cast.',['eu18'],'The choice is made, so now you go for it.','Caesar is said to have said this as he crossed the Rubicon. (A “die” is one dice.)','I pressed send on my story. The die is cast!'],
+ ['I came, I saw, I conquered.',['eu18'],'Doing something quickly and completely. People say it as a joke when they finish something fast.','Caesar wrote “Veni, vidi, vici” after winning a very quick battle.','I came, I saw, I conquered… my whole plate of broccoli!'],
+ ['All’s well that ends well.',['eu13'],'If things turn out fine in the end, the troubles along the way don’t matter much.','It is the name of one of Shakespeare’s plays.','We missed the bus but still got there on time. All’s well that ends well!'],
+ ['A wild-goose chase',['eu13'],'Looking hard for something you will never find.','Shakespeare was the first known writer to use this phrase, in Romeo and Juliet.','Looking for my left sock was a wild-goose chase. It was on my foot!'],
+ ['In a pickle',['eu13'],'In a tricky or messy situation.','Shakespeare used this phrase in his play The Tempest.','I forgot my lunch and my wallet. I’m in a pickle!'],
+ ['All that glitters is not gold.',['eu13'],'Something that looks great on the outside isn’t always great on the inside.','A version of this (“All that glisters is not gold”) appears in Shakespeare’s The Merchant of Venice.','That shiny toy broke in a day. All that glitters is not gold.'],
+ ['Standing on the shoulders of giants',['eu11'],'Learning from the great people who came before you, so you can see even further.','Isaac Newton wrote, “If I have seen further, it is by standing on the shoulders of giants.”','Your history cards let you stand on the shoulders of giants!'],
+ ['What goes up must come down.',['eu11'],'Things that rise will fall back down sometimes. (Like a ball, or a happy or grumpy mood!)','Newton explained gravity, the pull that brings things back down to Earth.','Throw the ball gently. What goes up must come down!'],
+ ['It’s all relative.',['eu03'],'Whether something seems big or small, fast or slow, depends on what you compare it to.','Einstein’s famous ideas are called the theory of relativity.','Five minutes of waiting feels long, but five minutes of play feels short. It’s all relative!'],
+ ['A real Einstein',['eu03'],'Someone who is very clever. (Sometimes people say it as a friendly joke.)','Albert Einstein is one of the most famous scientists ever.','You figured that out so fast. You’re a real Einstein!'],
+ ['A Renaissance person',['eu01'],'Someone who is good at many different things.','Leonardo da Vinci lived during the Renaissance and was a painter, inventor, scientist and more.','She paints, codes and plays piano. A real Renaissance person!'],
+ ['And yet it moves.',['eu08'],'Saying something is true even when other people don’t believe you.','A famous story says Galileo whispered this about the Earth moving around the Sun, even after he was told to stop saying it.','People laughed at my idea, but I think it’s right. And yet it moves!'],
+ ['Cutting the Gordian knot',['eu19'],'Solving a super tricky problem in a bold, simple way.','A legend says nobody could untie a huge knot, so Alexander the Great just cut it with his sword.','Instead of untangling the cables, we bought a new one. Gordian knot cut!'],
+ ['Early to bed and early to rise, makes a man healthy, wealthy and wise.',['am11'],'Going to bed and getting up early is good for you.','Benjamin Franklin printed this in his book Poor Richard’s Almanack in 1735.','Lights out! Early to bed and early to rise.'],
+ ['An ounce of prevention is worth a pound of cure.',['am11'],'Stopping a problem before it starts is much easier than fixing it later.','Franklin wrote this about stopping fires before they start. He also started a fire company.','Brushing your teeth now is easier than a filling later. An ounce of prevention!'],
+ ['Time is money.',['am11'],'Time is precious, so don’t waste it.','Franklin wrote “Remember that time is money” in 1748.','Time is money. Let’s get the homework done!'],
+ ['I have a dream.',['am07'],'Having a big hope for a better, fairer future.','Martin Luther King Jr. gave his famous “I have a dream” speech in 1963.','I have a dream that everyone in my class gets along.'],
+ ['Hot off the press',['eu04','kr06','cn17'],'Brand new, just finished.','It comes from printing: freshly printed pages came off the printing press still warm.','Here is my new drawing, hot off the press!'],
+ ['A moral compass',['cn19'],'Your inside sense of what is right and wrong.','A compass always points the way. A moral compass points you towards the right thing to do.','When I wasn’t sure what to do, my moral compass said, “tell the truth.”'],
+ ['Go off with a bang',['cn18'],'To go really, really well.','Fireworks make a big bang, and they were invented in China.','My birthday party went off with a bang!'],
+ ['Let off steam',['gl16'],'Doing something active to get rid of big feelings or energy.','Steam engines let out extra steam so they didn’t burst. They powered the Industrial Revolution.','After school I run around the park to let off steam.'],
+ ['Full steam ahead',['gl16','ca09'],'Going forward with lots of energy.','Steam engines powered the factories and trains of the Industrial Revolution.','The homework plan is ready. Full steam ahead!'],
+ ['Back on track',['ca09'],'Going the right way again after a problem.','Trains must stay on their tracks, like the trains on Canada’s railway.','I got distracted, but now I’m back on track.'],
+ ['Learn the ropes',['gl12'],'Learning how to do something new.','On old sailing ships, new sailors had to learn which rope did what.','It’s my first day at swim club, so I’m still learning the ropes.'],
+ ['Smooth sailing',['gl12'],'When things go easily with no problems.','Sailors love calm seas and good winds.','After the first hard page, the rest was smooth sailing.'],
+ ['Go the way of the dinosaurs',['gl02'],'When something disappears or gets old-fashioned.','The dinosaurs disappeared after a giant rock hit the Earth.','Video tapes have gone the way of the dinosaurs.'],
+ ['Avoid like the plague',['gl11'],'To stay far away from something.','Long ago, people stayed away from anyone sick with the plague, like the Black Death.','My little brother avoids broccoli like the plague.'],
+ ['Give me a ring.',['ca07'],'Phone me!','Old telephones made a ringing sound. Alexander Graham Bell made the first telephone call.','Give me a ring when you get home.'],
+ ['A slam dunk',['ca03'],'Something that is sure to work, or super easy.','In basketball, a slam dunk is pushing the ball right down into the hoop. James Naismith invented basketball.','That spelling test was a slam dunk!'],
+ ['You miss 100% of the shots you don’t take.',['ca25'],'If you never try, you can never succeed. So give it a go!','Wayne Gretzky, the hockey star, said this.','I was scared to try out for the team, but you miss 100% of the shots you don’t take.'],
+ ['Skate to where the puck is going.',['ca25'],'Think ahead and get ready for what will happen next.','Wayne Gretzky said his dad taught him to skate to where the puck is going, not where it has been.','Pack your bag tonight. Skate to where the puck is going!'],
+ ['Lest we forget',['gl13','ca21','ca22'],'We will always remember the people who served and died in wars, so we keep working for peace.','People say this on Remembrance Day (Armistice Day), when we wear poppies like the ones in John McCrae’s poem.','On November 11, we are quiet for two minutes. Lest we forget.'],
+ ['Go the distance',['ca01'],'Keep going all the way to the end, even when it’s hard.','Terry Fox ran 5,373 kilometres with an artificial leg in his Marathon of Hope.','This puzzle is long, but I’m going to go the distance.'],
+ ['The middle way',['as10'],'Not too much, not too little: finding a balance.','The Buddha taught the “middle way”: not living too hard and not too easy.','Not too much screen time, not too little play. The middle way!'],
+ ['Treat others the way you want to be treated.',['cn02'],'Be kind to people the way you’d like them to be kind to you. (It’s called the Golden Rule.)','Confucius taught: “Do not do to others what you would not want done to you.”','I didn’t like being left out, so I always invite others to play.'],
+ ['A journey of a thousand miles begins with a single step.',['cn03'],'Even the biggest goal starts with one small step.','This comes from Laozi’s book, the Tao Te Ching.','Writing a whole book? A journey of a thousand miles begins with a single step!'],
+ ['Know yourself and know your enemy.',['cn04'],'Understand the challenge and understand yourself, and you can handle anything.','Sun Tzu wrote this in The Art of War.','I checked what’s on the test and what I find tricky. Know yourself!'],
+ ['An eye for an eye',['as12'],'Paying someone back with the same thing they did. (Today we try to solve problems by talking and being fair instead.)','This idea was written in the Code of Hammurabi, one of the oldest laws, almost 4000 years ago.','Instead of an eye for an eye, let’s say sorry and make up.'],
+ ['The best time to plant a tree was 20 years ago. The second best time is now.',['af05'],'Don’t worry that you didn’t start sooner. Start today!','Wangari Maathai and the Green Belt Movement planted millions of trees in Kenya.','I wish I’d started piano earlier. But the second best time is now!'],
+ ['Because it’s there.',['as18'],'Doing something hard just because it is a big, exciting challenge.','When someone asked climber George Mallory why he wanted to climb Mount Everest, he said, “Because it’s there.”','Why do I want to learn every kanji? Because it’s there!'],
+ ['Be water, my friend.',['cn58'],'Be flexible and calm, and find a way around problems, like water flowing around rocks.','Bruce Lee said this to explain how to stay calm and adapt.','The plan changed? No problem. Be water, my friend.'],
+ ['A perfect 10',['eu24'],'Something that is perfect.','Nadia Comăneci was the first gymnast ever to score a perfect 10 at the Olympics, in 1976.','Your cartwheel was a perfect 10!'],
+ ['The beautiful game',['sa03'],'A nickname for soccer (football).','Pelé made the phrase famous. He called his life story “My Life and the Beautiful Game”.','Let’s play the beautiful game at recess!'],
+ ['The sky’s the limit.',['am12'],'There is no limit to what you can do.','Amelia Earhart was the first woman to fly alone across the Atlantic Ocean.','With hard work, the sky’s the limit!'],
+ ['Get off the ground',['am01'],'To get started and begin to work well.','The Wright brothers made the first airplane get off the ground in 1903.','Our lemonade stand finally got off the ground!'],
+ ['One small step for man, one giant leap for mankind.',['am02'],'One small action can be a huge moment for everyone. People say “a giant leap” for big progress.','Neil Armstrong said this when he became the first person to step on the Moon.','Reading her first chapter book was a giant leap!'],
+ ['Go for gold',['jp23','kr07'],'Try your very hardest to be the best you can.','At the Olympics, the winners get gold medals.','It’s the school race today. Go for gold!'],
+ ['Land of the Rising Sun',['jp41'],'A nickname for Japan.','日本 (Nihon) means “origin of the sun”, and old stories say Japan’s emperors came from Amaterasu, the sun goddess.','Mount Fuji is the tallest mountain in the Land of the Rising Sun.']
+];
+
+/* ---------- Kanji tab extras (v26.11.22): strong thought of the day, Japanese saying of the day + look-up + quiz, sayings on history cards ---------- */
+var KOTO_T = {k:'ことわざ', i:'慣用句 (idiom)', y:'四字熟語 (4-kanji phrase)', g:'故事成語 (saying from an old story)', m:'名言 (famous words)'};
+var KOTO_E = Math.floor(Date.UTC(2026, 10, 6) / 864e5);
+function kotoDay(){ return Math.max(0, dayNum() - KOTO_E); }
+function kotoIdx(){ return kotoDay() % KOTO.length; }
+function kotoSt(){ var ks = kanjiState(); if(!ks.koto) ks.koto = {met:{}, used:{}, usedDay:{}, quiz:{}}; ['met','used','usedDay','quiz'].forEach(function(k){ if(!ks.koto[k]) ks.koto[k] = {}; }); if(!ks.strong) ks.strong = {kept:[]}; return ks.koto; }
+function kotoMeet(){ var ko = kotoSt(), i = kotoIdx(); if(!ko.met[i]){ ko.met[i] = dateKey(); save(); } return i; }
+function kotoCardsFor(i){ return KOTO[i][8] || []; }
+function kotoUsedToday(){ var ko = kotoSt(); return ko.usedDay[dateKey()] != null; }
+function strongIdx(){
+  var ks = kjExtra(), d = kotoDay();
+  if(ks.feel[dateKey()] === 'hard'){ var c = []; STRONG.forEach(function(s, i){ if(s[3]) c.push(i); }); return c[d % c.length]; }
+  return (d * 7) % STRONG.length;
+}
+function strongHTML(){
+  kotoSt();
+  var ks = kjExtra(), i = strongIdx(), s = STRONG[i], hard = ks.feel[dateKey()] === 'hard', kept = (ks.strong.kept || []).indexOf(i) > -1;
+  var h = '<div class="panel kjstrong"><div class="ptitle">'+(hard ? '💛 A gentle thought for today' : '💪 Today’s strong thought')+'</div>';
+  h += '<p class="kjsq">“'+esc(s[0])+'”</p>' + (s[1] ? '<div class="kjsby">— '+esc(s[1])+'</div>' : '<div class="kjsby">— Kit 🦊</div>');
+  h += '<div class="kjstry">🌱 <b>Try this:</b> '+esc(s[2])+'</div>';
+  h += '<div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn small'+(kept ? ' primary' : '')+'" data-kstrong="keep:'+i+'">'+(kept ? '❤️ Kept' : '🤍 Keep it')+'</button><button class="btn small" data-kstrong="say:'+i+'">🔊 Read it to me</button></div></div>';
+  return h;
+}
+function kotoLinkHTML(i){
+  var ids = kotoCardsFor(i); if(!ids.length) return '';
+  var h = '<div class="kotolink">', got = ids.filter(function(id){ return state.cards[id] && BY_ID[id]; });
+  if(got.length) got.forEach(function(id){ h += '<button class="btn small" data-kotocard="'+id+'">🎴 See the '+esc(BY_ID[id].n)+' card</button>'; });
+  else h += '<span class="hint">🎴 A history card is linked to this saying. Keep collecting to find it!</span>';
+  return h + '</div>';
+}
+function kotoBodyHTML(i){
+  var k = KOTO[i], h = '';
+  h += '<div class="kotorow"><span class="kotolab">🖼️ Picture it</span> '+esc(k[3])+'</div>';
+  h += '<div class="kotorow"><span class="kotolab">💡 It means</span> <b>'+esc(k[4])+'</b></div>';
+  h += '<div class="kotorow"><span class="kotolab">やさしい いみ</span> <span lang="ja">'+esc(k[5])+'</span></div>';
+  h += '<div class="kotoex"><span class="kotolab">🗣️ Use it like this</span><div lang="ja" class="kotoexj">'+esc(k[6])+'</div><div class="kotoexe">'+esc(k[7])+'</div></div>';
+  if(k[9]) h += '<div class="kotorow kotonote">📜 '+esc(k[9])+'</div>';
+  h += kotoLinkHTML(i);
+  return h;
+}
+function kotoHeadHTML(i, big){
+  var k = KOTO[i];
+  return '<div class="kotohead'+(big ? ' big' : '')+'"><div class="kotoj" lang="ja">'+esc(k[0])+'</div><div class="kotor" lang="ja">'+esc(k[1])+'</div><span class="kotot">'+KOTO_T[k[2]]+'</span></div>';
+}
+function kotoTodayHTML(){
+  var i = kotoMeet(), used = kotoUsedToday(), pts = state.eco.kotoPts == null ? 1 : state.eco.kotoPts;
+  var h = '<div class="panel kotoday"><div class="ptitle">🗣️ Japanese saying of the day</div>' + kotoHeadHTML(i, true) + kotoBodyHTML(i);
+  h += '<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn small" data-kotosay="'+i+'">🔊 Hear it</button><button class="btn small" data-kotosayex="'+i+'">🔊 Hear the example</button>';
+  h += '<button class="btn small'+(used ? ' primary' : '')+'" data-kotoused="'+i+'">'+(used ? '⭐ You used a saying today!' : '✅ I used it today!'+(pts ? ' (+'+pts+')' : ''))+'</button>';
+  h += '<button class="btn small" data-kjtab="koto">📚 Look up sayings</button></div>';
+  h += '<p class="hint" style="margin:8px 0 0">Try saying it to someone at home today, at just the right moment. Tap ✅ when you do!</p></div>';
+  return h;
+}
+var KOTOF = {q:'', f:'all'};
+function kotoKana(s){ return String(s || '').toLowerCase().replace(/[\u30a1-\u30f6]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0x60); }); }
+function kotoTabHTML(){
+  var i = kotoMeet(), ko = kotoSt(), met = Object.keys(ko.met).length, usedN = Object.keys(ko.usedDay).length, h = '';
+  h += '<div class="panel kotoday"><div class="ptitle">☀️ Today’s saying</div>' + kotoHeadHTML(i, true);
+  h += '<p style="margin:6px 0 0"><b>'+esc(KOTO[i][4])+'</b></p><div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn small" data-kotosay="'+i+'">🔊 Hear it</button><button class="btn small" data-kjtab="today">See it with the example ›</button></div></div>';
+  h += '<div class="panel"><div class="ptitle">🧠 Quick saying quiz</div><div class="hint">5 questions using sayings you have met. No points, no pressure: just for fun!</div><div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn primary" data-kq="start:mean">What does it mean?</button><button class="btn" data-kq="start:which">Which saying fits?</button></div>';
+  h += '<div class="kjstats" style="margin-top:10px"><div class="kjst"><span>🗣️</span><b>'+met+'</b><small>sayings I have met</small></div><div class="kjst"><span>⭐</span><b>'+usedN+'</b><small>days I used one</small></div><div class="kjst"><span>📚</span><b>'+KOTO.length+'</b><small>in the book</small></div></div></div>';
+  h += '<div class="panel"><div class="ptitle">📚 My saying book</div><input id="kotoQ" class="kotoq" type="search" placeholder="Search: さる, monkey, 猿, patience…" value="'+esc(KOTOF.q)+'" autocomplete="off"><div class="kotofs">';
+  [['all','All'],['k','ことわざ'],['i','慣用句'],['y','四字熟語'],['g','故事成語 / 名言'],['met','✓ Met'],['used','⭐ Used'],['card','🎴 On a card']].forEach(function(x){ h += '<button class="'+(KOTOF.f === x[0] ? 'on' : '')+'" data-kotof="'+x[0]+'">'+x[1]+'</button>'; });
+  h += '</div><div class="kotolist">';
+  var order = KOTO.map(function(k, n){ return n; }).sort(function(a, b){ return KOTO[a][1].localeCompare(KOTO[b][1], 'ja'); });
+  order.forEach(function(n){
+    var k = KOTO[n], s = kotoKana([k[0], k[1], k[3], k[4], k[5], k[7]].join(' '));
+    h += '<details class="kotoit" data-s="'+esc(s)+'" data-t="'+(k[2] === 'm' ? 'g' : k[2])+'" data-met="'+(ko.met[n] ? 1 : 0)+'" data-used="'+(ko.used[n] ? 1 : 0)+'" data-card="'+(kotoCardsFor(n).length ? 1 : 0)+'"><summary><b lang="ja">'+esc(k[0])+'</b><small lang="ja">'+esc(k[1])+'</small><i>'+(n === i ? '☀️' : '')+(ko.met[n] ? '✓' : '')+(ko.used[n] ? '⭐' : '')+(kotoCardsFor(n).length ? '🎴' : '')+'</i></summary>';
+    h += '<div class="kotobody"><span class="kotot">'+KOTO_T[k[2]]+'</span>'+kotoBodyHTML(n)+'<div class="row" style="gap:8px;margin-top:8px"><button class="btn small" data-kotosay="'+n+'">🔊 Hear it</button><button class="btn small" data-kotosayex="'+n+'">🔊 Example</button></div></div></details>';
+  });
+  h += '</div><p class="hint kotonone" style="display:none">No sayings match. Try another word!</p></div>';
+  return h;
+}
+function kotoFilter(){
+  var q = kotoKana(KOTOF.q.trim()), f = KOTOF.f, shown = 0;
+  document.querySelectorAll('.kotoit').forEach(function(d){
+    var ok = (!q || d.getAttribute('data-s').indexOf(q) > -1);
+    if(ok && f !== 'all'){ ok = f === 'met' ? d.getAttribute('data-met') === '1' : f === 'used' ? d.getAttribute('data-used') === '1' : f === 'card' ? d.getAttribute('data-card') === '1' : d.getAttribute('data-t') === f; }
+    d.style.display = ok ? '' : 'none'; if(ok) shown++;
+  });
+  var nn = document.querySelector('.kotonone'); if(nn) nn.style.display = shown ? 'none' : '';
+}
+function kotoKitLine(){
+  var i = kotoIdx(), k = KOTO[i];
+  return 'Today’s saying is <b lang="ja">「'+esc(k[0])+'」</b>. Can you use it once today, at just the right moment? 🗣️';
+}
+function kotoUse(i){
+  var ko = kotoSt(), d = dateKey();
+  if(ko.usedDay[d] != null){ toast('⭐ You already used a saying today. Amazing!'); return; }
+  ko.usedDay[d] = i; ko.used[i] = (ko.used[i] || 0) + 1; save();
+  var want = state.eco.kotoPts == null ? 1 : state.eco.kotoPts, got = 0;
+  if(want) got = addPoints(want, 'Used a Japanese saying', true);
+  toast('🗣️ Great job using 「'+KOTO[i][0]+'」!'+(got ? ' +'+got+' ⭐' : ''));
+  try{ Sound.chime(); }catch(e){}
+  KJT.say = 'You used <b lang="ja">「'+esc(KOTO[i][0])+'」</b> for real! That is how sayings stick. I am so proud of you! 🦊⭐';
+  render(); checkBadgesX();
+}
+function kotoParentHTML(){
+  var ko = kotoSt(), ks = kanjiState(), met = Object.keys(ko.met).length, days = Object.keys(ko.usedDay).sort(), h = '<h3>🗣️ Japanese sayings</h3>';
+  h += '<div class="hint">Saying of the day: <b lang="ja">「'+esc(KOTO[kotoIdx()][0])+'」</b> ('+esc(KOTO[kotoIdx()][4])+'). She has met '+met+' of '+KOTO.length+' and used one on '+days.length+' day'+(days.length === 1 ? '' : 's')+'.';
+  if(days.length){ var last = days[days.length - 1]; h += ' Last: <b lang="ja">「'+esc(KOTO[ko.usedDay[last]][0])+'」</b> on '+kjLog(last)+'.'; }
+  h += ' Strong thoughts she kept: '+((ks.strong && ks.strong.kept.length) || 0)+'.</div>';
+  return h;
+}
+/* ---- saying quiz ---- */
+var KQ = null;
+function kqShuffle(a){ for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function kotoQuizStart(mode){
+  var ko = kotoSt(), pool = Object.keys(ko.met).map(Number).filter(function(n){ return KOTO[n]; });
+  if(pool.length < 6){ for(var n = 0; pool.length < 8 && n < KOTO.length; n++) if(pool.indexOf(n) < 0) pool.push(n); }
+  var qs = kqShuffle(pool.slice()).slice(0, 5).map(function(a){
+    var others = kqShuffle(KOTO.map(function(k, n){ return n; }).filter(function(n){ return n !== a; })).slice(0, 2);
+    return {a:a, opts:kqShuffle([a].concat(others))};
+  });
+  KQ = {mode:mode, qs:qs, i:0, right:0, picked:null};
+  kotoQuizShow();
+}
+function kotoQuizShow(){
+  var s = KQ, h = '<div class="kjmodal kotoqz">';
+  if(s.i >= s.qs.length){
+    var msg = s.right === s.qs.length ? 'Perfect! You are a saying master! 🏆' : s.right >= 3 ? 'Great work! Your saying book is growing in your head. 🌟' : 'Every try teaches your brain something. Want to look at the sayings again? 💛';
+    var ko = kotoSt(), d = dateKey(); ko.quiz[d] = Math.max(ko.quiz[d] || 0, s.right); save();
+    h += '<h2 style="margin:0 0 6px">🧠 '+s.right+' out of '+s.qs.length+'</h2><div class="kotokit">'+kitSVG(s.right >= 3 ? 'cheer' : 'happy', 'hero')+'<p>'+msg+'</p></div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" data-kq="again">Play again</button><button class="btn" data-kq="close">Done</button></div></div>';
+    openModal(h); return;
+  }
+  var q = s.qs[s.i], a = KOTO[q.a];
+  h += '<div class="hint">Question '+(s.i + 1)+' of '+s.qs.length+'</div>';
+  if(s.mode === 'mean') h += '<h3 style="margin:6px 0">What does this saying mean?</h3>' + kotoHeadHTML(q.a, true);
+  else h += '<h3 style="margin:6px 0">Which saying fits?</h3><p class="kotoqm"><b>'+esc(a[4])+'</b></p>';
+  h += '<div class="kotoopts">';
+  q.opts.forEach(function(n, j){
+    var cls = '';
+    if(s.picked != null){ if(n === q.a) cls = ' ok'; else if(j === s.picked) cls = ' no'; }
+    h += '<button class="btn kotoopt'+cls+'" data-kq="pick:'+j+'"'+(s.picked != null ? ' disabled' : '')+'>'+(s.mode === 'mean' ? esc(KOTO[n][4]) : '<b lang="ja">'+esc(KOTO[n][0])+'</b><small lang="ja">'+esc(KOTO[n][1])+'</small>')+'</button>';
+  });
+  h += '</div>';
+  if(s.picked != null){
+    var good = q.opts[s.picked] === q.a;
+    h += '<div class="kotofb '+(good ? 'ok' : 'no')+'">'+(good ? '🎉 Yes!' : '💛 Nice try! The answer is <b lang="ja">「'+esc(a[0])+'」</b>.')+'<div lang="ja" class="kotoexj">'+esc(a[6])+'</div><div class="kotoexe">'+esc(a[7])+'</div></div>';
+    h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-kq="next">'+(s.i + 1 < s.qs.length ? 'Next ›' : 'See my score')+'</button></div>';
+  }
+  h += '<div class="row" style="margin-top:10px"><button class="btn small" data-kq="close">Stop</button></div></div>';
+  openModal(h);
+}
+/* ---- sayings on history cards: tap for a kid-friendly popup (tap anywhere to close) ---- */
+function cardSayList(id){
+  var out = [];
+  KOTO.forEach(function(k, n){ if((k[8] || []).indexOf(id) > -1) out.push(['j', n]); });
+  CARD_SAY.forEach(function(s, n){ if(s[1].indexOf(id) > -1) out.push(['e', n]); });
+  return out;
+}
+function cardSayHTML(id){
+  var L = cardSayList(id); if(!L.length) return '';
+  var h = '<div class="csay"><div class="csayh">🗣️ Sayings linked to this card <span>(tap one!)</span></div><div class="csayl">';
+  L.forEach(function(x){
+    if(x[0] === 'j'){ var k = KOTO[x[1]]; h += '<button class="csayc" data-ksay="j:'+x[1]+':'+id+'">🇯🇵 <b lang="ja">'+esc(k[0])+'</b><small lang="ja">'+esc(k[1])+'</small></button>'; }
+    else h += '<button class="csayc" data-ksay="e:'+x[1]+':'+id+'">💬 <b>'+esc(CARD_SAY[x[1]][0])+'</b></button>';
+  });
+  return h + '</div></div>';
+}
+function showSayPop(kind, n, id){
+  var p = $('ksay'); if(!p){ p = document.createElement('div'); p.id = 'ksay'; document.body.appendChild(p); }
+  var h = '<div class="ksbox" role="dialog">';
+  if(kind === 'j'){
+    var k = KOTO[n];
+    h += kotoHeadHTML(n, true);
+    h += '<div class="kotorow"><span class="kotolab">💡 What it means</span> <b>'+esc(k[4])+'</b></div>';
+    h += '<div class="kotorow"><span class="kotolab">やさしい いみ</span> <span lang="ja">'+esc(k[5])+'</span></div>';
+    if(k[9]) h += '<div class="kotorow kotonote">🎴 '+esc(k[9])+'</div>';
+    h += '<div class="kotoex"><span class="kotolab">🗣️ Use it like this</span><div lang="ja" class="kotoexj">'+esc(k[6])+'</div><div class="kotoexe">'+esc(k[7])+'</div></div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn small" data-ksaykeep="sj:'+n+'">🔊 Hear it</button>'+(state.eco.kanjiOn === false ? '' : '<button class="btn small" data-ksaykeep="book:'+n+'">📚 Find it in my saying book</button>')+'</div>';
+  } else {
+    var s = CARD_SAY[n];
+    h += '<div class="kotohead big"><div class="kotoj">“'+esc(s[0])+'”</div><span class="kotot">English saying</span></div>';
+    h += '<div class="kotorow"><span class="kotolab">💡 What it means</span> <b>'+esc(s[2])+'</b></div>';
+    h += '<div class="kotorow kotonote">🎴 '+esc(s[3])+'</div>';
+    h += '<div class="kotoex"><span class="kotolab">🗣️ Use it like this</span><div class="kotoexe" style="opacity:1">'+esc(s[4])+'</div></div>';
+    h += '<div class="row" style="gap:8px;margin-top:8px"><button class="btn small" data-ksaykeep="se:'+n+'">🔊 Hear it</button></div>';
+  }
+  h += '<div class="ksclose">Tap anywhere to close</div></div>';
+  p.innerHTML = h; p.className = 'show';
+}
+function hideSayPop(){ var p = $('ksay'); if(p){ p.className = ''; p.innerHTML = ''; } try{ stopSpeak(); }catch(e){} }
+document.addEventListener('click', function(e){
+  var t = e.target, pop = $('ksay');
+  if(pop && pop.classList.contains('show') && pop.contains(t)){
+    var keep = t.closest('[data-ksaykeep]');
+    e.stopPropagation(); e.preventDefault();
+    if(!keep){ hideSayPop(); return; }
+    var v = keep.getAttribute('data-ksaykeep').split(':'), n = +v[1];
+    if(v[0] === 'sj') speakText(KOTO[n][1], 'ja-JP', keep);
+    else if(v[0] === 'se') speakText(CARD_SAY[n][0] + ' ' + CARD_SAY[n][2], 'en-US', keep);
+    else if(v[0] === 'book'){ hideSayPop(); closeModal(); KOTOF.q = KOTO[n][1]; KOTOF.f = 'all'; state.ui.kjTab = 'koto'; KJT.say = null; save(); if(typeof setTab === 'function') setTab('kanji'); else render(); setTimeout(function(){ kotoFilter(); var d = document.querySelector('.kotoit:not([style*="none"])'); if(d){ d.open = true; d.scrollIntoView({block:'center'}); } }, 120); }
+    return;
+  }
+  var s = t.closest && t.closest('[data-ksay],[data-kstrong],[data-kotosay],[data-kotosayex],[data-kotoused],[data-kotocard],[data-kotof],[data-kq]');
+  if(!s) return;
+  e.stopPropagation(); e.preventDefault();
+  if(s.hasAttribute('data-ksay')){ var a = s.getAttribute('data-ksay').split(':'); showSayPop(a[0], +a[1], a[2]); return; }
+  if(s.hasAttribute('data-kstrong')){
+    kotoSt(); var b = s.getAttribute('data-kstrong').split(':'), i = +b[1], ks = kjExtra();
+    if(b[0] === 'say'){ speakText(STRONG[i][0] + (STRONG[i][1] ? ' ' + STRONG[i][1] + '.' : '') + ' Try this: ' + STRONG[i][2], 'en-US', s); return; }
+    var kp = ks.strong.kept, at = kp.indexOf(i);
+    if(at > -1) kp.splice(at, 1); else { kp.push(i); toast('❤️ Saved to My strong thoughts (in 🌳 Growing)'); }
+    save(); render(); return;
+  }
+  if(s.hasAttribute('data-kotosay')){ speakText(KOTO[+s.getAttribute('data-kotosay')][1], 'ja-JP', s); return; }
+  if(s.hasAttribute('data-kotosayex')){ speakText(KOTO[+s.getAttribute('data-kotosayex')][6], 'ja-JP', s); return; }
+  if(s.hasAttribute('data-kotoused')){ kotoUse(+s.getAttribute('data-kotoused')); return; }
+  if(s.hasAttribute('data-kotocard')){ showCardDetail(s.getAttribute('data-kotocard')); return; }
+  if(s.hasAttribute('data-kotof')){ KOTOF.f = s.getAttribute('data-kotof'); document.querySelectorAll('[data-kotof]').forEach(function(x){ x.classList.toggle('on', x === s); }); kotoFilter(); return; }
+  if(s.hasAttribute('data-kq')){
+    var c = s.getAttribute('data-kq').split(':');
+    if(c[0] === 'start') kotoQuizStart(c[1]);
+    else if(c[0] === 'pick' && KQ && KQ.picked == null){ KQ.picked = +c[1]; if(KQ.qs[KQ.i].opts[KQ.picked] === KQ.qs[KQ.i].a){ KQ.right++; try{ Sound.chime(); }catch(e2){} } kotoQuizShow(); }
+    else if(c[0] === 'next' && KQ){ KQ.i++; KQ.picked = null; kotoQuizShow(); }
+    else if(c[0] === 'again' && KQ) kotoQuizStart(KQ.mode);
+    else if(c[0] === 'close'){ KQ = null; closeModal(); }
+  }
+}, true);
+document.addEventListener('input', function(e){ if(e.target && e.target.id === 'kotoQ'){ KOTOF.q = e.target.value; kotoFilter(); } });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideSayPop(); });
+window.addEventListener('popstate', function(){ hideSayPop(); });
+
+var KJT = {say:null, n:0};
+function kjExtra(){ var ks = kanjiState(); if(!ks.feel) ks.feel = {}; if(!ks.taught) ks.taught = {}; if(!ks.prac || ks.prac.d !== dateKey()) ks.prac = {d:dateKey(), n:0}; return ks; }
+function kjDoneToday(){ return kanjiState().date === dateKey(); }
+function kjKitLine(){
+  if(KJT.say) return KJT.say;
+  if(kjSub() === 'koto' && kjExtra().feel[dateKey()] !== 'hard') return kotoKitLine();
+  var ks = kjExtra(), k = kanjiToday(), f = ks.feel[dateKey()], hh = hz(), dow = parseKey(dateKey()).getDay();
+  if(f === 'hard') return 'Hard days are okay. Even looking at one kanji counts. Want to just say hi to today\u2019s kanji together?';
+  if(ks.prac.n >= 4) return 'You practised '+ks.prac.n+' times today! Your brain saves new kanji while you rest and sleep. Go play, I will be here tomorrow. 💤';
+  if(hh.on && kjKidPage() && (dow === 6 || dow === 0) && kjHzStale()) return 'Hoshuko weekend! 🏫 Did your class start a new page? Tell me in My Book.';
+  if(!kjDoneToday()) return 'Today\u2019s kanji is <b lang="ja">'+k.k+'</b> ('+kjEsc(k.m)+'). Let\u2019s meet it!';
+  return 'You learned <b lang="ja">'+k.k+'</b> today. Your brain grew a tiny bit stronger! 🌱';
+}
+function kjHzStale(){ var hh = hz(); if(!hh.at) return true; return daysBetween(dateFromKey(hh.at), dateFromKey(dateKey())) >= 2; }
+function kjSub(){ var t = state.ui.kjTab; return ['today','book','practice','koto','grow'].indexOf(t) >= 0 ? t : 'today'; }
+function renderKanjiTab(){
+  var v = $('view-kanji'); if(!v) return;
+  if(state.eco.kanjiOn === false){ v.innerHTML = ''; return; }
+  try{ kanjiBackfill(); }catch(e){}
+  var sub = kjSub(), mood = kjDoneToday() ? 'cheer' : 'happy';
+  var h = '<div class="kjtab">';
+  h += '<div class="panel kjhead"><button class="kjkit" aria-label="Tap Kit">'+kitSVG(mood, 'hero')+'</button><div class="kjsay"><div class="kjbub">'+kjKitLine()+'</div><small>Tap Kit for a thought</small></div></div>';
+  h += '<div class="kjseg" role="tablist">';
+  [['today','☀️ Today'], ['book','📖 My Book'], ['practice','🎯 Practice'], ['koto','🗣️ ことわざ'], ['grow','🌳 Growing']].forEach(function(x){
+    h += '<button role="tab" class="'+(sub === x[0] ? 'on' : '')+'" data-kjtab="'+x[0]+'">'+x[1]+'</button>';
+  });
+  h += '</div>';
+  if(sub === 'today') h += kjTodayHTML();
+  else if(sub === 'book') h += kjBookTabHTML();
+  else if(sub === 'practice') h += kjPracticeHTML();
+  else if(sub === 'koto') h += kotoTabHTML();
+  else h += kjGrowHTML();
+  v.innerHTML = h + '</div>';
+  if(sub === 'koto') kotoFilter();
+}
+function kjTodayHTML(){
+  var k = kanjiToday(), ks = kjExtra(), h = strongHTML() + kanjiPanelHTML();
+  var think = KJ_HEART[k.k] || KJ_THINK[dayNumX() % KJ_THINK.length].replace(/\{k\}/g, k.k).replace(/\{w\}/g, esc(k.w));
+  h += '<div class="panel kjthink"><div class="ptitle">'+(KJ_HEART[k.k] ? '💛 Kanji with heart' : '💭 Think about it')+'</div><p>'+think+'</p></div>';
+  h += '<div class="panel"><div class="ptitle">Do one thing, if you like</div><div class="kjacts">';
+  h += '<button class="btn" data-kw-open="today"><b>✍️ Write it</b><small>Slow and neat</small></button>';
+  h += '<button class="btn" data-kcb="fam:today"><b>🔗 Word family</b><small>Words with <span lang="ja">'+k.k+'</span></small></button>';
+  var taught = ks.taught[dateKey()];
+  h += '<button class="btn'+(taught ? ' did' : '')+'" data-kjteach="1"><b>🧑‍🏫 I taught it</b><small>'+(taught ? 'Thank you for sharing!' : 'to someone at home')+'</small></button>';
+  h += '</div></div>';
+  h += kotoTodayHTML();
+  return h;
+}
+function kjBookTabHTML(){
+  var hh = hz(), dow = parseKey(dateKey()).getDay(), h = '';
+  if(hh.on && kjKidPage()){
+    h += '<div class="panel kjwherep"><div class="ptitle">📍 Where am I?</div><p>You are on <b lang="ja">3年'+hh.vol+'</b> page <b>'+hh.page+'</b>. Kanji of the Day comes from this page and the 3 before it.</p>';
+    if((dow === 6 || dow === 0) && kjHzStale()) h += '<p class="hint">🏫 Hoshuko weekend! If your class started a new page, move your page so Kit knows.</p>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" data-kjw="step:1">Next page \u25b6</button><button class="btn" data-kjw="open">Pick a page</button></div></div>';
+  }
+  h += '<div class="panel"><div class="ptitle">📖 My Kanji Book</div><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again, or 🃏 to practise a page.</div>'+kjBookBody('none', true)+'</div>';
+  return h;
+}
+function kjPracticeHTML(){
+  var ks = kjExtra(), h = '';
+  h += '<div class="panel"><div class="ptitle">🎯 Practice</div><p class="hint" style="margin:0 0 8px">Small bites work best: 5 cards, then a stretch. No timers here. Kit saves the tricky ones for later.</p>';
+  h += '<div class="hint" style="margin:0 0 8px">Practising: <b>'+kfcSelLabel()+'</b> <button class="btn small" data-kfc="open">Change</button></div>';
+  if(ks.prac.n >= 3) h += '<div class="kjbreak">🧃 <b>Brain break idea:</b> '+['10 star jumps','a glass of water','look out the window for 20 seconds','a big stretch up to the sky','3 slow breaths'][ks.prac.n % 5]+'. Then come back if you want!</div>';
+  h += '<div class="kjpgrid">';
+  [['Kanji cards', [['data-kfc="mode:read"','👀 Read it','See the kanji, flip for the reading'], ['data-kfc="mode:recall"','💭 Remember it','See the meaning, think of the kanji'], ['data-kfc="mode:pick"','🔍 Find the kanji','Pick the right one from four'], ['data-kfc="mode:look"','👯 Look-alikes','Tell tricky twins apart']]],
+   ['Kanji combos', [['data-kcb="mode:build"','🧩 Build the word','Put two kanji together'], ['data-kcb="mode:miss"','🔎 Missing kanji','Which kanji fits the gap?'], ['data-kcb="mode:readw"','📖 Read the word','Pick the right reading'], ['data-kcb="fam:today"','🔗 Word family','All the words with one kanji']]],
+   ['Writing', [['data-kw-open="today"','✍️ Write it','Stroke order and neat writing'], ['data-kwalbum="1"','📓 My writing','See how it has grown']]]
+  ].forEach(function(g){
+    h += '<div class="kfch">'+g[0]+'</div>';
+    g[1].forEach(function(b){ h += '<button class="btn kfcm" '+b[0]+'><b>'+b[1]+'</b><small>'+b[2]+'</small></button>'; });
+  });
+  h += '</div></div>';
+  return h;
+}
+function kjTreeSVG(n, b){
+  var C = [[70,74,30],[110,54,38],[150,74,30],[110,88,32]], G = ['#5cb85c','#7bc96f','#4caf50','#9ad46a','#3d9a45'];
+  var h = '<svg class="kjtree" viewBox="0 0 220 176" role="img" aria-label="Your kanji tree has '+n+' leaves">';
+  h += '<ellipse cx="110" cy="166" rx="100" ry="9" fill="#cdeab4"/>';
+  C.forEach(function(c){ h += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="#e9f6dd"/>'; });
+  h += '<path d="M98 166C102 144 101 122 96 102L108 98L118 102C114 124 114 146 120 166Z" fill="#8d5a3b"/>';
+  h += '<path d="M104 104Q90 90 72 82M110 100Q126 86 146 80M107 100Q107 80 109 60" stroke="#8d5a3b" stroke-width="5" fill="none" stroke-linecap="round"/>';
+  var seed = 7; function rnd(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  for(var i = 0; i < Math.min(n, 220); i++){
+    var c = C[i % 4], a = rnd() * 6.283, r = Math.sqrt(rnd()) * (c[2] - 4), x = (c[0] + Math.cos(a) * r).toFixed(1), y = (c[1] + Math.sin(a) * r).toFixed(1);
+    h += '<ellipse cx="'+x+'" cy="'+y+'" rx="4.4" ry="2.5" fill="'+G[i % 5]+'" transform="rotate('+Math.round(rnd() * 180)+' '+x+' '+y+')"/>';
+  }
+  seed = 99;
+  for(var j = 0; j < Math.min(b, 40); j++){
+    var c2 = C[j % 4], a2 = rnd() * 6.283, r2 = Math.sqrt(rnd()) * (c2[2] - 6), x2 = (c2[0] + Math.cos(a2) * r2).toFixed(1), y2 = (c2[1] + Math.sin(a2) * r2).toFixed(1);
+    h += '<circle cx="'+x2+'" cy="'+y2+'" r="3.4" fill="#ffb3cf"/><circle cx="'+x2+'" cy="'+y2+'" r="1.2" fill="#fff3a0"/>';
+  }
+  if(!n) h += '<path d="M110 160q-2-10 0-16M110 150q-8-6-12-2 4 6 12 2zM110 146q8-6 12-2-4 6-12 2z" stroke="#4caf50" stroke-width="2" fill="#7bc96f"/>';
+  return h + '</svg>';
+}
+function kjGrowHTML(){
+  var ks = kjExtra(), n = kanjiCount(), pg = kbPagesDone(), ink = {}, h = '';
+  try{ ink = kinkLoad(); }catch(e){}
+  var written = Object.keys(ink).filter(function(c){ return ink[c] && ink[c].length; }).length;
+  var taught = Object.keys(ks.taught).length, days = (state.stats && state.stats.kanjiDays) || 0;
+  h += '<div class="panel kjgrow"><div class="ptitle">🌳 My kanji tree</div>'+kjTreeSVG(n, pg);
+  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
+  h += '<div class="panel"><div class="ptitle">What I have grown</div><div class="kjstats">';
+  [['🍃', n, 'kanji in my book'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
+    h += '<div class="kjst"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>';
+  });
+  h += '</div><div class="kjmiles">';
+  [[10,'🌱 Sprout'],[25,'🌿 Seedling'],[50,'🌳 Young tree'],[100,'🌸 Blossom tree'],[150,'🍎 Fruit tree'],[200,'🏆 All of grade 3']].forEach(function(m){
+    h += '<span class="kjmile'+(n >= m[0] ? ' on' : '')+'">'+m[1]+' <small>'+m[0]+'</small></span>';
+  });
+  h += '</div><div class="row" style="margin-top:10px"><button class="btn" data-kwalbum="1">📓 My writing album</button></div></div>';
+  var kept = (ks.strong && ks.strong.kept) || [];
+  h += '<div class="panel kjkept"><div class="ptitle">❤️ My strong thoughts</div>';
+  if(kept.length) h += kept.slice().reverse().map(function(i){ var x = STRONG[i]; return x ? '<div class="kjkq"><p>“'+esc(x[0])+'”</p><small>'+esc(x[1] || 'Kit 🦊')+'</small><button class="btn small" data-kstrong="keep:'+i+'" aria-label="Remove">✕</button></div>' : ''; }).join('');
+  else h += '<p class="hint" style="margin:0">When a strong thought on ☀️ Today feels just right, tap 🤍 Keep it and it will live here, ready for the days you need it.</p>';
+  h += '</div>';
+  var f = ks.feel[dateKey()];
+  h += '<div class="panel kjfeel"><div class="ptitle">💛 How does kanji feel today?</div><div class="kjfeelrow">';
+  KJ_FEEL.forEach(function(x){ h += '<button class="'+(f === x[0] ? 'on' : '')+'" data-kjfeel="'+x[0]+'"><span>'+x[1]+'</span>'+x[2]+'</button>'; });
+  h += '</div>';
+  if(f) h += '<p class="kjfeelsay">'+KJ_FEEL_SAY[f]+'</p>';
+  if(f === 'hard' || f === 'meh') h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn" data-kjeasy="1">🙂 One easy card</button><button class="btn" data-kjbreak="1">🧃 Take a break</button><button class="btn" data-kjtab="today">☀️ Just look at today\u2019s kanji</button></div>';
+  h += '<p class="hint" style="margin-top:8px">Only you and your grown-ups can see this. There are no wrong answers.</p></div>';
+  return h;
+}
+function kjFeelRecent(nd){
+  var ks = kjExtra(), out = [], d = parseKey(dateKey());
+  for(var i = nd - 1; i >= 0; i--){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() - i), k = x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'); if(ks.feel[k]) out.push(ks.feel[k]); }
+  return out;
+}
+function kjFeelParentHTML(){
+  var fl = kjFeelRecent(14); if(!fl.length) return '';
+  var em = {}; KJ_FEEL.forEach(function(x){ em[x[0]] = x[1]; });
+  var hard = fl.filter(function(x){ return x === 'hard'; }).length;
+  return '<div class="hint" style="margin-top:8px">💛 How kanji felt to her, last 2 weeks: '+fl.map(function(x){ return em[x]; }).join(' ')+
+    (hard >= 3 ? '<br>She said <b>hard</b> '+hard+' times. A lighter week can help: fewer cards, more writing in the air, word games, and lots of praise for effort.' : '')+'</div>';
+}
+/* count practice starts today (for rest reminders); never blocks anything */
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kfc^="mode:"],[data-kcb^="mode:"],[data-kcb^="fam:"],[data-kw-open],[data-kfc^="bookpg:"]');
+  if(!t) return; try{ kjExtra().prac.n++; save(); }catch(_){}
+}, true);
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kjtab],[data-kjfeel],[data-kjteach],[data-kjeasy],[data-kjbreak],.kjkit,[data-tabgo]');
+  if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  var ks = kjExtra();
+  if(t.hasAttribute('data-tabgo')){ try{ Sound.tap(); }catch(_){} setTab(t.getAttribute('data-tabgo')); return; }
+  if(t.classList.contains('kjkit')){
+    var sv = t.querySelector('.kit');
+    if(sv && kitAnimOK()) kitPlay(sv, kitPickAction());
+    KJT.n++; KJT.say = KJ_GROW[(KJT.n + dayNumX()) % KJ_GROW.length];
+    var b = document.querySelector('.kjbub'); if(b) b.innerHTML = KJT.say; return;
+  }
+  try{ Sound.tap(); }catch(_){}
+  if(t.hasAttribute('data-kjtab')){ state.ui.kjTab = t.getAttribute('data-kjtab'); KJT.say = null; save(); render(); window.scrollTo(0,0); return; }
+  if(t.hasAttribute('data-kjfeel')){
+    var f = t.getAttribute('data-kjfeel'); ks.feel[dateKey()] = f;
+    var keys = Object.keys(ks.feel).sort(); while(keys.length > 120) delete ks.feel[keys.shift()];
+    KJT.say = KJ_FEEL_SAY[f]; save(); render(); return;
+  }
+  if(t.hasAttribute('data-kjteach')){
+    var k = kanjiToday();
+    if(!ks.taught[dateKey()]){ ks.taught[dateKey()] = k.k; save(); }
+    KJT.say = 'Thank you for sharing <b lang="ja">'+k.k+'</b>! Teaching is one of the best ways to remember. 🧑‍🏫';
+    render(); return;
+  }
+  if(t.hasAttribute('data-kjeasy')){
+    var tr = []; try{ tr = kfcTricky(); }catch(_){}
+    var easy = KANJI.filter(function(x){ return kjIsMet(x.k) && tr.indexOf(x.k) < 0; });
+    if(!easy.length) easy = [kanjiToday()];
+    toast('🙂 Here is one you already know!', 1600);
+    showKanji(easy[Math.floor(Math.random() * easy.length)], 0); return;
+  }
+  if(t.hasAttribute('data-kjbreak')){ KJT.say = 'Good idea. Have some water, stretch, or play. Kanji will wait for you. 💛'; render(); return; }
+}, true);
+/* ---------- She picks her own kanji book page (26.11.20) ---------- */
+function kjKidPage(){ return hz().kid !== false; }
+function kjWhereChip(){
+  var hh = hz(); if(!hh.on || !kjKidPage()) return '';
+  return '<button class="kjwhere" data-kjw="open">\ud83d\udcd8 <span lang="ja">3\u5e74'+hh.vol+'</span> \u00b7 page '+hh.page+' \u00b7 <u>Change page</u></button>';
+}
+var KJW = {vol:null};
+function showKjWhere(){
+  knScreen('kjwhere', showKjWhere);
+  var hh = hz(), v = KJW.vol || hh.vol;
+  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd8 Which page are you on?</h2>';
+  h += '<div class="hint">Tap the page your class is on at hoshuko. Kanji of the Day picks from this page and the 3 kanji pages before it.</div>';
+  h += '<div class="row" style="gap:8px;margin:10px 0 8px">';
+  ['\u4e0a','\u4e0b'].forEach(function(x){ h += '<button class="btn '+(v === x ? 'primary' : '')+'" data-kjw="vol:'+x+'"><span lang="ja">3\u5e74'+x+'</span></button>'; });
+  h += '</div><div class="kjpgs kjwgrid">';
+  kbPages(v).forEach(function(x){
+    var on = hh.vol === v && hh.page === x.p, met = x.ks.filter(kjIsMet).length;
+    h += '<button class="kjpg'+(on ? ' on' : '')+'" data-kjw="pg:'+v+':'+x.p+'"><small>'+(on ? '\ud83d\udccd ' : '')+'p.'+x.p+'</small><span lang="ja">'+x.ks.join('')+'</span>'+(met === x.ks.length ? '<small>\u2b50</small>' : '')+'</button>';
+  });
+  h += '</div><div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" data-kjw="step:-1">\u25c0 Back a page</button><button class="btn" data-kjw="step:1">Next page \u25b6</button><button class="btn primary" data-x="1">Done</button></div></div>';
+  openModal(h);
+  setTimeout(function(){ var on = document.querySelector('.kjwgrid .kjpg.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest'}); }, 30);
+}
+function kjSetPage(v, p){
+  var hh = hz(), moved = hh.vol !== v || hh.page !== p;
+  hh.vol = v; hh.page = p; hh.by = 'kid'; hh.at = dateKey(); KJW.vol = v; save();
+  if(moved) toast('\ud83d\udcd8 Got it! You are on page '+p+'.', 1800);
+  render(); showKjWhere();
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kjw]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  try{ Sound.tap(); }catch(_){}
+  var a = t.getAttribute('data-kjw'), hh = hz();
+  if(a === 'open'){ KJW.vol = hh.vol; showKjWhere(); return; }
+  if(a.indexOf('vol:') === 0){ KJW.vol = a.slice(4); showKjWhere(); return; }
+  if(a.indexOf('pg:') === 0){ var p = a.split(':'); kjSetPage(p[1], +p[2]); return; }
+  if(a.indexOf('step:') === 0){
+    var dir = +a.slice(5), all = kbPages('\u4e0a').concat(kbPages('\u4e0b')), at = -1;
+    all.forEach(function(x, i){ if(x.v === hh.vol && x.p === hh.page) at = i; });
+    if(at < 0){ var pg = kbPages(hh.vol); at = all.indexOf(pg[0]); }
+    var nx = all[at + dir];
+    if(!nx){ toast(dir > 0 ? 'That is the last kanji page.' : 'That is the first kanji page.', 1600); return; }
+    kjSetPage(nx.v, nx.p);
+  }
+}, true);
 function kbPages(v){ return KBOOK.filter(function(x){ return x.v === v; }); }
 
 /* look-alike groups: a = in grade 3 (can be asked), d = extra look-alikes shown as choices */
@@ -8748,6 +9622,8 @@ function kjRecent(){
 function kjUniq(a){ var s = {}; return a.filter(function(c){ if(s[c]) return false; s[c] = 1; return true; }); }
 function kjDayOf(str){ var p = String(str).split('-'); return p.length === 3 ? Math.floor(Date.UTC(+p[0], +p[1]-1, +p[2])/86400000) : null; }
 function kanjiToday(){
+  var ks0 = kanjiState();
+  if(ks0.date === dateKey() && ks0.todayK){ for(var i0 = 0; i0 < KANJI.length; i0++) if(KANJI[i0].k === ks0.todayK) return KANJI[i0]; }
   if(!hz().on) return kanjiTodayLegacy();
   var ks = kanjiState(), dn = dayNumX(), r = rngFor(dn*7919 + 13), today = dateKey();
   var weak = kjWeak(), focus = kjFocus(), recent = kjRecent(), cand;
@@ -9040,6 +9916,9 @@ function showKanjiParent(){
   h += '<div class="hint">All optional. She never has to open any of this. It only decides which kanji appear for her.</div>';
   h += '<h3>📘 Where she is in the book</h3>';
   h += '<div class="row" style="gap:8px;align-items:center"><button class="btn small '+(h0.on ? 'primary' : '')+'" data-kjp="hz">'+(h0.on ? '✅ On' : '⬜ Off')+'</button><span class="hint">Kanji of the Day follows hoshuko (this and the last 3 kanji pages, plus any weak spots)</span></div>';
+  h += '<div class="row" style="gap:8px;align-items:center;margin-top:6px"><button class="btn small '+(h0.kid !== false ? 'primary' : '')+'" data-kjp="kid">'+(h0.kid !== false ? '✅ On' : '⬜ Off')+'</button><span class="hint">She can change the page herself (from Kanji of the Day and her Kanji Book)'+(h0.by === 'kid' && h0.at ? '. She last moved it to p.'+h0.page+' on '+kjLog(h0.at) : '')+'</span></div>';
+  h += kjFeelParentHTML();
+  h += kotoParentHTML();
   h += '<div class="row" style="gap:6px;margin-top:8px"><span class="hint">Book:</span>';
   ['上','下'].forEach(function(v){ h += '<button class="btn small '+(s.vol === v ? 'primary' : '')+'" data-kjp="vol:'+v+'">3年'+v+'</button>'; });
   h += '</div><div class="kjpgs">';
@@ -9101,12 +9980,13 @@ document.addEventListener('click', function(e){
   if(t.hasAttribute('data-kjpar')){ KJP = null; showKanjiParent(); return; }
   var a = t.getAttribute('data-kjp'), s = KJP || (KJP = {tab:'miss', sel:{}, ty:'write', all:false, vol:hz().vol}), h0 = hz(), ks = kanjiState();
   if(a === 'hz'){ h0.on = !h0.on; save(); render(); }
+  else if(a === 'kid'){ h0.kid = (h0.kid === false); save(); render(); }
   else if(a.indexOf('vol:') === 0){ s.vol = a.slice(4); }
-  else if(a.indexOf('pg:') === 0){ var p = a.split(':'); h0.vol = p[1]; h0.page = +p[2]; s.vol = p[1]; save(); render(); }
+  else if(a.indexOf('pg:') === 0){ var p = a.split(':'); h0.vol = p[1]; h0.page = +p[2]; h0.by = 'parent'; s.vol = p[1]; save(); render(); }
   else if(a === 'next'){
     var pgs = kbPages(h0.vol), nx = null;
     for(var i = 0; i < pgs.length; i++){ if(pgs[i].p > h0.page){ nx = pgs[i]; break; } }
-    if(nx){ h0.page = nx.p; s.vol = h0.vol; save(); render(); } else toast('That is the last kanji page of this book.');
+    if(nx){ h0.page = nx.p; h0.by = 'parent'; s.vol = h0.vol; save(); render(); } else toast('That is the last kanji page of this book.');
   }
   else if(a.indexOf('tab:') === 0){ s.tab = a.slice(4); s.sel = {}; }
   else if(a.indexOf('sel:') === 0){ var c = a.slice(4); if(s.sel[c]) delete s.sel[c]; else s.sel[c] = 1; }
