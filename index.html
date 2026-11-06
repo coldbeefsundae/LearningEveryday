@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.24', errs = [], shown = false;
+  var V = '26.11.25', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-06';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -689,6 +689,9 @@ body[data-calm=off] .hero .kit{animation:kitbob 3.2s ease-in-out infinite}
 .kit .k-ear-r{transform-box:fill-box;transform-origin:25% 100%}
 .kit .k-eyes,.kit .k-el,.kit .k-er,.kit .k-mouth,.kit .k-pl,.kit .k-pr,.kit .k-fx{transform-box:fill-box;transform-origin:50% 50%}
 .kit .k-open,.kit .k-puff,.kit .k-paws,.kit .k-fx{opacity:0}
+/* 26.11.25: open mouth + sneeze puff scale around their own centre (was scaling from the SVG corner, so the mouth jumped up by Kit's eye) */
+.kit .k-open{transform-box:fill-box;transform-origin:50% 50%}
+.kit .k-puff{transform-box:fill-box;transform-origin:0 50%}
 @keyframes kBlink{0%,100%{transform:scaleY(1)}40%,60%{transform:scaleY(.08)}}
 @keyframes kEar{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}
 @keyframes kEarR{0%,100%{transform:rotate(0)}50%{transform:rotate(16deg)}}
