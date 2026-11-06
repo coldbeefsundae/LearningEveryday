@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.22', errs = [], shown = false;
+  var V = '26.11.24', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-06';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -75,17 +75,17 @@
   --font:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",Roboto,system-ui,-apple-system,sans-serif;
   --ink:#1e2142;--muted:#687091;--line:rgba(30,33,66,.09);
   --surface:#fff;--bg:#f4f2ff;
-  --accent:#6c5ce7;--accent-2:#a29bfe;--accent-soft:#ece9ff;
-  --good:#16b777;--good-soft:#e6f9f0;--warn:#ff9f1a;--bad:#ff5470;--gold:#ffc233;
+  --accent:#6453e6;--accent-2:#a29bfe;--accent-soft:#ece9ff;
+  --good:#108556;--good-soft:#e6f9f0;--warn:#ff9f1a;--bad:#d42a46;--gold:#ffc233;
   --r-lg:26px;--r-md:18px;--r-sm:12px;
   --shadow-1:0 1px 2px rgba(30,33,66,.06),0 8px 20px -6px rgba(30,33,66,.10);
   --shadow-2:0 2px 4px rgba(30,33,66,.08),0 18px 40px -10px rgba(30,33,66,.22);
 }
-body[data-theme=sakura]{--accent:#e8588f;--accent-2:#ff9ec1;--accent-soft:#ffe6f0;--bg:#fff4f8}
-body[data-theme=ocean]{--accent:#1f86ee;--accent-2:#74c2ff;--accent-soft:#e2f1ff;--bg:#eef7ff}
-body[data-theme=matcha]{--accent:#2d9c68;--accent-2:#7fd6a8;--accent-soft:#e0f5ea;--bg:#f0faf4}
-body[data-theme=sunset]{--accent:#ee8420;--accent-2:#ffc06b;--accent-soft:#ffefd9;--bg:#fff7ec}
-body[data-theme=ruby]{--accent:#e0434b;--accent-2:#ff8e93;--accent-soft:#ffe4e5;--bg:#fff2f2}
+body[data-theme=sakura]{--accent:#cd1c60;--accent-2:#ff9ec1;--accent-soft:#ffe6f0;--bg:#fff4f8}
+body[data-theme=ocean]{--accent:#0f6bc8;--accent-2:#74c2ff;--accent-soft:#e2f1ff;--bg:#eef7ff}
+body[data-theme=matcha]{--accent:#247c53;--accent-2:#7fd6a8;--accent-soft:#e0f5ea;--bg:#f0faf4}
+body[data-theme=sunset]{--accent:#a8580d;--accent-2:#ffc06b;--accent-soft:#ffefd9;--bg:#fff7ec}
+body[data-theme=ruby]{--accent:#cc222a;--accent-2:#ff8e93;--accent-soft:#ffe4e5;--bg:#fff2f2}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{margin:0;min-height:100%}
@@ -434,7 +434,7 @@ h1,h2,h3,p{margin:0}
 .modal h2{margin:0 0 12px;font-size:25px;letter-spacing:-.3px}
 .modal h3{margin:22px 0 8px;font-size:17px;color:var(--accent);font-weight:900}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.btn{min-height:54px;padding:0 20px;border-radius:17px;font-weight:900;font-size:17px;background:#eeedf8;box-shadow:0 3px 0 #d3d1e6}
+.btn{min-height:54px;padding:0 20px;border-radius:17px;font-weight:900;font-size:17px;background:#eeedf8;color:var(--ink);box-shadow:0 3px 0 #d3d1e6}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #d3d1e6}
 .btn.primary{background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.2)}
 .btn.good{background:var(--good);color:#fff;box-shadow:0 3px 0 #0e8a58}
@@ -793,7 +793,7 @@ body[data-calm=on] .kit *{animation:none!important}
 .kitbub .kbtxt{flex:1;min-width:0}
 .kitbub .kbtxt b{color:inherit}
 .kitbub .kbbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub::before{background:#232650;color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub::before{background:#232650;color:#fff}
 /* ---- v42: grouped badges ---- */
 .bdsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0 8px;font-weight:900;font-size:15px}
 .bdsec small{font-weight:800;opacity:.6;font-size:12px}
@@ -1171,8 +1171,8 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybri
 
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
-   Tokens: body:is([data-skin=hybrid],[data-skin=gallery]) dark skins, body[data-skin=hybrid] hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
-           body:is([data-skin=hybrid],[data-skin=arcade]) hybrid+arcade (bottom dock), body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) every non-classic skin
+   Tokens: body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) dark skins, body:is([data-skin=hybrid],[data-skin=night]) hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
+           body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) hybrid+arcade (bottom dock), body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) every non-classic skin
    ===================================================================== */
 .avwrap{position:relative;flex:none}
 .xp,.lvb{display:none}
@@ -1189,14 +1189,14 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .kitbub,body:is([data-skin=hybri
 .sk-gallery{background:radial-gradient(60px 40px at 20% 20%,rgba(94,231,223,.55),transparent),linear-gradient(135deg,#0a0e20,#1b2250 55%,#9b7bff)}
 .sk-atlas{background:linear-gradient(135deg,#f4e8cf,#e9d3a2 60%,#bf3b2b)}
 
-body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) .xp{display:block;width:min(240px,100%);height:11px;border-radius:8px;background:rgba(127,127,160,.28);overflow:hidden;margin-top:6px}
-body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) .xp i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .6s}
-body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) .lvb{display:block;position:absolute;right:-12px;bottom:-5px;font-size:11px;font-weight:900;border-radius:99px;padding:2px 9px;background:var(--accent);color:#fff;border:2px solid var(--lvbc,#fff);white-space:nowrap}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic]) .xp{display:block;width:min(240px,100%);height:11px;border-radius:8px;background:rgba(127,127,160,.28);overflow:hidden;margin-top:6px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic]) .xp i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .6s}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic]) .lvb{display:block;position:absolute;right:-12px;bottom:-5px;font-size:11px;font-weight:900;border-radius:99px;padding:2px 9px;background:var(--accent);color:#fff;border:2px solid var(--lvbc,#fff);white-space:nowrap}
 
-body:is([data-skin=hybrid],[data-skin=gallery]) .themepanel,body[data-skin=atlas] .themepanel{display:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .themepanel,body[data-skin=atlas] .themepanel{display:none}
 
 /* ---------- shared dark palette ---------- */
-body:is([data-skin=hybrid],[data-skin=gallery]){
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]){
   --ink:#eaeeff;--muted:#8e97c4;--line:rgba(255,255,255,.13);--surface:rgba(255,255,255,.06);--bg:#0a0e20;
   --accent:#8b7bff;--accent-2:#5ee7df;--accent-soft:rgba(139,123,255,.22);
   --good:#36d6a0;--good-soft:rgba(94,231,223,.14);
@@ -1207,116 +1207,116 @@ body:is([data-skin=hybrid],[data-skin=gallery]){
   background:radial-gradient(700px 480px at 88% -8%,rgba(155,123,255,.40),transparent 70%),radial-gradient(640px 480px at -4% 104%,rgba(94,231,223,.24),transparent 70%),radial-gradient(500px 360px at 60% 110%,rgba(255,123,208,.16),transparent 70%),#0a0e20;
   background-attachment:fixed;
 }
-body:is([data-skin=hybrid],[data-skin=gallery]) .rail{background:rgba(255,255,255,.05);border-color:var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .logo{color:#0a0e20;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 0 30px rgba(94,231,223,.45)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .navbtn.on{background:linear-gradient(135deg,rgba(94,231,223,.22),rgba(155,123,255,.36));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 0 24px rgba(155,123,255,.45)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .navbtn .dot{background:var(--g3);color:#0a0e20;border-color:#0a0e20;box-shadow:0 0 14px rgba(255,123,208,.7)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .railtool{background:rgba(255,255,255,.09);color:#fff}
-body:is([data-skin=hybrid],[data-skin=gallery]) .railtool.on{background:rgba(255,215,106,.32)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .topbar{background:rgba(10,14,32,.74);border-color:var(--line)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .avatar{background:linear-gradient(#1b2250,#10153a);border:0;box-shadow:0 0 0 3px #0a0e20,0 0 0 5px var(--g1),0 0 26px rgba(94,231,223,.55)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .xp{background:rgba(255,255,255,.1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .xp i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.7)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .lvb{background:linear-gradient(135deg,var(--g3),var(--g2))}
-body:is([data-skin=hybrid],[data-skin=gallery]) .pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:none}
-body:is([data-skin=hybrid],[data-skin=gallery]) .pill.bank{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.14));border-color:rgba(255,215,106,.45)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .redeem{background:linear-gradient(135deg,#ffb86b,#ff7bd0);color:#0a0e20;box-shadow:0 4px 0 #b8466f,0 0 22px rgba(255,123,208,.45)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .redeem:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none}
-body:is([data-skin=hybrid],[data-skin=gallery]) .chip{background:rgba(94,231,223,.14);color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .chip.warn{background:rgba(255,184,107,.16);color:#ffb86b}
-body:is([data-skin=hybrid],[data-skin=gallery]) .chip.late{background:rgba(255,123,208,.16);color:#ff9ad8}
-body:is([data-skin=hybrid],[data-skin=gallery]) .chip.ok{background:rgba(94,231,223,.2);color:#5ee7df}
-body:is([data-skin=hybrid],[data-skin=gallery]) .prog,body:is([data-skin=hybrid],[data-skin=gallery]) .bigprog{background:rgba(255,255,255,.09);box-shadow:inset 0 3px 0 rgba(0,0,0,.25)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .progfill{background:linear-gradient(90deg,var(--g1),var(--g2));background-size:100% 100%;animation:none;box-shadow:0 0 16px rgba(94,231,223,.6)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .bigprog i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.5)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .progtxt{color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .panel{background:var(--surface);border:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quotecard{background:linear-gradient(135deg,rgba(155,123,255,.18),rgba(94,231,223,.08))}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quotecard::before{color:#fff;opacity:.1}
-body:is([data-skin=hybrid],[data-skin=gallery]) .qlabel{color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .dlabel{color:#ffd76a}
-body:is([data-skin=hybrid],[data-skin=gallery]) .disc.ready{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.12));border-color:rgba(255,215,106,.5)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .ratebox{background:linear-gradient(135deg,rgba(255,215,106,.16),rgba(255,123,208,.10));border-color:rgba(255,215,106,.4);color:#ffe6a3;box-shadow:none}
-body:is([data-skin=hybrid],[data-skin=gallery]) .ratebox b{color:#fff}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner{border-color:var(--line)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.screen{background:linear-gradient(135deg,rgba(54,214,160,.26),rgba(94,231,223,.14));color:#aef5dc}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.win,body:is([data-skin=hybrid],[data-skin=gallery]) .banner.bonus{background:linear-gradient(135deg,rgba(255,215,106,.24),rgba(255,184,107,.12));color:#ffe6a3}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.late{background:linear-gradient(135deg,rgba(255,123,208,.22),rgba(155,123,255,.14));color:#ffc2e6}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner button,body:is([data-skin=hybrid],[data-skin=gallery]) .btn-white{background:rgba(255,255,255,.15);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 4px 0 rgba(0,0,0,.28)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .p0{--tile:#ff8fc0}body:is([data-skin=hybrid],[data-skin=gallery]) .p1{--tile:#6fc4ff}body:is([data-skin=hybrid],[data-skin=gallery]) .p2{--tile:#ffcf5a}body:is([data-skin=hybrid],[data-skin=gallery]) .p3{--tile:#b49bff}body:is([data-skin=hybrid],[data-skin=gallery]) .p4{--tile:#ff9a7a}body:is([data-skin=hybrid],[data-skin=gallery]) .p5{--tile:#5ee7b0}
-body:is([data-skin=hybrid],[data-skin=gallery]) .tile{background:var(--tile);box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 20px -3px var(--tile)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .check{background:transparent;border-color:rgba(255,255,255,.3);color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5);box-shadow:0 4px 0 rgba(0,0,0,.28),0 0 24px -8px rgba(94,231,223,.55)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done .q-name{color:#a9b6ee;text-decoration-color:rgba(94,231,223,.7)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 4px 0 #3d4ec0,0 0 22px rgba(94,231,223,.65)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .timer{background:rgba(255,255,255,.07)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .ring .bg{stroke:rgba(255,255,255,.15)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .ring .fg{stroke:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .tbtn{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .tbtn.go{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus{--tile:rgba(255,255,255,.25);background:linear-gradient(110deg,#ff9f1c,#ff5d8f 60%,#c04dff);border-color:transparent;color:#fff}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus .q-name small{color:rgba(255,255,255,.92)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus .check{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.55);color:#fff}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.bonus.done .q-name small{color:var(--muted)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .fchip{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
-body:is([data-skin=hybrid],[data-skin=gallery]) .fchip.on{background:linear-gradient(135deg,rgba(94,231,223,.28),rgba(155,123,255,.42));color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 0 22px rgba(155,123,255,.45)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .stat{background:rgba(255,255,255,.06)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .av{background:rgba(255,255,255,.06)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .av.on{background:var(--accent-soft);border-color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .bigavatar{background:linear-gradient(#1b2250,#10153a);border-color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .nameinput{background:rgba(255,255,255,.06);border-color:var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .nameinput:focus{border-color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .sw{border-color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .skinopt{background:rgba(255,255,255,.05)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rail{background:rgba(255,255,255,.05);border-color:var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .logo{color:#0a0e20;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 0 30px rgba(94,231,223,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .navbtn.on{background:linear-gradient(135deg,rgba(94,231,223,.22),rgba(155,123,255,.36));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 0 24px rgba(155,123,255,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .navbtn .dot{background:var(--g3);color:#0a0e20;border-color:#0a0e20;box-shadow:0 0 14px rgba(255,123,208,.7)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .railtool{background:rgba(255,255,255,.09);color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .railtool.on{background:rgba(255,215,106,.32)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .topbar{background:rgba(10,14,32,.74);border-color:var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .avatar{background:linear-gradient(#1b2250,#10153a);border:0;box-shadow:0 0 0 3px #0a0e20,0 0 0 5px var(--g1),0 0 26px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .xp{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .xp i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.7)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .lvb{background:linear-gradient(135deg,var(--g3),var(--g2))}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pill.bank{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.14));border-color:rgba(255,215,106,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .redeem{background:linear-gradient(135deg,#ffb86b,#ff7bd0);color:#0a0e20;box-shadow:0 4px 0 #b8466f,0 0 22px rgba(255,123,208,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .redeem:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip{background:rgba(94,231,223,.14);color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.warn{background:rgba(255,184,107,.16);color:#ffb86b}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.late{background:rgba(255,123,208,.16);color:#ff9ad8}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.ok{background:rgba(94,231,223,.2);color:#5ee7df}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .prog,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigprog{background:rgba(255,255,255,.09);box-shadow:inset 0 3px 0 rgba(0,0,0,.25)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .progfill{background:linear-gradient(90deg,var(--g1),var(--g2));background-size:100% 100%;animation:none;box-shadow:0 0 16px rgba(94,231,223,.6)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigprog i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .progtxt{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .panel{background:var(--surface);border:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quotecard{background:linear-gradient(135deg,rgba(155,123,255,.18),rgba(94,231,223,.08))}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quotecard::before{color:#fff;opacity:.1}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qlabel{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .dlabel{color:#ffd76a}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .disc.ready{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.12));border-color:rgba(255,215,106,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ratebox{background:linear-gradient(135deg,rgba(255,215,106,.16),rgba(255,123,208,.10));border-color:rgba(255,215,106,.4);color:#ffe6a3;box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ratebox b{color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner{border-color:var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.screen{background:linear-gradient(135deg,rgba(54,214,160,.26),rgba(94,231,223,.14));color:#aef5dc}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.win,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bonus{background:linear-gradient(135deg,rgba(255,215,106,.24),rgba(255,184,107,.12));color:#ffe6a3}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.late{background:linear-gradient(135deg,rgba(255,123,208,.22),rgba(155,123,255,.14));color:#ffc2e6}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn-white{background:rgba(255,255,255,.15);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 4px 0 rgba(0,0,0,.28)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p0{--tile:#ff8fc0}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p1{--tile:#6fc4ff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p2{--tile:#ffcf5a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p3{--tile:#b49bff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p4{--tile:#ff9a7a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p5{--tile:#5ee7b0}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tile{background:var(--tile);box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 20px -3px var(--tile)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .check{background:transparent;border-color:rgba(255,255,255,.3);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5);box-shadow:0 4px 0 rgba(0,0,0,.28),0 0 24px -8px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .q-name{color:#a9b6ee;text-decoration-color:rgba(94,231,223,.7)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 4px 0 #3d4ec0,0 0 22px rgba(94,231,223,.65)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .timer{background:rgba(255,255,255,.07)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ring .bg{stroke:rgba(255,255,255,.15)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ring .fg{stroke:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tbtn{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tbtn.go{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus{--tile:rgba(255,255,255,.25);background:linear-gradient(110deg,#ff9f1c,#ff5d8f 60%,#c04dff);border-color:transparent;color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus .q-name small{color:rgba(255,255,255,.92)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus .check{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.55);color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done .q-name small{color:var(--muted)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fchip{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fchip.on{background:linear-gradient(135deg,rgba(94,231,223,.28),rgba(155,123,255,.42));color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 0 22px rgba(155,123,255,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .stat{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .av{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .av.on{background:var(--accent-soft);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigavatar{background:linear-gradient(#1b2250,#10153a);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .nameinput{background:rgba(255,255,255,.06);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .nameinput:focus{border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .sw{border-color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .skinopt{background:rgba(255,255,255,.05)}
 /* modals + parent mode */
-body:is([data-skin=hybrid],[data-skin=gallery]) .modal{background:#11163a;border:1px solid var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .modal h2,body:is([data-skin=hybrid],[data-skin=gallery]) .modal h3{color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .btn{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .btn.primary{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .btn.good{background:linear-gradient(135deg,#36d6a0,#5ee7df);color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .btn.danger{background:linear-gradient(135deg,#ff7b8d,#ff7bd0);color:#0a0e20}
-body:is([data-skin=hybrid],[data-skin=gallery]) .fld input,body:is([data-skin=hybrid],[data-skin=gallery]) textarea{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .prow,body:is([data-skin=hybrid],[data-skin=gallery]) .passage,body:is([data-skin=hybrid],[data-skin=gallery]) .opt,body:is([data-skin=hybrid],[data-skin=gallery]) .day,body:is([data-skin=hybrid],[data-skin=gallery]) .emojis button,body:is([data-skin=hybrid],[data-skin=gallery]) .pad button{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .day.on{background:var(--accent-soft);border-color:var(--g1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .okline{background:rgba(255,255,255,.07);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .okline.good{background:rgba(54,214,160,.16);color:#aef5dc}
-body:is([data-skin=hybrid],[data-skin=gallery]) .switch span{background:rgba(255,255,255,.22)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .toast{border:1px solid var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal{background:#11163a;border:1px solid var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal h2,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal h3{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.primary{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.good{background:linear-gradient(135deg,#36d6a0,#5ee7df);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.danger{background:linear-gradient(135deg,#ff7b8d,#ff7bd0);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fld input,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) textarea{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .prow,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .passage,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .opt,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .day,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .emojis button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pad button{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .day.on{background:var(--accent-soft);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .okline{background:rgba(255,255,255,.07);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .okline.good{background:rgba(54,214,160,.16);color:#aef5dc}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .switch span{background:rgba(255,255,255,.22)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .toast{border:1px solid var(--line)}
 
 /* ---------- bottom dock layout (hybrid + arcade) ---------- */
-body:is([data-skin=hybrid],[data-skin=arcade]) .app{display:block}
-body:is([data-skin=hybrid],[data-skin=arcade]) .rail{position:fixed;left:50%;right:auto;top:auto;bottom:14px;transform:translateX(-50%);width:auto;height:auto;flex-direction:row;align-items:center;gap:8px;padding:10px;border-radius:34px;border:1px solid var(--line);z-index:40;box-shadow:0 8px 0 rgba(0,0,0,.28),0 20px 40px -10px rgba(0,0,0,.55)}
-body:is([data-skin=hybrid],[data-skin=arcade]) .logo,body:is([data-skin=hybrid],[data-skin=arcade]) .rail .spacer{display:none}
-body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn{width:auto;height:58px;flex-direction:row;gap:10px;padding:0 26px;border-radius:26px;font-size:18px;flex:none;max-width:none}
-body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn>svg{width:26px;height:26px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn .dot{position:static;margin-left:-2px;top:auto;right:auto}
-body:is([data-skin=hybrid],[data-skin=arcade]) .railtool{width:50px;height:50px;border-radius:50%;font-size:21px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .main{padding-bottom:112px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .page{padding-bottom:30px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .toprow{padding:14px 30px 10px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .progrow{padding:0 30px 14px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .avatar{width:64px;height:64px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .who b{font-size:22px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .pill{height:60px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .pill .v{font-size:24px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .quest{border-radius:26px;min-height:92px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .tile{width:58px;height:58px;border-radius:18px;font-size:32px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .check{width:48px;height:48px;font-size:26px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .q-name{font-size:18px}
-body:is([data-skin=hybrid],[data-skin=arcade]) .panel{border-radius:30px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .app{display:block}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .rail{position:fixed;left:50%;right:auto;top:auto;bottom:14px;transform:translateX(-50%);width:auto;height:auto;flex-direction:row;align-items:center;gap:8px;padding:10px;border-radius:34px;border:1px solid var(--line);z-index:40;box-shadow:0 8px 0 rgba(0,0,0,.28),0 20px 40px -10px rgba(0,0,0,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .logo,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .rail .spacer{display:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn{width:auto;height:58px;flex-direction:row;gap:10px;padding:0 26px;border-radius:26px;font-size:18px;flex:none;max-width:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn>svg{width:26px;height:26px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn .dot{position:static;margin-left:-2px;top:auto;right:auto}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .railtool{width:50px;height:50px;border-radius:50%;font-size:21px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .main{padding-bottom:112px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .page{padding-bottom:30px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .toprow{padding:14px 30px 10px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .progrow{padding:0 30px 14px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .avatar{width:64px;height:64px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .who b{font-size:22px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill{height:60px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill .v{font-size:24px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .quest{border-radius:26px;min-height:92px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .tile{width:58px;height:58px;border-radius:18px;font-size:32px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px;font-size:26px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .q-name{font-size:18px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .panel{border-radius:30px}
 
 /* ---------- landscape two-column home ---------- */
 @media (min-width:900px) and (orientation:landscape){
-  body:is([data-skin=hybrid],[data-skin=arcade]) #view-home.show,body[data-skin=atlas] #view-home.show,body[data-skin=gallery] #view-home.show{display:grid;grid-template-columns:minmax(0,1fr) 410px;column-gap:22px;align-items:start}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) #view-home.show,body[data-skin=atlas] #view-home.show,body[data-skin=gallery] #view-home.show{display:grid;grid-template-columns:minmax(0,1fr) 410px;column-gap:22px;align-items:start}
   body[data-skin=gallery] #view-home.show{grid-template-columns:410px minmax(0,1fr)}
-  body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .hero{grid-column:1/-1;grid-row:1}
-  body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .banners{grid-column:1/-1;grid-row:2}
-  body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .sec{grid-column:1;grid-row:3}
-  body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .qgrid{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr))}
-  body:is([data-skin=hybrid],[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .duo{grid-column:2;grid-row:3/5;grid-template-columns:minmax(0,1fr);margin-bottom:0}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .hero{grid-column:1/-1;grid-row:1}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .banners{grid-column:1/-1;grid-row:2}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .sec{grid-column:1;grid-row:3}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .qgrid{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr))}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .duo{grid-column:2;grid-row:3/5;grid-template-columns:minmax(0,1fr);margin-bottom:0}
   body[data-skin=gallery] #view-home .sec{grid-column:2}
   body[data-skin=gallery] #view-home .qgrid{grid-column:2;grid-template-columns:minmax(0,1fr);gap:10px}
   body[data-skin=gallery] #view-home .duo{grid-column:1}
@@ -1327,14 +1327,14 @@ body:is([data-skin=hybrid],[data-skin=arcade]) .panel{border-radius:30px}
   body[data-skin=gallery] .q-name{font-size:18px;font-weight:700}
 }
 @media (max-width:820px){
-  body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn{padding:0 16px;font-size:15px;gap:6px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .railtool{width:44px;height:44px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .rail{gap:4px;padding:8px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn{padding:0 16px;font-size:15px;gap:6px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .railtool{width:44px;height:44px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .rail{gap:4px;padding:8px}
 }
 
 /* ---------- Pocket Arcade (bright) ---------- */
 body[data-skin=arcade]{
-  --ink:#241a5e;--muted:#7a74a8;--lvbc:#fff;
+  --ink:#241a5e;--muted:#5f5994;--lvbc:#fff;
   --shadow-1:0 8px 0 rgba(36,26,94,.28);--shadow-2:0 12px 0 rgba(36,26,94,.3);
   color:#fff;
   background:radial-gradient(500px 300px at 15% 0,rgba(255,255,255,.28),transparent 70%),radial-gradient(600px 400px at 100% 100%,rgba(255,79,154,.35),transparent 70%),linear-gradient(170deg,#4f8cff 0%,#6a4cff 50%,#9b4dff 100%);
@@ -1370,10 +1370,10 @@ body[data-skin=arcade] .fchip.on{box-shadow:0 4px 0 #4a31c9}
 body[data-skin=arcade] .empty{color:#fff}
 
 /* ---------- Midnight Arcade (hybrid): a little extra flair ---------- */
-body[data-skin=hybrid] .packpanel{background:linear-gradient(135deg,rgba(155,123,255,.35),rgba(255,123,208,.22));border:1px solid var(--line);box-shadow:0 0 40px -10px rgba(155,123,255,.6)}
-body[data-skin=hybrid] .btn-light{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20;box-shadow:0 5px 0 #2b6fa8,0 0 28px rgba(94,231,223,.45)}
-body[data-skin=hybrid] .btn-gold{box-shadow:0 5px 0 #c9780a,0 0 28px rgba(255,159,26,.4)}
-body[data-skin=hybrid] .panel{border-radius:28px}
+body:is([data-skin=hybrid],[data-skin=night]) .packpanel{background:linear-gradient(135deg,rgba(155,123,255,.35),rgba(255,123,208,.22));border:1px solid var(--line);box-shadow:0 0 40px -10px rgba(155,123,255,.6)}
+body:is([data-skin=hybrid],[data-skin=night]) .btn-light{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20;box-shadow:0 5px 0 #2b6fa8,0 0 28px rgba(94,231,223,.45)}
+body:is([data-skin=hybrid],[data-skin=night]) .btn-gold{box-shadow:0 5px 0 #c9780a,0 0 28px rgba(255,159,26,.4)}
+body:is([data-skin=hybrid],[data-skin=night]) .panel{border-radius:28px}
 body[data-skin=gallery] .packpanel{background:linear-gradient(135deg,rgba(155,123,255,.3),rgba(94,231,223,.18));border:1px solid var(--line)}
 body[data-skin=gallery] .btn-light{background:linear-gradient(90deg,var(--g1),var(--g2));color:#0a0e20;box-shadow:0 0 24px rgba(94,231,223,.35)}
 
@@ -1453,22 +1453,22 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   .rail{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .rail::-webkit-scrollbar{display:none}
   .railtool{width:42px;height:42px;font-size:19px;flex:none}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .rail{left:0;right:0;bottom:0;transform:none;width:100%;border-radius:22px 22px 0 0;justify-content:space-around;gap:2px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -10px rgba(0,0,0,.5)}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn{flex:1 1 0;min-width:56px;max-width:none;height:58px;flex-direction:column;justify-content:center;gap:2px;padding:0 4px;font-size:12px;border-radius:18px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn>svg{width:24px;height:24px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .navbtn .dot{position:absolute;top:3px;right:calc(50% - 26px);margin:0}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .railtool{width:40px;height:40px;font-size:18px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .toprow{padding:10px 14px 6px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .progrow{padding:0 14px 10px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .avatar{width:52px;height:52px;font-size:28px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .who b{font-size:19px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .xp{width:100%;max-width:200px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .pill{height:50px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .pill .v{font-size:20px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .tile{width:52px;height:52px;font-size:28px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .check{width:44px;height:44px}
-  body:is([data-skin=hybrid],[data-skin=arcade]) .page{padding:14px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .rail{left:0;right:0;bottom:0;transform:none;width:100%;border-radius:22px 22px 0 0;justify-content:space-around;gap:2px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -10px rgba(0,0,0,.5)}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn{flex:1 1 0;min-width:56px;max-width:none;height:58px;flex-direction:column;justify-content:center;gap:2px;padding:0 4px;font-size:12px;border-radius:18px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn>svg{width:24px;height:24px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn .dot{position:absolute;top:3px;right:calc(50% - 26px);margin:0}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .railtool{width:40px;height:40px;font-size:18px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .toprow{padding:10px 14px 6px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .progrow{padding:0 14px 10px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .avatar{width:52px;height:52px;font-size:28px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .who b{font-size:19px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .xp{width:100%;max-width:200px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill{height:50px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill .v{font-size:20px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .tile{width:52px;height:52px;font-size:28px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:44px;height:44px}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .page{padding:14px}
   body[data-skin=atlas] .rail{height:62px;padding:0 8px;gap:2px}
   body[data-skin=atlas] .logo{display:none}
   body[data-skin=atlas] .navbtn{padding:0 10px;font-size:17px;height:44px}
@@ -1609,18 +1609,18 @@ body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{an
 @media (max-width:760px){.rgrid{grid-template-columns:1fr}.balnum{font-size:42px}.earn{max-width:none}}
 
 /* dark skins */
-body:is([data-skin=hybrid],[data-skin=gallery]) .rcard{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 3px 0 rgba(0,0,0,.28)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .rcard.can{border-color:rgba(94,231,223,.6);box-shadow:0 3px 0 rgba(0,0,0,.28),0 0 22px -8px rgba(94,231,223,.55)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .rtile{background:rgba(255,255,255,.1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .earn span,body:is([data-skin=hybrid],[data-skin=gallery]) .snext{background:rgba(155,123,255,.2)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.rest{background:linear-gradient(135deg,rgba(155,123,255,.26),rgba(94,231,223,.14));color:#d6cfff}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.streak{background:linear-gradient(135deg,rgba(255,184,107,.22),rgba(255,123,208,.16));color:#ffd9b3}
-body:is([data-skin=hybrid],[data-skin=gallery]) :is(.rwgi,.rwgn,.rwgrp){background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .rwcost{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .calnav{background:rgba(255,255,255,.1)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .cday{background:rgba(255,255,255,.06)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .cday.done{background:linear-gradient(135deg,#ffd76a,#ffb347);color:#4a2f00}
-body:is([data-skin=hybrid],[data-skin=gallery]) .cday.rest{background:linear-gradient(135deg,rgba(155,123,255,.5),rgba(94,231,223,.35));color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rcard{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 3px 0 rgba(0,0,0,.28)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rcard.can{border-color:rgba(94,231,223,.6);box-shadow:0 3px 0 rgba(0,0,0,.28),0 0 22px -8px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rtile{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .earn span,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .snext{background:rgba(155,123,255,.2)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.rest{background:linear-gradient(135deg,rgba(155,123,255,.26),rgba(94,231,223,.14));color:#d6cfff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.streak{background:linear-gradient(135deg,rgba(255,184,107,.22),rgba(255,123,208,.16));color:#ffd9b3}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(.rwgi,.rwgn,.rwgrp){background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rwcost{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .calnav{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday.done{background:linear-gradient(135deg,#ffd76a,#ffb347);color:#4a2f00}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday.rest{background:linear-gradient(135deg,rgba(155,123,255,.5),rgba(94,231,223,.35));color:#fff}
 /* arcade */
 body[data-skin=arcade] .shophead .balnum,body[data-skin=arcade] .shophead .balsub{color:inherit}
 body[data-skin=arcade] .rcard{border:3px solid #e3ddff;box-shadow:0 4px 0 #e3ddff}
@@ -1634,16 +1634,16 @@ body[data-skin=atlas] .banner.streak{background:#fbefd2;color:#7a3b00}
 body[data-skin=atlas] .cday.done{background:linear-gradient(135deg,#f3d36b,#e0a92c)}
 body[data-skin=atlas] .cday.rest{background:#d9e8e0;color:#1f5a4b}
 
-body:is([data-skin=hybrid],[data-skin=gallery]) .quizpanel.ready{background:linear-gradient(135deg,rgba(162,155,254,.22),rgba(116,194,255,.14));border-color:rgba(162,155,254,.5)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quizpanel.done{background:linear-gradient(135deg,rgba(22,183,119,.2),rgba(22,183,119,.08));border-color:rgba(22,183,119,.5)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .qdots i{background:rgba(255,255,255,.18)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quizres .rpts{background:rgba(255,215,106,.2);color:#ffd76a}
-body:is([data-skin=hybrid],[data-skin=gallery]) .qrow{background:rgba(255,255,255,.07)}body:is([data-skin=hybrid],[data-skin=gallery]) .qrow.ok{background:rgba(22,183,119,.18)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .kitsay{background:rgba(255,255,255,.12)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizpanel.ready{background:linear-gradient(135deg,rgba(162,155,254,.22),rgba(116,194,255,.14));border-color:rgba(162,155,254,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizpanel.done{background:linear-gradient(135deg,rgba(22,183,119,.2),rgba(22,183,119,.08));border-color:rgba(22,183,119,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qdots i{background:rgba(255,255,255,.18)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizres .rpts{background:rgba(255,215,106,.2);color:#ffd76a}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qrow{background:rgba(255,255,255,.07)}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qrow.ok{background:rgba(22,183,119,.18)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitsay{background:rgba(255,255,255,.12)}
 body[data-skin=arcade] .quizpanel.ready{background:#fff}body[data-skin=arcade] .quizpanel.done{background:#fff}
 body[data-skin=arcade] .kitsay{background:rgba(255,255,255,.22);color:#fff}
 body[data-skin=atlas] .quizpanel{border:1.5px solid var(--ink)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .bite{background:rgba(255,255,255,.08)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bite{background:rgba(255,255,255,.08)}
 body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 
 /* ===================== PHASE 4: holidays, birthday, journal, badges ===================== */
@@ -1750,21 +1750,21 @@ body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 .bdg.off{opacity:.55}
 .bdg.off .bi{filter:grayscale(1)}
 .bdpanel .btn{margin-top:2px}
-body:is([data-skin=hybrid],[data-skin=gallery]) .banner.bday,body:is([data-skin=hybrid],[data-skin=gallery]) .banner.bday.soft{color:#4a1030}
-body:is([data-skin=hybrid],[data-skin=gallery]) .mood.on,body:is([data-skin=hybrid],[data-skin=gallery]) .evb.on{color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bday,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bday.soft{color:#4a1030}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .mood.on,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .evb.on{color:var(--ink)}
 @media (max-width:420px){.moodgrid,.evgrid{gap:6px}.mood .me{font-size:27px}.rctile b{font-size:19px}}
 a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .fld input[type=email],.fld input[type=tel],.fld input[type=url],.fld input[type=date],.pin{height:54px;border-radius:15px;border:3px solid rgba(127,127,160,.35);padding:0 14px;font:inherit;font-size:17px;font-weight:700;background:rgba(127,127,160,.08);color:inherit;width:100%;min-width:0}
 .pin{height:46px;width:auto;font-size:15px}
 .fld input[type=email]:focus,.fld input[type=tel]:focus,.fld input[type=url]:focus,.fld input[type=date]:focus,.pin:focus{outline:none;border-color:var(--accent)}
 
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
-body:is([data-skin=hybrid],[data-skin=gallery]) .quest.done .q-name small.qpts{color:var(--muted)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .q-name small.qpts{color:var(--muted)}
 
-body:is([data-skin=hybrid],[data-skin=gallery]) .bkamt.pos{color:#7be0a8}
-body:is([data-skin=hybrid],[data-skin=gallery]) .bkamt.neg{color:#ff9a90}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkamt.pos{color:#7be0a8}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkamt.neg{color:#ff9a90}
 
-body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkjar{color:#c9c4ee}
 
 .hlp h2{margin:0 0 6px}
 .hlptabs{display:flex;gap:6px;margin:8px 0 10px;background:rgba(127,127,160,.12);border-radius:16px;padding:4px}
@@ -2178,7 +2178,7 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 .kotobody{padding:6px 2px 4px}
 .kotoopts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .kotoopt{text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-size:15px;line-height:1.35}
-.kotoopt.ok{background:#00b894;color:#fff}.kotoopt.no{background:#fab1a0}
+.kotoopt.ok{background:#0e7f5c;color:#fff}.kotoopt.no{background:#ffd2c7;color:#5a1a0c}
 .kotoopt b{font-size:18px}
 .kotofb{margin-top:10px;padding:10px;border-radius:12px;font-weight:700}
 .kotofb.ok{background:rgba(0,184,148,.14)}.kotofb.no{background:rgba(253,203,110,.22)}
@@ -2187,11 +2187,17 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 .kjkq{position:relative;padding:8px 40px 8px 10px;border-radius:12px;background:rgba(255,183,77,.12);margin:6px 0}
 .kjkq p{margin:0;font-weight:700;line-height:1.4}.kjkq small{opacity:.65}
 .kjkq .btn{position:absolute;right:6px;top:6px;padding:4px 8px}
-.csay{margin-top:12px;padding:10px;border-radius:14px;background:rgba(108,92,231,.07)}
-.csayh{font-weight:900;font-size:15px;margin-bottom:6px}.csayh span{font-weight:700;opacity:.6;font-size:13px}
-.csayl{display:flex;flex-direction:column;gap:6px}
-.csayc{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;text-align:left;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;font-size:15px;background:#fff;color:inherit;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.csayc small{opacity:.65;font-size:12px}
+.cq{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:12px 12px 12px 10px;border-radius:14px;background:#fff4dc;border-left:5px solid #e17055;color:#2d3436}
+.cqsay{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#e17055;color:#fff;font-size:19px;cursor:pointer;box-shadow:0 2px 6px rgba(225,112,85,.35)}
+.cqsay.speaking{animation:speakpulse .9s ease-in-out infinite}
+.cqq{flex:1;min-width:0;text-align:left;border:0;background:none;padding:0;font:inherit;color:#2d3436;cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.cq .cqo,.cqpq .cqo{font-style:italic;font-size:18px;line-height:1.5;font-weight:700;color:#2d3436}
+.cq .cqe,.cqpq .cqe{font-style:italic;font-size:15px;line-height:1.45;color:#3d3d3d}
+.cqby{font-size:13px;font-weight:800;color:#7a4f12}
+.cqtap{font-size:12px;font-weight:700;color:#a0522d}
+.cqpq{display:flex;flex-direction:column;gap:5px;padding:12px;border-radius:14px;background:#fff4dc;border-left:5px solid #e17055;margin-bottom:10px}
+.cqpq .cqo{font-size:21px}
+.cqr{font-size:14px;color:#555;letter-spacing:.03em}
 #ksay{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(20,16,40,.45)}
 #ksay.show{display:flex;animation:ksin .18s ease-out}
 @keyframes ksin{from{opacity:0}to{opacity:1}}
@@ -2226,6 +2232,70 @@ body:is([data-skin=hybrid],[data-skin=gallery]) .bkjar{color:#c9c4ee}
 .kmbtns{display:flex;flex-wrap:wrap;gap:8px;flex:1;min-width:220px}
 .kmbtns .btn{flex:1 1 140px;padding:9px 10px;font-size:14px}
 .kmbtns .btn.now{box-shadow:inset 0 0 0 2px var(--accent)}
+
+/* ---------- visibility audit (26.11.24) ---------- */
+.warnhint{color:#a8281c}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .warnhint{color:#ffa196}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner){--ink:#1e2142;--muted:#565d7e;--line:rgba(30,33,66,.16)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#ksay .ksbox,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk){color:#1e2142}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn:not(.primary):not(.good):not(.danger){background:#eeedf8;color:#1e2142;box-shadow:0 3px 0 #cfcbe6}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn.primary{background:#6453e6;color:#fff;box-shadow:0 3px 0 #3d2fb0}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .hint{color:#565d7e}
+#kitnudge .kn-btns .btn:not(.primary){border:2px solid #cfcbe6}
+
+/* ---------- new looks (26.11.24): Starlight Bright, Washi Garden, Comic Pop ---------- */
+.sk-night{background:radial-gradient(2px 2px at 20% 30%,#fff,transparent),radial-gradient(2px 2px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 45% 80%,#ffd43b,transparent),linear-gradient(135deg,#05060f,#141833 70%,#ffd43b)}
+.sk-washi{background:radial-gradient(40px 30px at 85% 25%,rgba(232,88,143,.45),transparent),repeating-linear-gradient(100deg,rgba(120,100,60,.05) 0 2px,transparent 2px 7px),linear-gradient(135deg,#faf6ee,#efe6d3 65%,#2c4f9e)}
+.sk-comic{background:radial-gradient(#f5c400 1.4px,transparent 1.6px) 0 0/10px 10px,linear-gradient(135deg,#fff7c2,#ffd93b);box-shadow:inset 0 0 0 3px #111}
+body[data-skin=night]{
+  --ink:#ffffff;--muted:#cdd5f3;--line:rgba(255,255,255,.32);--surface:#141833;--bg:#05060f;
+  --accent:#ffd43b;--accent-2:#7cc4ff;--accent-soft:rgba(255,212,59,.18);
+  --good:#5ef0a8;--good-soft:rgba(94,240,168,.15);
+  --g1:#ffd43b;--g2:#7cc4ff;--g3:#ff9ad5;--lvbc:#05060f;
+  --shadow-1:0 0 0 1px rgba(255,255,255,.18);--shadow-2:0 0 0 2px rgba(255,255,255,.2),0 24px 50px -20px rgba(0,0,0,.9);
+  color:#fff;
+  background:radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.9),transparent),radial-gradient(1.5px 1.5px at 78% 12%,rgba(255,255,255,.8),transparent),radial-gradient(2px 2px at 60% 70%,rgba(255,212,59,.8),transparent),radial-gradient(1.5px 1.5px at 30% 85%,rgba(255,255,255,.7),transparent),#05060f;
+  background-attachment:fixed;
+}
+body[data-skin=night] :is(.panel,.quest,.modal,.cardtile,.stat){background:#141833;border:2px solid rgba(255,255,255,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+body[data-skin=night] .btn{background:#262c55;color:#fff;border:2px solid rgba(255,255,255,.4);box-shadow:none}
+body[data-skin=night] .btn.primary{background:#ffd43b;color:#0a0e20;border-color:#ffd43b}
+body[data-skin=night] .btn.good{background:#5ef0a8;color:#06281a;border-color:#5ef0a8}
+body[data-skin=night] .btn.danger{background:#ff8fa0;color:#2a0610;border-color:#ff8fa0}
+body[data-skin=night] .navbtn{color:#cdd5f3}
+body[data-skin=night] .navbtn.on{background:#ffd43b;color:#0a0e20;box-shadow:none}
+body[data-skin=night] .hint{color:#cdd5f3}
+body[data-skin=night] :focus-visible{outline:3px solid #ffd43b;outline-offset:2px}
+body[data-skin=washi]{
+  --ink:#1d2a4a;--muted:#555d74;--line:#e3d8c2;--surface:#ffffff;--bg:#faf6ee;
+  --shadow-1:0 2px 0 #e3d8c2;--shadow-2:0 6px 0 #e3d8c2,0 20px 40px -18px rgba(29,42,74,.25);
+  color:#1d2a4a;
+  background:radial-gradient(520px 340px at 100% 0,rgba(232,88,143,.10),transparent 70%),radial-gradient(600px 420px at 0 100%,rgba(44,79,158,.08),transparent 70%),repeating-linear-gradient(100deg,rgba(120,100,60,.025) 0 2px,transparent 2px 9px),#faf6ee;
+  background-attachment:fixed;
+}
+body[data-skin=washi] .rail{background:#fffdf7;border-right:1.5px solid #e3d8c2}
+body[data-skin=washi] :is(.panel,.quest,.modal){border:1.5px solid #e3d8c2}
+body[data-skin=washi] .quest{border-left:6px solid var(--accent)}
+body[data-skin=washi] .btn{background:#f3ede0;color:#1d2a4a;box-shadow:0 3px 0 #ddd0b5}
+body[data-skin=washi] .btn.primary{background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+body[data-skin=washi] .navbtn{color:#555d74}
+body[data-skin=comic]{
+  --ink:#111111;--muted:#3a3a3a;--line:rgba(17,17,17,.35);--surface:#ffffff;--bg:#fff7c2;
+  --shadow-1:4px 4px 0 #111;--shadow-2:6px 6px 0 #111;
+  color:#111;
+  background:radial-gradient(rgba(240,190,0,.45) 1.3px,transparent 1.5px) 0 0/14px 14px,#fff7c2;
+  background-attachment:fixed;
+}
+body[data-skin=comic] :is(.panel,.quest,.modal,.cardtile,.stat){border:3px solid #111}
+body[data-skin=comic] .rail{background:#fff;border-right:3px solid #111}
+body[data-skin=comic] .btn{background:#fff;color:#111;border:3px solid #111;box-shadow:3px 3px 0 #111}
+body[data-skin=comic] .btn:active{box-shadow:1px 1px 0 #111}
+body[data-skin=comic] .btn.primary{background:var(--accent);color:#fff}
+body[data-skin=comic] .btn.good{background:var(--good);color:#fff}
+body[data-skin=comic] .btn.danger{background:var(--bad);color:#fff}
+body[data-skin=comic] .navbtn{color:#111}
+body[data-skin=comic] .navbtn.on{background:var(--accent);color:#fff;box-shadow:3px 3px 0 #111;border:3px solid #111}
+body[data-skin=comic] :focus-visible{outline:3px solid #111;outline-offset:2px}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -4227,8 +4297,8 @@ var tab = 'home', parentUnlocked = false;
 var cardFilter = {region:'ALL', rar:'ALL', own:'ALL'};
 var AVATARS = ['🦊','🐼','🐱','🐰','🦄','🐲','🐯','🐸','🦉','🐧','🐨','🦁','🐙','🦋','🐢','🐬','🌸','🚀','⚽','🎨','🎵','🌈','🍙','🐶'];
 var THEMES = [
-  {k:'grape',c:'#6c5ce7'},{k:'sakura',c:'#e8588f'},{k:'ocean',c:'#1f86ee'},
-  {k:'matcha',c:'#2d9c68'},{k:'sunset',c:'#ee8420'},{k:'ruby',c:'#e0434b'}
+  {k:'grape',c:'#6453e6'},{k:'sakura',c:'#cd1c60'},{k:'ocean',c:'#0f6bc8'},
+  {k:'matcha',c:'#247c53'},{k:'sunset',c:'#a8580d'},{k:'ruby',c:'#cc222a'}
 ];
 
 var SKINS = [
@@ -4236,6 +4306,9 @@ var SKINS = [
   {k:'arcade', n:'Pocket Arcade', d:'Bright, bold and bouncy'},
   {k:'gallery', n:'Midnight Gallery', d:'Dark with a side menu'},
   {k:'atlas', n:'Storybook Atlas', d:'Paper, ink and red stamps'},
+  {k:'night', n:'Starlight Bright', d:'Dark, with extra-clear text and big outlines'},
+  {k:'washi', n:'Washi Garden', d:'Soft paper and ink, calm and easy on the eyes'},
+  {k:'comic', n:'Comic Pop', d:'Bold black outlines, super easy to read'},
   {k:'classic', n:'Classic', d:'The first look'}
 ];
 function skinKey(){
@@ -4679,7 +4752,7 @@ function helpData(){
     {q:'I got a card I already have. What happens?', a:'A duplicate goes in your <b>🫙 jar</b>. Every time the jar gets to <b>'+dper+'</b>, you earn <b>1 point</b>. Rarer duplicates fill the jar faster, and the leftovers stay for next time.'},
     {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
       {q:'Why do some cards shine?', a:'Rare cards (A and up) have a shiny <b>holo</b> foil. Tilt the tablet or move your finger over the card to make it sparkle. The rarer the card, the fancier the shine! Tap a card in a new pack to <b>flip</b> it over.'},
-      {q:'What are the sayings on my cards?', a:'Some history cards have a <b>🗣️ Sayings</b> box near the bottom: a Japanese saying (🇯🇵) or an English one (💬) that comes from that person or place. Tap a saying to see what it means and how to use it. Tap anywhere to close it.'},
+      {q:'What are the quotes on my cards?', a:'Many history cards have a famous quote near the bottom: words that person said or wrote, or a famous line about them. Tap 🔊 to hear it (Chinese quotes are in Cantonese). Tap the quote to see what it means, and tap anywhere to close. If it is one of your Japanese sayings, you can jump to it in your saying book!'},
     {q:'What is my level title?', a:'Your title grows as you find cards: Rookie Explorer, Time Traveler, History Hunter, and all the way to <b>History Legend</b> 👑. Check Me → My Adventure.'}
    ]},
    {t:'🎁 Rewards and screen time', i:[
@@ -4706,7 +4779,8 @@ function helpData(){
       {q:'What are my morning and evening routines?', a:'A checklist shows on your home screen at routine time. Tick each step. Finish everything before the time on the card to earn a reward (often 🧩 pack pieces: collect enough for a free pack!). Late still counts as done.'},
     {q:'What are badges?', a:'Badges are awards for things like streaks, collecting cards, quizzes and kanji. Find them in <b>Me</b>. Gold, silver and bronze show how far you got.'},
     {q:'What happens on my birthday?', a:'You get a party banner, confetti, balloons, Kit in a party hat (tap him to make a wish!), and a <b>Birthday Star card</b> to keep. Look in <b>Me → Birthday Book</b> to see all your birthday cards and your “year in review”.'},
-    {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up. Find S, SSR or SSSR cards to unlock <b>hero pictures</b>.'}
+    {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up. Find S, SSR or SSSR cards to unlock <b>hero pictures</b>.'},
+      {q:'Which look is easiest to read?', a:'All the looks are checked so words are easy to read. If you want extra-clear text, try <b>Starlight Bright</b> (dark) or <b>Comic Pop</b> (bright, with bold outlines). <b>Washi Garden</b> is soft and calm. In Classic, Pocket Arcade, Washi Garden and Comic Pop you can also pick your colour.'}
    ]},
    {t:'🛠️ If something looks odd', i:[
     {q:'My points or cards look wrong', a:'Ask a grown-up. They can fix points and packs in Parent mode. Your progress is saved on this device.'},
@@ -4750,7 +4824,7 @@ function helpData(){
     {q:'How can I see a card your child has not found yet?', a:'Open <b>Card viewer</b> on the Parent home. You can search, filter by found or not found, type (Person, Event, Legend, Place), rarity and region, then tap any card to see it full size. It is read only and never adds the card to her collection or clears her New badges.'},
     {q:'Do news bites update by themselves?', a:'No. Nothing is fetched from the internet. Fresh bites only appear when you paste a news pack in <b>Learning &amp; news</b>. You can read the whole pool or remove a bite there too.'},
     {q:'How do I add news bites?', a:'Paste a news pack (text starting with <code>SQNEWS:</code>) into <b>Learning &amp; news → News pack</b>. Each day she sees one world bite from a fresh pool. Re-importing the same pack adds nothing twice.'},
-    {q:'How does the kanji section work?', a:'The 字 Kanji tab is built around effort and feelings, not scores:'+li(['<b>Today</b>: a daily strong thought (resilience, feelings, rest, self-kindness), today’s kanji, a heart question, and a Japanese saying of the day with meaning, example and audio.','<b>My Book</b>: kanji by page. She can change her own page (turn this off in <b>Parent → Kanji</b>, which also shows who moved it last).','<b>Practice</b>: flash cards, writing, word games, with rest reminders.','<b>ことわざ</b>: a searchable book of '+KOTO.length+' common sayings, most-used first, plus a no-points quiz. Some link to history cards.','<b>Growing</b>: kanji tree, kept thoughts, and a feelings check-in. Parent → Kanji shows the last 2 weeks of feelings and a tip if she often feels it is hard.'])+'History cards also show linked Japanese and English sayings she can tap to understand.'}
+    {q:'How does the kanji section work?', a:'The 字 Kanji tab is built around effort and feelings, not scores:'+li(['<b>Today</b>: a daily strong thought (resilience, feelings, rest, self-kindness), today’s kanji, a heart question, and a Japanese saying of the day with meaning, example and audio.','<b>My Book</b>: kanji by page. She can change her own page (turn this off in <b>Parent → Kanji</b>, which also shows who moved it last).','<b>Practice</b>: flash cards, writing, word games, with rest reminders.','<b>ことわざ</b>: a searchable book of '+KOTO.length+' common sayings, most-used first, plus a no-points quiz. Some link to history cards.','<b>Growing</b>: kanji tree, kept thoughts, and a feelings check-in. Parent → Kanji shows the last 2 weeks of feelings and a tip if she often feels it is hard.'])+'116 history cards also have one famous quote (their own words, or a famous line about what they did), credited exactly, with audio in the original language (Chinese in Cantonese; add the Google “Chinese (Hong Kong)” voice once in Android Text-to-speech settings). Tapping it gives a kid-friendly explanation.'}
    ]},
    {t:'💵 Money, goals and family', i:[
     {q:'What is the Money tab?', a:'A simple allowance tracker (jar, allowance, goal). Set it up in <b>Allowance money</b>. Adding or removing money updates the “Received” total and Kit comments on new coins.'},
@@ -5186,7 +5260,7 @@ function showParent(scrollTop){
   [30, 60, 90, 120].forEach(function(m){ h += '<button class="btn" data-act="pbreak" data-m="'+m+'">'+(m === 90 ? '1.5 hours' : (m < 60 ? m+' min' : (m/60)+(m === 60 ? ' hour' : ' hours')))+'</button>'; });
   h += '</div>';
   var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
-  h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#ff7bd0;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
+  h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#c2185b;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
 
   h += '<h3>🗂️ Settings</h3><div class="ptiles">';
   h += pTile('🎁', 'Rewards &amp; prices', 'Edit, group, price', 'data-act="rweditor"');
@@ -5793,7 +5867,7 @@ function showCardDetail(id, fromParent){
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
   h += '<div class="era say" data-say="year:'+id+'"><b>'+lbl+'</b> '+esc(c.y)+' <span class="spk">🔊</span></div>';
   h += '<div class="tagline say" data-say="tag:'+id+'">'+esc(c.s)+' <span class="spk">🔊</span></div>';
-  h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>'+cardSayHTML(c.id);
+  h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>'+cardQuoteHTML(c.id);
   h += '<div class="row" style="margin-top:14px"><button class="btn good" data-say="story:'+id+'">🔊 Read it aloud</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div>';
   h += '<div class="hint" style="margin-top:8px">Tip: tap the name, place or year to hear it.</div>';
   h += '</div></div>';
@@ -7548,7 +7622,7 @@ function kitMovesParentHTML(){
   var sea = kitSeason(), h = '<h3>🎬 Kit\u2019s moves</h3>';
   h += pTog('Kit does seasonal, holiday and birthday moves', 'eKitMoves', kitMovesOn());
   h += '<div class="hint" style="margin:6px 0 4px">Right now: <b>'+KIT_SEASON_NAME[sea]+'</b> moves. About 1 in 5 of Kit\u2019s moves is seasonal. Each big holiday has its own move: it plays about 3 in 10 times during the holiday\u2019s countdown and half the time on the day. On her birthday, the first tap on Kit is always <b>Make a wish</b> (then 1 in 3), and the first open of the day shows a balloon celebration. Respectful days keep the quiet bow. Tap a button to watch.</div>';
-  if(state.ui.calm || state.ui.kitAnim === false) h += '<div class="hint" style="color:#c0392b;margin-bottom:4px">Calm mode or "Kit\u2019s little animations" is off, so Kit stays still for her.</div>';
+  if(state.ui.calm || state.ui.kitAnim === false) h += '<div class="hint warnhint" style="margin-bottom:4px">Calm mode or "Kit\u2019s little animations" is off, so Kit stays still for her.</div>';
   h += '<div class="kmprev"><span class="kmstage">'+kitSVG('happy', 'kprev', {slots:{}, ids:[]})+'</span><div class="kmbtns">';
   ['wish'].concat(KIT_SEASON_MOVES.fall, KIT_SEASON_MOVES.winter, KIT_SEASON_MOVES.spring, KIT_SEASON_MOVES.summer).forEach(function(m){
     var now = KIT_SEASON_MOVES[sea].indexOf(m) >= 0;
@@ -9085,61 +9159,125 @@ var STRONG = [
  ['Sleep, water, food, play and hugs: that is the recipe for a strong mind.','','Which part of the recipe do you need most today?',1]
 ];
 
-/* Well-known English sayings and idioms linked to history cards (tap on the card for a kid-friendly popup).
-   [saying, card ids, what it means (for an 8-year-old), how it links to the card, example] */
-var CARD_SAY = [
- ['Rome wasn’t built in a day.',['eu32','eu10'],'Big, amazing things take a long time and lots of work. Be patient!','Ancient Rome, with its roads, temples and the Colosseum, took hundreds of years to build.','Learning all your kanji takes time. Rome wasn’t built in a day!'],
- ['When in Rome, do as the Romans do.',['eu32'],'When you visit a new place, follow the way people do things there. It shows respect.','The saying comes from long-ago advice about visiting Rome and following its customs.','At a Japanese home we take off our shoes. When in Rome!'],
- ['All roads lead to Rome.',['eu32'],'There are lots of different ways to get to the same answer or goal.','The Romans built thousands of kilometres of roads that all connected back to Rome.','You solved it a different way, and that’s fine. All roads lead to Rome!'],
- ['Crossing the Rubicon',['eu18'],'Making a big choice that you can’t take back.','Julius Caesar crossed the Rubicon River with his army, and after that there was no going back.','Signing up for the talent show was my Rubicon. Now I’m doing it!'],
- ['The die is cast.',['eu18'],'The choice is made, so now you go for it.','Caesar is said to have said this as he crossed the Rubicon. (A “die” is one dice.)','I pressed send on my story. The die is cast!'],
- ['I came, I saw, I conquered.',['eu18'],'Doing something quickly and completely. People say it as a joke when they finish something fast.','Caesar wrote “Veni, vidi, vici” after winning a very quick battle.','I came, I saw, I conquered… my whole plate of broccoli!'],
- ['All’s well that ends well.',['eu13'],'If things turn out fine in the end, the troubles along the way don’t matter much.','It is the name of one of Shakespeare’s plays.','We missed the bus but still got there on time. All’s well that ends well!'],
- ['A wild-goose chase',['eu13'],'Looking hard for something you will never find.','Shakespeare was the first known writer to use this phrase, in Romeo and Juliet.','Looking for my left sock was a wild-goose chase. It was on my foot!'],
- ['In a pickle',['eu13'],'In a tricky or messy situation.','Shakespeare used this phrase in his play The Tempest.','I forgot my lunch and my wallet. I’m in a pickle!'],
- ['All that glitters is not gold.',['eu13'],'Something that looks great on the outside isn’t always great on the inside.','A version of this (“All that glisters is not gold”) appears in Shakespeare’s The Merchant of Venice.','That shiny toy broke in a day. All that glitters is not gold.'],
- ['Standing on the shoulders of giants',['eu11'],'Learning from the great people who came before you, so you can see even further.','Isaac Newton wrote, “If I have seen further, it is by standing on the shoulders of giants.”','Your history cards let you stand on the shoulders of giants!'],
- ['What goes up must come down.',['eu11'],'Things that rise will fall back down sometimes. (Like a ball, or a happy or grumpy mood!)','Newton explained gravity, the pull that brings things back down to Earth.','Throw the ball gently. What goes up must come down!'],
- ['It’s all relative.',['eu03'],'Whether something seems big or small, fast or slow, depends on what you compare it to.','Einstein’s famous ideas are called the theory of relativity.','Five minutes of waiting feels long, but five minutes of play feels short. It’s all relative!'],
- ['A real Einstein',['eu03'],'Someone who is very clever. (Sometimes people say it as a friendly joke.)','Albert Einstein is one of the most famous scientists ever.','You figured that out so fast. You’re a real Einstein!'],
- ['A Renaissance person',['eu01'],'Someone who is good at many different things.','Leonardo da Vinci lived during the Renaissance and was a painter, inventor, scientist and more.','She paints, codes and plays piano. A real Renaissance person!'],
- ['And yet it moves.',['eu08'],'Saying something is true even when other people don’t believe you.','A famous story says Galileo whispered this about the Earth moving around the Sun, even after he was told to stop saying it.','People laughed at my idea, but I think it’s right. And yet it moves!'],
- ['Cutting the Gordian knot',['eu19'],'Solving a super tricky problem in a bold, simple way.','A legend says nobody could untie a huge knot, so Alexander the Great just cut it with his sword.','Instead of untangling the cables, we bought a new one. Gordian knot cut!'],
- ['Early to bed and early to rise, makes a man healthy, wealthy and wise.',['am11'],'Going to bed and getting up early is good for you.','Benjamin Franklin printed this in his book Poor Richard’s Almanack in 1735.','Lights out! Early to bed and early to rise.'],
- ['An ounce of prevention is worth a pound of cure.',['am11'],'Stopping a problem before it starts is much easier than fixing it later.','Franklin wrote this about stopping fires before they start. He also started a fire company.','Brushing your teeth now is easier than a filling later. An ounce of prevention!'],
- ['Time is money.',['am11'],'Time is precious, so don’t waste it.','Franklin wrote “Remember that time is money” in 1748.','Time is money. Let’s get the homework done!'],
- ['I have a dream.',['am07'],'Having a big hope for a better, fairer future.','Martin Luther King Jr. gave his famous “I have a dream” speech in 1963.','I have a dream that everyone in my class gets along.'],
- ['Hot off the press',['eu04','kr06','cn17'],'Brand new, just finished.','It comes from printing: freshly printed pages came off the printing press still warm.','Here is my new drawing, hot off the press!'],
- ['A moral compass',['cn19'],'Your inside sense of what is right and wrong.','A compass always points the way. A moral compass points you towards the right thing to do.','When I wasn’t sure what to do, my moral compass said, “tell the truth.”'],
- ['Go off with a bang',['cn18'],'To go really, really well.','Fireworks make a big bang, and they were invented in China.','My birthday party went off with a bang!'],
- ['Let off steam',['gl16'],'Doing something active to get rid of big feelings or energy.','Steam engines let out extra steam so they didn’t burst. They powered the Industrial Revolution.','After school I run around the park to let off steam.'],
- ['Full steam ahead',['gl16','ca09'],'Going forward with lots of energy.','Steam engines powered the factories and trains of the Industrial Revolution.','The homework plan is ready. Full steam ahead!'],
- ['Back on track',['ca09'],'Going the right way again after a problem.','Trains must stay on their tracks, like the trains on Canada’s railway.','I got distracted, but now I’m back on track.'],
- ['Learn the ropes',['gl12'],'Learning how to do something new.','On old sailing ships, new sailors had to learn which rope did what.','It’s my first day at swim club, so I’m still learning the ropes.'],
- ['Smooth sailing',['gl12'],'When things go easily with no problems.','Sailors love calm seas and good winds.','After the first hard page, the rest was smooth sailing.'],
- ['Go the way of the dinosaurs',['gl02'],'When something disappears or gets old-fashioned.','The dinosaurs disappeared after a giant rock hit the Earth.','Video tapes have gone the way of the dinosaurs.'],
- ['Avoid like the plague',['gl11'],'To stay far away from something.','Long ago, people stayed away from anyone sick with the plague, like the Black Death.','My little brother avoids broccoli like the plague.'],
- ['Give me a ring.',['ca07'],'Phone me!','Old telephones made a ringing sound. Alexander Graham Bell made the first telephone call.','Give me a ring when you get home.'],
- ['A slam dunk',['ca03'],'Something that is sure to work, or super easy.','In basketball, a slam dunk is pushing the ball right down into the hoop. James Naismith invented basketball.','That spelling test was a slam dunk!'],
- ['You miss 100% of the shots you don’t take.',['ca25'],'If you never try, you can never succeed. So give it a go!','Wayne Gretzky, the hockey star, said this.','I was scared to try out for the team, but you miss 100% of the shots you don’t take.'],
- ['Skate to where the puck is going.',['ca25'],'Think ahead and get ready for what will happen next.','Wayne Gretzky said his dad taught him to skate to where the puck is going, not where it has been.','Pack your bag tonight. Skate to where the puck is going!'],
- ['Lest we forget',['gl13','ca21','ca22'],'We will always remember the people who served and died in wars, so we keep working for peace.','People say this on Remembrance Day (Armistice Day), when we wear poppies like the ones in John McCrae’s poem.','On November 11, we are quiet for two minutes. Lest we forget.'],
- ['Go the distance',['ca01'],'Keep going all the way to the end, even when it’s hard.','Terry Fox ran 5,373 kilometres with an artificial leg in his Marathon of Hope.','This puzzle is long, but I’m going to go the distance.'],
- ['The middle way',['as10'],'Not too much, not too little: finding a balance.','The Buddha taught the “middle way”: not living too hard and not too easy.','Not too much screen time, not too little play. The middle way!'],
- ['Treat others the way you want to be treated.',['cn02'],'Be kind to people the way you’d like them to be kind to you. (It’s called the Golden Rule.)','Confucius taught: “Do not do to others what you would not want done to you.”','I didn’t like being left out, so I always invite others to play.'],
- ['A journey of a thousand miles begins with a single step.',['cn03'],'Even the biggest goal starts with one small step.','This comes from Laozi’s book, the Tao Te Ching.','Writing a whole book? A journey of a thousand miles begins with a single step!'],
- ['Know yourself and know your enemy.',['cn04'],'Understand the challenge and understand yourself, and you can handle anything.','Sun Tzu wrote this in The Art of War.','I checked what’s on the test and what I find tricky. Know yourself!'],
- ['An eye for an eye',['as12'],'Paying someone back with the same thing they did. (Today we try to solve problems by talking and being fair instead.)','This idea was written in the Code of Hammurabi, one of the oldest laws, almost 4000 years ago.','Instead of an eye for an eye, let’s say sorry and make up.'],
- ['The best time to plant a tree was 20 years ago. The second best time is now.',['af05'],'Don’t worry that you didn’t start sooner. Start today!','Wangari Maathai and the Green Belt Movement planted millions of trees in Kenya.','I wish I’d started piano earlier. But the second best time is now!'],
- ['Because it’s there.',['as18'],'Doing something hard just because it is a big, exciting challenge.','When someone asked climber George Mallory why he wanted to climb Mount Everest, he said, “Because it’s there.”','Why do I want to learn every kanji? Because it’s there!'],
- ['Be water, my friend.',['cn58'],'Be flexible and calm, and find a way around problems, like water flowing around rocks.','Bruce Lee said this to explain how to stay calm and adapt.','The plan changed? No problem. Be water, my friend.'],
- ['A perfect 10',['eu24'],'Something that is perfect.','Nadia Comăneci was the first gymnast ever to score a perfect 10 at the Olympics, in 1976.','Your cartwheel was a perfect 10!'],
- ['The beautiful game',['sa03'],'A nickname for soccer (football).','Pelé made the phrase famous. He called his life story “My Life and the Beautiful Game”.','Let’s play the beautiful game at recess!'],
- ['The sky’s the limit.',['am12'],'There is no limit to what you can do.','Amelia Earhart was the first woman to fly alone across the Atlantic Ocean.','With hard work, the sky’s the limit!'],
- ['Get off the ground',['am01'],'To get started and begin to work well.','The Wright brothers made the first airplane get off the ground in 1903.','Our lemonade stand finally got off the ground!'],
- ['One small step for man, one giant leap for mankind.',['am02'],'One small action can be a huge moment for everyone. People say “a giant leap” for big progress.','Neil Armstrong said this when he became the first person to step on the Moon.','Reading her first chapter book was a giant leap!'],
- ['Go for gold',['jp23','kr07'],'Try your very hardest to be the best you can.','At the Olympics, the winners get gold medals.','It’s the school race today. Go for gold!'],
- ['Land of the Rising Sun',['jp41'],'A nickname for Japan.','日本 (Nihon) means “origin of the sun”, and old stories say Japan’s emperors came from Amaterasu, the sun goddess.','Mount Fuji is the tallest mountain in the Land of the Rising Sun.']
+/* One famous quote per history card (not every card has one). Shown in italics with a 🔊 button; tap for a kid-friendly pop-up.
+   [card id, quote (original), language, reading for audio/pop-up (ja/ko) or '', English (if original isn't English), credit, what it means, linked saying in her ことわざ book or ''] */
+var CARD_QUOTES = [
+ ['cn02','知之為知之，不知為不知，是知也','yue','','Knowing what you know, and admitting what you don’t know: that is real knowing.','Confucius, the Analects','Confucius taught that it’s smart, not embarrassing, to say “I don’t know yet.” Pretending to know stops you from learning. Being honest about what you don’t know is where learning starts!',''],
+ ['cn03','千里之行，始於足下','yue','','A journey of a thousand li begins with a single step.','Laozi, Tao Te Ching','A “li” is an old Chinese measure of distance. Even the longest trip starts with one tiny step. Any big goal, like learning all your kanji, starts with the small thing you do today.','千里の道も一歩から'],
+ ['cn04','知彼知己，百戰不殆','yue','','Know the other side and know yourself, and you will never be in danger.','Sun Tzu, The Art of War','If you understand the challenge in front of you, and you also understand yourself (what you’re good at and what’s still tricky), you can get ready for almost anything. It works for tests and games too!','彼を知り己を知れば百戦殆うからず'],
+ ['cn11','非寧靜無以致遠','yue','','Without calm, you cannot go far.','Zhuge Liang, letter to his son','The cleverest strategist in China told his son that a calm, quiet mind is what helps you reach big goals. When you feel rushed or upset, slow down and breathe first.',''],
+ ['cn12','雙兔傍地走，安能辨我是雄雌','yue','','When two rabbits run side by side, who can tell which is the boy and which is the girl?','The Ballad of Mulan','Mulan fought for years and nobody guessed she was a girl. At the end of the poem she says this: when rabbits run together, you can’t tell boys from girls. Girls can do anything boys can do!',''],
+ ['cn14','舉頭望明月，低頭思故鄉','yue','','I lift my head to look at the bright moon; I lower my head and think of home.','Li Bai, “Quiet Night Thoughts”','Li Bai was far from home and saw the moonlight. It made him miss his family. Almost every child in China learns this poem. The same moon shines on everyone you love, wherever they are.',''],
+ ['cn15','國破山河在','yue','','The country is broken, but the mountains and rivers remain.','Du Fu, “Spring View”','Du Fu wrote this during a terrible war. Cities were ruined, but nature was still there, and spring still came. Even after hard times, some beautiful things stay.',''],
+ ['cn21','In Xanadu did Kubla Khan a stately pleasure-dome decree','en','','','Samuel Taylor Coleridge, “Kubla Khan” (1797)','An English poet wrote a dreamy poem about Kublai Khan’s summer palace at Xanadu. “Decree” means he ordered it built, and a “pleasure-dome” is a fancy palace for fun. Kublai Khan was so famous that poets far away wrote about him!',''],
+ ['cn23','天下為公','yue','','The world belongs to everyone.','Sun Yat-sen’s favourite motto','Sun Yat-sen wrote these words again and again with his brush. They come from an old Chinese book and mean a country should work for all its people, not just a few powerful ones.',''],
+ ['cn25','禾下乘涼夢','yue','','My dream: resting in the shade under rice plants as tall as trees.','Yuan Longping','Yuan Longping said he once dreamed of rice so tall that he could sit in its shade. His dream was really about growing so much rice that nobody would go hungry, and his rice has fed millions of people.',''],
+ ['cn27','我感覺良好','yue','','I feel good.','Yang Liwei, speaking from space (2003)','These were some of the first words China’s first astronaut said from space, so everyone at home knew he was safe. Sometimes the simplest words are the most exciting!',''],
+ ['cn28','誰言兒女不英雄','yue','','Who says daughters can’t be heroes?','Wang Zhenyi, from her poem','Wang Zhenyi studied stars and maths more than 200 years ago, when girls weren’t supposed to. In her poem she asks: who says girls can’t be heroes? She proved they can.',''],
+ ['cn30','班門弄斧','yue','','Showing off your axe skills at Lu Ban’s door.','Chinese idiom about Lu Ban','Lu Ban was China’s greatest carpenter. Showing off with an axe in front of his door would be silly! People use this idiom to mean showing off in front of a real expert. (In Japanese there is a similar saying: 釈迦に説法.)',''],
+ ['cn34','路漫漫其修遠兮，吾將上下而求索','yue','','The road ahead is long, but I will keep searching high and low.','Qu Yuan, “Li Sao”','Qu Yuan wrote that even though the way is long and hard, he would never stop searching for what is right. People still use this line to mean “I won’t give up.”',''],
+ ['cn37','老驥伏櫪，志在千里','yue','','An old horse resting in the stable still dreams of running a thousand li.','Cao Cao, from his poem','Cao Cao wrote this when he was older. It means you’re never too old (or too young) to have big dreams.',''],
+ ['cn38','勿以善小而不為','yue','','Never skip a good deed just because it is small.','Liu Bei, letter to his son','Before he died, Liu Bei told his son: don’t skip a kind act because it seems small, and don’t do a bad thing because it seems small. Little kindnesses add up to a good person.',''],
+ ['cn43','大江東去','yue','','The great river flows east…','Su Shi, “Memories of Red Cliff”','Hundreds of years after the battle, the poet Su Shi stood at Red Cliffs and watched the Yangtze River flow east. The river keeps flowing, while the famous heroes of the past are gone. History is all around us.',''],
+ ['cn45','天下大勢，分久必合，合久必分','yue','','What is long divided must unite; what is long united must divide.','Romance of the Three Kingdoms, opening line','The famous book starts by saying that countries come apart and come back together again and again, all through history. Nothing stays the same forever.',''],
+ ['cn46','以五十步笑百步','yue','','Fifty steps laughing at a hundred steps.','Mencius','Mencius told a story: in a battle, a soldier who ran away 50 steps laughed at one who ran 100 steps. But both ran away! It means don’t laugh at others for the same mistake you made.','五十歩百歩'],
+ ['cn47','不知周之夢為胡蝶與，胡蝶之夢為周與','yue','','Was I a man dreaming I was a butterfly, or am I a butterfly dreaming I am a man?','Zhuangzi, the butterfly dream','Zhuangzi dreamed he was a happy butterfly. When he woke up, he wondered which one was real! It’s a fun puzzle that makes you think about dreams and how we know what’s real.',''],
+ ['cn50','以人為鏡，可以明得失','yue','','Use people as a mirror, and you can see what you did right and wrong.','Emperor Taizong of Tang','A mirror shows if your clothes are neat. Honest friends are like a mirror for how you act. Taizong was a great emperor because he listened to people who told him the truth.',''],
+ ['cn52','但願人長久，千里共嬋娟','yue','','May we all live long, and share the beautiful moon though we are a thousand li apart.','Su Shi, “Water Melody” (a Mid-Autumn poem)','Su Shi missed his brother on the Mid-Autumn Festival. He wished they could both live long and enjoy the same moon, even far apart. Families in different countries still say this to each other.',''],
+ ['cn54','齊天大聖','yue','','Great Sage Equal to Heaven!','Sun Wukong’s title, Journey to the West','This is the grand name the Monkey King gave himself, because he thought he was as great as heaven! He was brave and super strong, but he also learned to be humble on his long journey.',''],
+ ['cn56','三過家門而不入','yue','','He passed his own home three times without going in.','Mencius, about Yu the Great','Yu worked for many years to control the floods. He was so busy helping people that he walked past his own home three times without stopping. It means working hard for others.',''],
+ ['cn58','Be water, my friend.','en','','','Bruce Lee, TV interview (1971)','Water can flow around rocks, fill any cup, and even crash like a wave. Bruce Lee meant: be calm and flexible, and find a new way when something blocks you.',''],
+ ['jp02','和を以て貴しとなす','ja','わをもってとうとしとなす','Harmony is the most precious thing.','Prince Shōtoku, Seventeen-Article Constitution (604)','These are the first words of Japan’s oldest set of rules. Prince Shōtoku wanted people to get along, listen to each other and talk things through.','和を以て貴しとなす'],
+ ['jp03','鳴くよウグイス平安京','ja','なくよ うぐいす へいあんきょう','The bush warbler sings: Heian-kyō!','Rhyme Japanese students use to remember 794','Japanese kids remember the year Kyoto became the capital with this rhyme: なく(7)よ(9)うぐいす(4), 794! Making up a funny rhyme is a great memory trick.',''],
+ ['jp04','いづれの御時にか、女御、更衣あまたさぶらひたまひける中に','ja','いずれのおおんときにか、にょうご、こういあまたさぶらいたまいけるなかに','In the reign of a certain emperor, among the many ladies of the court…','Murasaki Shikibu, opening of The Tale of Genji','This is how The Tale of Genji begins, more than 1000 years ago. Many people call it the world’s first novel. Japanese students learn this opening in school.',''],
+ ['jp05','春はあけぼの','ja','はるはあけぼの','In spring, it is the dawn (that is most beautiful).','Sei Shōnagon, The Pillow Book','Sei Shōnagon wrote about the best moment in each season: spring dawn, summer night, autumn evening, winter early morning. She noticed tiny beautiful moments. What’s your favourite time of day?',''],
+ ['jp08','天下布武','ja','てんかふぶ','Unite the whole land by strength.','Oda Nobunaga’s seal','Nobunaga stamped these four kanji on his letters. They show his big goal: to bring all of Japan together after years of wars.',''],
+ ['jp09','鳴かぬなら鳴かせてみようホトトギス','ja','なかぬなら なかせてみよう ほととぎす','If the cuckoo won’t sing, I’ll find a way to make it sing.','A famous Edo-period verse describing Hideyoshi','People made up three verses to show three leaders. Hideyoshi’s shows he was clever and creative: if something doesn’t work, find a smart new way!',''],
+ ['jp10','鳴かぬなら鳴くまで待とうホトトギス','ja','なかぬなら なくまでまとう ほととぎす','If the cuckoo won’t sing, I’ll wait until it does.','A famous Edo-period verse describing Ieyasu','Ieyasu’s verse shows his patience. He waited calmly for the right moment, and in the end he became the ruler of all Japan.','鳴かぬなら鳴くまで待とうホトトギス'],
+ ['jp11','千日の稽古を鍛とし、万日の稽古を錬とす','ja','せんにちのけいこを たんとし、まんにちのけいこを れんとす','A thousand days of practice to forge, ten thousand days to polish.','Miyamoto Musashi, The Book of Five Rings','Musashi said it takes 1,000 days of practice to get strong and 10,000 days to become truly great. This is where the word 鍛錬 (training) comes from. Practice every day adds up!',''],
+ ['jp14','一期一会','ja','いちごいちえ','One time, one meeting: treasure each moment together.','From the tea teaching of Sen no Rikyū, written down by his student','Rikyū taught that every tea gathering happens only once, so you should give it your whole heart. Treat every moment with people you love as special.','一期一会'],
+ ['jp15','古池や蛙飛び込む水の音','ja','ふるいけや かわずとびこむ みずのおと','An old pond. A frog jumps in. The sound of water.','Matsuo Bashō (1686)','This is the most famous haiku in the world: just 17 sounds. A quiet pond, then plop! Bashō shows how one tiny moment can be beautiful if you notice it.',''],
+ ['jp16','天我をして五年の命を保たしめば、真正の画工となるを得べし','ja','てん われをして ごねんのいのちを たもたしめば、しんせいのがこうと なるをうべし','If heaven gave me five more years, I could become a real painter.','Katsushika Hokusai, his last words at 88','Hokusai had painted for 70 years and made The Great Wave, but he still felt he was learning! The greatest artists never stop trying to get better.',''],
+ ['jp18','日本を今一度せんたくいたし申候','ja','にほんを いまいちど せんたく いたしもうしそうろう','I’ll wash Japan clean once more.','Sakamoto Ryōma, letter to his sister Otome (1863)','Ryōma wrote to his big sister that he wanted to “do the laundry” for Japan: to make a fresh, new start for the country. He used a funny everyday word for a huge dream!',''],
+ ['jp19','泰平の眠りをさます上喜撰 たった四杯で夜も寝られず','ja','たいへいの ねむりをさます じょうきせん たったしはいで よるもねられず','Just four cups of fancy tea, and nobody can sleep!','A famous joke poem from 1853','It’s a pun! 上喜撰 is strong green tea, but it sounds like 蒸気船 (steamships). Four cups of tea keep you awake, and four black steamships kept all of Japan awake with worry.',''],
+ ['jp20','ざんぎり頭をたたいてみれば、文明開化の音がする','ja','ざんぎりあたまを たたいてみれば、ぶんめいかいかの おとがする','Tap a short-haired head, and you’ll hear the sound of modern times!','A popular song of the Meiji era','When samurai cut off their topknots for short Western haircuts, people sang this funny song. It shows how fast Japan was changing.',''],
+ ['jp21','天は人の上に人を造らず、人の下に人を造らずと言えり','ja','てんは ひとのうえに ひとをつくらず、ひとのしたに ひとをつくらずと いえり','It is said that heaven does not make one person above another, or below another.','Fukuzawa Yukichi, An Encouragement of Learning','These are the first words of Fukuzawa’s famous book. Everyone is born equal. He said that what makes a difference is learning, so study hard!','天は人の上に人を造らず'],
+ ['jp26','宙返り 何度もできる 無重力','ja','ちゅうがえり なんどもできる むじゅうりょく','Somersaults, as many as you like, with no gravity!','Mukai Chiaki, from space (1998)','Mukai Chiaki wrote the first half of a poem in space and asked people in Japan to write the second half. Thousands of people sent in their endings! Science and poetry can go together.',''],
+ ['jp31','積小為大','ja','せきしょういだい','Pile up small things to make something big.','Ninomiya Kinjirō (Sontoku)','Kinjirō grew rice from tiny leftover seedlings and studied while working. He taught that small efforts, done every day, become something big.',''],
+ ['jp32','桃太郎さん、桃太郎さん、お腰につけたきびだんご、一つわたしにくださいな','ja','ももたろうさん ももたろうさん おこしにつけた きびだんご ひとつわたしに くださいな','Momotarō, Momotarō, the millet dumplings on your belt, please give one to me!','The Momotarō song','Every child in Japan knows this song. The dog, the monkey and the pheasant each ask for a dumpling, then join Momotarō as friends on his adventure.',''],
+ ['jp33','志を得ざれば再び此地を踏まず','ja','こころざしを えざれば ふたたび このちを ふまず','Until I reach my goal, I will not set foot here again.','Noguchi Hideyo, carved into a pillar of his home','When young Hideyo left home to study, he carved these words into a pillar. He badly burned his hand as a baby, but he never gave up and became a famous scientist. You can still see the pillar today.',''],
+ ['jp36','判官びいき','ja','ほうがんびいき','Cheering for the Hōgan (Yoshitsune).','Japanese idiom named after Yoshitsune','Yoshitsune’s title was Hōgan. People felt sorry for him when his own brother turned against him. Now 判官びいき means cheering for the underdog.','判官びいき'],
+ ['jp37','弁慶の泣き所','ja','べんけいのなきどころ','The spot that makes even Benkei cry.','Japanese idiom named after Benkei','Benkei was super strong, but they say a kick to the shin would make even him cry. It means your shin, or anyone’s weak spot. Everybody has one!','弁慶の泣き所'],
+ ['jp38','風林火山','ja','ふうりんかざん','Swift as the wind, quiet as the forest, fierce as fire, steady as the mountain.','Takeda Shingen’s battle banner','Shingen’s flag had words from Sun Tzu’s book. It means: move fast when you need to, stay calm and quiet, be brave, and don’t be pushed around.',''],
+ ['jp39','敵に塩を送る','ja','てきにしおをおくる','Sending salt to your enemy.','Japanese idiom from the story of Uesugi Kenshin','When Takeda Shingen’s land ran out of salt, his rival Kenshin is said to have sent him salt. Now it means helping your rival when they are in trouble: being a good sport.','敵に塩を送る'],
+ ['jp40','天下分け目の戦い','ja','てんかわけめのたたかい','The battle that split the whole country.','What people call the Battle of Sekigahara','Sekigahara decided who would rule Japan. Today people say 天下分け目 for any big deciding moment, like the final match of a tournament.','天下分け目'],
+ ['jp42','昔々浦島は 助けた亀に連れられて 竜宮城へ来てみれば 絵にもかけない美しさ','ja','むかしむかし うらしまは たすけたかめに つれられて りゅうぐうじょうへ きてみれば えにもかけない うつくしさ','Long ago, Urashima was taken by the turtle he saved to the Dragon Palace, more beautiful than any picture.','The Urashima Tarō song','Japanese children sing this song about Urashima. He was kind to a turtle, and it took him to a magical palace under the sea.',''],
+ ['jp43','笹の葉さらさら 軒端にゆれる お星さまきらきら 金銀砂子','ja','ささのは さらさら のきばにゆれる おほしさま きらきら きんぎんすなご','Bamboo leaves rustle, swaying by the roof; the stars twinkle like gold and silver sand.','The Tanabata song','Children sing this on July 7th while hanging wishes on bamboo. Orihime and Hikoboshi meet across the Milky Way that night. What would you wish for?',''],
+ ['jp44','いろはにほへと ちりぬるを わかよたれそ つねならむ','ja','いろはにおえど ちりぬるを わがよたれぞ つねならん','Flowers bloom bright, but soon they fall; in our world, nothing stays forever.','The Iroha poem','This old poem uses every kana exactly once, like a perfect puzzle! For hundreds of years, children learned their kana with it, the way you learn the ABC song.',''],
+ ['jp45','論語と算盤','ja','ろんごとそろばん','The Analects and the abacus.','Shibusawa Eiichi, title of his book','The Analects are Confucius’ teachings about being good; an abacus is for counting money. Shibusawa said business should use both: be smart with money, and always be honest and kind.',''],
+ ['jp50','食足世平','ja','しょくそくせへい','When everyone has enough food, the world is at peace.','Momofuku Ando’s motto','Ando saw hungry people after the war and wanted to help. He invented instant ramen when he was 48, and he believed full tummies help make a peaceful world.',''],
+ ['jp51','VW: Vision and Work hard','en','','','Shinya Yamanaka’s motto','Yamanaka learned this from a teacher in America: have a clear dream (vision), and work hard for it. With both, he made a discovery that won the Nobel Prize.',''],
+ ['jp52','憧れるのをやめましょう','ja','あこがれるのを やめましょう','Let’s stop admiring them.','Shohei Ohtani, to his team before the 2023 WBC final','Before playing the USA’s superstar team, Ohtani told his teammates: if we just admire them, we can’t beat them. Believe you belong on the same field! Japan won.',''],
+ ['jp53','一富士二鷹三茄子','ja','いちふじ にたか さんなすび','One: Mount Fuji, two: a hawk, three: an eggplant.','Traditional Japanese saying','These are the three luckiest things to see in your first dream of the New Year, and Mount Fuji is number one!','一富士二鷹三茄子'],
+ ['jp54','初春の令月にして、気淑く風和ぎ','ja','しょしゅんの れいげつにして、きよく かぜやわらぎ','In the lovely month of early spring, the air is fresh and the wind is gentle.','The Man’yōshū (about 1300 years old)','The era name 令和 (Reiwa) comes from this line in Japan’s oldest poetry collection. It was the first era name taken from a Japanese book instead of a Chinese one.',''],
+ ['jp57','色は静岡、香りは宇治よ、味は狭山でとどめさす','ja','いろは しずおか、かおりは うじよ、あじは さやまで とどめさす','For colour it’s Shizuoka, for smell it’s Uji, but for taste, Sayama wins!','Sayama tea-picking song','Sayama is famous for its tea. This old song says Shizuoka tea has the best colour and Uji tea the best smell, but Sayama tea tastes the best of all!',''],
+ ['kr01','나랏말싸미 듕귁에 달아','ko','나라의 말이 중국과 달라','Our language is different from China’s… so I have made 28 letters that everyone can learn easily and use every day.','King Sejong, preface to Hunminjeongeum (1446)','King Sejong saw that ordinary people couldn’t read Chinese characters. So he invented Hangul, an alphabet so easy that people say a clever person can learn it in a morning!',''],
+ ['kr02','신에게는 아직 열두 척의 배가 있사옵니다','ko','신에게는 아직 열두 척의 배가 있사옵니다','I still have twelve ships.','Admiral Yi Sun-sin, to the king (1597)','The king thought the navy was finished, but Yi said, “I still have twelve ships.” With them he won against more than 130 ships. Don’t give up just because things look hard.',''],
+ ['kr11','홍익인간 (弘益人間)','ko','홍익인간','Benefit all people.','Korea’s founding ideal, from the story of Dangun','According to legend, Dangun founded Korea with this idea: live in a way that helps everyone. It is still Korea’s main idea for education today.',''],
+ ['ca01','I believe in miracles. I have to.','en','','','Terry Fox, letter asking for support for his run (1979)','Terry knew a cure for cancer wouldn’t come from one run, but he believed people working together could make amazing things happen. His hope still raises money every year in the Terry Fox Run.',''],
+ ['ca06','Peace, order, and good government','en','','','Constitution Act, 1867','When Canada became a country in 1867, its rules said the government should give people peace, order and good government. Canadians still talk about these words today.',''],
+ ['ca07','Mr. Watson, come here, I want to see you.','en','','','Alexander Graham Bell, the first telephone call (1876)','These were the very first words ever spoken on a telephone! Bell was calling his helper in the next room. Now we can talk to anyone in the world.',''],
+ ['ca18','Courage, my friends; ’tis not too late to build a better world.','en','','','Tommy Douglas','Tommy Douglas helped bring free health care to Canada. He loved these words: be brave, because it’s never too late to make the world better.',''],
+ ['ca21','In those few minutes I witnessed the birth of a nation.','en','','','Brigadier-General Alexander Ross, about Vimy Ridge (1917)','At Vimy Ridge, soldiers from all over Canada fought together for the first time. Many people felt it was the moment Canada truly felt like its own country.',''],
+ ['ca22','In Flanders fields the poppies blow / Between the crosses, row on row','en','','','John McCrae, “In Flanders Fields” (1915)','Dr. McCrae wrote this poem after losing a friend in the war. It’s why we wear red poppies on Remembrance Day, to remember people who served.',''],
+ ['ca23','Every Child Matters','en','','','Orange Shirt Day, started by Phyllis Webstad','Phyllis’s new orange shirt was taken away at residential school. On Orange Shirt Day (September 30) we wear orange to say that every child is important.',''],
+ ['ca24','Women are persons.','en','','','The Persons Case ruling (1929)','The Famous Five went to court to prove that women count as “persons” under the law, so women could become senators. They won!',''],
+ ['ca25','You miss 100% of the shots you don’t take.','en','','','Wayne Gretzky','If you never try, you can never score. Being scared of missing is normal, but give it a go anyway!',''],
+ ['eu01','Iron rusts from disuse… so does inaction sap the vigour of the mind.','en','','','Leonardo da Vinci, his notebooks','An iron tool gets rusty if nobody uses it. Leonardo said your brain is the same: keep using it, keep learning and keep being curious.',''],
+ ['eu03','Imagination is more important than knowledge.','en','','','Albert Einstein, 1929 interview','Knowing facts is great, but imagining new ideas is how discoveries happen. Einstein imagined riding on a beam of light!',''],
+ ['eu08','Philosophy is written in this grand book, the universe… It is written in the language of mathematics.','en','','','Galileo Galilei, The Assayer (1623)','Galileo called the universe a giant book. He said that to understand the world, like how things fall or how planets move, you need maths. Maths is the secret language of nature!',''],
+ ['eu10','While the Colosseum stands, Rome shall stand.','en','','','Saying recorded by the monk Bede (about 8th century)','Long ago, people believed that as long as the giant Colosseum stood, Rome would last too. It’s still standing after almost 2000 years!',''],
+ ['eu11','If I have seen further, it is by standing on the shoulders of giants.','en','','','Isaac Newton, letter (1675)','Newton meant that he learned from the great thinkers who came before him. Their ideas lifted him up, like standing on a giant’s shoulders to see further.',''],
+ ['eu12','Endless forms most beautiful','en','','','Charles Darwin, On the Origin of Species (1859)','These words are from the last sentence of Darwin’s famous book. He was amazed at how many beautiful kinds of living things there are, all growing and changing over time.',''],
+ ['eu13','To be, or not to be, that is the question.','en','','','William Shakespeare, Hamlet','Prince Hamlet is thinking hard about a really big decision. It’s one of the most famous lines ever written, and people use it as a joke when they can’t decide something!',''],
+ ['eu16','Can machines think?','en','','','Alan Turing, first line of his 1950 paper','Turing asked this question more than 70 years ago, long before smart computers existed. Scientists are still trying to answer it today!',''],
+ ['eu17','Chance favours the prepared mind.','en','','','Louis Pasteur, lecture (1854)','Lucky discoveries happen to people who have studied and are ready to notice them. Getting ready helps you catch good chances!',''],
+ ['eu18','Veni, vidi, vici.','la','','I came, I saw, I conquered.','Julius Caesar, message after a quick victory (47 BC)','Caesar won a battle so fast that he sent home just three Latin words. People say it as a joke when they finish something quickly, like “I came, I saw, I finished my homework!”',''],
+ ['eu19','Cutting the Gordian knot','en','','','English idiom from the legend of Alexander the Great','Nobody could untie a giant, tangled knot, so Alexander just cut it with his sword! It means solving a tricky problem in a bold, simple way.',''],
+ ['eu21','Great things are done by a series of small things brought together.','en','','','Vincent van Gogh, letter to his brother Theo (1882)','A painting is made of thousands of little brush strokes. Van Gogh knew big things are made of many small steps.',''],
+ ['eu23','Поехали!','ru','','Let’s go!','Yuri Gagarin, at liftoff (1961)','Gagarin shouted this as his rocket launched, making him the first person to go to space. Today people around the world say it when starting an adventure!',''],
+ ['eu32','Rome wasn’t built in a day.','en','','','Proverb about ancient Rome','Rome took hundreds of years to build. Big, amazing things take time and lots of work, so be patient with yourself.','ローマは一日にして成らず'],
+ ['am01','Success four flights Thursday morning','en','','','The Wright brothers’ telegram home (December 17, 1903)','After flying the first airplane, the brothers sent a short message to their dad. Telegrams cost money for every word, so they kept it short. Four words to tell about history!',''],
+ ['am02','That’s one small step for man, one giant leap for mankind.','en','','','Neil Armstrong, stepping onto the Moon (1969)','Armstrong’s step was small, but it was a huge moment for everyone on Earth. People were on the Moon for the first time!',''],
+ ['am04','Pies, ¿para qué los quiero si tengo alas para volar?','es','','Feet, what do I need you for when I have wings to fly?','Frida Kahlo, her diary (1953)','Frida had a lot of pain in her legs, but her imagination and her art were her wings. Your mind can fly even when your body has a hard time.',''],
+ ['am05','I never ran my train off the track and I never lost a passenger.','en','','','Harriet Tubman','The “Underground Railroad” wasn’t a real train. It was a secret path to freedom. Harriet led many people to safety and never lost one of them.',''],
+ ['am06','The only tired I was, was tired of giving in.','en','','','Rosa Parks, her autobiography','People said Rosa didn’t give up her bus seat because she was tired. She said the truth was she was tired of unfair rules. She stood up for what was right by staying seated.',''],
+ ['am07','I have a dream…','en','','','Martin Luther King Jr., speech in Washington (1963)','Dr. King dreamed that one day children would be judged by how kind and good they are, not by the colour of their skin.',''],
+ ['am09','Give me your tired, your poor, your huddled masses yearning to breathe free','en','','','Emma Lazarus, “The New Colossus” (on the Statue of Liberty)','This poem is on the Statue of Liberty. It welcomed people from all over the world coming to start a new life.',''],
+ ['am11','Early to bed and early to rise makes a man healthy, wealthy and wise.','en','','','Benjamin Franklin, Poor Richard’s Almanack (1735)','Franklin believed good sleep habits help you stay healthy and do well. (In Japanese there’s a similar saying: 早起きは三文の徳.)',''],
+ ['am12','When they fail, their failure must be but a challenge to others.','en','','','Amelia Earhart, letter to her husband','Amelia meant that if a woman tries something brave and doesn’t succeed, others should take up the challenge and keep trying.',''],
+ ['am13','Stay hungry, stay foolish.','en','','','Steve Jobs, speech to university students (2005)','“Hungry” means always wanting to learn more. “Foolish” means not being afraid to try new things, even if people think they’re silly.',''],
+ ['am14','I’m not the next Usain Bolt or Michael Phelps. I’m the first Simone Biles.','en','','','Simone Biles (2016)','Simone didn’t want to be compared to anyone. Be the first you, not the next somebody else!',''],
+ ['am17','Leave it as it is. You cannot improve on it.','en','','','Theodore Roosevelt, at the Grand Canyon (1903)','The US president saw the Grand Canyon and said nature had made it perfect, so people should protect it. It later became a national park.',''],
+ ['sa06','Su nombre es Hoy','es','','Their name is Today.','Gabriela Mistral','Mistral wrote that many things can wait, but children can’t: they are growing right now. Their name is “Today.” She cared deeply about children and schools.',''],
+ ['af01','Man fears time, yet time fears the pyramids.','en','','','Arab proverb','Time makes everything old and crumbly, but the pyramids have stood for over 4500 years! It’s like even time is scared of them.',''],
+ ['af03','Yes, wonderful things!','en','','','Howard Carter, opening Tutankhamun’s tomb (1922)','When Carter first peeked into the tomb by candlelight, someone asked if he could see anything. He answered, “Yes, wonderful things!” He saw gold everywhere.',''],
+ ['af04','Education is the most powerful weapon which you can use to change the world.','en','','','Nelson Mandela (2003)','Mandela believed that learning gives people the power to make the world fairer and better. Every lesson you learn makes you stronger.',''],
+ ['af05','I will be a hummingbird. I will do the best I can.','en','','','Wangari Maathai, telling the hummingbird story','In the story, a forest is on fire and the big animals do nothing, but a tiny hummingbird carries drops of water. Wangari said: be the hummingbird. Do what you can, even if it’s small.',''],
+ ['af10','Salt comes from the north, gold from the south, but the word of God and the treasures of wisdom come from Timbuktu.','en','','','West African proverb','Traders brought salt and gold to Timbuktu, but the city was most proud of its books and scholars. Knowledge was its greatest treasure.',''],
+ ['af18','Scenes so lovely must have been gazed upon by angels in their flight.','en','','','David Livingstone, about Victoria Falls (1855)','Livingstone was amazed by the giant waterfall. He thought it was so beautiful that even angels flying by would stop to look.',''],
+ ['as02','The weak can never forgive. Forgiveness is the attribute of the strong.','en','','','Mahatma Gandhi','It takes real strength to forgive someone. Staying angry is easy; letting go is brave.',''],
+ ['as06','A teardrop on the cheek of time','en','','','Rabindranath Tagore, about the Taj Mahal','The emperor built the Taj Mahal because he missed his wife so much. Tagore said it looks like a shining white teardrop on the face of time.',''],
+ ['as07','Faith is the bird that feels the light and sings when the dawn is still dark.','en','','','Rabindranath Tagore, Fireflies (1928)','Some birds start singing before the sun comes up, because they know morning is coming. Hope is like that bird: it sings even before things get better.',''],
+ ['as10','Hatred is never ended by hatred, but by love alone.','en','','','The Buddha, the Dhammapada','Being mean back doesn’t stop meanness; it just makes more. Only kindness can really end a fight.',''],
+ ['as11','No, it is a very interesting number!','en','','','Srinivasa Ramanujan, about the number 1729','His friend said his taxi number, 1729, was boring. Ramanujan instantly said it was the smallest number you can make by adding two cubes in two different ways! He saw magic in numbers.',''],
+ ['as12','An eye for an eye','en','','','The Code of Hammurabi (about 1750 BC)','Hammurabi’s old law said punishment should match what was done, and no more. Today we try to solve problems by talking and being fair instead of getting even.','目には目を歯には歯を'],
+ ['as17','A rose-red city half as old as time','en','','','John William Burgon, poem “Petra” (1845)','Petra is carved into pink and red rock cliffs. A poet said it looks rose-red and feels as old as time itself.',''],
+ ['as18','Because it’s there.','en','','','George Mallory, about climbing Mount Everest (1923)','When someone asked Mallory why he wanted to climb Everest, he simply said, “Because it’s there.” Some challenges are worth trying just because they’re amazing.',''],
+ ['gl05','This is for everyone.','en','','','Tim Berners-Lee, at the 2012 London Olympics','The inventor of the World Wide Web gave it away for free so everyone could use it. At the Olympics, he typed this message for the whole world to see.',''],
+ ['gl09','…to save succeeding generations from the scourge of war','en','','','The Charter of the United Nations (1945)','After two world wars, countries promised to work together so that children in the future (“succeeding generations”) would not have to live through war.',''],
+ ['gl10','All human beings are born free and equal in dignity and rights.','en','','','Universal Declaration of Human Rights, Article 1 (1948)','This is the first rule of the promise countries made to treat every person fairly. Every single person matters the same.',''],
+ ['gl13','The eleventh hour of the eleventh day of the eleventh month','en','','','The moment World War I ended (November 11, 1918)','The fighting stopped at exactly 11 o’clock on November 11. That’s why we are quiet for two minutes at 11:00 on Remembrance Day.','']
 ];
 
 /* ---------- Kanji tab extras (v26.11.22): strong thought of the day, Japanese saying of the day + look-up + quiz, sayings on history cards ---------- */
@@ -9149,7 +9287,6 @@ function kotoDay(){ return Math.max(0, dayNum() - KOTO_E); }
 function kotoIdx(){ return kotoDay() % KOTO.length; }
 function kotoSt(){ var ks = kanjiState(); if(!ks.koto) ks.koto = {met:{}, used:{}, usedDay:{}, quiz:{}}; ['met','used','usedDay','quiz'].forEach(function(k){ if(!ks.koto[k]) ks.koto[k] = {}; }); if(!ks.strong) ks.strong = {kept:[]}; return ks.koto; }
 function kotoMeet(){ var ko = kotoSt(), i = kotoIdx(); if(!ko.met[i]){ ko.met[i] = dateKey(); save(); } return i; }
-function kotoCardsFor(i){ return KOTO[i][8] || []; }
 function kotoUsedToday(){ var ko = kotoSt(); return ko.usedDay[dateKey()] != null; }
 function strongIdx(){
   var ks = kjExtra(), d = kotoDay();
@@ -9287,42 +9424,53 @@ function kotoQuizShow(){
   h += '<div class="row" style="margin-top:10px"><button class="btn small" data-kq="close">Stop</button></div></div>';
   openModal(h);
 }
-/* ---- sayings on history cards: tap for a kid-friendly popup (tap anywhere to close) ---- */
-function cardSayList(id){
-  var out = [];
-  KOTO.forEach(function(k, n){ if((k[8] || []).indexOf(id) > -1) out.push(['j', n]); });
-  CARD_SAY.forEach(function(s, n){ if(s[1].indexOf(id) > -1) out.push(['e', n]); });
-  return out;
-}
-function cardSayHTML(id){
-  var L = cardSayList(id); if(!L.length) return '';
-  var h = '<div class="csay"><div class="csayh">🗣️ Sayings linked to this card <span>(tap one!)</span></div><div class="csayl">';
-  L.forEach(function(x){
-    if(x[0] === 'j'){ var k = KOTO[x[1]]; h += '<button class="csayc" data-ksay="j:'+x[1]+':'+id+'">🇯🇵 <b lang="ja">'+esc(k[0])+'</b><small lang="ja">'+esc(k[1])+'</small></button>'; }
-    else h += '<button class="csayc" data-ksay="e:'+x[1]+':'+id+'">💬 <b>'+esc(CARD_SAY[x[1]][0])+'</b></button>';
-  });
-  return h + '</div></div>';
-}
-function showSayPop(kind, n, id){
-  var p = $('ksay'); if(!p){ p = document.createElement('div'); p.id = 'ksay'; document.body.appendChild(p); }
-  var h = '<div class="ksbox" role="dialog">';
-  if(kind === 'j'){
-    var k = KOTO[n];
-    h += kotoHeadHTML(n, true);
-    h += '<div class="kotorow"><span class="kotolab">💡 What it means</span> <b>'+esc(k[4])+'</b></div>';
-    h += '<div class="kotorow"><span class="kotolab">やさしい いみ</span> <span lang="ja">'+esc(k[5])+'</span></div>';
-    if(k[9]) h += '<div class="kotorow kotonote">🎴 '+esc(k[9])+'</div>';
-    h += '<div class="kotoex"><span class="kotolab">🗣️ Use it like this</span><div lang="ja" class="kotoexj">'+esc(k[6])+'</div><div class="kotoexe">'+esc(k[7])+'</div></div>';
-    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn small" data-ksaykeep="sj:'+n+'">🔊 Hear it</button>'+(state.eco.kanjiOn === false ? '' : '<button class="btn small" data-ksaykeep="book:'+n+'">📚 Find it in my saying book</button>')+'</div>';
-  } else {
-    var s = CARD_SAY[n];
-    h += '<div class="kotohead big"><div class="kotoj">“'+esc(s[0])+'”</div><span class="kotot">English saying</span></div>';
-    h += '<div class="kotorow"><span class="kotolab">💡 What it means</span> <b>'+esc(s[2])+'</b></div>';
-    h += '<div class="kotorow kotonote">🎴 '+esc(s[3])+'</div>';
-    h += '<div class="kotoex"><span class="kotolab">🗣️ Use it like this</span><div class="kotoexe" style="opacity:1">'+esc(s[4])+'</div></div>';
-    h += '<div class="row" style="gap:8px;margin-top:8px"><button class="btn small" data-ksaykeep="se:'+n+'">🔊 Hear it</button></div>';
+/* ---- one famous quote per history card: 🔊 + quote in italics; tap for a kid-friendly pop-up (tap anywhere to close) ---- */
+var CQ_LANG = {yue:'zh-HK', ja:'ja-JP', ko:'ko-KR', en:'en-US', es:'es-ES', ru:'ru-RU', la:'en-US'};
+var CQ_BY = {}; CARD_QUOTES.forEach(function(q){ CQ_BY[q[0]] = q; });
+function kotoCardsFor(i){ var w = KOTO[i][0], out = []; CARD_QUOTES.forEach(function(q){ if(q[7] === w) out.push(q[0]); }); return out; }
+function cqKoto(q){ if(!q[7]) return -1; for(var i = 0; i < KOTO.length; i++) if(KOTO[i][0] === q[7]) return i; return -1; }
+function speakCQ(txt, lang, el){
+  if(lang !== 'zh-HK'){ speakText(txt, lang, el); return; }
+  var hint = '🔊 To hear Cantonese, add the voice once: Android Settings → Text-to-speech → Google → Install voice data → Chinese (Hong Kong).';
+  if(state.mute){ speakText(txt, lang, el); return; }
+  var cap = nativeCap();
+  if(cap){
+    try{ cap.nativePromise('TextToSpeech', 'isLanguageSupported', {lang:'zh-HK'}).then(function(r){ if(r && r.supported === false) toast(hint, 9000); else speakText(txt, lang, el); }, function(){ speakText(txt, lang, el); }); }
+    catch(e){ speakText(txt, lang, el); }
+    return;
   }
-  h += '<div class="ksclose">Tap anywhere to close</div></div>';
+  try{ if('speechSynthesis' in window){ var v = window.speechSynthesis.getVoices(); if(v.length && !v.some(function(x){ return /zh[-_]HK|yue/i.test(x.lang); })){ toast(hint, 9000); return; } } }catch(e){}
+  speakText(txt, lang, el);
+}
+function cqSpeak(id, which, el){
+  var q = CQ_BY[id]; if(!q) return;
+  if(which === 'x'){ speakText(q[6], 'en-US', el); return; }
+  if(which === 'e' || q[2] === 'la'){ speakText((q[4] || q[1]).replace(/…/g, ', '), 'en-US', el); return; }
+  speakCQ(q[3] || q[1], CQ_LANG[q[2]] || 'en-US', el);
+}
+function cardQuoteHTML(id){
+  var q = CQ_BY[id]; if(!q) return '';
+  var lg = q[2] === 'yue' ? 'zh-Hant-HK' : q[2];
+  var h = '<div class="cq"><button class="cqsay" data-cqsay="'+id+'" aria-label="Hear the quote">🔊</button><button class="cqq" data-cq="'+id+'">';
+  h += '<span class="cqo" lang="'+lg+'">'+(q[2] === 'en' ? '“'+esc(q[1])+'”' : esc(q[1]))+'</span>';
+  if(q[4]) h += '<span class="cqe">“'+esc(q[4])+'”</span>';
+  h += '<span class="cqby">— '+esc(q[5])+'</span><span class="cqtap">Tap to find out what it means</span></button></div>';
+  return h;
+}
+function showQuotePop(id){
+  var q = CQ_BY[id]; if(!q) return;
+  var p = $('ksay'); if(!p){ p = document.createElement('div'); p.id = 'ksay'; document.body.appendChild(p); }
+  var lg = q[2] === 'yue' ? 'zh-Hant-HK' : q[2], ki = cqKoto(q);
+  var h = '<div class="ksbox" role="dialog"><div class="cqpq"><span class="cqo" lang="'+lg+'">'+(q[2] === 'en' ? '“'+esc(q[1])+'”' : esc(q[1]))+'</span>';
+  if(q[3] && q[3] !== q[1]) h += '<span class="cqr" lang="'+lg+'">'+esc(q[3])+'</span>';
+  if(q[4]) h += '<span class="cqe">“'+esc(q[4])+'”</span>';
+  h += '<span class="cqby">— '+esc(q[5])+'</span></div>';
+  h += '<div class="kotorow"><span class="kotolab">💡 What it means</span><br>'+esc(q[6])+'</div>';
+  h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" data-ksaykeep="cq:'+id+'">🔊 Hear the quote</button>';
+  if(q[4] && q[2] !== 'la') h += '<button class="btn small" data-ksaykeep="ce:'+id+'">🔊 In English</button>';
+  h += '<button class="btn small" data-ksaykeep="cx:'+id+'">🔊 Hear what it means</button>';
+  if(ki > -1 && state.eco.kanjiOn !== false) h += '<button class="btn small" data-ksaykeep="book:'+ki+'">📚 Find it in my saying book</button>';
+  h += '</div><div class="ksclose">Tap anywhere to close</div></div>';
   p.innerHTML = h; p.className = 'show';
 }
 function hideSayPop(){ var p = $('ksay'); if(p){ p.className = ''; p.innerHTML = ''; } try{ stopSpeak(); }catch(e){} }
@@ -9333,15 +9481,17 @@ document.addEventListener('click', function(e){
     e.stopPropagation(); e.preventDefault();
     if(!keep){ hideSayPop(); return; }
     var v = keep.getAttribute('data-ksaykeep').split(':'), n = +v[1];
-    if(v[0] === 'sj') speakText(KOTO[n][1], 'ja-JP', keep);
-    else if(v[0] === 'se') speakText(CARD_SAY[n][0] + ' ' + CARD_SAY[n][2], 'en-US', keep);
-    else if(v[0] === 'book'){ hideSayPop(); closeModal(); KOTOF.q = KOTO[n][1]; KOTOF.f = 'all'; state.ui.kjTab = 'koto'; KJT.say = null; save(); if(typeof setTab === 'function') setTab('kanji'); else render(); setTimeout(function(){ kotoFilter(); var d = document.querySelector('.kotoit:not([style*="none"])'); if(d){ d.open = true; d.scrollIntoView({block:'center'}); } }, 120); }
+    if(v[0] === 'cq') cqSpeak(v[1], 'q', keep);
+    else if(v[0] === 'ce') cqSpeak(v[1], 'e', keep);
+    else if(v[0] === 'cx') cqSpeak(v[1], 'x', keep);
+    else if(v[0] === 'book'){ hideSayPop(); closeModal(); KOTOF.q = KOTO[n][0]; KOTOF.f = 'all'; state.ui.kjTab = 'koto'; KJT.say = null; save(); if(typeof setTab === 'function') setTab('kanji'); else render(); setTimeout(function(){ kotoFilter(); var d = document.querySelector('.kotoit:not([style*="none"])'); if(d){ d.open = true; d.scrollIntoView({block:'center'}); } }, 120); }
     return;
   }
-  var s = t.closest && t.closest('[data-ksay],[data-kstrong],[data-kotosay],[data-kotosayex],[data-kotoused],[data-kotocard],[data-kotof],[data-kq]');
+  var s = t.closest && t.closest('[data-cq],[data-cqsay],[data-kstrong],[data-kotosay],[data-kotosayex],[data-kotoused],[data-kotocard],[data-kotof],[data-kq]');
   if(!s) return;
   e.stopPropagation(); e.preventDefault();
-  if(s.hasAttribute('data-ksay')){ var a = s.getAttribute('data-ksay').split(':'); showSayPop(a[0], +a[1], a[2]); return; }
+  if(s.hasAttribute('data-cqsay')){ cqSpeak(s.getAttribute('data-cqsay'), 'q', s); return; }
+  if(s.hasAttribute('data-cq')){ showQuotePop(s.getAttribute('data-cq')); return; }
   if(s.hasAttribute('data-kstrong')){
     kotoSt(); var b = s.getAttribute('data-kstrong').split(':'), i = +b[1], ks = kjExtra();
     if(b[0] === 'say'){ speakText(STRONG[i][0] + (STRONG[i][1] ? ' ' + STRONG[i][1] + '.' : '') + ' Try this: ' + STRONG[i][2], 'en-US', s); return; }
