@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.25', errs = [], shown = false;
+  var V = '26.11.26', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-06';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4833,7 +4833,8 @@ function helpData(){
     {q:'What is the Money tab?', a:'A simple allowance tracker (jar, allowance, goal). Set it up in <b>Allowance money</b>. Adding or removing money updates the “Received” total and Kit comments on new coins.'},
     {q:'What are Goal cards?', a:'The <b>Goal cards</b> tile lets you write “I saw you…” notes that show up on her home screen.'},
     {q:'How does the Family pack work?', a:li(['It is a private file with family cards and details. It stays on this device and is never uploaded.','Import it in <b>Family pack</b>. Adding another file <b>only adds or updates</b> cards. Nothing is removed, and her unlocked cards are safe.','Importing the same file twice says “Nothing new in that file.”'])},
-    {q:'Birthdays and holidays?', a:'In <b>Celebrations &amp; alerts</b> you can set her birthday (party banner, confetti, a Birthday Star card, her Birthday Book) and add family birthdays for gentle reminders.'}
+    {q:'Birthdays and holidays?', a:'In <b>Celebrations &amp; alerts</b> you can set her birthday (party banner, confetti, a Birthday Star card, her Birthday Book) and add family birthdays for gentle reminders.'},
+    {q:'Can the done alert include her journal?', a:'Yes. In <b>Celebrations &amp; alerts</b>, turn on the push notification (or webhook) and <b>Include today’s journal page</b>. The alert adds her feeling, what happened and what she wrote. If she writes or changes it after the alert, an update follows a couple of minutes after she stops (up to 6 a day). The Email and Text buttons on her screen never include it.'}
    ]},
    {t:'💾 Backup, updates and problems', i:[
     {q:'Where is her progress saved?', a:'On this device only. Make a backup code in <b>Backup &amp; PIN</b> so you can restore on another device.'},
@@ -7995,6 +7996,7 @@ function jSetText(k, v){
   var s = $('jSaved'); if(s) s.textContent = 'Saving...';
   clearTimeout(jTimer);
   jTimer = setTimeout(function(){ jTimer = null; save(); var s2 = $('jSaved'); if(s2) s2.textContent = 'Saved ✓'; checkBadges(); }, 600);
+  jPushSoon(k);
 }
 function jCountDays(){
   return Object.keys(state.journal || {}).filter(function(k){ var e = state.journal[k]; return e.m || e.t; }).length;
@@ -8067,7 +8069,7 @@ function jOnClick(e){
   var k = jKey();
   if(b.hasAttribute('data-mood')){
     jFlush(); var en = jEntry(k, true), id = b.getAttribute('data-mood');
-    en.m = en.m === id ? '' : id; en.at = Date.now(); jClean(k); save(); Sound.tap(); render(); checkBadges(); return;
+    en.m = en.m === id ? '' : id; en.at = Date.now(); jClean(k); save(); jPushSoon(k); Sound.tap(); render(); checkBadges(); return;
   }
   if(b.hasAttribute('data-ev')){
     jFlush(); var e2 = jEntry(k, true), v = b.getAttribute('data-ev'); e2.ev = e2.ev || [];
@@ -8075,7 +8077,7 @@ function jOnClick(e){
     if(ix > -1) e2.ev.splice(ix, 1);
     else if(e2.ev.length >= 3){ toast('Pick up to 3 things'); Sound.untick(); return; }
     else e2.ev.push(v);
-    e2.at = Date.now(); jClean(k); save(); Sound.tap(); render(); return;
+    e2.at = Date.now(); jClean(k); save(); jPushSoon(k); Sound.tap(); render(); return;
   }
   if(b.hasAttribute('data-jnav')){
     jFlush(); var d = parseKey(k); d.setDate(d.getDate() + (+b.getAttribute('data-jnav')));
@@ -8292,6 +8294,36 @@ function notifyMsg(){
   var s = streakNow();
   return 'StarQuest: all '+act+' quests are done at '+t+'.'+(s > 1 ? ' Streak: '+s+' days.' : '');
 }
+/* 26.11.26: today's journal page goes with the automatic alerts (push + webhook only, never the email/text button she sees) */
+function jPushOn(){ var c = p4eco().notify; return !!(c.on && c.jrnl !== false && ((c.push && c.topic) || c.hook)); }
+function jPushText(k){
+  var e = state.journal && state.journal[k]; if(!e || !(e.m || e.t || (e.ev && e.ev.length))) return '';
+  var out = [], mo = null; MOODS.forEach(function(x){ if(x[0] === e.m) mo = x; });
+  if(mo) out.push('Feeling: '+mo[1]+' '+mo[2]);
+  var ev = (e.ev || []).map(function(v){ var o = null; EVENTS.forEach(function(x){ if(x[0] === v) o = x; }); return o ? o[1]+' '+o[2] : ''; }).filter(Boolean);
+  if(ev.length) out.push('Today: '+ev.join(', '));
+  if(e.t && e.t.trim()) out.push('\n\u201c'+e.t.trim()+'\u201d');
+  return out.join('\n');
+}
+function jPushSig(k){ var e = state.journal && state.journal[k]; return e ? (e.m || '')+'|'+(e.ev || []).join(',')+'|'+(e.t || '').trim() : ''; }
+var jPushTimer = null;
+function jPushSoon(k){
+  if(k !== dateKey() || !jPushOn() || state.notified !== dateKey()) return;
+  clearTimeout(jPushTimer); jPushTimer = setTimeout(jPushCheck, 120000);
+}
+function jPushCheck(){
+  clearTimeout(jPushTimer); jPushTimer = null;
+  var k = dateKey(), c = p4eco().notify;
+  if(!jPushOn() || state.notified !== k) return;
+  var sig = jPushSig(k), last = state.notifyJ && state.notifyJ.k === k ? state.notifyJ : null;
+  if(!sig.replace(/\|/g,'') || (last && last.sig === sig) || (last && last.n >= 6)) return;
+  var t = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  var msg = 'StarQuest journal'+(last ? ' (updated '+t+')' : ' ('+t+')')+':\n'+jPushText(k);
+  var fin = function(good){ if(good){ state.notifyJ = {k:k, sig:sig, n:(last ? last.n : 0) + 1}; save(); } };
+  if(c.push && c.topic) sendPush(msg, fin);
+  if(c.hook) sendHook(msg, fin, 'StarQuest: journal');
+}
+document.addEventListener('visibilitychange', function(){ if(document.hidden && jPushTimer){ try{ jFlush(); }catch(e){} jPushCheck(); } });
 function newTopic(){
   var chars = 'abcdefghjkmnpqrstuvwxyz23456789', s = 'sq-';
   for(var i=0;i<16;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
@@ -8305,10 +8337,10 @@ function sendPush(msg, cb){
     if(cb) cb(true);
   }).catch(function(){ if(cb) cb(false); });
 }
-function sendHook(msg, cb){
+function sendHook(msg, cb, subj){
   var c = p4eco().notify;
   if(!c.hook || !/^https:\/\//.test(c.hook) || typeof fetch !== 'function'){ if(cb) cb(false); return; }
-  fetch(c.hook, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({subject:'StarQuest: all done!', body:msg, name:c.name || ''})}).then(function(){
+  fetch(c.hook, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({subject:subj || 'StarQuest: all done!', body:msg, name:c.name || ''})}).then(function(){
     if(cb) cb(true);
   }).catch(function(){ if(cb) cb(false); });
 }
@@ -8317,6 +8349,7 @@ function notifyDone(){
   if(!c.on || state.notified === dateKey()) return;
   state.notified = dateKey();
   var msg = notifyMsg(), auto = (c.push && c.topic) || c.hook;
+  if(auto && jPushOn()){ try{ jFlush(); }catch(e){} var jt = jPushText(dateKey()); if(jt){ msg += '\n\n\ud83d\udcd3 Journal:\n'+jt; state.notifyJ = {k:dateKey(), sig:jPushSig(dateKey()), n:0}; } }
   save();
   if(!auto) return;
   var ok = 0, tried = 0, total = ((c.push && c.topic) ? 1 : 0) + (c.hook ? 1 : 0);
@@ -8377,7 +8410,7 @@ function showCelebrate(){
   h += sw('pcHolCN', e.holCN !== false, '🇨🇳 China and Lunar New Year');
   h += '<h3>📔 Journal</h3>';
   h += sw('pcJournal', e.journalOn !== false, 'Show the Journal tab');
-  h += '<div class="hint" style="margin:4px 0 6px">Her written pages stay private on this device and are not shown here. You can see which feelings she has picked (last 30 days):</div>'+feelingsParentHTML();
+  h += '<div class="hint" style="margin:4px 0 6px">Her written pages are not shown here'+(jPushOn() ? ' (they are sent with your push alerts, see below)' : '')+'. You can see which feelings she has picked (last 30 days):</div>'+feelingsParentHTML();
   h += '<h3>📨 Tell me when she is done</h3>';
   h += '<div class="hint" style="margin-bottom:6px">StarQuest works offline, so it cannot send email or texts on its own. These options work when her device is online.</div>';
   h += sw('pcNOn', n.on, 'Tell me when all quests are done');
@@ -8386,8 +8419,9 @@ function showCelebrate(){
   h += '<div class="fld"><label>Phone number for texting</label><input type="tel" id="pcNPhone" placeholder="+1 555 123 4567" value="'+esc(n.phone)+'"></div>';
   h += '<div class="hint" style="margin-bottom:8px"><b>Email and text:</b> when she finishes, a “Tell '+esc(n.name || 'Mom or Dad')+'” button appears. One tap opens a ready-to-send message in her email or messages app.</div>';
   h += sw('pcNPush', n.push, 'Also send an automatic push notification to my phone');
+  h += sw('pcNJrnl', n.jrnl !== false, 'Include today\u2019s journal page in automatic alerts (feeling, what happened, what she wrote)');
   if(n.push && n.topic){
-    h += '<div class="okline" style="margin-bottom:6px">On your phone: install the free <b>ntfy</b> app, tap +, and subscribe to this topic:<br><b style="user-select:all;word-break:break-all">'+esc(n.topic)+'</b><br><span class="hint">Alerts only say “all quests done” plus the time and streak. Keep the topic private. <button class="btn small" data-act="ntopic">New topic</button></span></div>';
+    h += '<div class="okline" style="margin-bottom:6px">On your phone: install the free <b>ntfy</b> app, tap +, and subscribe to this topic:<br><b style="user-select:all;word-break:break-all">'+esc(n.topic)+'</b><br><span class="hint">Alerts say “all quests done” plus the time and streak'+(n.jrnl !== false ? ', and today\u2019s journal page. If she writes or changes it later, an update follows a couple of minutes after she stops' : '')+'. Keep the topic private: anyone who knows it can read the alerts. <button class="btn small" data-act="ntopic">New topic</button></span></div>';
   } else if(n.push){
     h += '<div class="hint" style="margin-bottom:6px">Save to get your private topic name.</div>';
   }
@@ -8407,6 +8441,7 @@ function p4Collect(){
   n.on = $('pcNOn').checked; n.name = $('pcNName').value.trim().slice(0, 20);
   n.email = $('pcNEmail').value.trim().slice(0, 80); n.phone = $('pcNPhone').value.trim().slice(0, 24);
   n.push = $('pcNPush').checked; if(n.push && !n.topic) n.topic = newTopic();
+  n.jrnl = $('pcNJrnl').checked;
   n.hook = $('pcNHook').value.trim().slice(0, 300);
   accCache = {k:''}; lookCache = {k:''};
 }
@@ -11036,6 +11071,7 @@ save();
 render();
 try{ tick(); }catch(e){ try{ console.error('tick', e); }catch(_){} }
 try{ retryNotify(); }catch(e){}
+try{ setTimeout(jPushCheck, 8000); }catch(e){}
 window.__SQ_BOOTED = true;
 window.__iconStart();
 setInterval(tick, 500);
