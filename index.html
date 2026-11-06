@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.13', errs = [], shown = false;
-  window.__SQV = V; window.__SQDATE = '2026-11-05';
+  var V = '26.11.15', errs = [], shown = false;
+  window.__SQV = V; window.__SQDATE = '2026-11-06';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
     try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
@@ -340,6 +340,7 @@ h1,h2,h3,p{margin:0}
 .tcg.hlf .tcg-in>:not(.hlx){position:relative;z-index:1}
 .hlx-pearl{z-index:0;background:linear-gradient(105deg,#ffb0c8 0%,#ffe08f 14%,#b5f3c1 28%,#9fe3ff 42%,#c7b2ff 56%,#ffb0c8 70%,#ffe08f 84%,#b5f3c1 100%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:multiply;opacity:var(--po,.6);-webkit-mask-image:radial-gradient(ellipse 85% 70% at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.24) 100%);mask-image:radial-gradient(ellipse 85% 70% at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.24) 100%)}
 .hlx-deco{z-index:3}
+.hlx-spark.lite{opacity:.8}
 .hlx-sp{position:absolute;inset:0;filter:hue-rotate(calc((var(--mx)*1.3 + var(--my)) * 150deg - 172deg)) saturate(1.25)}
 .hlx-sp i{position:absolute;aspect-ratio:1;transform:translate(-50%,-50%) scale(calc(.78 + .45 * (1 - min(1, 2.2 * max(var(--mx) - var(--x), var(--x) - var(--mx), var(--my) - var(--y), var(--y) - var(--my))))));opacity:calc(.78 + .22 * (1 - min(1, 2.2 * max(var(--mx) - var(--x), var(--x) - var(--mx), var(--my) - var(--y), var(--y) - var(--my)))))}
 .hlx-sp i::after{content:"";position:absolute;inset:0;background:center/100% 100% no-repeat;animation:sptw 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
@@ -1551,6 +1552,41 @@ body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{an
 .rwcost{width:96px;padding:8px 10px;border-radius:12px;border:2px solid var(--line);font:inherit;font-weight:800;text-align:center}
 .prow.off{opacity:.5}
 .ecogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 14px}
+#kitnudge{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9500;display:flex;align-items:flex-end;gap:10px;width:min(520px,92vw);pointer-events:auto}
+#kitnudge .kn-kit{position:relative;flex:0 0 auto;width:96px;height:96px}
+#kitnudge .kn-face{display:block;width:96px;height:96px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+#kitnudge .kn-face svg{width:100%;height:100%}
+#kitnudge .kn-bub{position:relative;flex:1;background:#fff;color:#2a2540;border-radius:20px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:16px;line-height:1.35;animation:knBub .45s cubic-bezier(.2,1.6,.4,1) both;animation-delay:.75s}
+#kitnudge .kn-bub::before{content:"";position:absolute;left:-9px;bottom:22px;border:10px solid transparent;border-right-color:#fff;border-left:0}
+#kitnudge .kn-bub>b{display:block;font-size:17px;margin-bottom:2px}
+#kitnudge .kn-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}#kitnudge .kn-btns .btn{padding:8px 14px;font-size:15px}
+#kitnudge.out{animation:knOut .45s ease-in both}
+@keyframes knBub{from{opacity:0;transform:scale(.6) translateX(-20px)}to{opacity:1;transform:none}}
+@keyframes knOut{to{opacity:0;transform:translateX(-50%) translateY(40px) scale(.9)}}
+/* 1) peek: pops up from below, looks around, ears wiggle */
+.kn-peek .kn-kit{animation:knPeek .9s cubic-bezier(.25,1.5,.5,1) both}
+.kn-peek .kn-face{animation:knLook 2.4s ease-in-out .9s 2}
+@keyframes knPeek{0%{transform:translateY(140px)}60%{transform:translateY(-10px)}100%{transform:none}}
+@keyframes knLook{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+/* 2) swing: drops from above on a string and swings to a stop */
+.kn-swing .kn-kit{transform-origin:50% -220px;animation:knDrop .7s cubic-bezier(.3,1.4,.5,1) both,knSwing 2.2s ease-out .7s both}
+.kn-swing .kn-rope{position:absolute;left:50%;bottom:78px;width:2px;height:240px;margin-left:-1px;background:linear-gradient(#fff0,#fff 30%);opacity:.85;animation:knRope .5s ease 2.9s forwards}
+@keyframes knDrop{0%{transform:translateY(-120vh)}100%{transform:none}}
+@keyframes knSwing{0%{rotate:14deg}25%{rotate:-10deg}50%{rotate:6deg}75%{rotate:-3deg}100%{rotate:0deg}}
+@keyframes knRope{to{opacity:0;height:0}}
+/* 3) zoom: dashes in from the side with speed lines, skids, hops */
+.kn-zoom .kn-kit{animation:knZoom .7s cubic-bezier(.2,.9,.3,1) both,knHop .5s ease-out .7s}
+.kn-zoom .kn-trail{position:absolute;right:70%;top:30%;width:120px;height:40%;background:repeating-linear-gradient(0deg,transparent 0 6px,rgba(255,255,255,.75) 6px 9px);border-radius:10px;opacity:0;animation:knTrail .8s ease-out}
+.kn-zoom .kn-dust{position:absolute;left:10%;bottom:-4px;width:80%;height:16px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.7),transparent);opacity:0;animation:knDust .7s ease-out .55s}
+@keyframes knZoom{0%{transform:translateX(-110vw) skewX(-18deg)}75%{transform:translateX(12px) skewX(10deg)}100%{transform:none}}
+@keyframes knHop{0%,100%{transform:none}40%{transform:translateY(-22px)}}
+@keyframes knTrail{0%{opacity:.9;transform:scaleX(1.4)}100%{opacity:0;transform:scaleX(.2)}}
+@keyframes knDust{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.6)}}
+.quest.kn-hi{animation:knHi 1.2s ease-in-out 2;box-shadow:0 0 0 4px #ffd84d,0 0 24px #ffd84d}
+@keyframes knHi{50%{transform:scale(1.04)}}
+@media (prefers-reduced-motion:reduce){#kitnudge *,#kitnudge{animation-duration:.01s !important;animation-iteration-count:1 !important}}
+.rtrw{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.rtpcs{display:inline-flex;gap:3px;font-size:22px;line-height:1}.rtpc{filter:grayscale(1);opacity:.28}.rtpc.on{filter:none;opacity:1}
 .ptiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0}
 .ptile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:92px;padding:10px 8px;text-align:center;line-height:1.2;font-size:15px}
 .ptile .pti{font-size:28px;line-height:1}.ptile small{font-size:12px;font-weight:700;opacity:.7}
@@ -3581,9 +3617,9 @@ function backArtSVG(){
   return h + '</svg>';
 }
 function hlTier(k){ return (k === 'SSR' || k === 'SSSR') ? 'ssr' : k === 'S' ? 'holo' : k === 'A' ? 'foil' : 'matte'; }
-function hlSparks(){
+function hlSparks(n){
   var h = '', x = 7; function r(){ x = (x*1103515245+12345)&0x7fffffff; return x/0x7fffffff; }
-  for(var i = 0; i < 34; i++) h += '<i style="left:'+(4+r()*92).toFixed(1)+'%;top:'+(4+r()*92).toFixed(1)+'%;animation-delay:-'+(r()*1.8).toFixed(2)+'s"></i>';
+  for(var i = 0; i < (n || 34); i++) h += '<i style="left:'+(4+r()*92).toFixed(1)+'%;top:'+(4+r()*92).toFixed(1)+'%;animation-delay:-'+(r()*1.8).toFixed(2)+'s"></i>';
   return h;
 }
 function hlLayers(t, isBack){
@@ -3591,6 +3627,7 @@ function hlLayers(t, isBack){
   var h = '';
   if(isBack && (t === 'holo' || t === 'ssr')) h += '<div class="hlx hlx-holo hole"></div>';
   if(isBack && t === 'ssr') h += '<div class="hlx hlx-spark">'+hlSparks()+'</div>';
+  if(isBack && t === 'holo') h += '<div class="hlx hlx-spark lite">'+hlSparks(12)+'</div>';
   return h + '<div class="hlx hlx-glare"></div>';
 }
 /* hlPaper(t): front shimmer that sits on the cream paper only (behind the art and the words). */
@@ -3599,7 +3636,7 @@ function hlPaper(t){
   return '<div class="hlx hlx-pearl"></div>';
 }
 /* hlDeco(k): SSR / SSSR fronts get TCG-style sparkles (soft glow, thin rays) on the frame and cream. Grow + brighten near the light, holo tint shifts with tilt. Picture stays matte. */
-var HL_SP = {SSR:'<i class="sb" style="left:91.0%;top:15.4%;width:28.0cqw;--x:0.910;--y:0.154;--d:-0.00s"></i><i class="sa" style="left:9.0%;top:80.7%;width:25.0cqw;--x:0.090;--y:0.807;--d:-0.53s"></i><i class="sa" style="left:66.0%;top:6.4%;width:12.0cqw;--x:0.660;--y:0.064;--d:-1.06s"></i><i class="sb" style="left:3.0%;top:32.1%;width:15.0cqw;--x:0.030;--y:0.321;--d:-1.59s"></i><i class="sa" style="left:97.0%;top:44.3%;width:16.0cqw;--x:0.970;--y:0.443;--d:-2.12s"></i><i class="sa" style="left:3.0%;top:62.9%;width:13.0cqw;--x:0.030;--y:0.629;--d:-0.05s"></i><i class="sb" style="left:97.0%;top:71.4%;width:15.0cqw;--x:0.970;--y:0.714;--d:-0.58s"></i><i class="sa" style="left:14.0%;top:87.9%;width:11.0cqw;--x:0.140;--y:0.879;--d:-1.11s"></i><i class="sa" style="left:86.0%;top:87.9%;width:11.0cqw;--x:0.860;--y:0.879;--d:-1.64s"></i><i class="sb" style="left:50.0%;top:98.6%;width:14.0cqw;--x:0.500;--y:0.986;--d:-2.17s"></i><i class="sa" style="left:28.0%;top:1.8%;width:10.0cqw;--x:0.280;--y:0.018;--d:-0.10s"></i><i class="sa" style="left:72.0%;top:98.2%;width:10.0cqw;--x:0.720;--y:0.982;--d:-0.63s"></i><i class="sb" style="left:4.8%;top:46.7%;width:8.8cqw;--x:0.048;--y:0.467;--d:-1.16s"></i><i class="sa" style="left:57.1%;top:2.7%;width:5.9cqw;--x:0.571;--y:0.027;--d:-1.69s"></i><i class="sa" style="left:2.2%;top:86.1%;width:5.8cqw;--x:0.022;--y:0.861;--d:-2.22s"></i><i class="sb" style="left:94.3%;top:53.8%;width:7.7cqw;--x:0.943;--y:0.538;--d:-0.15s"></i><i class="sa" style="left:68.3%;top:95.3%;width:8.6cqw;--x:0.683;--y:0.953;--d:-0.68s"></i><i class="sa" style="left:4.2%;top:74.3%;width:8.4cqw;--x:0.042;--y:0.743;--d:-1.21s"></i><i class="sb" style="left:2.9%;top:6.0%;width:5.7cqw;--x:0.029;--y:0.060;--d:-1.74s"></i><i class="sa" style="left:93.7%;top:20.5%;width:8.0cqw;--x:0.937;--y:0.205;--d:-2.27s"></i><i class="sa" style="left:7.3%;top:90.4%;width:5.1cqw;--x:0.073;--y:0.904;--d:-0.20s"></i><i class="sb" style="left:93.2%;top:62.7%;width:8.2cqw;--x:0.932;--y:0.627;--d:-0.73s"></i><i class="sa" style="left:97.9%;top:84.2%;width:8.9cqw;--x:0.979;--y:0.842;--d:-1.26s"></i><i class="sa" style="left:96.9%;top:94.7%;width:7.5cqw;--x:0.969;--y:0.947;--d:-1.79s"></i><i class="sb" style="left:3.1%;top:54.6%;width:6.0cqw;--x:0.031;--y:0.546;--d:-2.32s"></i><i class="sa" style="left:71.2%;top:4.1%;width:5.6cqw;--x:0.712;--y:0.041;--d:-0.25s"></i><i class="sa" style="left:62.6%;top:5.5%;width:6.9cqw;--x:0.626;--y:0.055;--d:-0.78s"></i><i class="sb" style="left:88.7%;top:1.5%;width:6.6cqw;--x:0.887;--y:0.015;--d:-1.31s"></i><i class="sa" style="left:57.8%;top:94.5%;width:8.3cqw;--x:0.578;--y:0.945;--d:-1.84s"></i><i class="sa" style="left:2.1%;top:11.9%;width:7.3cqw;--x:0.021;--y:0.119;--d:-2.37s"></i><i class="sb" style="left:95.4%;top:38.3%;width:8.8cqw;--x:0.954;--y:0.383;--d:-0.30s"></i><i class="sa" style="left:32.6%;top:97.0%;width:7.0cqw;--x:0.326;--y:0.970;--d:-0.83s"></i>', SSSR:'<i class="sb fl" style="left:91.0%;top:15.4%;width:36.0cqw;--x:0.910;--y:0.154;--d:-0.00s"></i><i class="sc fl" style="left:9.0%;top:80.7%;width:34.0cqw;--x:0.090;--y:0.807;--d:-0.41s"></i><i class="sa fl" style="left:9.0%;top:15.4%;width:26.0cqw;--x:0.090;--y:0.154;--d:-0.82s"></i><i class="sd fl" style="left:91.0%;top:80.7%;width:26.0cqw;--x:0.910;--y:0.807;--d:-1.23s"></i><i class="sb" style="left:66.0%;top:6.4%;width:15.0cqw;--x:0.660;--y:0.064;--d:-1.64s"></i><i class="sc" style="left:3.0%;top:32.1%;width:20.0cqw;--x:0.030;--y:0.321;--d:-0.15s"></i><i class="sa fl" style="left:97.0%;top:44.3%;width:21.0cqw;--x:0.970;--y:0.443;--d:-0.56s"></i><i class="sd" style="left:3.0%;top:62.9%;width:18.0cqw;--x:0.030;--y:0.629;--d:-0.97s"></i><i class="sb" style="left:97.0%;top:71.4%;width:20.0cqw;--x:0.970;--y:0.714;--d:-1.38s"></i><i class="sc fl" style="left:14.0%;top:87.9%;width:14.0cqw;--x:0.140;--y:0.879;--d:-1.79s"></i><i class="sa" style="left:86.0%;top:87.9%;width:14.0cqw;--x:0.860;--y:0.879;--d:-0.30s"></i><i class="sd" style="left:50.0%;top:98.6%;width:19.0cqw;--x:0.500;--y:0.986;--d:-0.71s"></i><i class="sb fl" style="left:28.0%;top:1.8%;width:13.0cqw;--x:0.280;--y:0.018;--d:-1.12s"></i><i class="sc" style="left:72.0%;top:98.2%;width:13.0cqw;--x:0.720;--y:0.982;--d:-1.53s"></i><i class="sa" style="left:97.0%;top:25.7%;width:15.0cqw;--x:0.970;--y:0.257;--d:-0.04s"></i><i class="sd fl" style="left:3.0%;top:47.1%;width:15.0cqw;--x:0.030;--y:0.471;--d:-0.45s"></i><i class="sb" style="left:3.0%;top:91.4%;width:13.0cqw;--x:0.030;--y:0.914;--d:-0.86s"></i><i class="sc" style="left:97.0%;top:91.4%;width:13.0cqw;--x:0.970;--y:0.914;--d:-1.27s"></i><i class="sa fl" style="left:50.0%;top:1.8%;width:14.0cqw;--x:0.500;--y:0.018;--d:-1.68s"></i><i class="sd" style="left:97.0%;top:58.6%;width:14.0cqw;--x:0.970;--y:0.586;--d:-0.19s"></i><i class="sb" style="left:3.0%;top:74.3%;width:13.0cqw;--x:0.030;--y:0.743;--d:-0.60s"></i><i class="sc fl" style="left:38.0%;top:98.6%;width:11.0cqw;--x:0.380;--y:0.986;--d:-1.01s"></i><i class="sa" style="left:62.0%;top:98.6%;width:11.0cqw;--x:0.620;--y:0.986;--d:-1.42s"></i><i class="sd" style="left:94.2%;top:29.6%;width:9.3cqw;--x:0.942;--y:0.296;--d:-1.83s"></i><i class="sb" style="left:92.7%;top:40.4%;width:10.5cqw;--x:0.927;--y:0.404;--d:-0.34s"></i><i class="sc" style="left:8.0%;top:80.4%;width:9.9cqw;--x:0.080;--y:0.804;--d:-0.75s"></i><i class="sa" style="left:55.7%;top:94.2%;width:6.6cqw;--x:0.557;--y:0.942;--d:-1.16s"></i><i class="sd" style="left:47.5%;top:98.2%;width:6.2cqw;--x:0.475;--y:0.982;--d:-1.57s"></i><i class="sb" style="left:93.9%;top:52.6%;width:7.3cqw;--x:0.939;--y:0.526;--d:-0.08s"></i><i class="sc" style="left:2.9%;top:74.6%;width:7.2cqw;--x:0.029;--y:0.746;--d:-0.49s"></i><i class="sa" style="left:96.7%;top:89.8%;width:5.6cqw;--x:0.967;--y:0.898;--d:-0.90s"></i><i class="sd" style="left:94.1%;top:58.8%;width:7.5cqw;--x:0.941;--y:0.588;--d:-1.31s"></i><i class="sb" style="left:6.7%;top:91.4%;width:6.0cqw;--x:0.067;--y:0.914;--d:-1.72s"></i><i class="sc" style="left:97.8%;top:74.8%;width:7.0cqw;--x:0.978;--y:0.748;--d:-0.23s"></i><i class="sa" style="left:47.6%;top:2.6%;width:6.8cqw;--x:0.476;--y:0.026;--d:-0.64s"></i><i class="sd" style="left:96.8%;top:81.7%;width:7.8cqw;--x:0.968;--y:0.817;--d:-1.05s"></i><i class="sb" style="left:69.1%;top:4.1%;width:7.9cqw;--x:0.691;--y:0.041;--d:-1.46s"></i><i class="sc" style="left:97.3%;top:11.0%;width:10.0cqw;--x:0.973;--y:0.110;--d:-1.87s"></i><i class="sa" style="left:40.9%;top:2.2%;width:9.3cqw;--x:0.409;--y:0.022;--d:-0.38s"></i><i class="sd" style="left:2.7%;top:13.3%;width:8.0cqw;--x:0.027;--y:0.133;--d:-0.79s"></i><i class="sb" style="left:32.8%;top:95.1%;width:9.2cqw;--x:0.328;--y:0.951;--d:-1.20s"></i><i class="sc" style="left:5.4%;top:56.7%;width:5.8cqw;--x:0.054;--y:0.567;--d:-1.61s"></i><i class="sa" style="left:92.5%;top:23.8%;width:8.7cqw;--x:0.925;--y:0.238;--d:-0.12s"></i><i class="sd" style="left:64.0%;top:14.2%;width:9.9cqw;--x:0.640;--y:0.142;--d:-0.53s"></i><i class="sb" style="left:91.3%;top:84.8%;width:8.0cqw;--x:0.913;--y:0.848;--d:-0.94s"></i><i class="sc" style="left:95.9%;top:48.2%;width:10.3cqw;--x:0.959;--y:0.482;--d:-1.35s"></i><i class="sa" style="left:75.7%;top:11.9%;width:7.4cqw;--x:0.757;--y:0.119;--d:-1.76s"></i><i class="sd" style="left:95.9%;top:2.2%;width:9.5cqw;--x:0.959;--y:0.022;--d:-0.27s"></i><i class="sb" style="left:5.9%;top:39.5%;width:6.0cqw;--x:0.059;--y:0.395;--d:-0.68s"></i><i class="sc" style="left:27.7%;top:98.2%;width:6.0cqw;--x:0.277;--y:0.982;--d:-1.09s"></i><i class="sa" style="left:2.3%;top:46.2%;width:9.9cqw;--x:0.023;--y:0.462;--d:-1.50s"></i><i class="sd" style="left:2.6%;top:6.4%;width:6.8cqw;--x:0.026;--y:0.064;--d:-0.01s"></i><i class="sb" style="left:3.5%;top:62.5%;width:10.5cqw;--x:0.035;--y:0.625;--d:-0.42s"></i><i class="sc" style="left:94.4%;top:69.4%;width:6.8cqw;--x:0.944;--y:0.694;--d:-0.83s"></i><i class="sa" style="left:60.2%;top:2.4%;width:10.1cqw;--x:0.602;--y:0.024;--d:-1.24s"></i><i class="sd" style="left:78.6%;top:2.3%;width:9.3cqw;--x:0.786;--y:0.023;--d:-1.65s"></i><i class="sb" style="left:7.5%;top:29.0%;width:8.6cqw;--x:0.075;--y:0.290;--d:-0.16s"></i><i class="sc" style="left:39.8%;top:93.2%;width:7.2cqw;--x:0.398;--y:0.932;--d:-0.57s"></i><i class="sa" style="left:22.3%;top:2.3%;width:7.6cqw;--x:0.223;--y:0.023;--d:-0.98s"></i><i class="sd" style="left:7.3%;top:68.4%;width:6.3cqw;--x:0.073;--y:0.684;--d:-1.39s"></i><i class="sb" style="left:84.5%;top:13.4%;width:8.1cqw;--x:0.845;--y:0.134;--d:-1.80s"></i><i class="sc" style="left:94.0%;top:15.4%;width:6.8cqw;--x:0.940;--y:0.154;--d:-0.31s"></i><i class="sa" style="left:92.1%;top:34.9%;width:10.3cqw;--x:0.921;--y:0.349;--d:-0.72s"></i><i class="sd" style="left:2.7%;top:87.6%;width:6.2cqw;--x:0.027;--y:0.876;--d:-1.13s"></i><i class="sb" style="left:84.6%;top:97.5%;width:7.4cqw;--x:0.846;--y:0.975;--d:-1.54s"></i><i class="sc" style="left:67.1%;top:96.9%;width:7.5cqw;--x:0.671;--y:0.969;--d:-0.05s"></i><i class="sa" style="left:90.4%;top:90.1%;width:6.7cqw;--x:0.904;--y:0.901;--d:-0.46s"></i><i class="sd" style="left:35.0%;top:3.3%;width:7.5cqw;--x:0.350;--y:0.033;--d:-0.87s"></i><i class="sb" style="left:15.3%;top:98.3%;width:10.4cqw;--x:0.153;--y:0.983;--d:-1.28s"></i>'};
+var HL_SP = {S:'<i class="sb" style="left:91.0%;top:15.4%;width:17.0cqw;--x:0.910;--y:0.154;--d:-0.00s"></i><i class="sa" style="left:9.0%;top:80.7%;width:15.0cqw;--x:0.090;--y:0.807;--d:-0.61s"></i><i class="sa" style="left:3.0%;top:42.9%;width:10.0cqw;--x:0.030;--y:0.429;--d:-1.22s"></i><i class="sb" style="left:97.0%;top:62.9%;width:10.0cqw;--x:0.970;--y:0.629;--d:-1.83s"></i><i class="sa" style="left:50.0%;top:98.6%;width:9.0cqw;--x:0.500;--y:0.986;--d:-2.44s"></i><i class="sa" style="left:66.0%;top:6.4%;width:8.0cqw;--x:0.660;--y:0.064;--d:-0.45s"></i><i class="sb" style="left:3.2%;top:12.3%;width:5.5cqw;--x:0.032;--y:0.123;--d:-1.06s"></i><i class="sa" style="left:97.6%;top:10.5%;width:4.6cqw;--x:0.976;--y:0.105;--d:-1.67s"></i><i class="sa" style="left:92.2%;top:40.6%;width:5.0cqw;--x:0.922;--y:0.406;--d:-2.28s"></i><i class="sb" style="left:93.7%;top:21.9%;width:5.0cqw;--x:0.937;--y:0.219;--d:-0.29s"></i><i class="sa" style="left:93.6%;top:82.9%;width:5.4cqw;--x:0.936;--y:0.829;--d:-0.90s"></i><i class="sa" style="left:96.9%;top:4.4%;width:6.3cqw;--x:0.969;--y:0.044;--d:-1.51s"></i>', SSR:'<i class="sb" style="left:91.0%;top:15.4%;width:28.0cqw;--x:0.910;--y:0.154;--d:-0.00s"></i><i class="sa" style="left:9.0%;top:80.7%;width:25.0cqw;--x:0.090;--y:0.807;--d:-0.53s"></i><i class="sa" style="left:66.0%;top:6.4%;width:12.0cqw;--x:0.660;--y:0.064;--d:-1.06s"></i><i class="sb" style="left:3.0%;top:32.1%;width:15.0cqw;--x:0.030;--y:0.321;--d:-1.59s"></i><i class="sa" style="left:97.0%;top:44.3%;width:16.0cqw;--x:0.970;--y:0.443;--d:-2.12s"></i><i class="sa" style="left:3.0%;top:62.9%;width:13.0cqw;--x:0.030;--y:0.629;--d:-0.05s"></i><i class="sb" style="left:97.0%;top:71.4%;width:15.0cqw;--x:0.970;--y:0.714;--d:-0.58s"></i><i class="sa" style="left:14.0%;top:87.9%;width:11.0cqw;--x:0.140;--y:0.879;--d:-1.11s"></i><i class="sa" style="left:86.0%;top:87.9%;width:11.0cqw;--x:0.860;--y:0.879;--d:-1.64s"></i><i class="sb" style="left:50.0%;top:98.6%;width:14.0cqw;--x:0.500;--y:0.986;--d:-2.17s"></i><i class="sa" style="left:28.0%;top:1.8%;width:10.0cqw;--x:0.280;--y:0.018;--d:-0.10s"></i><i class="sa" style="left:72.0%;top:98.2%;width:10.0cqw;--x:0.720;--y:0.982;--d:-0.63s"></i><i class="sb" style="left:4.8%;top:46.7%;width:8.8cqw;--x:0.048;--y:0.467;--d:-1.16s"></i><i class="sa" style="left:57.1%;top:2.7%;width:5.9cqw;--x:0.571;--y:0.027;--d:-1.69s"></i><i class="sa" style="left:2.2%;top:86.1%;width:5.8cqw;--x:0.022;--y:0.861;--d:-2.22s"></i><i class="sb" style="left:94.3%;top:53.8%;width:7.7cqw;--x:0.943;--y:0.538;--d:-0.15s"></i><i class="sa" style="left:68.3%;top:95.3%;width:8.6cqw;--x:0.683;--y:0.953;--d:-0.68s"></i><i class="sa" style="left:4.2%;top:74.3%;width:8.4cqw;--x:0.042;--y:0.743;--d:-1.21s"></i><i class="sb" style="left:2.9%;top:6.0%;width:5.7cqw;--x:0.029;--y:0.060;--d:-1.74s"></i><i class="sa" style="left:93.7%;top:20.5%;width:8.0cqw;--x:0.937;--y:0.205;--d:-2.27s"></i><i class="sa" style="left:7.3%;top:90.4%;width:5.1cqw;--x:0.073;--y:0.904;--d:-0.20s"></i><i class="sb" style="left:93.2%;top:62.7%;width:8.2cqw;--x:0.932;--y:0.627;--d:-0.73s"></i><i class="sa" style="left:97.9%;top:84.2%;width:8.9cqw;--x:0.979;--y:0.842;--d:-1.26s"></i><i class="sa" style="left:96.9%;top:94.7%;width:7.5cqw;--x:0.969;--y:0.947;--d:-1.79s"></i><i class="sb" style="left:3.1%;top:54.6%;width:6.0cqw;--x:0.031;--y:0.546;--d:-2.32s"></i><i class="sa" style="left:71.2%;top:4.1%;width:5.6cqw;--x:0.712;--y:0.041;--d:-0.25s"></i><i class="sa" style="left:62.6%;top:5.5%;width:6.9cqw;--x:0.626;--y:0.055;--d:-0.78s"></i><i class="sb" style="left:88.7%;top:1.5%;width:6.6cqw;--x:0.887;--y:0.015;--d:-1.31s"></i><i class="sa" style="left:57.8%;top:94.5%;width:8.3cqw;--x:0.578;--y:0.945;--d:-1.84s"></i><i class="sa" style="left:2.1%;top:11.9%;width:7.3cqw;--x:0.021;--y:0.119;--d:-2.37s"></i><i class="sb" style="left:95.4%;top:38.3%;width:8.8cqw;--x:0.954;--y:0.383;--d:-0.30s"></i><i class="sa" style="left:32.6%;top:97.0%;width:7.0cqw;--x:0.326;--y:0.970;--d:-0.83s"></i>', SSSR:'<i class="sb fl" style="left:91.0%;top:15.4%;width:36.0cqw;--x:0.910;--y:0.154;--d:-0.00s"></i><i class="sc fl" style="left:9.0%;top:80.7%;width:34.0cqw;--x:0.090;--y:0.807;--d:-0.41s"></i><i class="sa fl" style="left:9.0%;top:15.4%;width:26.0cqw;--x:0.090;--y:0.154;--d:-0.82s"></i><i class="sd fl" style="left:91.0%;top:80.7%;width:26.0cqw;--x:0.910;--y:0.807;--d:-1.23s"></i><i class="sb" style="left:66.0%;top:6.4%;width:15.0cqw;--x:0.660;--y:0.064;--d:-1.64s"></i><i class="sc" style="left:3.0%;top:32.1%;width:20.0cqw;--x:0.030;--y:0.321;--d:-0.15s"></i><i class="sa fl" style="left:97.0%;top:44.3%;width:21.0cqw;--x:0.970;--y:0.443;--d:-0.56s"></i><i class="sd" style="left:3.0%;top:62.9%;width:18.0cqw;--x:0.030;--y:0.629;--d:-0.97s"></i><i class="sb" style="left:97.0%;top:71.4%;width:20.0cqw;--x:0.970;--y:0.714;--d:-1.38s"></i><i class="sc fl" style="left:14.0%;top:87.9%;width:14.0cqw;--x:0.140;--y:0.879;--d:-1.79s"></i><i class="sa" style="left:86.0%;top:87.9%;width:14.0cqw;--x:0.860;--y:0.879;--d:-0.30s"></i><i class="sd" style="left:50.0%;top:98.6%;width:19.0cqw;--x:0.500;--y:0.986;--d:-0.71s"></i><i class="sb fl" style="left:28.0%;top:1.8%;width:13.0cqw;--x:0.280;--y:0.018;--d:-1.12s"></i><i class="sc" style="left:72.0%;top:98.2%;width:13.0cqw;--x:0.720;--y:0.982;--d:-1.53s"></i><i class="sa" style="left:97.0%;top:25.7%;width:15.0cqw;--x:0.970;--y:0.257;--d:-0.04s"></i><i class="sd fl" style="left:3.0%;top:47.1%;width:15.0cqw;--x:0.030;--y:0.471;--d:-0.45s"></i><i class="sb" style="left:3.0%;top:91.4%;width:13.0cqw;--x:0.030;--y:0.914;--d:-0.86s"></i><i class="sc" style="left:97.0%;top:91.4%;width:13.0cqw;--x:0.970;--y:0.914;--d:-1.27s"></i><i class="sa fl" style="left:50.0%;top:1.8%;width:14.0cqw;--x:0.500;--y:0.018;--d:-1.68s"></i><i class="sd" style="left:97.0%;top:58.6%;width:14.0cqw;--x:0.970;--y:0.586;--d:-0.19s"></i><i class="sb" style="left:3.0%;top:74.3%;width:13.0cqw;--x:0.030;--y:0.743;--d:-0.60s"></i><i class="sc fl" style="left:38.0%;top:98.6%;width:11.0cqw;--x:0.380;--y:0.986;--d:-1.01s"></i><i class="sa" style="left:62.0%;top:98.6%;width:11.0cqw;--x:0.620;--y:0.986;--d:-1.42s"></i><i class="sd" style="left:94.2%;top:29.6%;width:9.3cqw;--x:0.942;--y:0.296;--d:-1.83s"></i><i class="sb" style="left:92.7%;top:40.4%;width:10.5cqw;--x:0.927;--y:0.404;--d:-0.34s"></i><i class="sc" style="left:8.0%;top:80.4%;width:9.9cqw;--x:0.080;--y:0.804;--d:-0.75s"></i><i class="sa" style="left:55.7%;top:94.2%;width:6.6cqw;--x:0.557;--y:0.942;--d:-1.16s"></i><i class="sd" style="left:47.5%;top:98.2%;width:6.2cqw;--x:0.475;--y:0.982;--d:-1.57s"></i><i class="sb" style="left:93.9%;top:52.6%;width:7.3cqw;--x:0.939;--y:0.526;--d:-0.08s"></i><i class="sc" style="left:2.9%;top:74.6%;width:7.2cqw;--x:0.029;--y:0.746;--d:-0.49s"></i><i class="sa" style="left:96.7%;top:89.8%;width:5.6cqw;--x:0.967;--y:0.898;--d:-0.90s"></i><i class="sd" style="left:94.1%;top:58.8%;width:7.5cqw;--x:0.941;--y:0.588;--d:-1.31s"></i><i class="sb" style="left:6.7%;top:91.4%;width:6.0cqw;--x:0.067;--y:0.914;--d:-1.72s"></i><i class="sc" style="left:97.8%;top:74.8%;width:7.0cqw;--x:0.978;--y:0.748;--d:-0.23s"></i><i class="sa" style="left:47.6%;top:2.6%;width:6.8cqw;--x:0.476;--y:0.026;--d:-0.64s"></i><i class="sd" style="left:96.8%;top:81.7%;width:7.8cqw;--x:0.968;--y:0.817;--d:-1.05s"></i><i class="sb" style="left:69.1%;top:4.1%;width:7.9cqw;--x:0.691;--y:0.041;--d:-1.46s"></i><i class="sc" style="left:97.3%;top:11.0%;width:10.0cqw;--x:0.973;--y:0.110;--d:-1.87s"></i><i class="sa" style="left:40.9%;top:2.2%;width:9.3cqw;--x:0.409;--y:0.022;--d:-0.38s"></i><i class="sd" style="left:2.7%;top:13.3%;width:8.0cqw;--x:0.027;--y:0.133;--d:-0.79s"></i><i class="sb" style="left:32.8%;top:95.1%;width:9.2cqw;--x:0.328;--y:0.951;--d:-1.20s"></i><i class="sc" style="left:5.4%;top:56.7%;width:5.8cqw;--x:0.054;--y:0.567;--d:-1.61s"></i><i class="sa" style="left:92.5%;top:23.8%;width:8.7cqw;--x:0.925;--y:0.238;--d:-0.12s"></i><i class="sd" style="left:64.0%;top:14.2%;width:9.9cqw;--x:0.640;--y:0.142;--d:-0.53s"></i><i class="sb" style="left:91.3%;top:84.8%;width:8.0cqw;--x:0.913;--y:0.848;--d:-0.94s"></i><i class="sc" style="left:95.9%;top:48.2%;width:10.3cqw;--x:0.959;--y:0.482;--d:-1.35s"></i><i class="sa" style="left:75.7%;top:11.9%;width:7.4cqw;--x:0.757;--y:0.119;--d:-1.76s"></i><i class="sd" style="left:95.9%;top:2.2%;width:9.5cqw;--x:0.959;--y:0.022;--d:-0.27s"></i><i class="sb" style="left:5.9%;top:39.5%;width:6.0cqw;--x:0.059;--y:0.395;--d:-0.68s"></i><i class="sc" style="left:27.7%;top:98.2%;width:6.0cqw;--x:0.277;--y:0.982;--d:-1.09s"></i><i class="sa" style="left:2.3%;top:46.2%;width:9.9cqw;--x:0.023;--y:0.462;--d:-1.50s"></i><i class="sd" style="left:2.6%;top:6.4%;width:6.8cqw;--x:0.026;--y:0.064;--d:-0.01s"></i><i class="sb" style="left:3.5%;top:62.5%;width:10.5cqw;--x:0.035;--y:0.625;--d:-0.42s"></i><i class="sc" style="left:94.4%;top:69.4%;width:6.8cqw;--x:0.944;--y:0.694;--d:-0.83s"></i><i class="sa" style="left:60.2%;top:2.4%;width:10.1cqw;--x:0.602;--y:0.024;--d:-1.24s"></i><i class="sd" style="left:78.6%;top:2.3%;width:9.3cqw;--x:0.786;--y:0.023;--d:-1.65s"></i><i class="sb" style="left:7.5%;top:29.0%;width:8.6cqw;--x:0.075;--y:0.290;--d:-0.16s"></i><i class="sc" style="left:39.8%;top:93.2%;width:7.2cqw;--x:0.398;--y:0.932;--d:-0.57s"></i><i class="sa" style="left:22.3%;top:2.3%;width:7.6cqw;--x:0.223;--y:0.023;--d:-0.98s"></i><i class="sd" style="left:7.3%;top:68.4%;width:6.3cqw;--x:0.073;--y:0.684;--d:-1.39s"></i><i class="sb" style="left:84.5%;top:13.4%;width:8.1cqw;--x:0.845;--y:0.134;--d:-1.80s"></i><i class="sc" style="left:94.0%;top:15.4%;width:6.8cqw;--x:0.940;--y:0.154;--d:-0.31s"></i><i class="sa" style="left:92.1%;top:34.9%;width:10.3cqw;--x:0.921;--y:0.349;--d:-0.72s"></i><i class="sd" style="left:2.7%;top:87.6%;width:6.2cqw;--x:0.027;--y:0.876;--d:-1.13s"></i><i class="sb" style="left:84.6%;top:97.5%;width:7.4cqw;--x:0.846;--y:0.975;--d:-1.54s"></i><i class="sc" style="left:67.1%;top:96.9%;width:7.5cqw;--x:0.671;--y:0.969;--d:-0.05s"></i><i class="sa" style="left:90.4%;top:90.1%;width:6.7cqw;--x:0.904;--y:0.901;--d:-0.46s"></i><i class="sd" style="left:35.0%;top:3.3%;width:7.5cqw;--x:0.350;--y:0.033;--d:-0.87s"></i><i class="sb" style="left:15.3%;top:98.3%;width:10.4cqw;--x:0.153;--y:0.983;--d:-1.28s"></i>'};
 function hlDeco(k){
   if(!HL_SP[k]) return '';
   return '<div class="hlx hlx-deco"><span class="hlx-sp'+(k === 'SSSR' ? ' sx' : '')+'">'+HL_SP[k]+'</span></div>';
@@ -3921,13 +3958,95 @@ function ftWatch(){
   if(__ftWas === null){ __ftWas = a; if(a) setTimeout(ftChillNow, 1800); return; }
   if(a !== __ftWas){ __ftWas = a; if(tab === 'home' && !$('overlay').classList.contains('show')){ renderHome(); if(a) setTimeout(ftChillNow, 700); } }
 }
+/* ---------- free card pack every day ---------- */
+function freePacks(){ var n = state.eco && state.eco.freePacks; return (n === undefined || n === null) ? 1 : n; }
+function freePackCheck(){
+  var n = freePacks(), k = dateKey();
+  if(n <= 0 || state.freePackDay === k) return;
+  state.freePackDay = k; state.packs = (state.packs || 0) + n; save();
+  setTimeout(function(){ try{ toast('🎁 Your free daily card pack'+(n > 1 ? 's are' : ' is')+' here! Open it on the Cards tab.', 4200); Sound.chime(); }catch(e){} }, 900);
+}
+/* ---------- routines: morning + evening checklists, with a small on-time reward ---------- */
+var RT_DEF = {
+  m:{name:'Morning routine', ico:'☀️', start:'06:30', by:'09:00', items:'🧼 Wash face\n🪥 Brush teeth\n🧵 Floss\n💇 Brush hair\n🛏️ Make bed & tidy room\n🎒 Get school bag ready', days:[1,2,3,4,5]},
+  n:{name:'Evening routine', ico:'🌙', start:'17:00', by:'20:30', items:'🎒 Put school bag away\n🍱 Lunch box & water bottle in the sink\n🪥 Brush teeth after dinner\n🧹 Tidy room before bed', days:[0,1,2,3,4]}
+};
+function rtCfg(w){
+  var e = state.eco || {}, d = RT_DEF[w], p = 'rt'+w.toUpperCase();
+  var items = String(e[p+'Items'] != null ? e[p+'Items'] : d.items).split('\n').map(function(x){ return x.trim(); }).filter(Boolean).slice(0, 8);
+  var by = e[p+'By'] || d.by, end = w === 'm' ? Math.max(12*60, ftMinOf(by) + 60) : 24*60 - 1;
+  return {w:w, on:e[p+'On'] !== false, name:d.name, ico:d.ico, start:e[p+'Start'] || d.start, by:by, endM:end, items:items, days:e[p+'School'] === false ? [0,1,2,3,4,5,6] : d.days};
+}
+function rtReward(){ return (state.eco && state.eco.rtReward) || 'pieces'; }
+function rtPer(){ var n = state.eco && state.eco.rtPer; return n > 0 ? n : 3; }
+function rtState(){
+  var k = dateKey(), o = state.rt || {};
+  if(o.day !== k) state.rt = {day:k, m:[], n:[], got:{}, late:{}, pt:[], pieces:o.pieces || 0, total:o.total || 0};
+  return state.rt;
+}
+function rtNow(){ var n = new Date(); return n.getHours()*60 + n.getMinutes(); }
+function rtWhich(){
+  var dow = new Date().getDay(), now = rtNow(), out = '';
+  ['m','n'].forEach(function(w){ var c = rtCfg(w); if(!out && c.on && c.items.length && c.days.indexOf(dow) > -1 && now >= ftMinOf(c.start) && now <= c.endM) out = w; });
+  return out;
+}
+function rtPiecesHTML(){
+  var per = rtPer(), have = rtState().pieces % per, h = '';
+  for(var i = 0; i < per; i++) h += '<span class="rtpc'+(i < have ? ' on' : '')+'">🧩</span>';
+  return h;
+}
+function rtHTML(){
+  var w = rtWhich(); if(!w) return '';
+  var c = rtCfg(w), r = rtState(), ticks = r[w], byM = ftMinOf(c.by), now = rtNow(), all = ticks.length >= c.items.length, rw = rtReward();
+  var st;
+  if(r.got[w]) st = 'Done on time! Amazing! 🌟';
+  else if(all) st = 'All done! 🌟';
+  else if(now < byM){ var left = byM - now; st = '⏰ '+(left >= 60 ? Math.floor(left/60)+' h '+(left%60)+' min' : left+' min')+' left'; }
+  else st = 'It is past '+fmt12(c.by)+', but finishing is still a great habit!';
+  var h = '<div class="panel ftpanel rtpanel"><div class="fthead"><span class="ftico">'+c.ico+'</span><div><b>'+c.name+' · by '+fmt12(c.by)+'</b><div class="hint">'+st+'</div></div></div><div class="ftlist">';
+  c.items.forEach(function(t, i){ var on = ticks.indexOf(i) > -1; h += '<button class="ftt'+(on ? ' on' : '')+'" data-rt="'+w+':'+i+'"><span>'+(on ? '✅' : '⬜')+'</span> '+esc(t)+'</button>'; });
+  h += '</div>';
+  if(rw === 'pieces') h += '<div class="rtrw"><span class="rtpcs">'+rtPiecesHTML()+'</span><span class="hint">Finish everything by '+fmt12(c.by)+' to earn a pack piece. '+rtPer()+' pieces = a new card pack!</span></div>';
+  else if(rw === 'points') h += '<div class="rtrw hint">⭐ 1 point for each one done by '+fmt12(c.by)+'.</div>';
+  else h += '<div class="rtrw hint">Every check mark makes Kit proud! 🦊</div>';
+  return h + '</div>';
+}
+function rtTick(w, i){
+  var c = rtCfg(w), r = rtState(), ticks = r[w], at = ticks.indexOf(i), onTime = rtNow() < ftMinOf(c.by), rw = rtReward();
+  if(at > -1){ ticks.splice(at, 1); save(); renderHome(); return; }
+  ticks.push(i); try{ Sound.tick(); }catch(_){}
+  if(rw === 'points' && onTime && r.pt.indexOf(w+i) < 0){ r.pt.push(w+i); if(addPoints(1, c.name)) toast('⭐ +1 point', 1400); }
+  if(ticks.length >= c.items.length && !r.got[w] && !r.late[w]){
+    if(onTime){
+      r.got[w] = true; r.total = (r.total || 0) + 1;
+      if(rw === 'pieces'){
+        r.pieces = (r.pieces || 0) + 1;
+        if(r.pieces >= rtPer()){ r.pieces -= rtPer(); state.packs = (state.packs || 0) + 1; toast('🎉 '+rtPer()+' pack pieces = a new card pack! Open it on the Cards tab.', 4500); try{ Sound.fanfare(); confetti(); }catch(_){} }
+        else { toast('🧩 You earned a pack piece! '+r.pieces+' of '+rtPer(), 3600); try{ Sound.chime(); }catch(_){} }
+      } else { toast('🌟 '+c.name+' done on time!', 3200); try{ Sound.chime(); }catch(_){} }
+    } else {
+      r.late[w] = true; toast('🌟 All done! Tomorrow, try to finish by '+fmt12(c.by)+'.', 3800);
+    }
+  }
+  save(); renderHome();
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-rt]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  try{ Sound.tap(); }catch(_){}
+  var a = t.getAttribute('data-rt').split(':'); rtTick(a[0], +a[1]);
+}, true);
+var __rtWas = null;
+function rtWatch(){ var w = rtWhich(); if(__rtWas === null){ __rtWas = w; return; } if(w !== __rtWas){ __rtWas = w; if(tab === 'home' && !$('overlay').classList.contains('show')) renderHome(); } }
 function renderHome(){
+  try{ freePackCheck(); }catch(e){}
   var nm = '', act = [], km = {mood:'happy', say:''};
   try{ nm = displayName(); }catch(e){}
   try{ act = activeTasks(); }catch(e){}
   try{ km = kitMood(); }catch(e){}
   var h = safeSec('Top of page', function(){ return '<div class="hero"><div class="herol">'+gHeroCharm(kitHTML(km.mood,'hero'))+'<div><h1>'+greeting()+(nm ? ', '+esc(nm) : '')+'! <span class="wave">👋</span></h1><p>'+new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</p><div class="kitsay">'+km.say+'</div></div></div></div>'; });
   h += safeSec('Free Time', freeWindowHTML);
+  h += safeSec('Routine', rtHTML);
   h += '<div class="sec"><h2>Today\'s Quests</h2><span class="count">'+safeSec('Count', function(){ return doneCount()+' of '+act.length+' done'+(state.restToday ? '' : ' · ⭐ '+pointsEarnedToday()+' of '+pointsMaxToday()+' points'); })+'</span></div><div class="qgrid">';
   if(!act.length) h += '<div class="empty">'+kitHTML('sleep','big')+'<br>No quests today!<br><small>Enjoy your day!</small></div>';
   act.forEach(function(t,i){ h += safeSec('Quest “'+t.name+'”', function(){ return questHTML(t,i); }); });
@@ -4298,7 +4417,7 @@ function tick(){
   if(state.screenEndsAt && curfewOn()){
     var cfT = curfewDate().getTime(), nT = Date.now();
     if(nT >= cfT && nT < cfT + 3*3600000){
-      state.screenEndsAt = null; save(); Sound.alarm();
+      state.screenEndsAt = null; save(); stDone();
       toast('🌙 Screen time is over for tonight. Sleep well!', 5000); renderBanners();
     } else if(nT < cfT && cfT - nT <= 5*60000 && window.__cfWarn !== dateKey()){
       window.__cfWarn = dateKey(); toast('⏰ 5 minutes until screen time ends tonight', 4200);
@@ -4306,9 +4425,10 @@ function tick(){
   }
   if(state.screenEndsAt){
     if(Date.now() >= state.screenEndsAt){
-      state.screenEndsAt = null; save(); Sound.alarm();
-      toast('📺 Free Time is over! Great job enjoying it!', 5000); renderBanners();
+      state.screenEndsAt = null; save(); stDone();
+      toast('📺 Screen time is done! Great job enjoying it!', 5000); renderBanners();
     } else {
+      if(state.screenEndsAt - Date.now() <= 60000 && window.__stWarn !== state.screenEndsAt){ window.__stWarn = state.screenEndsAt; stWarn(); toast('⏰ 1 minute of screen time left', 3500); }
       var el = $('screenTime'); if(el) el.textContent = hms(state.screenEndsAt - Date.now());
     }
   }
@@ -4316,6 +4436,9 @@ function tick(){
   updateTimerDisplays();
   updateTfs();
   try{ ftWatch(); }catch(_){}
+  try{ rtWatch(); }catch(_){}
+  try{ nudgeTick(); }catch(_){}
+  try{ stNoteSync(); }catch(_){}
 }
 
 
@@ -4350,8 +4473,64 @@ function openModal(html){
     if(html.indexOf('class="kjmodal') < 0) knReset();
     else if(KN.stack.length) html = html.replace(/(<div class="kjmodal[^"]*">)/, '$1' + KN_BAR);
   } else if(KN.cur || KN.stack.length){ knReset(); }
+  if(window.KN2){ KN2.learn = KN2.inLearn; if(KN2.inLearn) KN2.sec = 0; }
   $('modal').innerHTML = html; $('overlay').classList.add('show');
 }
+/* ---------- Kit nudge: after a while of just browsing (Cards, Rewards, Money, Me), Kit pops in and suggests an unfinished quest ---------- */
+var KN2 = {sec:0, learn:false, inLearn:false, last:'', shown:false};
+function nudgeOn(){ return !(state.eco && state.eco.nudgeOn === false); }
+function nudgeMins(){ var n = state.eco && state.eco.nudgeMins; return n >= 3 ? n : 10; }
+function nudgeTodo(){ return activeTasks().filter(function(t){ return !state.done[t.id]; }); }
+function nudgeExempt(){
+  if(!nudgeOn() || document.visibilityState === 'hidden' || KN2.shown) return true;
+  if(!nudgeTodo().length) return true;                                   /* all quests done: browse away */
+  try{ if(ftActive()) return true; }catch(e){}                           /* her Free Time */
+  if(state.screenEndsAt && state.screenEndsAt > Date.now()) return true;  /* screen time she earned */
+  try{ if(bedMode()) return true; }catch(e){}
+  if(window.__parSec || ($('modal') && $('modal').querySelector('.ptiles, .pinpad, .psec'))) return true;
+  return false;
+}
+function nudgeTick(){
+  var browsing = ['cards','shop','money','profile'].indexOf(tab) > -1, inOv = $('overlay').classList.contains('show');
+  if(inOv && KN2.learn){ KN2.sec = 0; KN2.t = Date.now(); return; }                          /* doing a quiz, kanji, story: that counts as practice */
+  var now = Date.now(), dt = KN2.t ? Math.min(2000, now - KN2.t) : 0; KN2.t = now;
+  if(!browsing || nudgeExempt()) return;
+  KN2.sec += dt/1000;
+  if(KN2.sec >= nudgeMins()*60){ KN2.sec = 0; showNudge(); }
+}
+var NUDGE_LINES = [
+  ['Psst! 👀', 'How about <b>{t}</b>? Let\'s knock it out together!'],
+  ['Hey, explorer! 🌟', 'Your cards will wait for you. Want to do <b>{t}</b> first?'],
+  ['Kit idea! 💡', '<b>{t}</b> is still on your quest list. You\'ve got this!'],
+  ['Quick break? ⏰', 'Let\'s try <b>{t}</b>, then come back to play!']
+];
+function showNudge(){
+  var todo = nudgeTodo(); if(!todo.length) return;
+  var learnFirst = todo.filter(function(t){ return !t.calm; }), pool = learnFirst.length ? learnFirst : todo;
+  var t = pool[Math.floor(Math.random()*pool.length)];
+  var anims = ['peek','swing','zoom'].filter(function(a){ return a !== KN2.last; }), an = anims[Math.floor(Math.random()*anims.length)];
+  KN2.last = an; KN2.shown = true;
+  var L = NUDGE_LINES[Math.floor(Math.random()*NUDGE_LINES.length)];
+  var el = document.createElement('div'); el.id = 'kitnudge'; el.className = 'kn-'+an;
+  el.innerHTML = '<div class="kn-kit">'+(an === 'swing' ? '<i class="kn-rope"></i>' : '')+(an === 'zoom' ? '<i class="kn-trail"></i><i class="kn-dust"></i>' : '')+'<span class="kn-face">'+kitSVG(an === 'peek' ? 'think' : 'happy','face')+'</span></div>'
+    + '<div class="kn-bub"><b>'+L[0]+'</b><div>'+L[1].replace('{t}', esc((t.emoji ? t.emoji+' ' : '')+t.name))+'</div><div class="kn-btns"><button class="btn primary" data-kn="go">Let\'s go!</button><button class="btn ghost" data-kn="later">In a minute</button></div></div>';
+  document.body.appendChild(el);
+  try{ Sound.chime(); }catch(e){}
+  el.addEventListener('click', function(e){
+    var b = e.target.closest('[data-kn]'); if(!b) return;
+    var go = b.getAttribute('data-kn') === 'go';
+    el.classList.add('out'); setTimeout(function(){ el.remove(); KN2.shown = false; }, 450);
+    if(go){
+      if($('overlay').classList.contains('show')) closeModal();
+      setTab('home');
+      setTimeout(function(){ var q = document.querySelector('.quest[data-id="'+t.id+'"]'); if(q){ q.scrollIntoView({behavior:'smooth', block:'center'}); q.classList.add('kn-hi'); setTimeout(function(){ q.classList.remove('kn-hi'); }, 2600); } }, 250);
+    }
+  });
+}
+['showQuiz','showQuizQuestion','showQuizResult','showKanji','showKanjiBook','showBite','showNewsList','showInkAlbum','showInkOne','showGoalDeal','showCelebrate'].forEach(function(n){
+  var f = window[n]; if(typeof f !== 'function') return;
+  window[n] = function(){ KN2.inLearn = true; try{ return f.apply(this, arguments); } finally{ KN2.inLearn = false; } };
+});
 function closeModal(){ window.__parSec = null; knReset(); stopSpeak(); $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
@@ -4404,6 +4583,7 @@ function taskSub(t){
 function pTog(label, id, on){ return '<label class="row" style="font-weight:800;margin:8px 0"><span class="switch"><input type="checkbox" id="'+id+'" '+(on ? 'checked' : '')+'><span></span></span> '+label+'</label>'; }
 function pNum(label, id, lo, hi, val){ return '<div class="fld"><label>'+label+'</label><input type="number" id="'+id+'" min="'+lo+'" max="'+hi+'" inputmode="numeric" value="'+val+'"></div>'; }
 function pText(label, id, val, rows){ return '<div class="fld"><label>'+label+'</label><textarea id="'+id+'" rows="'+(rows||3)+'" maxlength="240" style="width:100%">'+esc(val)+'</textarea></div>'; }
+function pSel(label, id, opts, val){ return '<div class="fld"><label>'+label+'</label><select id="'+id+'">'+opts.map(function(o){ return '<option value="'+o[0]+'"'+(o[0] === val ? ' selected' : '')+'>'+o[1]+'</option>'; }).join('')+'</select></div>'; }
 function pTime(label, id, val){ return '<div class="fld"><label>'+label+'</label><input type="time" id="'+id+'" value="'+esc(val)+'"></div>'; }
 function pTile(ico, title, sub, attr){ return '<button class="btn ptile" '+attr+'><span class="pti">'+ico+'</span><b>'+title+'</b><small>'+sub+'</small></button>'; }
 function parentOnChange(e){
@@ -4447,6 +4627,7 @@ function showParent(scrollTop){
   h += '<h3>🗂️ Settings</h3><div class="ptiles">';
   h += pTile('🎁', 'Rewards &amp; prices', 'Edit, group, price', 'data-act="rweditor"');
   h += pTile('⭐', 'Points &amp; bonuses', 'Daily points, bonus, rest day', 'data-act="psec" data-sec="pts"');
+  h += pTile('🪥', 'Routines', 'Morning and evening checklists', 'data-act="psec" data-sec="rt"');
   h += pTile('⏱️', 'Time &amp; limits', 'Screen time, bedtime, music', 'data-act="psec" data-sec="time"');
   h += pTile('📚', 'Learning &amp; news', 'Quiz, bites, kanji, news pack', 'data-act="psec" data-sec="learn"');
   h += pTile('💵', 'Allowance money', 'Jar, allowance, goal', 'data-bkp="1"');
@@ -4465,7 +4646,7 @@ function showParent(scrollTop){
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
 }
-var PAR_SECTIONS = {pts:'⭐ Points &amp; bonuses', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
+var PAR_SECTIONS = {pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
 function showParentSection(key, scrollTop){
   window.__parSec = key;
   var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Parent</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
@@ -4516,6 +4697,23 @@ function showParentSection(key, scrollTop){
     h += pTime('Music stops at this time each evening (leave empty for no limit)', 'eMusicOff', e.musicOff || '');
     h += '<h3>Card packs</h3>';
     h += pNum('Card packs she can open per day (0 = no limit)', 'ePackCap', 0, 20, packCap());
+    h += pNum('Free card packs every day (0 = off)', 'eFreePacks', 0, 5, freePacks());
+    h += '<h3>🦊 Kit reminders</h3>';
+    h += pTog('Kit suggests a quest when she has been browsing (Cards, Rewards, Money, Me) for a while', 'eNudgeOn', nudgeOn());
+    h += pNum('Minutes of browsing before Kit pops in', 'eNudgeMins', 3, 60, nudgeMins());
+  } else if(key === 'rt'){
+    h += '<div class="hint" style="margin-bottom:6px">A checklist shows on her home screen at these times. Finishing everything before the deadline earns the reward below. Late still counts as done, just no reward.</div>';
+    [['m','☀️ Morning'],['n','🌙 Evening']].forEach(function(x){
+      var c = rtCfg(x[0]), P = 'eRt'+x[0].toUpperCase(), e2 = state.eco;
+      h += '<h3>'+x[1]+'</h3>';
+      h += pTog('Show the '+x[1].split(' ')[1].toLowerCase()+' routine', P+'On', c.on);
+      h += pTog(x[0] === 'm' ? 'School days only (Mon to Fri)' : 'School nights only (Sun to Thu)', P+'School', e2['rt'+x[0].toUpperCase()+'School'] !== false);
+      h += '<div class="ecogrid">'+pTime('Shows from', P+'Start', c.start)+pTime('Finish by', P+'By', c.by)+'</div>';
+      h += pText('Checklist (one per line, up to 8, emoji welcome)', P+'Items', c.items.join('\n'), 6);
+    });
+    h += '<h3>🎁 Reward for finishing on time</h3>';
+    h += pSel('Reward', 'eRtReward', [['pieces','🧩 Pack pieces (collect some for a card pack)'],['points','⭐ 1 point per item'],['none','🌟 Just praise, no prize']], rtReward());
+    h += pNum('Pack pieces needed for one card pack', 'eRtPer', 1, 10, rtPer());
   } else if(key === 'learn'){
     h += '<h3>Daily card quiz</h3>';
     h += pTog('Show the daily card quiz (3 questions, once a day)', 'eQuiz', e.quizOn !== false);
@@ -4572,6 +4770,18 @@ function applyParentSettings(){
   e.extraCap = num('eExtra', 0, 200, e.extraCap);
   if($('eDupPer')){ e.dupPer = num('eDupPer', 1, 50, dupPer()); ['C','B','A','S','SSR','SSSR'].forEach(function(k){ e['dup'+k] = num('eDup'+k, 0, 500, dupCredits(k)); }); }
   e.packCap = num('ePackCap', 0, 20, packCap());
+  if($('eFreePacks')) e.freePacks = num('eFreePacks', 0, 5, freePacks());
+  if($('eNudgeOn')){ e.nudgeOn = ck('eNudgeOn', true); e.nudgeMins = num('eNudgeMins', 3, 60, nudgeMins()); }
+  if($('eRtReward')){
+    ['M','N'].forEach(function(W){
+      var d = RT_DEF[W.toLowerCase()];
+      e['rt'+W+'On'] = ck('eRt'+W+'On', true); e['rt'+W+'School'] = ck('eRt'+W+'School', true);
+      e['rt'+W+'Start'] = tm('eRt'+W+'Start', e['rt'+W+'Start'] || d.start); e['rt'+W+'By'] = tm('eRt'+W+'By', e['rt'+W+'By'] || d.by);
+      if($('eRt'+W+'Items')){ var nv = String($('eRt'+W+'Items').value || '').split('\n').map(function(x){ return x.trim().slice(0, 60); }).filter(Boolean).slice(0, 8).join('\n'); if(nv !== rtCfg(W.toLowerCase()).items.join('\n') && state.rt) state.rt[W.toLowerCase()] = []; e['rt'+W+'Items'] = nv; }
+    });
+    var rv = $('eRtReward').value; e.rtReward = (rv === 'points' || rv === 'none') ? rv : 'pieces';
+    e.rtPer = num('eRtPer', 1, 10, rtPer());
+  }
   e.bankCap = num('eBank', 50, 5000, e.bankCap);
   e.restOn = ck('eRest', e.restOn); e.autoRest = ck('eAuto', e.autoRest);
   e.quizPts = num('eQPts', 0, 5, e.quizPts);
@@ -4896,6 +5106,33 @@ function natLang(c){
 }
 var speakingEl = null;
 /* Android app (Capacitor): the WebView has no speech, so talk to the phone's own text-to-speech through the app. */
+/* ---------- screen-time alerts: small chime + vibration (plays even when sounds are off), and an Android notification so it still rings while she is in another app ---------- */
+function toneAlways(f, st, d, ty, v){ var m = state.mute; state.mute = false; try{ tone(f, st, d, ty, v); }catch(e){} state.mute = m; }
+function stVibe(pat){ try{ if(navigator.vibrate) navigator.vibrate(pat); }catch(e){} }
+function stDone(){
+  [[1047,0],[784,.22],[659,.44],[1047,.9],[784,1.12],[659,1.34]].forEach(function(n){ toneAlways(n[0], n[1], .5, 'sine', .3); toneAlways(n[0]*2, n[1], .25, 'triangle', .05); });
+  stVibe([250, 120, 250, 120, 500]);
+}
+function stWarn(){ toneAlways(880, 0, .35, 'sine', .22); toneAlways(1175, .16, .45, 'sine', .18); stVibe(150); }
+var __stNoteAt, __stSetup = null;
+function stNoteSetup(c){
+  if(!__stSetup) __stSetup = c.nativePromise('LocalNotifications', 'requestPermissions', {}).catch(function(){})
+    .then(function(){ return c.nativePromise('LocalNotifications', 'createChannel', {id:'sq-time', name:'Screen time', description:'Rings when screen time is done', importance:5, visibility:1, vibration:true}).catch(function(){}); });
+  return __stSetup;
+}
+function stNoteSync(){
+  var c = nativeCap(); if(!c) return;
+  var at = state.screenEndsAt || 0;
+  try{ if(at && curfewOn()){ var cf = curfewDate().getTime(); if(cf > Date.now() && cf < at) at = cf; } }catch(e){}
+  if(at === __stNoteAt) return; __stNoteAt = at;
+  try{
+    c.nativePromise('LocalNotifications', 'cancel', {notifications:[{id:7101}]}).catch(function(){});
+    if(!at || at < Date.now() + 5000) return;
+    stNoteSetup(c).then(function(){
+      return c.nativePromise('LocalNotifications', 'schedule', {notifications:[{id:7101, title:'📺 Screen time is done!', body:'Great job! Time to put the tablet down. ⭐', channelId:'sq-time', schedule:{at:new Date(at).toISOString(), allowWhileIdle:true}}]});
+    }).catch(function(){});
+  }catch(e){}
+}
 function nativeCap(){
   try{ var c = window.Capacitor; if(c && typeof c.nativePromise === 'function' && (!c.getPlatform || c.getPlatform() !== 'web')) return c; }catch(e){}
   return null;
@@ -6749,7 +6986,8 @@ var MOODS = [
 var EVENTS = [
   ['party','🎉','Party'],['school','🏫','School'],['friends','👭','Friends'],['family','👪','Family'],
   ['sports','⚽','Sports'],['art','🎨','Art'],['music','🎵','Music'],['trip','🧳','Trip'],
-  ['outside','🌳','Outside'],['special','🎁','Special'],['cozy','🛋️','Cozy'],['learning','📚','Learning']
+  ['outside','🌳','Outside'],['special','🎁','Special'],['cozy','🛋️','Cozy'],['learning','📚','Learning'],
+  ['unwell','🤧','Feeling sick'],['health','🩺','Health check'],['shot','💉','Shot'],['dentist','🦷','Dentist']
 ];
 var J_PROMPTS = [
   'Something that made me smile today was...','One thing I’m proud of today is...','Today I learned...','Someone who was kind to me today...',
