@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.27', errs = [], shown = false;
+  var V = '26.11.30', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-07';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4839,7 +4839,7 @@ function helpData(){
    ]},
    {t:'📚 Learning', i:[
     {q:'What are Quick Quizzes?', a:'Once you have a few cards, a short <b>daily quiz</b> about your history cards unlocks. Right answers give points, and a perfect score gives a bonus.'},
-    {q:'What are Today’s Bites?', a:'Short, fun reads. One is “on this day” and one is from around the world, like kid-friendly news. Tap one to read it and earn <b>+'+(e.bitesPts == null ? 1 : e.bitesPts)+'</b> point. In <b>Me</b> you can choose the language for the bites.'},
+    {q:'What are Today’s Bites?', a:'Short, fun reads that change every day. One is from history: something that happened on this very day, or another day this month. The other is from around the world, like kid-friendly news. Tap one to read it and earn <b>+'+(e.bitesPts == null ? 1 : e.bitesPts)+'</b> point. In <b>Me</b> you can choose the language for the bites.'},
     {q:'What is the 字 Kanji tab?', a:'Your own kanji corner, with Kit at the top. Tap Kit for a thought! It has five parts:'+li(['☀️ <b>Today</b>: a <b>strong thought</b> to help you feel brave, today’s kanji (tap it to learn it and earn a point), a heart question, and the <b>Japanese saying of the day</b>.','📖 <b>My Book</b>: all your kanji by page. Tap <b>Change page</b> to pick the page you are on at Saturday school.','🎯 <b>Practice</b>: flash cards, writing, word games and more. Kit will remind you to rest after a few rounds. Resting helps your brain remember!','🗣️ <b>ことわざ</b>: look up any saying, and play a quick saying quiz.','🌳 <b>Growing</b>: your kanji tree, your kept strong thoughts, and how kanji feels today.'])},
       {q:'What is the strong thought?', a:'Every day there is a new thought to help you be brave, bounce back from mistakes and be kind to yourself, plus a tiny thing to try. Tap 🤍 <b>Keep it</b> to save the ones you love in 🌳 Growing. On a hard day, Kit picks an extra gentle one.'},
       {q:'What is the Japanese saying of the day?', a:'A new ことわざ (proverb), 慣用句 (idiom) or 四字熟語 every day, starting with the ones people in Japan use the most. You see what it means, a picture of the words, and how to use it. Tap 🔊 to hear it. When you use it for real, tap ✅ <b>I used it today!</b> for a bonus point. Look up any saying in the 🗣️ ことわざ part of the Kanji tab: search in hiragana, kanji or English.'},
@@ -5170,6 +5170,11 @@ function mhBack(){
   return true;
 }
 function openModal(html){
+  /* 26.11.29: a NEW window (different title/type, or nothing open) always starts at the top,
+     so opening a card from a scrolled list shows the card, not the text below it.
+     Re-drawing the same window (filters, answers) keeps its place. Callers that restore a
+     saved position (Back, card viewer) still set scrollTop after this. */
+  var mWas = $('modal'), wasOpen = $('overlay').classList.contains('show') && mWas.firstChild, newWin = !wasOpen || mWas.__sig !== mhSig(html);
   mhTrack(html);
   if(KN.fresh){
     KN.fresh = false;
@@ -5178,6 +5183,7 @@ function openModal(html){
   } else if(KN.cur || KN.stack.length){ knReset(); }
   if(window.KN2){ KN2.learn = KN2.inLearn; if(KN2.inLearn) KN2.sec = 0; }
   $('modal').innerHTML = html; $('overlay').classList.add('show');
+  if(newWin) $('modal').scrollTop = 0;
 }
 /* ---------- Kit nudge: after a while of just browsing (Cards, Rewards, Money, Me), Kit pops in and suggests an unfinished quest ---------- */
 var KN2 = {sec:0, learn:false, inLearn:false, last:'', shown:false};
@@ -6950,7 +6956,389 @@ var OTD = [
 ['12-17',1903,'tech','The Wright brothers made the first powered airplane flight at Kitty Hawk.','ライトきょうだいが、キティホークでエンジンつきのひこうきではじめてとびました。','The Wright Brothers'],
 ['12-21',1913,'culture','The first crossword puzzle was printed in a New York newspaper.','さいしょのクロスワードパズルが、ニューヨークのしんぶんにのりました。'],
 ['12-22','','culture','Around now, it’s Dongzhi, the winter solstice. In China, families eat dumplings or tangyuan to celebrate.','このころ、冬至(とうじ)です。中国ではかぞくでぎょうざやタンユエンをたべておいわいします。'],
-['12-27',1571,'space','Johannes Kepler was born. He discovered how planets move around the Sun.','ヨハネス・ケプラーがうまれました。わくせいが太陽(たいよう)のまわりをうごくきそくを見つけました。']
+['12-27',1571,'space','Johannes Kepler was born. He discovered how planets move around the Sun.','ヨハネス・ケプラーがうまれました。わくせいが太陽(たいよう)のまわりをうごくきそくを見つけました。'],
+  /* 26.11.30: a history bite for every day of the year (Canada, Japan, China, Hong Kong, science, nature) */
+  ["01-01", 1912, "history", "The Republic of China began, and Sun Yat-sen became its first leader. It was the end of more than 2,000 years of emperors.", "中国で「中華民国(ちゅうかみんこく)」がはじまり、孫文(そんぶん)がさいしょのリーダーになりました。2000年いじょうつづいた皇帝(こうてい)の時代がおわりました。", "Sun Yat-sen"],
+  ["01-01", 1963, "culture", "Astro Boy (Tetsuwan Atom) started on Japanese TV. It was one of the first anime TV series.", "「鉄腕(てつわん)アトム」のテレビアニメがはじまりました。日本ではじめてのテレビアニメシリーズの一つです。", "Osamu Tezuka"],
+  ["01-03", 1868, "history", "Japan announced the return of power to the Emperor. This started the Meiji era of big changes.", "日本で「王政復古(おうせいふっこ)」が宣言(せんげん)され、天皇中心の新しい時代、明治(めいじ)がはじまりました。", "Meiji Restoration"],
+  ["01-03", 2019, "space", "China’s Chang’e-4 became the first spacecraft to land gently on the far side of the Moon.", "中国の「嫦娥(じょうが)4ごう」が、月のうら側(がわ)にはじめて着陸(ちゃくりく)しました。", "Chang'e-4 Moon Landing"],
+  ["01-05", 1941, "culture", "Hayao Miyazaki was born in Tokyo. He made films like My Neighbor Totoro and Kiki’s Delivery Service.", "宮崎駿(みやざきはやお)さんが東京でうまれました。「となりのトトロ」や「魔女(まじょ)の宅急便(たっきゅうびん)」をつくりました。", "Hayao Miyazaki"],
+  ["01-05", "", "food", "Around now, Tokyo’s fish market holds its first tuna auction of the year. One giant tuna can sell for a huge price!", "このころ、東京の市場(いちば)で一年さいしょのマグロのせりがあります。大きなマグロ1ぴきに、びっくりするねだんがつくこともあります。"],
+  ["01-06", 1838, "tech", "Samuel Morse and Alfred Vail first showed their electric telegraph, which sent messages along a wire using dots and dashes.", "サミュエル・モールスたちが、電線(でんせん)で「トン・ツー」のしんごうをおくる電信(でんしん)をはじめて見せました。"],
+  ["01-07", 1610, "space", "Galileo pointed his telescope at Jupiter and spotted its biggest moons for the first time.", "ガリレオが望遠鏡(ぼうえんきょう)で木星(もくせい)を見て、大きな月(衛星)をはじめて見つけました。", "Galileo Galilei"],
+  ["01-07", "", "food", "Nanakusa day in Japan: families eat rice porridge with seven spring herbs to stay healthy in the new year.", "日本の「七草(ななくさ)」の日。七つの春の草を入れたおかゆを食べて、一年の元気をねがいます。"],
+  ["01-08", 1942, "science", "Stephen Hawking was born. He studied black holes and wrote books to explain the universe to everyone.", "スティーヴン・ホーキングがうまれました。ブラックホールをけんきゅうし、宇宙(うちゅう)のことをみんなにわかりやすく本に書きました。"],
+  ["01-09", 2007, "tech", "Steve Jobs showed the very first iPhone to the world.", "スティーブ・ジョブズが、さいしょのiPhone(アイフォーン)を世界に見せました。", "Steve Jobs"],
+  ["01-10", 1863, "tech", "The world’s first underground railway opened in London. Today people call it “the Tube.”", "ロンドンで、世界ではじめての地下鉄(ちかてつ)が開業(かいぎょう)しました。今は「チューブ」とよばれています。"],
+  ["01-10", 1835, "history", "Fukuzawa Yukichi was born. He started Keio school, and his face was on Japan’s 10,000-yen bill for many years.", "福沢諭吉(ふくざわゆきち)がうまれました。慶應(けいおう)の学校をつくり、長いあいだ一万円札(さつ)の顔でした。", "Fukuzawa Yukichi"],
+  ["01-10", 1977, "animals", "Ocean Park opened in Hong Kong. It is famous for its sea animals, giant pandas and cable cars.", "香港(ホンコン)のオーシャンパークがオープンしました。海の生きものやパンダ、ロープウェイで有名(ゆうめい)です。", "Hong Kong"],
+  ["01-11", 1922, "science", "In Toronto, a 14-year-old boy named Leonard Thompson got the first insulin shot for diabetes. It saved his life.", "トロントで、14さいのレナード・トンプソンが、とうにょうびょうのくすり「インスリン」をはじめてうけ、いのちがたすかりました。", "Banting & Best"],
+  ["01-11", 1815, "history", "John A. Macdonald was born in Scotland. He became Canada’s first Prime Minister.", "ジョン・A・マクドナルドがスコットランドでうまれました。のちにカナダのさいしょの首相(しゅしょう)になりました。", "Sir John A. Macdonald"],
+  ["01-12", 1628, "culture", "Charles Perrault was born. He wrote down fairy tales like Cinderella and Puss in Boots.", "シャルル・ペローがうまれました。「シンデレラ」や「長ぐつをはいたねこ」などのお話を本にまとめました。"],
+  ["01-13", "", "culture", "Around now, Japan celebrates Coming of Age Day for young people turning 20. Many wear beautiful kimono.", "このころ、日本では「成人(せいじん)の日」。20さいになった人をおいわいし、きれいな着物(きもの)を着る人もたくさんいます。"],
+  ["01-14", 2005, "space", "The Huygens probe landed on Titan, Saturn’s biggest moon. It was the farthest landing ever made.", "探査機(たんさき)ホイヘンスが、土星(どせい)のいちばん大きな月タイタンに着陸(ちゃくりく)しました。いちばん遠い着陸です。"],
+  ["01-15", 1929, "history", "Martin Luther King Jr. was born. He worked peacefully for fair treatment of all people.", "マーティン・ルーサー・キング・ジュニアがうまれました。へいわな方法で、みんながびょうどうにあつかわれるようにはたらきました。", "Martin Luther King Jr."],
+  ["01-16", 1909, "science", "Explorers from Ernest Shackleton’s expedition became the first to reach the area of the South Magnetic Pole.", "シャクルトンの探検隊(たんけんたい)のメンバーが、はじめて南磁極(みなみじきょく)のあたりにたどりつきました。"],
+  ["01-18", 1882, "culture", "A. A. Milne was born. He wrote the stories of Winnie-the-Pooh.", "A・A・ミルンがうまれました。「くまのプーさん」のお話を書きました。"],
+  ["01-19", 1736, "tech", "James Watt was born. He made steam engines much better, and the unit “watt” is named after him.", "ジェームズ・ワットがうまれました。蒸気(じょうき)きかんをずっとよくしました。電気の「ワット」は、かれの名前からきています。"],
+  ["01-20", 1930, "space", "Buzz Aldrin was born. He was the second person to walk on the Moon.", "バズ・オルドリンがうまれました。月の上を歩いた2人目の人です。"],
+  ["01-21", 1976, "tech", "The Concorde began passenger flights. It flew faster than the speed of sound.", "超音速(ちょうおんそく)旅客機(りょかくき)コンコルドが、お客さんをのせて飛びはじめました。音よりはやく飛びました。"],
+  ["01-22", 1992, "space", "Roberta Bondar flew into space on the space shuttle Discovery. She was the first Canadian woman in space.", "ロバータ・ボンダーがスペースシャトルで宇宙へ行きました。カナダ人の女性ではじめてです。", "Roberta Bondar"],
+  ["01-23", 1849, "science", "Elizabeth Blackwell became the first woman in the United States to earn a medical degree.", "エリザベス・ブラックウェルが、アメリカで女性としてはじめてお医者さんの学位(がくい)をとりました。"],
+  ["01-24", 1848, "history", "Gold was found at Sutter’s Mill in California. Many people, including thousands from southern China, later came looking for gold.", "カリフォルニアで金(きん)が見つかりました。のちに、中国南部からも何千人もの人が金をさがしにやってきました。"],
+  ["01-25", 1924, "sports", "The first Winter Olympics opened in Chamonix, France.", "フランスのシャモニーで、さいしょの冬季(とうき)オリンピックがはじまりました。"],
+  ["01-26", 1841, "history", "British sailors landed at Possession Point, and Hong Kong Island soon became a British colony. It stayed that way for 156 years.", "イギリスの船の人たちが香港島(ホンコンとう)に上陸(じょうりく)し、香港はイギリスの植民地(しょくみんち)になりました。156年つづきました。", "Hong Kong"],
+  ["01-26", 1961, "sports", "Wayne Gretzky was born in Brantford, Ontario. He became known as “The Great One” of hockey.", "ウェイン・グレツキーがオンタリオ州でうまれました。アイスホッケーの「ザ・グレート・ワン」とよばれました。", "Wayne Gretzky"],
+  ["01-28", 1958, "tech", "The LEGO brick with its famous studs and tubes was patented in Denmark.", "デンマークで、ぽつぽつとつつのあるレゴブロックの特許(とっきょ)がとられました。"],
+  ["01-29", 1886, "tech", "Karl Benz patented his three-wheeled Motorwagen, often called the first real car.", "カール・ベンツが三りんの「モトールヴァーゲン」の特許をとりました。さいしょの本当の自動車(じどうしゃ)といわれます。"],
+  ["01-30", 1969, "culture", "The Beatles played their last public concert, on a London rooftop.", "ビートルズが、ロンドンのビルのおくじょうで、さいごのコンサートをしました。"],
+  ["01-31", 1958, "space", "Explorer 1, the first American satellite, was launched. It found belts of radiation around the Earth.", "アメリカのさいしょの人工衛星(じんこうえいせい)エクスプローラー1ごうがうちあげられ、地球のまわりの放射線(ほうしゃせん)のおびを見つけました。"],
+  ["02-01", 1884, "culture", "The first part of the giant Oxford English Dictionary was published. The whole thing took 44 years to finish!", "大きな「オックスフォード英語辞典(じてん)」のさいしょの部分が出ました。ぜんぶできるまで44年かかりました。"],
+  ["02-02", "", "animals", "Groundhog Day: in Canada, Wiarton Willie checks for his shadow. If he sees it, people say winter will last six more weeks.", "グラウンドホッグデー。カナダではウィアートン・ウィリーが自分のかげを見るか、みんなで見まもります。見えたら、冬があと6週間つづくといわれます。"],
+  ["02-04", 1913, "history", "Rosa Parks was born. Her brave “no” on a bus helped change unfair laws in the United States.", "ローザ・パークスがうまれました。バスでのゆうきある「いいえ」が、アメリカの不公平(ふこうへい)なきまりをかえるきっかけになりました。", "Rosa Parks"],
+  ["02-05", 1971, "space", "Apollo 14 landed on the Moon. Astronaut Alan Shepard even hit two golf balls there!", "アポロ14ごうが月に着陸(ちゃくりく)しました。アラン・シェパードは月でゴルフボールを2つ打ちました。"],
+  ["02-05", "", "culture", "Around now, the Sapporo Snow Festival fills the city with giant snow and ice sculptures.", "このころ、さっぽろ雪まつり。大きな雪や氷(こおり)の像(ぞう)が町にならびます。"],
+  ["02-06", 1952, "history", "Elizabeth II became Queen of the United Kingdom and Canada. She was queen for more than 70 years.", "エリザベス2世がイギリスとカナダの女王(じょおう)になりました。70年いじょうも女王でした。"],
+  ["02-07", 1812, "culture", "Charles Dickens was born. He wrote A Christmas Carol and Oliver Twist.", "チャールズ・ディケンズがうまれました。「クリスマス・キャロル」や「オリバー・ツイスト」を書きました。"],
+  ["02-08", 1828, "culture", "Jules Verne was born. He wrote adventure stories about trips to the Moon and under the sea.", "ジュール・ヴェルヌがうまれました。月へ行く話や海の中を旅する話など、ぼうけん小説(しょうせつ)を書きました。"],
+  ["02-09", 1895, "sports", "William G. Morgan invented volleyball. He first called it “mintonette.”", "ウィリアム・G・モーガンがバレーボールを考えだしました。さいしょは「ミントネット」という名前でした。"],
+  ["02-10", 1996, "tech", "A computer called Deep Blue won a chess game against the world champion for the first time.", "コンピューター「ディープ・ブルー」が、チェスの世界チャンピオンにはじめて1回かちました。"],
+  ["02-11", "", "history", "National Foundation Day in Japan, a day to think about the country’s beginnings.", "日本の「建国記念(けんこくきねん)の日」。国のはじまりを考える日です。"],
+  ["02-12", 2010, "sports", "The Vancouver Winter Olympics opened in Canada.", "カナダでバンクーバー冬季(とうき)オリンピックがはじまりました。"],
+  ["02-13", "", "tech", "World Radio Day: radio still helps people get news, music and safety alerts all around the world.", "世界ラジオデー。ラジオは今も、世界中でニュースや音楽、あんぜんのお知らせをとどけています。"],
+  ["02-14", 1990, "space", "Voyager 1 turned around and took the “Pale Blue Dot” photo, showing Earth as a tiny speck in space.", "ボイジャー1ごうがふりかえって、地球を「小さな青い点」としてしゃしんにとりました。"],
+  ["02-15", 1965, "history", "Canada’s red-and-white Maple Leaf flag was raised for the first time. It is National Flag of Canada Day.", "カナダの赤と白のメープルリーフの国旗(こっき)が、はじめてあげられました。「カナダ国旗の日」です。", "Ottawa"],
+  ["02-16", 1923, "history", "Howard Carter opened the sealed burial room of Tutankhamun, full of golden treasures.", "ハワード・カーターが、ツタンカーメンのお墓(はか)のふういんされた部屋をあけました。金のたからものでいっぱいでした。", "Tutankhamun's Tomb Found"],
+  ["02-17", 1959, "space", "Vanguard 2 was launched. It was the first satellite made to watch the weather from space.", "ヴァンガード2ごうがうちあげられました。宇宙から天気を見るためのさいしょの衛星(えいせい)です。"],
+  ["02-18", 1930, "space", "Clyde Tombaugh discovered Pluto by comparing photos of the night sky.", "クライド・トンボーが、夜空のしゃしんをくらべて、めい王星(おうせい)を見つけました。"],
+  ["02-19", 1473, "space", "Nicolaus Copernicus was born. He said the Earth goes around the Sun, not the other way around.", "コペルニクスがうまれました。「地球が太陽のまわりをまわっている」と考えました。"],
+  ["02-21", "", "culture", "International Mother Language Day: a day to celebrate all the languages people grow up speaking, like Japanese, English and Cantonese.", "国際(こくさい)母語(ぼご)デー。日本語、英語、広東語(カントンご)など、うまれそだったことばを大切にする日です。"],
+  ["02-22", "", "animals", "Cat Day in Japan! The date 2-2-2 sounds like “nyan nyan nyan.”", "日本の「ねこの日」!2月22日は「ニャン・ニャン・ニャン」です。"],
+  ["02-23", 1960, "history", "Emperor Naruhito was born. His birthday is a national holiday in Japan.", "天皇陛下(てんのうへいか)がうまれました。日本では天皇誕生日(たんじょうび)として祝日(しゅくじつ)です。", "Emperor Naruhito and Reiwa"],
+  ["02-24", 1955, "tech", "Steve Jobs was born. He helped create the Apple computer and the iPhone.", "スティーブ・ジョブズがうまれました。アップルのコンピューターやiPhoneをつくりました。", "Steve Jobs"],
+  ["02-25", 1841, "culture", "Pierre-Auguste Renoir was born. He painted happy, sunny scenes of people dancing and having picnics.", "ルノワールがうまれました。人がおどったりピクニックをしたりする、明るい絵をかきました。"],
+  ["02-26", 1829, "culture", "Levi Strauss was born. His company later made the first blue jeans with metal rivets.", "リーバイ・ストラウスがうまれました。かれの会社が、金具(かなぐ)つきのジーンズをはじめてつくりました。"],
+  ["02-27", 1996, "tech", "The first Pokémon games, Red and Green, came out in Japan. Today is Pokémon Day!", "さいしょのポケモンのゲーム「赤・緑」が日本で発売(はつばい)されました。「ポケモンデー」です!"],
+  ["02-27", "", "animals", "International Polar Bear Day: polar bears need sea ice to hunt, so keeping the Arctic cold helps them.", "国際ホッキョクグマの日。ホッキョクグマは海の氷の上でえものをとるので、北極(ほっきょく)のさむさが大切です。"],
+  ["02-28", 1953, "science", "Scientists Francis Crick and James Watson figured out the twisted-ladder shape of DNA.", "クリックとワトソンが、DNAが「ねじれたはしご」の形をしていることを見つけました。"],
+  ["02-29", "", "science", "Leap Day! It comes only once every four years, because Earth takes about 365 and a quarter days to go around the Sun.", "うるう日!4年に1回だけ。地球が太陽を1しゅうするのに、365日と4分の1日ぐらいかかるからです。"],
+  ["03-01", 1872, "nature", "Yellowstone became the world’s first national park, protecting its geysers, hot springs and wildlife.", "イエローストーンが世界ではじめての国立公園(こくりつこうえん)になりました。かんけつせんや温泉(おんせん)、どうぶつをまもります。"],
+  ["03-02", 1904, "culture", "Dr. Seuss was born. He wrote The Cat in the Hat and Green Eggs and Ham.", "ドクター・スースがうまれました。「キャット・イン・ザ・ハット」などの絵本を書きました。"],
+  ["03-04", 1678, "culture", "Antonio Vivaldi was born. He wrote The Four Seasons, music that sounds like spring, summer, autumn and winter.", "ヴィヴァルディがうまれました。春・夏・秋・冬を音楽にした「四季(しき)」をつくりました。"],
+  ["03-05", 1979, "space", "Voyager 1 flew past Jupiter and found volcanoes erupting on its moon Io.", "ボイジャー1ごうが木星(もくせい)のそばをとおり、月のイオで火山がふんかしているのを見つけました。"],
+  ["03-06", 1475, "culture", "Michelangelo was born. He painted the Sistine Chapel ceiling and carved the statue of David.", "ミケランジェロがうまれました。システィーナ礼拝堂(れいはいどう)の天井画(てんじょうが)や、ダビデ像(ぞう)をつくりました。"],
+  ["03-07", 1912, "history", "Roald Amundsen announced to the world that his team had reached the South Pole.", "アムンセンが、自分たちのチームが南極点(なんきょくてん)にとうたつしたことを世界に知らせました。"],
+  ["03-08", "", "history", "International Women’s Day: a day to celebrate women and girls and to work for fairness for everyone.", "国際女性(じょせい)デー。女の人や女の子をたたえ、みんなが公平(こうへい)になるように考える日です。"],
+  ["03-09", 1959, "culture", "The Barbie doll was shown for the first time at a toy fair in New York.", "ニューヨークのおもちゃの見本市(みほんいち)で、バービー人形がはじめて登場しました。"],
+  ["03-11", 2011, "history", "A huge earthquake and tsunami hit northeast Japan. Every year people remember, help each other, and practise how to stay safe.", "東日本大震災(ひがしにほんだいしんさい)がおきました。毎年この日に思い出し、たすけあい、身(み)をまもる練習(れんしゅう)をします。"],
+  ["03-12", 1930, "history", "Mahatma Gandhi began the Salt March, a peaceful 390-kilometre walk to protest an unfair salt tax.", "ガンジーが「塩(しお)の行進(こうしん)」をはじめました。不公平な塩の税金(ぜいきん)にへいわに反対して、390kmも歩きました。", "Mahatma Gandhi"],
+  ["03-12", "", "nature", "Arbor Day (Tree-Planting Day) in China: people plant trees to make the country greener.", "中国の「植樹節(しょくじゅせつ)」。木をうえて、国をみどりにする日です。"],
+  ["03-13", 2013, "space", "Chris Hadfield became the first Canadian to command the International Space Station.", "クリス・ハドフィールドが、カナダ人ではじめて国際(こくさい)宇宙ステーションの船長(せんちょう)になりました。", "International Space Station"],
+  ["03-14", 1911, "culture", "Akira Yoshizawa was born. He turned origami into an art and invented a way to write down folding steps.", "吉澤章(よしざわあきら)さんがうまれました。おりがみを芸術(げいじゅつ)にし、おり方の図(ず)の書き方を考えました。", "Akira Yoshizawa"],
+  ["03-15", 1985, "tech", "The first .com internet address, symbolics.com, was registered.", "さいしょの「.com(ドットコム)」のインターネットのアドレスが登録(とうろく)されました。"],
+  ["03-16", 1926, "space", "Robert Goddard launched the first rocket powered by liquid fuel. It flew for just 2.5 seconds.", "ロバート・ゴダードが、えきたい燃料(ねんりょう)のロケットをはじめてうちあげました。飛んだのは2.5秒でした。"],
+  ["03-17", 1845, "tech", "The rubber band was patented in England by Stephen Perry.", "イギリスで、スティーブン・ペリーが輪(わ)ゴムの特許(とっきょ)をとりました。"],
+  ["03-18", 1965, "space", "Alexei Leonov made the first spacewalk, floating outside his spaceship for about 12 minutes.", "アレクセイ・レオーノフが、はじめて宇宙遊泳(ゆうえい)をしました。宇宙船の外に12分ぐらい出ました。"],
+  ["03-19", 1932, "tech", "The Sydney Harbour Bridge opened in Australia. People call it “the Coathanger.”", "オーストラリアのシドニー・ハーバーブリッジが開通しました。「ハンガー」というあだ名があります。"],
+  ["03-20", "", "nature", "Around now is the spring equinox, when day and night are about the same length. In Japan it is a holiday, Shunbun no Hi.", "このころは春分(しゅんぶん)。昼と夜の長さがほぼ同じになります。日本では「春分の日」で祝日です。"],
+  ["03-21", 1685, "culture", "Johann Sebastian Bach was born. Musicians all over the world still play his music.", "バッハがうまれました。今も世界中の音楽家がかれの曲をえんそうしています。"],
+  ["03-22", "", "nature", "World Water Day: clean water is precious, so turn off the tap while you brush your teeth!", "世界水の日。きれいな水は大切。はをみがくときは、水をとめようね!"],
+  ["03-23", 1857, "tech", "The first safe passenger elevator, by Elisha Otis, began working in a New York building.", "エリシャ・オーチスの、あんぜんなエレベーターが、ニューヨークのビルではじめてうごきました。"],
+  ["03-24", 1882, "science", "Robert Koch announced he had found the germ that causes tuberculosis. Today is World TB Day.", "ロベルト・コッホが、結核(けっかく)のばいきんを見つけたと発表しました。"],
+  ["03-25", 1655, "space", "Christiaan Huygens discovered Titan, Saturn’s largest moon.", "クリスティアーン・ホイヘンスが、土星(どせい)のいちばん大きな月タイタンを見つけました。"],
+  ["03-26", 1953, "science", "Jonas Salk announced a vaccine against polio, a disease that hurt many children.", "ジョナス・ソークが、ポリオ(小児(しょうに)まひ)のワクチンを発表しました。"],
+  ["03-27", 1912, "nature", "The first cherry trees, a gift from Tokyo, were planted in Washington, D.C. They still bloom there every spring.", "東京からおくられたさくらの木が、ワシントンではじめてうえられました。今も毎年春にさきます。", "Washington, D.C."],
+  ["03-28", 1910, "tech", "Henri Fabre flew the first seaplane, taking off from water in France.", "アンリ・ファーブルが、水の上からとびたつ水上飛行機(ひこうき)をはじめて飛ばしました。"],
+  ["03-29", 1974, "history", "Farmers digging a well in China found the first pieces of the Terracotta Army, thousands of clay soldiers.", "中国で井戸(いど)をほっていた農家の人が、何千体もの「兵馬俑(へいばよう)」のさいしょのかけらを見つけました。", "Terracotta Army Found"],
+  ["03-30", 1853, "culture", "Vincent van Gogh was born. He painted The Starry Night and bright sunflowers.", "ゴッホがうまれました。「星月夜(ほしづきよ)」やあざやかなひまわりの絵をかきました。", "Vincent van Gogh"],
+  ["03-31", 1949, "history", "Newfoundland and Labrador joined Canada and became its tenth province.", "ニューファンドランド・ラブラドールがカナダにくわわり、10番目の州(しゅう)になりました。"],
+  ["04-01", 1957, "food", "As an April Fool’s joke, BBC TV showed Swiss farmers “harvesting spaghetti” from trees. Many viewers believed it!", "エイプリルフールに、イギリスのBBCが「木からスパゲッティをしゅうかくするスイスの農家」をテレビでながしました。本気にした人がたくさんいました!"],
+  ["04-01", 1999, "history", "Nunavut became Canada’s newest territory. Its name means “our land” in Inuktitut.", "ヌナブトがカナダのいちばん新しい準州(じゅんしゅう)になりました。イヌクティトゥット語で「わたしたちの土地」といういみです。"],
+  ["04-02", 1805, "culture", "Hans Christian Andersen was born. He wrote The Ugly Duckling and The Little Mermaid. Today is International Children’s Book Day.", "アンデルセンがうまれました。「みにくいアヒルの子」や「人魚姫(にんぎょひめ)」を書きました。国際子どもの本の日です。"],
+  ["04-03", 1973, "tech", "Martin Cooper made the first call on a handheld mobile phone. It weighed about one kilogram!", "マーティン・クーパーが、手にもてる携帯(けいたい)電話ではじめて電話をかけました。重さは1キロぐらいでした!"],
+  ["04-04", 1975, "tech", "Bill Gates and Paul Allen started Microsoft.", "ビル・ゲイツとポール・アレンがマイクロソフトをつくりました。"],
+  ["04-05", "", "culture", "Around now is Qingming, the Clear and Bright festival in China and Hong Kong. Families visit and clean their ancestors’ graves and enjoy spring.", "このころ、中国や香港では「清明節(せいめいせつ)」。家族で先祖(せんぞ)のお墓をきれいにし、春をたのしみます。"],
+  ["04-05", 1998, "tech", "The Akashi Kaikyō Bridge opened in Japan. It was the world’s longest suspension bridge span for many years.", "明石海峡大橋(あかしかいきょうおおはし)が開通しました。長いあいだ、世界一長いつり橋でした。"],
+  ["04-06", 1896, "sports", "The first modern Olympic Games opened in Athens, Greece.", "ギリシャのアテネで、さいしょの近代(きんだい)オリンピックがはじまりました。"],
+  ["04-07", 1948, "science", "The World Health Organization (WHO) was started to help people all over the world stay healthy. Today is World Health Day.", "世界保健機関(WHO)ができました。世界中の人のけんこうをまもるためです。「世界保健デー」です。"],
+  ["04-08", "", "culture", "Hana Matsuri, the Flower Festival in Japan, celebrates the Buddha’s birthday. People pour sweet tea over a small statue.", "日本の「花まつり」。おしゃかさまの誕生日をいわい、小さな像(ぞう)にあま茶をかけます。", "Buddha (Siddhartha Gautama)"],
+  ["04-09", 1917, "history", "Canadian soldiers began the Battle of Vimy Ridge in France. All four Canadian divisions fought together for the first time.", "カナダの兵士(へいし)たちがフランスでヴィミーリッジの戦(たたか)いをはじめました。カナダの4つの師団(しだん)がはじめていっしょにたたかいました。", "Vimy Ridge"],
+  ["04-10", 1849, "tech", "Walter Hunt patented the safety pin. He invented it in about three hours!", "ウォルター・ハントが安全ピンの特許(とっきょ)をとりました。3時間ぐらいで考えついたそうです!"],
+  ["04-11", 1970, "space", "Apollo 13 launched toward the Moon. An explosion stopped the landing, but the crew cleverly made it home safely.", "アポロ13ごうが月へむかいました。ばくはつで着陸はできませんでしたが、ちえをしぼって3人ともぶじに帰りました。"],
+  ["04-12", 1980, "history", "Terry Fox dipped his leg in the Atlantic Ocean at St. John’s and began his Marathon of Hope across Canada.", "テリー・フォックスがセントジョンズで大西洋(たいせいよう)に足をつけ、カナダ横断(おうだん)の「希望(きぼう)のマラソン」をはじめました。", "Terry Fox"],
+  ["04-13", 1796, "animals", "The first elephant known in the United States arrived in New York by ship from India.", "アメリカで知られているさいしょのゾウが、インドから船でニューヨークにつきました。"],
+  ["04-14", 2003, "science", "Scientists finished reading the human genome, the instructions inside our cells.", "科学者たちが、わたしたちの細胞(さいぼう)の中の設計図(せっけいず)「ヒトゲノム」を読みおえました。"],
+  ["04-15", 1983, "culture", "Tokyo Disneyland opened. It was the first Disney park outside the United States.", "東京ディズニーランドがオープンしました。アメリカの外でははじめてのディズニーのパークです。"],
+  ["04-16", 1889, "culture", "Charlie Chaplin was born. He made people laugh in silent movies without saying a word.", "チャップリンがうまれました。ことばをつかわないサイレント映画(えいが)で人をわらわせました。"],
+  ["04-16", 1988, "culture", "My Neighbor Totoro came out in Japanese cinemas.", "「となりのトトロ」が日本の映画館(えいがかん)で公開されました。", "Hayao Miyazaki"],
+  ["04-17", 1970, "space", "The Apollo 13 astronauts splashed down safely in the Pacific Ocean.", "アポロ13ごうの3人が、太平洋(たいへいよう)にぶじ着水(ちゃくすい)しました。"],
+  ["04-17", 1982, "history", "Canada’s Constitution came home from Britain, with the Charter of Rights and Freedoms, signed in Ottawa.", "オタワで、カナダの憲法(けんぽう)と「権利(けんり)と自由の憲章(けんしょう)」に署名(しょめい)されました。", "Ottawa"],
+  ["04-18", 1930, "culture", "The BBC radio news said, “There is no news,” and played piano music instead!", "イギリスのBBCラジオが「今日はニュースがありません」といって、ピアノの曲をながしました!"],
+  ["04-19", 1971, "space", "Salyut 1, the first space station, was launched.", "さいしょの宇宙ステーション「サリュート1ごう」がうちあげられました。"],
+  ["04-19", 1907, "sports", "Tom Longboat, an Onondaga runner from Ontario, won the Boston Marathon in record time.", "オンタリオのオノンダガの人、トム・ロングボートがボストンマラソンで大会新記録(しんきろく)でゆうしょうしました。", "Tom Longboat"],
+  ["04-20", 1902, "science", "Marie and Pierre Curie separated radium salts after years of hard work.", "マリーとピエール・キュリーが、何年もの努力(どりょく)のすえ、ラジウムをとりだしました。", "Marie Curie"],
+  ["04-20", 1871, "history", "Japan’s modern postal service began, thanks to Maejima Hisoka. It is Postal Day in Japan.", "前島密(まえじまひそか)のおかげで、日本の近代(きんだい)の郵便(ゆうびん)がはじまりました。郵政記念日です。"],
+  ["04-21", "", "history", "According to legend, the city of Rome was founded on this day by Romulus.", "言いつたえでは、この日にロムルスがローマの町をつくりました。", "Rome"],
+  ["04-24", 1990, "space", "The Hubble Space Telescope was launched. It has taken amazing pictures of faraway galaxies.", "ハッブル宇宙望遠鏡(ぼうえんきょう)がうちあげられました。遠くの銀河(ぎんが)のすばらしいしゃしんをとっています。"],
+  ["04-25", 1719, "culture", "Robinson Crusoe was published. It tells of a sailor who survives alone on an island.", "「ロビンソン・クルーソー」が出版(しゅっぱん)されました。島でひとりで生きのびる船乗りの話です。"],
+  ["04-26", 1785, "nature", "John James Audubon was born. He painted almost every kind of bird in North America.", "オーデュボンがうまれました。北アメリカのほとんどの鳥の絵をかきました。"],
+  ["04-27", 1994, "history", "South Africa held its first election where people of all races could vote. Nelson Mandela soon became president.", "南アフリカで、すべての人がとうひょうできるさいしょの選挙(せんきょ)がありました。ネルソン・マンデラが大統領(だいとうりょう)になりました。", "Nelson Mandela"],
+  ["04-28", 1947, "world", "Thor Heyerdahl and his crew set sail from Peru on the Kon-Tiki, a raft made of balsa logs.", "ヘイエルダールたちが、バルサの木のいかだ「コン・ティキ号」でペルーから出発しました。"],
+  ["04-29", "", "culture", "Shōwa Day in Japan. It is also the start of Golden Week, a string of holidays.", "日本の「昭和(しょうわ)の日」。ゴールデンウィークのはじまりです。"],
+  ["04-29", 2021, "space", "China launched Tianhe, the main part of its Tiangong space station.", "中国が宇宙ステーション「天宮(てんぐう)」の中心部分「天和(てんわ)」をうちあげました。", "Tiangong Space Station"],
+  ["04-30", 2019, "history", "Emperor Akihito stepped down. It was the last day of Japan’s Heisei era.", "上皇(じょうこう)さまが天皇(てんのう)をしりぞかれ、平成(へいせい)のさいごの日になりました。", "Emperor Naruhito and Reiwa"],
+  ["05-01", 2019, "history", "Japan’s Reiwa era began, as Emperor Naruhito took the throne. Reiwa means “beautiful harmony.”", "天皇陛下(てんのうへいか)が即位(そくい)され、令和(れいわ)がはじまりました。「うつくしい調和(ちょうわ)」といういみです。", "Emperor Naruhito and Reiwa"],
+  ["05-02", 1670, "history", "The Hudson’s Bay Company was created to trade furs in northern Canada. It became one of the oldest companies in the world.", "ハドソン湾(わん)会社ができました。カナダ北部で毛皮(けがわ)の取引(とりひき)をし、世界でもっとも古い会社の一つになりました。"],
+  ["05-03", 1947, "history", "Japan’s Constitution came into effect. Today is Constitution Memorial Day.", "日本国憲法(けんぽう)がはじまりました。「憲法記念日」です。"],
+  ["05-03", 1915, "culture", "Canadian doctor John McCrae wrote the poem In Flanders Fields.", "カナダのお医者さんジョン・マクレーが、詩(し)「フランダースの野に」を書きました。", "John McCrae"],
+  ["05-04", "", "nature", "Greenery Day in Japan, a day to enjoy nature and thank the trees and plants.", "日本の「みどりの日」。自然(しぜん)にしたしみ、木や草花に感謝(かんしゃ)する日です。"],
+  ["05-06", 1954, "sports", "Roger Bannister became the first person to run a mile in under four minutes.", "ロジャー・バニスターが、1マイル(約1.6km)を4分より早く走った、はじめての人になりました。"],
+  ["05-07", 1840, "culture", "Pyotr Ilyich Tchaikovsky was born. He wrote the music for The Nutcracker and Swan Lake.", "チャイコフスキーがうまれました。「くるみわり人形」や「白鳥の湖(みずうみ)」の音楽をつくりました。"],
+  ["05-08", 1980, "science", "The World Health Organization announced that smallpox was gone from the whole world, thanks to vaccines.", "WHOが、ワクチンのおかげで天然痘(てんねんとう)が世界からなくなったと発表しました。", "Smallpox Is Gone"],
+  ["05-09", 1860, "culture", "J. M. Barrie was born. He wrote Peter Pan, the boy who never grows up.", "J・M・バリーがうまれました。おとなにならない少年「ピーター・パン」を書きました。"],
+  ["05-11", 1904, "culture", "Salvador Dalí was born. He painted dream-like pictures, like clocks melting in the sun.", "サルバドール・ダリがうまれました。とけた時計など、ゆめのような絵をかきました。"],
+  ["05-12", 1820, "science", "Florence Nightingale was born. She made hospitals cleaner and safer. Today is International Nurses Day.", "ナイチンゲールがうまれました。病院をきれいで安全にしました。国際看護師(かんごし)の日です。", "Florence Nightingale"],
+  ["05-13", 1888, "history", "Brazil passed the Golden Law, ending slavery in the country.", "ブラジルで「黄金法(おうごんほう)」ができ、どれい制(せい)がおわりました。"],
+  ["05-14", 1796, "science", "Edward Jenner gave the first vaccine, using cowpox to protect a boy from smallpox.", "エドワード・ジェンナーが、牛のとうそうをつかって、さいしょのワクチンを男の子にうちました。"],
+  ["05-15", "", "culture", "Aoi Matsuri in Kyoto: a long parade of people dressed like the royal court of 1,000 years ago.", "京都の葵祭(あおいまつり)。1000年前の貴族(きぞく)のすがたをした人たちの行列(ぎょうれつ)がつづきます。", "Heian-kyō (Kyoto) Founded"],
+  ["05-15", 2021, "space", "China’s Zhurong rover landed on Mars.", "中国の火星探査車(かせいたんさしゃ)「祝融(しゅくゆう)」が火星に着陸しました。"],
+  ["05-16", 1975, "sports", "Junko Tabei of Japan became the first woman to climb to the top of Mount Everest.", "田部井淳子(たべいじゅんこ)さんが、女性としてはじめてエベレストの山頂(さんちょう)にたちました。"],
+  ["05-17", 1642, "history", "Ville-Marie, the settlement that grew into Montreal, was founded by Paul de Chomedey de Maisonneuve and Jeanne Mance.", "メゾヌーヴとジャンヌ・マンスが「ヴィル・マリー」をつくりました。のちのモントリオールです。"],
+  ["05-18", "", "culture", "International Museum Day: museums keep treasures from the past so everyone can learn from them.", "国際博物館(はくぶつかん)の日。博物館は、むかしのたからものをまもり、みんなが学べるようにしています。"],
+  ["05-19", 1910, "space", "Earth passed through the tail of Halley’s Comet. Some people worried, but nothing bad happened.", "地球がハレーすい星の尾(お)の中をとおりました。しんぱいした人もいましたが、何もおきませんでした。"],
+  ["05-20", "", "animals", "World Bee Day: bees help flowers, fruits and vegetables grow by carrying pollen.", "世界ミツバチの日。ハチは花粉(かふん)をはこんで、花や果物(くだもの)、やさいがそだつのをたすけます。"],
+  ["05-21", 1932, "tech", "Amelia Earhart landed in Northern Ireland, the first woman to fly alone across the Atlantic.", "アメリア・イアハートが北アイルランドに着陸し、女性ではじめてひとりで大西洋をこえました。", "Amelia Earhart"],
+  ["05-22", 1980, "tech", "Pac-Man came out in Japan. It became one of the most famous video games ever.", "パックマンが日本で登場しました。世界でいちばん有名なゲームの一つになりました。"],
+  ["05-22", 2012, "tech", "Tokyo Skytree opened. At 634 metres, it is the tallest tower in the world.", "東京スカイツリーがオープンしました。高さ634メートルで、世界一高いタワーです。"],
+  ["05-23", "", "animals", "World Turtle Day: some sea turtles swim thousands of kilometres and return to the beach where they hatched.", "世界カメの日。ウミガメの中には何千キロもおよいで、うまれた浜(はま)にもどってくるものもいます。"],
+  ["05-25", 1977, "culture", "The first Star Wars movie opened in cinemas.", "さいしょの「スター・ウォーズ」が映画館で公開されました。"],
+  ["05-26", 1951, "space", "Sally Ride was born. She became the first American woman in space.", "サリー・ライドがうまれました。アメリカ人の女性ではじめて宇宙へ行きました。"],
+  ["05-27", 1937, "tech", "The Golden Gate Bridge opened in San Francisco. On the first day, people walked across it.", "サンフランシスコのゴールデンゲートブリッジが開通しました。さいしょの日は、人が歩いてわたりました。"],
+  ["05-28", 1934, "history", "The Dionne quintuplets, five identical baby girls, were born in Ontario. They all survived, which was very rare.", "オンタリオで、ディオンヌ家の五つ子の女の子がうまれました。5人ともそだったのは、とてもめずらしいことでした。"],
+  ["05-30", 2020, "space", "SpaceX launched astronauts to the space station for the first time, on Crew Dragon.", "スペースX社の「クルードラゴン」が、はじめて宇宙飛行士(ひこうし)を宇宙ステーションへはこびました。"],
+  ["05-30", 1888, "tech", "The Peak Tram opened in Hong Kong. It climbs a very steep hill to Victoria Peak.", "香港のピークトラムが開業しました。とても急な坂をのぼってビクトリア・ピークへ行きます。", "Hong Kong"],
+  ["05-31", 1859, "tech", "The great clock in London’s Elizabeth Tower, known as Big Ben, started keeping time.", "ロンドンの大時計「ビッグ・ベン」が時をきざみはじめました。"],
+  ["06-01", "", "culture", "Children’s Day in China and many other countries. Kids get treats, shows and sometimes a day off school.", "中国など多くの国で「子どもの日」。おかしやイベントがあり、学校が休みになることもあります。"],
+  ["06-02", 1896, "tech", "Guglielmo Marconi applied for a patent for his radio. Messages could now travel without wires.", "マルコーニがラジオ(無線(むせん))の特許をもうしこみました。電線なしでメッセージがとどくようになりました。"],
+  ["06-04", 1783, "tech", "The Montgolfier brothers showed their hot-air balloon to a crowd in France for the first time.", "モンゴルフィエ兄弟が、フランスで熱気球(ねつききゅう)をはじめて人びとに見せました。"],
+  ["06-05", "", "nature", "World Environment Day: a day to protect forests, oceans, animals and the air we breathe.", "世界環境(かんきょう)デー。森や海、どうぶつ、すう空気をまもる日です。"],
+  ["06-06", 1944, "history", "On D-Day, about 14,000 Canadian soldiers landed at Juno Beach in France to help free Europe.", "Dデーに、やく1万4000人のカナダ兵がフランスのジュノー・ビーチに上陸し、ヨーロッパの解放(かいほう)をたすけました。"],
+  ["06-07", "", "food", "World Food Safety Day: wash your hands, and keep food clean and cold so no one gets sick.", "世界食品安全の日。手をあらい、食べ物を清潔(せいけつ)に、つめたくたもって、びょうきをふせごう。"],
+  ["06-08", "", "nature", "World Oceans Day: oceans cover most of our planet and make much of the oxygen we breathe.", "世界海洋(かいよう)デー。海は地球のほとんどをおおい、わたしたちのすう酸素(さんそ)をたくさんつくっています。"],
+  ["06-09", 1934, "culture", "Donald Duck first appeared in a cartoon called The Wise Little Hen.", "ドナルドダックが「かしこいメンドリ」というアニメにはじめて登場しました。"],
+  ["06-10", "", "science", "Time Day in Japan (Toki no Kinenbi). It remembers Japan’s first water clock, built in the year 671.", "日本の「時の記念日」。671年に日本ではじめての水時計(みずどけい)がつくられたことを記念しています。"],
+  ["06-11", 1910, "nature", "Jacques Cousteau was born. He helped invent scuba gear and showed the world life under the sea.", "ジャック・クストーがうまれました。アクアラングの発明をたすけ、海の中の世界をみんなに見せました。"],
+  ["06-12", 1942, "history", "Anne Frank got a diary for her 13th birthday. Her writing became one of the most-read books in the world.", "アンネ・フランクが13さいの誕生日に日記帳(にっきちょう)をもらいました。その日記は世界でもっとも読まれた本の一つになりました。"],
+  ["06-13", 1983, "space", "Pioneer 10 became the first spacecraft to travel beyond the orbit of Neptune.", "パイオニア10ごうが、はじめて海王星(かいおうせい)のきどうより遠くへ行きました。"],
+  ["06-13", 2010, "space", "Japan’s Hayabusa returned to Earth with the first dust ever brought back from an asteroid.", "日本の「はやぶさ」が地球に帰ってきました。小惑星(しょうわくせい)のちりをもちかえったのは世界ではじめてです。"],
+  ["06-14", "", "science", "World Blood Donor Day: grown-ups who give blood help save lives in hospitals.", "世界献血者(けんけつしゃ)デー。おとなが血(ち)をわけてくれると、病院でいのちがすくわれます。"],
+  ["06-15", 1215, "history", "King John of England sealed the Magna Carta, which said even the king must follow the law.", "イングランドのジョン王がマグナ・カルタをみとめました。王さまでも法律(ほうりつ)をまもらなければならない、というやくそくです。"],
+  ["06-17", 1946, "tech", "The first mobile telephone call was made from a car in St. Louis, USA.", "アメリカのセントルイスで、車からはじめて移動(いどう)電話がかけられました。"],
+  ["06-18", 1942, "culture", "Paul McCartney of the Beatles was born.", "ビートルズのポール・マッカートニーがうまれました。"],
+  ["06-19", 1910, "culture", "The first Father’s Day was celebrated in Spokane, Washington.", "アメリカのスポケーンで、はじめての「父の日」がいわわれました。"],
+  ["06-20", "", "world", "World Refugee Day: a day to welcome and help people who had to leave their homes to stay safe.", "世界難民(なんみん)の日。あんぜんのために家をはなれた人をむかえ、たすける日です。"],
+  ["06-21", "", "history", "National Indigenous Peoples Day in Canada: celebrating First Nations, Inuit and Métis cultures. It is also around the longest day of the year.", "カナダの「先住民(せんじゅうみん)の日」。ファースト・ネーションズ、イヌイット、メティの文化をいわいます。一年で昼がいちばん長いころです。"],
+  ["06-22", 1978, "space", "James Christy discovered Charon, Pluto’s biggest moon.", "ジェームズ・クリスティーが、めい王星のいちばん大きな月カロンを見つけました。"],
+  ["06-22", 1813, "history", "Laura Secord began her long walk through the woods to warn British and Mohawk soldiers of an attack.", "ローラ・セコードが森の中を長く歩いて、こうげきがあることを知らせに行きました。", "Laura Secord"],
+  ["06-22", 2013, "nature", "Mount Fuji was named a UNESCO World Heritage Site as a “sacred place and source of artistic inspiration.”", "富士山(ふじさん)がユネスコの世界遺産(いさん)になりました。", "Mount Fuji"],
+  ["06-23", 1912, "tech", "Alan Turing was born. He helped invent the computer and break secret codes.", "アラン・チューリングがうまれました。コンピューターのもとを考え、暗号(あんごう)をといたことでも知られています。", "Alan Turing"],
+  ["06-24", "", "culture", "Fête nationale in Québec (Saint-Jean-Baptiste Day), with bonfires, music and lots of blue-and-white flags.", "ケベック州の祝日「サン・ジャン・バティストの日」。たき火や音楽、青と白の旗でいっぱいになります。"],
+  ["06-25", 1678, "science", "Elena Cornaro Piscopia of Italy became the first woman in the world to earn a doctor’s degree from a university.", "イタリアのエレナ・ピスコピアが、世界ではじめて大学で博士号(はかせごう)をとった女性になりました。"],
+  ["06-26", 1997, "culture", "The first Harry Potter book was published in the United Kingdom.", "さいしょの「ハリー・ポッター」の本がイギリスで出版されました。"],
+  ["06-26", 1976, "tech", "The CN Tower in Toronto opened to the public. It was the world’s tallest free-standing structure for over 30 years.", "トロントのCNタワーがオープンしました。30年いじょう、世界一高い自立式(じりつしき)のたてものでした。"],
+  ["06-27", 1880, "history", "Helen Keller was born. She could not see or hear, but learned to read, write and speak, and helped many people.", "ヘレン・ケラーがうまれました。目も耳も不自由でしたが、読み書きや話すことをおぼえ、多くの人をたすけました。"],
+  ["06-28", 1838, "history", "Queen Victoria was crowned. Victoria, B.C., and Victoria Day in Canada are named after her.", "ビクトリア女王の戴冠式(たいかんしき)がありました。カナダのビクトリア市やビクトリア・デーは、女王の名前からきています。"],
+  ["06-29", 1900, "culture", "Antoine de Saint-Exupéry was born. He wrote The Little Prince.", "サン=テグジュペリがうまれました。「星の王子さま」を書きました。"],
+  ["06-30", 1908, "space", "A space rock exploded in the air over Tunguska, Siberia, knocking down about 80 million trees. Today is Asteroid Day.", "シベリアのツングースカの空で、宇宙の岩がばくはつし、やく8000万本の木がたおれました。小惑星(しょうわくせい)の日です。"],
+  ["07-01", 1997, "history", "Hong Kong was returned from Britain to China. It became a Special Administrative Region with its own system.", "香港(ホンコン)がイギリスから中国にかえされ、「特別行政区(とくべつぎょうせいく)」になりました。", "Hong Kong"],
+  ["07-02", 1900, "tech", "The first Zeppelin airship flew over Lake Constance in Germany.", "ドイツのボーデン湖の上で、さいしょのツェッペリン飛行船(ひこうせん)が飛びました。"],
+  ["07-03", 1608, "history", "Samuel de Champlain founded Québec City, one of the oldest cities in North America.", "シャンプランがケベック・シティをつくりました。北アメリカでもっとも古い町の一つです。", "Samuel de Champlain"],
+  ["07-03", 2024, "history", "Japan’s new banknotes came out. Shibusawa Eiichi, “the father of Japanese business,” is on the 10,000-yen bill.", "日本の新しいお札(さつ)が出ました。一万円札は「日本の資本主義(しほんしゅぎ)の父」渋沢栄一(しぶさわえいいち)です。", "Shibusawa Eiichi"],
+  ["07-05", 1994, "sports", "Shohei Ohtani was born in Iwate, Japan. He became a baseball star who both pitches and hits.", "大谷翔平(おおたにしょうへい)選手が岩手県でうまれました。投げても打ってもすごい野球選手です。", "Shohei Ohtani"],
+  ["07-06", 1885, "science", "Louis Pasteur gave his rabies vaccine to a boy named Joseph Meister, and it saved his life.", "パスツールが狂犬病(きょうけんびょう)のワクチンをジョゼフ・メステルにうち、いのちがたすかりました。", "Louis Pasteur"],
+  ["07-06", 1998, "tech", "Hong Kong’s new airport at Chek Lap Kok opened, built on a giant man-made island.", "香港の新しい空港がチェクラップコクに開港しました。大きな人工島(じんこうとう)の上につくられました。", "Hong Kong"],
+  ["07-08", 1853, "history", "Commodore Perry’s “Black Ships” sailed into Uraga Bay, near Edo. This began Japan’s opening to the world.", "ペリーの「黒船(くろふね)」が浦賀(うらが)にやってきました。日本が世界に国をひらくきっかけになりました。", "The Black Ships Arrive"],
+  ["07-08", 1994, "space", "Chiaki Mukai flew on the space shuttle Columbia. She was the first Japanese woman in space.", "向井千秋(むかいちあき)さんがスペースシャトル・コロンビアで宇宙へ。日本人女性ではじめてです。", "Mukai Chiaki"],
+  ["07-09", 1877, "sports", "The first Wimbledon tennis championship began in London.", "ロンドンで、さいしょのウィンブルドンのテニス大会がはじまりました。"],
+  ["07-10", 1856, "tech", "Nikola Tesla was born. His ideas helped bring electricity into homes.", "ニコラ・テスラがうまれました。かれのアイデアで、家に電気がとどくようになりました。"],
+  ["07-11", 1405, "history", "Zheng He set sail on the first of his seven great voyages with a huge fleet of treasure ships. It is China’s Maritime Day.", "鄭和(ていわ)が大きな宝船(たからぶね)の船団で、7回の大航海(だいこうかい)のさいしょに出発しました。中国の「航海の日」です。", "Zheng He"],
+  ["07-11", "", "world", "World Population Day: there are now more than 8 billion people on Earth.", "世界人口デー。今、地球には80億人いじょうの人がくらしています。"],
+  ["07-12", 1997, "history", "Malala Yousafzai was born. She spoke up for every girl’s right to go to school and won the Nobel Peace Prize.", "マララ・ユスフザイさんがうまれました。女の子が学校へ行けるようにうったえ、ノーベル平和賞(へいわしょう)をうけました。"],
+  ["07-13", 1923, "culture", "The giant HOLLYWOOD sign was put up on a hill in Los Angeles. At first it said “HOLLYWOODLAND.”", "ロサンゼルスの丘(おか)に大きなハリウッドの文字がたてられました。さいしょは「HOLLYWOODLAND」でした。"],
+  ["07-14", 2015, "space", "New Horizons flew past Pluto and sent back the first close-up photos, showing a heart-shaped plain.", "ニュー・ホライズンズがめい王星のそばをとおり、ハートの形の平原(へいげん)のしゃしんを送ってきました。"],
+  ["07-15", 1606, "culture", "Rembrandt was born in the Netherlands. He was a master of light and shadow in painting.", "レンブラントがオランダでうまれました。光とかげをえがく名人でした。"],
+  ["07-15", 1870, "history", "Manitoba joined Canada as its fifth province, thanks partly to Louis Riel.", "マニトバがカナダの5番目の州になりました。ルイ・リエルのはたらきもありました。"],
+  ["07-16", 1969, "space", "Apollo 11 launched from Florida, carrying the first astronauts who would walk on the Moon.", "アポロ11ごうがフロリダからうちあげられました。月を歩くさいしょの宇宙飛行士をのせていました。"],
+  ["07-17", 1955, "culture", "Disneyland opened in California.", "カリフォルニアでディズニーランドがオープンしました。"],
+  ["07-18", 1918, "history", "Nelson Mandela was born. Today is Mandela Day, when people do kind things for others.", "ネルソン・マンデラがうまれました。「マンデラ・デー」は、人のためにいいことをする日です。", "Nelson Mandela"],
+  ["07-19", 1848, "history", "The first big meeting for women’s rights began in Seneca Falls, New York.", "ニューヨーク州のセネカフォールズで、はじめての大きな女性の権利(けんり)の会議がはじまりました。"],
+  ["07-20", 1871, "history", "British Columbia joined Canada, after Canada promised to build a railway to the Pacific.", "ブリティッシュ・コロンビアがカナダにくわわりました。太平洋まで鉄道をつくるやくそくがありました。"],
+  ["07-21", 1983, "nature", "The coldest temperature ever measured on Earth, minus 89.2°C, was recorded at Vostok Station in Antarctica.", "南極のボストーク基地で、地球でいちばん低いマイナス89.2度が記録されました。"],
+  ["07-22", 2009, "space", "The longest total solar eclipse of the 21st century was seen in China and southern Japan.", "21世紀でいちばん長い皆既日食(かいきにっしょく)が、中国や日本の南の島で見られました。"],
+  ["07-23", 2021, "sports", "The Tokyo Olympics opened, one year late because of the pandemic.", "東京オリンピックがはじまりました。コロナのため1年おくれでした。"],
+  ["07-24", 1911, "history", "Hiram Bingham reached Machu Picchu, the hidden Inca city in the mountains of Peru.", "ハイラム・ビンガムが、ペルーの山の中のインカの町マチュピチュにたどりつきました。", "Machu Picchu"],
+  ["07-24", 1534, "history", "Jacques Cartier put up a tall cross at Gaspé and claimed the land for France.", "ジャック・カルティエがガスペに大きな十字架(じゅうじか)をたて、フランスの土地だとしました。", "Jacques Cartier"],
+  ["07-25", 1909, "tech", "Louis Blériot became the first person to fly an airplane across the English Channel.", "ルイ・ブレリオが、はじめて飛行機でイギリス海峡(かいきょう)をこえました。"],
+  ["07-26", 1971, "space", "Apollo 15 launched. Its astronauts were the first to drive a car, the Lunar Rover, on the Moon.", "アポロ15ごうがうちあげられました。月の上ではじめて車(月面車)を運転しました。"],
+  ["07-27", 1921, "science", "In Toronto, Frederick Banting and Charles Best first separated insulin, a medicine that helps people with diabetes.", "トロントでバンティングとベストが、とうにょうびょうのくすりインスリンをはじめてとりだしました。", "Banting & Best"],
+  ["07-28", 1866, "culture", "Beatrix Potter was born. She wrote and drew The Tale of Peter Rabbit.", "ビアトリクス・ポターがうまれました。「ピーターラビットのおはなし」をかきました。"],
+  ["07-29", 1958, "space", "NASA was created to explore space for the United States.", "アメリカで宇宙をたんけんするNASA(ナサ)ができました。"],
+  ["07-30", 1930, "sports", "Uruguay won the first FIFA World Cup, beating Argentina in the final.", "さいしょのサッカー・ワールドカップで、ウルグアイがアルゼンチンにかってゆうしょうしました。"],
+  ["07-31", 1965, "culture", "J. K. Rowling was born. She wrote the Harry Potter books.", "J・K・ローリングがうまれました。「ハリー・ポッター」を書きました。"],
+  ["08-01", 1834, "history", "Slavery was ended in the British Empire, including Canada. It is Emancipation Day.", "カナダもふくむイギリス帝国(ていこく)で、どれい制がおわりました。「解放(かいほう)の日」です。"],
+  ["08-02", "", "culture", "Around now, Aomori’s Nebuta Festival parades giant glowing paper floats of warriors through the streets.", "このころ、青森ねぶた祭。光る大きな武者(むしゃ)のねぶたが町をねりあるきます。"],
+  ["08-03", 2004, "space", "NASA’s MESSENGER spacecraft launched. It became the first to orbit Mercury, the closest planet to the Sun.", "メッセンジャーがうちあげられました。太陽にいちばん近い水星(すいせい)をまわった、はじめての探査機です。"],
+  ["08-04", 2007, "space", "The Phoenix lander launched. It later found ice under the soil near Mars’s north pole.", "フェニックスがうちあげられました。のちに火星の北極の近くで土の下の氷を見つけました。"],
+  ["08-05", 1930, "space", "Neil Armstrong was born. He was the first person to walk on the Moon.", "ニール・アームストロングがうまれました。月をはじめて歩いた人です。"],
+  ["08-06", 1945, "history", "Hiroshima Peace Memorial Day. People ring bells, fold paper cranes and pray that atomic bombs are never used again.", "広島平和記念日。かねを鳴らし、おりづるをおり、二度と原爆(げんばく)がつかわれないようにいのります。", "Sadako Sasaki"],
+  ["08-07", "", "culture", "Around now, the Sendai Tanabata Festival fills streets with huge, colourful paper streamers.", "このころ、仙台七夕(せんだいたなばた)まつり。大きくてカラフルなかざりが町をうめつくします。"],
+  ["08-07", 1930, "food", "Yuan Longping was born. He grew new kinds of rice that helped feed hundreds of millions of people.", "袁隆平(えんりゅうへい)がうまれました。新しいお米をつくり、何億人もの人の食べ物になりました。", "Yuan Longping"],
+  ["08-09", 1965, "world", "Singapore became an independent country.", "シンガポールが独立(どくりつ)した国になりました。", "Singapore"],
+  ["08-10", 1846, "culture", "The Smithsonian Institution was founded in Washington. Today it has museums full of dinosaurs, planes and spacecraft.", "ワシントンにスミソニアン協会(きょうかい)ができました。きょうりゅうや飛行機、宇宙船の博物館があります。"],
+  ["08-11", "", "nature", "Mountain Day in Japan: a holiday to enjoy and thank the mountains.", "日本の「山の日」。山にしたしみ、山のめぐみに感謝する祝日です。"],
+  ["08-13", "", "culture", "Obon begins in much of Japan. Families welcome their ancestors’ spirits home and dance Bon Odori.", "多くの地方でお盆(ぼん)がはじまります。ご先祖(せんぞ)さまをむかえ、盆おどりをおどります。"],
+  ["08-14", 1959, "space", "The Explorer 6 satellite took the first photo of Earth from orbit. It was fuzzy, but historic!", "エクスプローラー6ごうが、宇宙からはじめて地球のしゃしんをとりました。ぼやけていましたが、れきし的な1まいです!"],
+  ["08-15", 1914, "tech", "The Panama Canal opened, letting ships cross between the Atlantic and Pacific Oceans.", "パナマ運河(うんが)が開通し、船が大西洋と太平洋のあいだを行き来できるようになりました。"],
+  ["08-16", 1896, "history", "Gold was found at Bonanza Creek in the Yukon. This started the Klondike Gold Rush.", "ユーコンのボナンザ川で金が見つかり、クロンダイクのゴールドラッシュがはじまりました。"],
+  ["08-16", "", "culture", "Gozan no Okuribi in Kyoto: giant fire characters, like 大, light up the mountains to send ancestors’ spirits off.", "京都の五山送り火(ござんのおくりび)。「大」などの火の文字が山にうかび、ご先祖さまをおくります。", "Heian-kyō (Kyoto) Founded"],
+  ["08-17", 1945, "world", "Indonesia declared its independence.", "インドネシアが独立(どくりつ)を宣言(せんげん)しました。"],
+  ["08-18", 1868, "science", "During a solar eclipse, Jules Janssen spotted a mysterious yellow line in the Sun’s light. It was helium, found in the Sun before Earth!", "日食のとき、ジャンサンが太陽の光にふしぎな黄色い線を見つけました。ヘリウムでした。地球より先に太陽で見つかったのです!"],
+  ["08-19", 1839, "tech", "The daguerreotype, one of the first ways to take photographs, was shared with the world. Today is World Photography Day.", "ダゲレオタイプという、さいしょのしゃしんの方法の一つが、世界に発表されました。世界写真デーです。"],
+  ["08-20", 1977, "space", "Voyager 2 launched. It is the only spacecraft to visit Uranus and Neptune.", "ボイジャー2ごうがうちあげられました。天王星(てんのうせい)と海王星に行った、ただ一つの探査機です。"],
+  ["08-22", 1864, "world", "The first Geneva Convention was signed, creating rules to protect wounded soldiers. This was the start of the Red Cross’s work.", "さいしょのジュネーブ条約(じょうやく)がむすばれ、けがをした兵士をまもるきまりができました。赤十字(せきじゅうじ)のはじまりです。"],
+  ["08-23", 1966, "space", "Lunar Orbiter 1 took the first photo of Earth from near the Moon.", "ルナ・オービター1ごうが、月の近くからはじめて地球のしゃしんをとりました。"],
+  ["08-24", 2006, "space", "Astronomers decided that Pluto is a “dwarf planet,” so our Solar System now has eight planets.", "天文学者(てんもんがくしゃ)が、めい王星を「準惑星(じゅんわくせい)」としました。太陽系(たいようけい)のわく星は8こになりました。"],
+  ["08-25", 1958, "food", "Momofuku Ando’s Chicken Ramen, the world’s first instant noodles, went on sale in Japan.", "安藤百福(あんどうももふく)さんの「チキンラーメン」が発売されました。世界ではじめてのインスタントラーメンです。", "Momofuku Ando"],
+  ["08-25", 1916, "nature", "The U.S. National Park Service was created to protect special wild places.", "アメリカで国立公園局(こくりつこうえんきょく)ができ、大切な自然をまもるようになりました。"],
+  ["08-26", "", "animals", "International Dog Day: dogs have lived with people for thousands of years as helpers and friends.", "国際犬の日。犬は何千年も前から、人のなかま、ともだちです。"],
+  ["08-27", 2003, "space", "Mars came closer to Earth than it had in almost 60,000 years.", "火星が、やく6万年ぶりに地球にいちばん近づきました。"],
+  ["08-28", 1963, "history", "Martin Luther King Jr. gave his “I Have a Dream” speech in Washington.", "キング牧師(ぼくし)がワシントンで「わたしにはゆめがある」の演説(えんぜつ)をしました。", "Martin Luther King Jr."],
+  ["08-29", 1885, "tech", "Gottlieb Daimler patented the Reitwagen, often called the first motorcycle.", "ゴットリープ・ダイムラーが「ライトワーゲン」の特許をとりました。さいしょのオートバイといわれます。"],
+  ["08-30", 1871, "science", "Ernest Rutherford was born. He did prize-winning work on atoms while teaching at McGill University in Montreal.", "ラザフォードがうまれました。モントリオールのマギル大学で、原子(げんし)のけんきゅうをしてノーベル賞をうけました。"],
+  ["08-31", 1870, "culture", "Maria Montessori was born. She created a way of teaching that lets children learn by doing.", "マリア・モンテッソーリがうまれました。子どもが自分でやってみて学ぶ教え方を考えました。"],
+  ["09-01", "", "history", "Disaster Prevention Day in Japan. Schools hold earthquake drills, remembering the Great Kantō Earthquake of 1923.", "日本の「防災(ぼうさい)の日」。1923年の関東大震災(かんとうだいしんさい)を思い出し、学校でひなん訓練(くんれん)をします。"],
+  ["09-01", 1905, "history", "Alberta and Saskatchewan joined Canada as provinces.", "アルバータとサスカチュワンがカナダの州になりました。"],
+  ["09-02", 1666, "history", "The Great Fire of London began in a bakery on Pudding Lane. After it, London was rebuilt with brick and stone.", "ロンドンのパン屋から大火事がおきました。そのあと、町はレンガと石でたてなおされました。"],
+  ["09-03", 1976, "space", "The Viking 2 lander touched down on Mars and sent back pictures of frost on the ground.", "バイキング2ごうが火星に着陸し、地面の霜(しも)のしゃしんを送ってきました。"],
+  ["09-04", 1998, "tech", "Google was started by Larry Page and Sergey Brin.", "ラリー・ペイジとセルゲイ・ブリンがグーグルをつくりました。"],
+  ["09-05", 1977, "space", "Voyager 1 launched. It is now the farthest human-made object from Earth.", "ボイジャー1ごうがうちあげられました。今、人がつくったものでいちばん地球から遠くにあります。"],
+  ["09-06", 1522, "history", "The ship Victoria returned to Spain, the first ship to sail all the way around the world.", "ビクトリア号がスペインに帰ってきました。世界を一周したはじめての船です。", "Around the World by Ship"],
+  ["09-07", 1822, "world", "Brazil declared independence from Portugal.", "ブラジルがポルトガルから独立を宣言しました。"],
+  ["09-09", "", "culture", "Chōyō, the Chrysanthemum Festival, in Japan. In China, Double Ninth is on the 9th day of the 9th lunar month, when people climb hills.", "日本の「重陽(ちょうよう)の節句」、菊(きく)の節句です。中国では旧暦(きゅうれき)9月9日に山にのぼります。"],
+  ["09-10", 2008, "science", "Scientists sent the first beam around the Large Hadron Collider, a 27-kilometre ring for studying tiny particles.", "科学者たちが、1しゅう27kmの大型(おおがた)ハドロン衝突型加速器(しょうとつがたかそくき)にはじめてビームをとおしました。"],
+  ["09-10", "", "culture", "Teachers’ Day in China: students thank their teachers with cards and flowers.", "中国の「教師節(きょうしせつ)」。生徒がカードや花で先生に感謝します。"],
+  ["09-11", 2001, "history", "Attacks in the United States took many lives. Firefighters and everyday people helped bravely. Today people remember and choose kindness.", "アメリカでおきたテロで、多くのいのちがうしなわれました。消防士(しょうぼうし)や人びとがゆうかんにたすけました。今日は思い出し、やさしさをえらぶ日です。"],
+  ["09-12", 2005, "culture", "Hong Kong Disneyland opened on Lantau Island.", "香港ディズニーランドがランタオ島にオープンしました。", "Hong Kong"],
+  ["09-13", 1916, "culture", "Roald Dahl was born. He wrote Charlie and the Chocolate Factory and Matilda.", "ロアルド・ダールがうまれました。「チョコレート工場のひみつ」や「マチルダ」を書きました。"],
+  ["09-13", 1985, "tech", "Super Mario Bros. came out in Japan for the Famicom.", "ファミコンの「スーパーマリオブラザーズ」が発売されました。", "Shigeru Miyamoto"],
+  ["09-14", 1769, "nature", "Alexander von Humboldt was born. He explored South America and showed how all of nature is connected.", "フンボルトがうまれました。南アメリカを探検し、自然はすべてつながっていることをしめしました。"],
+  ["09-15", 1835, "nature", "Charles Darwin’s ship, the Beagle, reached the Galápagos Islands, where he studied finches and giant tortoises.", "ダーウィンの船ビーグル号がガラパゴス諸島(しょとう)につき、フィンチやゾウガメをしらべました。", "Charles Darwin"],
+  ["09-16", 1987, "nature", "Countries signed the Montreal Protocol in Canada to protect the ozone layer. It is one of the most successful environmental agreements ever.", "カナダのモントリオールで、オゾン層(そう)をまもる「モントリオール議定書(ぎていしょ)」がむすばれました。"],
+  ["09-17", 1976, "space", "The first space shuttle, Enterprise, was rolled out. Fans had asked for it to be named after the Star Trek ship.", "さいしょのスペースシャトル「エンタープライズ」がおひろめされました。スタートレックのファンのねがいで名前がきまりました。"],
+  ["09-18", 1971, "food", "Cup Noodle went on sale in Japan, created by Momofuku Ando.", "安藤百福さんの「カップヌードル」が日本で発売されました。", "Momofuku Ando"],
+  ["09-18", 1977, "space", "Voyager 1 took the first photo of the Earth and Moon together in one picture.", "ボイジャー1ごうが、地球と月をいっしょにうつした、はじめてのしゃしんをとりました。"],
+  ["09-19", 1893, "history", "New Zealand became the first country where women could vote in national elections.", "ニュージーランドが、女性が国の選挙でとうひょうできる、はじめての国になりました。"],
+  ["09-19", 2024, "sports", "Shohei Ohtani became the first player to hit 50 home runs and steal 50 bases in one season.", "大谷翔平選手が、1シーズンでホームラン50本・盗塁(とうるい)50をはじめてたっせいしました。", "Shohei Ohtani"],
+  ["09-20", 1519, "history", "Ferdinand Magellan set sail from Spain with five ships, hoping to sail around the world.", "マゼランが5せきの船でスペインを出発し、世界一周をめざしました。", "Around the World by Ship"],
+  ["09-21", "", "world", "International Day of Peace: around the world, people pause for a minute of peace.", "国際平和(へいわ)デー。世界中で1分間、へいわをねがいます。"],
+  ["09-22", "", "nature", "Around now is the autumn equinox, when day and night are about equal. In Japan, Shūbun no Hi is a holiday to remember ancestors.", "このころは秋分(しゅうぶん)。昼と夜がほぼ同じ長さです。日本では「秋分の日」で、ご先祖さまをしのびます。"],
+  ["09-24", 1948, "tech", "Soichiro Honda founded Honda Motor Company in Japan. It started with motorized bicycles.", "本田宗一郎(ほんだそういちろう)さんが本田技研工業(ほんだぎけんこうぎょう)をつくりました。エンジンつき自転車からはじまりました。"],
+  ["09-25", 1513, "history", "Vasco Núñez de Balboa became the first European to see the Pacific Ocean from the Americas.", "バルボアが、アメリカ大陸から太平洋を見た、はじめてのヨーロッパ人になりました。"],
+  ["09-26", 1774, "nature", "Johnny Appleseed (John Chapman) was born. He planted apple trees across the American frontier.", "ジョニー・アップルシード(ジョン・チャップマン)がうまれました。アメリカの各地にりんごの木をうえました。"],
+  ["09-27", 1825, "tech", "The Stockton and Darlington Railway opened in England, the first public railway to use steam engines.", "イギリスでストックトン・ダーリントン鉄道が開業しました。蒸気機関車(じょうききかんしゃ)をつかうさいしょの公共(こうきょう)の鉄道です。"],
+  ["09-28", 1928, "science", "Alexander Fleming noticed mould killing germs in a dish. This led to penicillin, the first antibiotic.", "フレミングが、おさらのカビがばいきんをころしているのに気づきました。さいしょの抗生物質(こうせいぶっしつ)ペニシリンになりました。"],
+  ["09-29", 1954, "science", "CERN, the European lab for studying the tiniest particles, was created. The World Wide Web was later invented there.", "ヨーロッパの研究所CERN(セルン)ができました。のちにここでウェブ(WWW)がうまれました。"],
+  ["10-05", "", "culture", "World Teachers’ Day: a day to say thank you to teachers everywhere, including Saturday school teachers!", "世界教師(きょうし)デー。補習校(ほしゅうこう)の先生もふくめて、先生に「ありがとう」をつたえる日です!"],
+  ["10-05", 2015, "science", "Tu Youyou was named a Nobel Prize winner for finding artemisinin, a malaria medicine from an old Chinese herb remedy.", "屠呦呦(とゆうゆう)さんが、中国のむかしの薬草(やくそう)からマラリアのくすりを見つけ、ノーベル賞にえらばれました。", "Tu Youyou"],
+  ["10-06", 1927, "culture", "The Jazz Singer opened. It was the first full-length movie with spoken words people could hear.", "「ジャズ・シンガー」が公開されました。せりふが聞こえる、はじめての長編(ちょうへん)映画です。"],
+  ["10-07", 1959, "space", "Luna 3 took the first photos of the far side of the Moon, which we never see from Earth.", "ルナ3ごうが、地球からは見えない月のうら側のしゃしんをはじめてとりました。"],
+  ["10-08", "", "food", "Around now, Canada celebrates Thanksgiving (the second Monday of October) with turkey, pumpkin pie and family.", "このころ、カナダはサンクスギビング(10月の第2月曜日)。七面鳥(しちめんちょう)やかぼちゃのパイで家族といわいます。"],
+  ["10-08", 2012, "science", "Shinya Yamanaka was named a Nobel Prize winner for finding how to turn ordinary cells back into stem cells (iPS cells).", "山中伸弥(やまなかしんや)さんが、iPS細胞(さいぼう)のけんきゅうでノーベル賞にえらばれました。", "Shinya Yamanaka"],
+  ["10-11", 1968, "space", "Apollo 7 launched. It was the first time American astronauts sent live TV from space.", "アポロ7ごうがうちあげられました。宇宙からはじめてテレビの生中継(なまちゅうけい)をしました。"],
+  ["10-12", 1999, "world", "The United Nations marked the “Day of Six Billion,” when Earth’s population reached about 6 billion people.", "国連(こくれん)が「60億人の日」としました。地球の人口がやく60億人になったころです。"],
+  ["10-13", 1884, "science", "Countries agreed that the line through Greenwich, London, would be 0° longitude. Canadian Sandford Fleming had pushed for world time zones.", "ロンドンのグリニッジをとおる線を経度(けいど)0度にきめました。カナダのサンドフォード・フレミングが時間帯(じかんたい)をよびかけました。"],
+  ["10-14", 1872, "tech", "Japan’s first railway opened between Shimbashi in Tokyo and Yokohama. Today is Railway Day.", "日本ではじめての鉄道が、新橋(しんばし)と横浜(よこはま)のあいだに開業しました。「鉄道の日」です。"],
+  ["10-15", 2003, "space", "Yang Liwei flew into space on Shenzhou 5, becoming China’s first astronaut.", "楊利偉(ようりい)さんが「神舟(しんしゅう)5ごう」で宇宙へ。中国ではじめての宇宙飛行士です。", "Yang Liwei"],
+  ["10-16", 1945, "food", "The Food and Agriculture Organization was started to help end hunger. Today is World Food Day.", "国連食糧農業機関(FAO)ができ、うえをなくすためにはたらいています。「世界食料デー」です。"],
+  ["10-17", 1956, "space", "Mae Jemison was born. She became the first Black woman in space and is also a doctor and dancer.", "メイ・ジェミソンがうまれました。黒人女性ではじめて宇宙へ行きました。お医者さんでダンサーでもあります。", "Mae Jemison"],
+  ["10-18", 2019, "space", "Christina Koch and Jessica Meir made the first all-woman spacewalk.", "クリスティーナ・コックとジェシカ・メイアが、女性だけではじめての宇宙遊泳をしました。"],
+  ["10-18", 1929, "history", "Five Alberta women won the Persons Case: Canadian women were legally “persons” and could serve in the Senate.", "アルバータの5人の女性が「パーソンズ事件(じけん)」でかち、カナダの女性が法律上「人(パーソン)」とみとめられました。", "The Famous Five"],
+  ["10-19", 2017, "space", "Astronomers in Hawaii spotted ʻOumuamua, the first object found visiting our Solar System from another star.", "ハワイの天文学者が「オウムアムア」を見つけました。ほかの星からきた、はじめての天体です。"],
+  ["10-20", 1973, "culture", "The Sydney Opera House opened. Its roof looks like big white sails.", "シドニー・オペラハウスがオープンしました。屋根(やね)が白い帆(ほ)のようです。", "Sydney Opera House"],
+  ["10-21", 1833, "science", "Alfred Nobel was born. He left his fortune to create the Nobel Prizes.", "アルフレッド・ノーベルがうまれました。財産(ざいさん)でノーベル賞をつくりました。"],
+  ["10-22", "", "culture", "Jidai Matsuri in Kyoto: a parade of people dressed in costumes from over 1,000 years of Japanese history.", "京都の時代祭(じだいまつり)。1000年いじょうの日本のれきしの衣装(いしょう)をきた人たちの行列です。", "Heian-kyō (Kyoto) Founded"],
+  ["10-23", 1940, "sports", "Pelé was born in Brazil. He became one of the greatest soccer players ever.", "ペレがブラジルでうまれました。史上(しじょう)さいこうのサッカー選手の一人です。", "Pelé"],
+  ["10-24", 1945, "world", "The United Nations was created to help countries keep peace and work together. Today is UN Day.", "国際連合(こくさいれんごう)ができました。国どうしがへいわをまもり、きょうりょくするためです。「国連デー」です。", "The United Nations"],
+  ["10-25", 1881, "culture", "Pablo Picasso was born. He painted faces from many sides at once.", "ピカソがうまれました。顔をいろいろな方向から見た絵をかきました。"],
+  ["10-26", 1863, "sports", "The Football Association was formed in London and wrote the first official rules of soccer.", "ロンドンでサッカー協会(きょうかい)ができ、さいしょの正式(せいしき)なルールをつくりました。"],
+  ["10-27", "", "culture", "Reading Week begins in Japan (until Nov. 9). It is a great time to finish a book!", "日本の「読書週間(どくしょしゅうかん)」がはじまります(11月9日まで)。本を1さつ読みおえよう!"],
+  ["10-28", 1886, "history", "The Statue of Liberty was dedicated in New York Harbor. It was a gift from France.", "ニューヨークで自由の女神(めがみ)の完成式(かんせいしき)がありました。フランスからのおくりものです。", "The Statue of Liberty"],
+  ["10-28", 1972, "animals", "Two giant pandas from China, Kang Kang and Lan Lan, arrived at Ueno Zoo in Tokyo. Huge crowds came to see them.", "中国からジャイアントパンダのカンカンとランランが上野動物園にきました。たくさんの人が見に行きました。", "Giant Pandas"],
+  ["10-29", 1969, "tech", "The first message was sent on ARPANET, the early internet. It crashed after just two letters: “LO.”", "インターネットのもと「ARPANET」ではじめてメッセージが送られました。2文字「LO」でとまってしまいました。"],
+  ["10-30", 1938, "culture", "A radio play of The War of the Worlds sounded so real that some listeners thought aliens had landed!", "ラジオドラマ「宇宙戦争」があまりに本物らしく、宇宙人がきたと思った人もいました!"],
+  ["10-31", "", "culture", "Halloween! It came from an old Celtic festival. In Canada, kids go trick-or-treating in costumes.", "ハロウィーン!むかしのケルトのおまつりがもとです。カナダでは子どもが仮装(かそう)してお菓子をもらいに回ります。"],
+  ["11-01", 1512, "culture", "Michelangelo’s painted ceiling in the Sistine Chapel was shown to the public for the first time.", "ミケランジェロがえがいたシスティーナ礼拝堂(れいはいどう)の天井画(てんじょうが)が、はじめて公開されました。"],
+  ["11-01", "", "culture", "Hello Kitty’s official birthday! She first appeared in 1974 and is from Sanrio in Japan.", "ハローキティの誕生日!1974年に日本のサンリオから登場しました。"],
+  ["11-02", 2000, "space", "The first crew moved into the International Space Station. People have lived in space ever since.", "国際宇宙ステーションに、さいしょのクルーがすみはじめました。それからずっと人が宇宙でくらしています。", "International Space Station"],
+  ["11-05", "", "nature", "World Tsunami Awareness Day comes from the Japanese story Inamura no Hi: in 1854, a man burned his rice sheaves to lead villagers up the hill to safety.", "世界津波(つなみ)の日。1854年、いねのたばに火をつけて村人を高台(たかだい)にみちびいた「稲(いな)むらの火」の話からきています。"],
+  ["11-06", 1861, "sports", "James Naismith was born in Almonte, Ontario. He invented basketball using peach baskets.", "ジェームズ・ネイスミスがオンタリオ州アルモントでうまれました。もものかごをつかってバスケットボールを考えだしました。", "James Naismith"],
+  ["11-08", 1895, "science", "Wilhelm Röntgen discovered X-rays, which let doctors see bones inside the body.", "レントゲンがX線(エックスせん)を見つけました。体の中のほねを見ることができます。"],
+  ["11-09", 1876, "science", "Noguchi Hideyo was born. He studied diseases around the world, and his face was on the 1,000-yen bill.", "野口英世(のぐちひでよ)がうまれました。世界で病気のけんきゅうをし、千円札の顔にもなりました。", "Noguchi Hideyo"],
+  ["11-10", 1969, "culture", "Sesame Street first aired on TV, teaching kids letters and numbers with Muppets.", "「セサミストリート」の放送(ほうそう)がはじまりました。マペットといっしょに文字や数を学びます。"],
+  ["11-12", 1866, "history", "Sun Yat-sen was born. He is called the father of modern China.", "孫文(そんぶん)がうまれました。「近代中国の父」とよばれます。", "Sun Yat-sen"],
+  ["11-12", 1981, "space", "The Canadarm, a robotic arm built in Canada, went to space for the first time on the space shuttle Columbia.", "カナダがつくったロボットアーム「カナダアーム」が、スペースシャトル・コロンビアではじめて宇宙へ行きました。"],
+  ["11-13", "", "culture", "World Kindness Day: one kind word or action can make someone’s whole day better.", "世界親切(しんせつ)デー。やさしいことば一つで、だれかの一日がよくなります。"],
+  ["11-14", 1891, "science", "Frederick Banting was born in Alliston, Ontario. He co-discovered insulin. Today is World Diabetes Day.", "バンティングがオンタリオ州でうまれました。インスリンを見つけた一人です。「世界糖尿病(とうにょうびょう)デー」です。", "Banting & Best"],
+  ["11-15", "", "culture", "Shichi-Go-San in Japan: children aged 3, 5 and 7 visit shrines in kimono and get long sticks of chitose-ame candy.", "日本の七五三(しちごさん)。3さい・5さい・7さいの子が着物で神社にお参りし、千歳飴(ちとせあめ)をもらいます。"],
+  ["11-16", 1945, "world", "UNESCO was created to protect culture, science and education. It chooses World Heritage Sites.", "ユネスコができました。文化・科学・教育をまもり、世界遺産をえらんでいます。"],
+  ["11-16", 1952, "tech", "Shigeru Miyamoto was born in Kyoto. He created Mario and The Legend of Zelda.", "宮本茂(みやもとしげる)さんが京都でうまれました。マリオやゼルダの伝説をつくりました。", "Shigeru Miyamoto"],
+  ["11-17", 1869, "tech", "The Suez Canal opened in Egypt, letting ships travel between Europe and Asia without going around Africa.", "エジプトのスエズ運河(うんが)が開通しました。アフリカを回らずにヨーロッパとアジアを行き来できます。"],
+  ["11-18", 1928, "culture", "Steamboat Willie, starring Mickey Mouse, opened. It was one of the first cartoons with sound.", "ミッキーマウスの「蒸気船(じょうきせん)ウィリー」が公開されました。音のついたさいしょのアニメの一つです。"],
+  ["11-19", "", "science", "World Toilet Day: clean toilets keep people healthy. Japan is famous for toilets with warm seats and buttons!", "世界トイレの日。きれいなトイレはけんこうを守ります。日本はあたたかい便座(べんざ)やボタンのあるトイレで有名です!"],
+  ["11-19", 2018, "history", "A new $10 bill with Viola Desmond came out. She stood up against unfair treatment in a Nova Scotia movie theatre.", "ヴァイオラ・デズモンドの新しい10ドル札が出ました。ノバスコシアの映画館で不公平なあつかいに立ちむかいました。", "Viola Desmond"],
+  ["11-20", 1989, "world", "The UN agreed on the Convention on the Rights of the Child, promising every child safety, school and a voice. Today is World Children’s Day.", "国連で「子どもの権利条約(けんりじょうやく)」がきまりました。すべての子どもの安全、教育、声をまもるやくそくです。"],
+  ["11-21", 1783, "tech", "Two men flew over Paris in a Montgolfier hot-air balloon, the first people to fly freely.", "2人の男の人がモンゴルフィエの熱気球でパリの空を飛びました。人がはじめて自由に空を飛びました。"],
+  ["11-22", 1995, "culture", "Toy Story opened. It was the first movie made entirely on computers.", "「トイ・ストーリー」が公開されました。ぜんぶコンピューターでつくった、はじめての映画です。"],
+  ["11-23", "", "culture", "Labour Thanksgiving Day in Japan: a day to thank everyone who works hard for us.", "日本の「勤労感謝(きんろうかんしゃ)の日」。はたらく人みんなに感謝する日です。"],
+  ["11-24", 1859, "science", "Charles Darwin published On the Origin of Species, explaining how living things change over time.", "ダーウィンが「種(しゅ)の起源(きげん)」を出版しました。生きものがながい時間でかわっていくことを説明(せつめい)しました。", "Charles Darwin"],
+  ["11-25", 1844, "tech", "Karl Benz was born in Germany. He built one of the first cars.", "カール・ベンツがドイツでうまれました。さいしょの自動車の一つをつくりました。"],
+  ["11-26", 2011, "space", "NASA’s Curiosity rover launched to Mars. It is about the size of a small car.", "NASAの火星探査車キュリオシティがうちあげられました。小さな車ぐらいの大きさです。"],
+  ["11-27", 1940, "sports", "Bruce Lee was born in San Francisco and grew up in Hong Kong. He became a world-famous martial artist and actor.", "ブルース・リーがサンフランシスコでうまれ、香港でそだちました。世界的なカンフーの名人で俳優(はいゆう)です。", "Bruce Lee"],
+  ["11-28", 1964, "space", "Mariner 4 launched. It took the first close-up photos of Mars.", "マリナー4ごうがうちあげられ、火星をはじめて近くからしゃしんにとりました。"],
+  ["11-29", 1898, "culture", "C. S. Lewis was born. He wrote The Chronicles of Narnia.", "C・S・ルイスがうまれました。「ナルニア国物語(こくものがたり)」を書きました。"],
+  ["11-30", 1835, "culture", "Mark Twain was born. He wrote The Adventures of Tom Sawyer.", "マーク・トウェインがうまれました。「トム・ソーヤーの冒険(ぼうけん)」を書きました。"],
+  ["12-01", 1959, "nature", "Twelve countries signed the Antarctic Treaty, agreeing that Antarctica is only for peace and science.", "12か国が南極条約(なんきょくじょうやく)をむすび、南極はへいわと科学のためだけにつかうときめました。"],
+  ["12-02", 1993, "space", "Astronauts flew up to fix the Hubble Space Telescope, giving it “glasses” so its pictures became sharp.", "宇宙飛行士がハッブル望遠鏡をなおしに行き、「めがね」をつけて写真がはっきりするようにしました。"],
+  ["12-03", 1967, "science", "Doctor Christiaan Barnard did the first human heart transplant in South Africa.", "南アフリカでバーナード医師(いし)が、はじめて人の心臓(しんぞう)いしょくをしました。"],
+  ["12-04", 1872, "history", "The ship Mary Celeste was found sailing with no one aboard. What happened is still a mystery!", "メアリー・セレスト号が、だれものっていないまま見つかりました。何がおきたかは今もなぞです!"],
+  ["12-05", 1901, "culture", "Walt Disney was born. He created Mickey Mouse and Disneyland.", "ウォルト・ディズニーがうまれました。ミッキーマウスやディズニーランドをつくりました。"],
+  ["12-06", 1877, "tech", "Thomas Edison recorded his voice saying “Mary had a little lamb” on his new phonograph.", "エジソンが新しい蓄音機(ちくおんき)に「メリーさんのひつじ」とふきこみました。"],
+  ["12-06", 2020, "space", "Hayabusa2’s capsule landed in Australia (Japan time), bringing back rocks from the asteroid Ryugu.", "「はやぶさ2」のカプセルが、小惑星リュウグウの石をもってオーストラリアに着地しました(日本時間)。", "Hayabusa2 Brings Home Space Rocks"],
+  ["12-07", 1972, "space", "The Apollo 17 crew took the “Blue Marble” photo, one of the most famous pictures of the whole Earth.", "アポロ17ごうのクルーが「ブルー・マーブル」をとりました。地球全体のもっとも有名なしゃしんの一つです。"],
+  ["12-08", "", "culture", "Hari-kuyō in some parts of Japan: people thank old, broken sewing needles by resting them in soft tofu.", "日本の一部の地方で「針供養(はりくよう)」。おれた古いぬい針をやわらかいとうふにさして、感謝します。"],
+  ["12-09", 1906, "tech", "Grace Hopper was born. She was a computer pioneer and helped make programming languages people could read.", "グレース・ホッパーがうまれました。コンピューターの先駆者(せんくしゃ)で、人が読めるプログラミング言語をつくりました。"],
+  ["12-10", 1949, "science", "Hideki Yukawa received the Nobel Prize in Physics, the first Japanese person to win a Nobel Prize.", "湯川秀樹(ゆかわひでき)さんがノーベル物理学賞(ぶつりがくしょう)をうけました。日本人ではじめてのノーベル賞です。"],
+  ["12-11", 1997, "nature", "The Kyoto Protocol was agreed in Kyoto, Japan, to reduce gases that warm the planet.", "京都で、地球温暖化(おんだんか)のガスをへらす「京都議定書(ぎていしょ)」がまとまりました。", "Heian-kyō (Kyoto) Founded"],
+  ["12-12", 1901, "tech", "Guglielmo Marconi received the first radio signal sent across the Atlantic, at Signal Hill in St. John’s, Newfoundland.", "マルコーニが、ニューファンドランドのシグナル・ヒルで、大西洋をこえたさいしょの無線(むせん)しんごうをうけとりました。"],
+  ["12-12", "", "culture", "Kanji Day in Japan! The “Kanji of the Year” is revealed, written with a giant brush at Kiyomizu-dera temple in Kyoto.", "日本の「漢字の日」!京都の清水寺(きよみずでら)で、大きな筆(ふで)で「今年の漢字」が書かれます。", "Heian-kyō (Kyoto) Founded"],
+  ["12-13", "", "culture", "Shōgatsu koto-hajime: in Japan, today is the traditional day to start getting ready for the New Year.", "日本の「正月事始め(しょうがつことはじめ)」。お正月のじゅんびをはじめる日です。"],
+  ["12-15", 1859, "culture", "L. L. Zamenhof was born. He created Esperanto, a language meant to be easy for everyone to learn.", "ザメンホフがうまれました。だれでも学びやすいことば「エスペラント」をつくりました。"],
+  ["12-16", 1770, "culture", "Ludwig van Beethoven was born around this day. He kept writing music even after he lost his hearing.", "このころ、ベートーヴェンがうまれました。耳が聞こえなくなっても作曲をつづけました。"],
+  ["12-17", 2020, "space", "China’s Chang’e-5 brought Moon rocks back to Earth (Beijing time), the first in over 40 years.", "中国の「嫦娥5ごう」が月の石をもちかえりました(北京時間)。40年いじょうぶりです。"],
+  ["12-18", "", "world", "International Migrants Day: honouring people who move to a new country, like many families in Canada.", "国際移住者(いじゅうしゃ)デー。カナダの多くの家族のように、新しい国にうつりすんだ人をたたえる日です。"],
+  ["12-19", 1843, "culture", "Charles Dickens published A Christmas Carol, the story of Ebenezer Scrooge.", "ディケンズが「クリスマス・キャロル」を出版しました。スクルージのお話です。"],
+  ["12-20", 1999, "history", "Macau was returned from Portugal to China.", "マカオがポルトガルから中国にかえされました。"],
+  ["12-23", 1958, "tech", "Tokyo Tower was completed. At 333 metres, it was taller than the Eiffel Tower.", "東京タワーが完成しました。高さ333メートルで、エッフェル塔より高かったのです。"],
+  ["12-24", 1968, "space", "Apollo 8 astronauts took the “Earthrise” photo, showing Earth rising over the Moon.", "アポロ8ごうの宇宙飛行士が、月の地平線から地球がのぼる「地球の出」のしゃしんをとりました。"],
+  ["12-25", "", "culture", "Christmas! In Japan, many families eat fried chicken and strawberry shortcake.", "クリスマス!日本ではフライドチキンといちごのショートケーキを食べる家族がたくさんいます。"],
+  ["12-25", 2021, "space", "The James Webb Space Telescope launched. It sees the first galaxies ever formed.", "ジェイムズ・ウェッブ宇宙望遠鏡がうちあげられました。宇宙でさいしょにできた銀河を見ています。", "James Webb Space Telescope"],
+  ["12-26", "", "culture", "Boxing Day in Canada: traditionally a day to give gifts to helpers. Now it is famous for sales.", "カナダのボクシング・デー。もとは、はたらく人におくりものをする日でした。今はセールで有名です。"],
+  ["12-26", 1898, "science", "Marie and Pierre Curie announced they had found a new element, radium.", "マリーとピエール・キュリーが、新しい元素(げんそ)ラジウムを見つけたと発表しました。", "Marie Curie"],
+  ["12-28", 1895, "culture", "The Lumière brothers showed the first films to a paying audience in Paris.", "リュミエール兄弟がパリで、お客さんにはじめて映画を見せました。"],
+  ["12-29", "", "culture", "Around now, families in Japan do ōsōji, the big year-end clean, to welcome the New Year fresh.", "このころ、日本の家族は大そうじをして、きれいな家で新年をむかえます。"],
+  ["12-30", 1865, "culture", "Rudyard Kipling was born. He wrote The Jungle Book.", "キップリングがうまれました。「ジャングル・ブック」を書きました。"],
+  ["12-31", "", "culture", "Ōmisoka (New Year’s Eve) in Japan: families eat long toshikoshi soba noodles, and temple bells ring 108 times.", "日本の大みそか。年こしそばを食べ、お寺のかねが108回鳴ります。"],
+  ["12-31", 1864, "history", "Tsuda Umeko was born. She studied in America as a young girl and later started a school for women. She is on the new 5,000-yen bill.", "津田梅子(つだうめこ)がうまれました。小さいときにアメリカで学び、女子の学校をつくりました。新しい五千円札の顔です。", "Tsuda Umeko"]
 ];
 /* ['category', region code, English, Japanese] */
 var WORLD_BITES = [
@@ -7027,15 +7415,32 @@ function otdToday(){
   var now = new Date(), key = pad(now.getMonth()+1)+'-'+pad(now.getDate());
   var hits = OTD.filter(function(e){ return e[0] === key; });
   if(hits.length) return {e:hits[dayNum() % hits.length], today:true};
-  // nothing today: show what is coming up next
-  var best = null, bestD = 999;
-  OTD.forEach(function(e){
-    var m = +e[0].slice(0,2), d = +e[0].slice(3), t = new Date(now.getFullYear(), m-1, d);
-    var diff = daysBetween(new Date(now.getFullYear(), now.getMonth(), now.getDate()), t);
-    if(diff < 0) diff += 365;
-    if(diff > 0 && diff < bestD){ bestD = diff; best = e; }
-  });
-  return best ? {e:best, today:false, in:bestD} : null;
+  /* 26.11.28: no fact for today, so show a different "this month in history" fact each day
+     (it used to show the next upcoming fact, which repeated for up to 4 weeks) */
+  var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // walk forward from a few weeks ago so the fact never matches the one shown the day before
+  var dn = dayNum(), prevE = null, mine = null;
+  for(var back = 40; back >= 0; back--){
+    var d = new Date(t0.getFullYear(), t0.getMonth(), t0.getDate() - back), k = otdKey(d, 0);
+    var ex = OTD.filter(function(e){ return e[0] === k; });
+    if(ex.length){ prevE = ex[(dn - back) % ex.length]; mine = null; continue; }
+    mine = otdPick(d, dn - back, prevE); prevE = mine ? mine.e : null;
+  }
+  return mine;
+}
+function otdKey(d, n){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return pad(x.getMonth()+1)+'-'+pad(x.getDate()); }
+function otdPick(day, dn, avoid){
+  var ok = OTD.filter(function(e){ return e[1] && !/on this day|around (this day|now)|happy/i.test(e[3]); });
+  var mo = day.getMonth()+1, mOf = function(e){ return +e[0].slice(0,2); };
+  var pool = ok.filter(function(e){ return mOf(e) === mo; });
+  if(pool.length < 4) pool = ok.filter(function(e){ var d = Math.abs(mOf(e) - mo); return d <= 1 || d === 11; });
+  if(pool.length < 4) pool = ok;
+  var bad = [otdKey(day, -1), otdKey(day, 0), otdKey(day, 1)];
+  for(var i = 0; i < pool.length; i++){
+    var e = pool[(((dn + i) % pool.length) + pool.length) % pool.length];
+    if(bad.indexOf(e[0]) < 0 && e !== avoid) return {e:e, today:false, lab:(mOf(e) === mo ? 'This month in history' : 'From history')};
+  }
+  return null;
 }
 function worldBiteToday(){
   var fresh = freshNews();
@@ -7057,8 +7462,8 @@ function bitesPanelHTML(){
   if(state.eco.bitesOn === false) return '';
   var o = otdToday(), w = worldBiteToday(), h = '<div class="panel bitespanel"><div class="ptitle">📰 Today’s Bites</div>';
   if(o){
-    var e = o.e, lab = o.today ? 'On this day'+(e[1] ? ' · '+e[1] : '') : 'Coming up · '+monthDay(e)+' (in '+o.in+' day'+(o.in === 1 ? '' : 's')+')';
-    h += '<button class="bite" data-bite="otd"><span class="bico">'+IC(o.today ? 'calendar' : 'hourglass')+'</span><div class="btxt"><small>'+lab+'</small>'+biteText(e[3], e[4])+'</div></button>';
+    var e = o.e, lab = o.today ? 'On this day'+(e[1] ? ' · '+e[1] : '') : o.lab+' · '+monthDay(e)+', '+e[1];
+    h += '<button class="bite" data-bite="otd"><span class="bico">'+IC('calendar')+'</span><div class="btxt"><small>'+lab+'</small>'+biteText(e[3], e[4])+'</div></button>';
   }
   var wl = w.kind === 'news' ? 'World news · '+REGIONS[w.r].flag+' '+esc(w.src) : 'Around the world · '+REGIONS[w.r].flag;
   h += '<button class="bite" data-bite="world"><span class="bico">'+IC(w.kind === 'news' ? 'globe' : 'sparkles')+'</span><div class="btxt"><small>'+wl+'</small>'+biteText(w.en, w.ja)+'</div></button>';
@@ -7069,7 +7474,7 @@ function showBite(kind){
   var o = otdToday(), w = worldBiteToday(), h = '', card = null;
   if(kind === 'otd' && o){
     var e = o.e; card = cardByName(e[5]);
-    h = '<div class="bitemodal"><div class="bm-ico">'+IC('calendar')+'</div><div class="bm-lab">'+(o.today ? 'On this day' : 'Coming up on '+monthDay(e))+(e[1] ? ' · '+e[1] : '')+'</div>'+biteText(e[3], e[4])+'</div>';
+    h = '<div class="bitemodal"><div class="bm-ico">'+IC('calendar')+'</div><div class="bm-lab">'+(o.today ? 'On this day'+(e[1] ? ' · '+e[1] : '') : o.lab+' · '+monthDay(e)+', '+e[1])+'</div>'+biteText(e[3], e[4])+'</div>';
   } else {
     h = '<div class="bitemodal"><div class="bm-ico">'+IC(w.kind === 'news' ? 'globe' : 'sparkles')+'</div><div class="bm-lab">'+(w.kind === 'news' ? 'World news · '+esc(w.src)+' · '+esc(w.d) : 'Around the world')+' '+REGIONS[w.r].flag+'</div>'+biteText(w.en, w.ja)+'</div>';
   }
