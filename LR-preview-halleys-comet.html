@@ -68,7 +68,7 @@ main{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:cen
 #frame{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;border-radius:18px;box-shadow:0 0 0 3px #e2c060,0 0 0 6px #050505,0 0 40px rgba(140,205,255,.55)}
 .scene{position:absolute;inset:0;opacity:0}
 .scene .img{position:absolute;inset:0;background:center/cover no-repeat;will-change:transform}
-.glow{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:0}
+.glow{position:absolute;border-radius:50%;pointer-events:none;opacity:0}
 #fx,#sky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #sky{position:fixed;z-index:1002}
 #dive{position:fixed;z-index:1001;background:center/cover no-repeat;border-radius:12px;pointer-events:none;transform-origin:0 0}
@@ -253,15 +253,21 @@ Layer.prototype.size = function(){ var r = this.c.getBoundingClientRect(), d = M
 Layer.prototype.start = function(){ if(this.run) return; this.run = true; this.size(); var self = this, last = performance.now();
   function step(now){ if(!self.run) return; var dt = Math.min(.05, (now - last)/1000); last = now; self.draw(dt, now/1000); requestAnimationFrame(step); }
   requestAnimationFrame(step); };
-Layer.prototype.stop = function(){ this.run = false; this.p = []; this.comet = null; this.streak = 0; this.x.clearRect(0, 0, this.w, this.h); };
+Layer.prototype.stop = function(){ this.run = false; this.p = []; this.comet = null; this.streak = 0; this.rays = null; this.x.clearRect(0, 0, this.w, this.h); };
 Layer.prototype.add = function(o){ if(this.p.length < 420) this.p.push(o); };
 Layer.prototype.draw = function(dt, t){
-  var x = this.x, W = this.w, H = this.h; x.clearRect(0, 0, W, H); x.globalCompositeOperation = 'lighter';
-  if(this.streak > 0){ /* "through the tail": light streaks from the middle */
-    var cx = W/2, cy = H/2; for(var k = 0; k < 6; k++){ var a = Math.random()*Math.PI*2, r0 = 20 + Math.random()*60, r1 = r0 + 120 + Math.random()*Math.max(W,H)*.5*this.streak;
-      var g = x.createLinearGradient(cx + Math.cos(a)*r0, cy + Math.sin(a)*r0, cx + Math.cos(a)*r1, cy + Math.sin(a)*r1);
-      g.addColorStop(0, 'rgba(200,235,255,0)'); g.addColorStop(1, 'rgba(220,240,255,' + (.55*this.streak) + ')');
-      x.strokeStyle = g; x.lineWidth = 1.5 + Math.random()*2.5; x.beginPath(); x.moveTo(cx + Math.cos(a)*r0, cy + Math.sin(a)*r0); x.lineTo(cx + Math.cos(a)*r1, cy + Math.sin(a)*r1); x.stroke(); } }
+  var x = this.x, W = this.w, H = this.h; x.clearRect(0, 0, W, H);
+  x.save(); if(this.clip){ var cr = this.clip(); x.beginPath(); if(x.roundRect) x.roundRect(cr.left, cr.top, cr.width, cr.height, 18); else x.rect(cr.left, cr.top, cr.width, cr.height); x.clip(); }
+  x.globalCompositeOperation = 'lighter';
+  if(this.streak > 0){ /* "through the tail": steady light lines gliding outward (same lines every frame, so no flicker) */
+    var cx = W/2, cy = H/2, R = Math.max(W, H)*.6;
+    if(!this.rays){ this.rays = []; for(var k = 0; k < 28; k++) this.rays.push({a: k/28*6.283 + Math.random()*.15, r: Math.random()*R, v: .9 + Math.random()*.6, w: 1.2 + Math.random()*1.6}); }
+    for(var k = 0; k < this.rays.length; k++){ var ry = this.rays[k]; ry.r += ry.v*R*dt*(.4 + this.streak); if(ry.r > R) ry.r -= R;
+      var r0 = 20 + ry.r*.6, r1 = 20 + ry.r*(1 + this.streak), ca = Math.cos(ry.a), sa = Math.sin(ry.a), al = .35*this.streak*Math.min(1, ry.r/(R*.25));
+      var g = x.createLinearGradient(cx + ca*r0, cy + sa*r0, cx + ca*r1, cy + sa*r1);
+      g.addColorStop(0, 'rgba(200,235,255,0)'); g.addColorStop(1, 'rgba(220,240,255,' + al.toFixed(3) + ')');
+      x.strokeStyle = g; x.lineWidth = ry.w; x.beginPath(); x.moveTo(cx + ca*r0, cy + sa*r0); x.lineTo(cx + ca*r1, cy + sa*r1); x.stroke(); } }
+  else this.rays = null;
   var keep = [];
   for(var i = 0; i < this.p.length; i++){ var p = this.p[i]; p.life -= dt; if(p.life <= 0) continue;
     p.vx += (p.ax || 0)*dt; p.vy += (p.ay || 0)*dt; p.x += p.vx*dt; p.y += p.vy*dt;
@@ -275,7 +281,7 @@ Layer.prototype.draw = function(dt, t){
     keep.push(p); }
   this.p = keep;
   if(this.comet) drawComet(x, this.comet, t, this);
-  x.globalCompositeOperation = 'source-over';
+  x.restore();
 };
 /* comet: glowing head + long soft tail pointing along (tx,ty) */
 function drawComet(x, c, t, layer){
@@ -322,6 +328,7 @@ var SCENES = [
   {yr: '', en: 'Next visit: 2061 ✨', ja: 'つぎに 来るのは 2061年！', big: true}
 ];
 var fx = new Layer($('fx')), sky = new Layer($('sky'));
+fx.clip = function(){ return frameRect(); };   /* sparkles, snow and space dust stay inside the picture */
 var RUN = 0, cut = null, anims = [];
 function A(el, kf, opt){ var a = el.animate(kf, Object.assign({fill: 'forwards', easing: 'ease-in-out'}, opt)); anims.push(a); return a; }
 function resetAnims(){ var st = $('stage'), dv = $('dive'); document.getAnimations().forEach(function(a){ var t = a.effect && a.effect.target; if(t && (st.contains(t) || t === dv)) a.cancel(); }); }
@@ -382,20 +389,22 @@ async function playStory(fromEl){
   if(!await wait(3500, id)) return;
   /* 4. zoom into the comet: through the tail to 1986 */
   capOut(); snowOff(); whoosh(1, true);
-  if(!REDUCE){ var s0 = performance.now(); (function grow(){ if(!go()) return; var k = Math.min(1, (performance.now() - s0)/900); fx.streak = k; if(fx.comet){ fx.comet.size *= 1.05; fx.comet.len *= 1.02; } if(k < 1) requestAnimationFrame(grow); })(); }
+  var zoom = {on: true};
+  if(!REDUCE){ var s0 = performance.now(); (function grow(){ if(!go() || !zoom.on) return; var k = Math.min(1, (performance.now() - s0)/900); fx.streak = k; if(fx.comet){ fx.comet.size *= 1.05; fx.comet.len *= 1.02; } if(k < 1) requestAnimationFrame(grow); })(); }
   pan(2, [1.05, '50% 30%'], [1.9, '70% 15%'], 900);
   if(!await wait(800, id)) return;
-  fx.comet = null; fx.streak = 0; fx.p = [];
+  zoom.on = false; fx.comet = null; fx.streak = 0; fx.p = [];
   show(3, 350); musPlay('s3');
   pan(3, [1.3, '50% 18%'], [1.55, '62% 70%'], 4600);
-  A($('jet1'), [{opacity: .3}, {opacity: .9}, {opacity: .45}, {opacity: 1}, {opacity: .5}], {duration: 2300, iterations: 2});
-  A($('jet2'), [{opacity: .8}, {opacity: .2}, {opacity: .9}, {opacity: .3}], {duration: 1500, iterations: 3});
+  A($('jet1'), [{opacity: .55}, {opacity: .8}, {opacity: .55}], {duration: 2600, iterations: 2});
+  A($('jet2'), [{opacity: .6}, {opacity: .85}, {opacity: .6}], {duration: 2200, iterations: 2});
   if(!REDUCE) dustOn(id);
   if(!await wait(500, id)) return;
   caption(2);
   if(!await wait(3800, id)) return;
   /* 5. back out to the card; the comet flies off past the edge */
   capOut(); dustOff();
+  A($('fx'), [{opacity: 1}, {opacity: 0}], {duration: 500}).onfinish = function(){ if(go()) fx.p = []; };
   show(4, 600); musPlay('lr');
   pan(4, [1.4, '80% 25%'], [1, '50% 50%'], 1100);
   if(!REDUCE){ sky.c.hidden = false; sky.start(); var b0 = {x: -innerWidth*.15, y: innerHeight*.95}, b1 = {x: innerWidth*1.2, y: -innerHeight*.25};
