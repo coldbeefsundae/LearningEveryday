@@ -1,5 +1,5 @@
 // StarQuest service worker: makes the app work offline.
-const VERSION = '26.11.30';
+const VERSION = '26.11.31';
 const CACHE = 'starquest-' + VERSION;
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {

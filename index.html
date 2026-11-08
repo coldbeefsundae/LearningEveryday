@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.30', errs = [], shown = false;
-  window.__SQV = V; window.__SQDATE = '2026-11-07';
+  var V = '26.11.31', errs = [], shown = false;
+  window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
     try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
@@ -2300,6 +2300,18 @@ body[data-skin=comic] .navbtn{color:#111}
 body[data-skin=comic] .navbtn.on{background:var(--accent);color:#fff;box-shadow:3px 3px 0 #111;border:3px solid #111}
 body[data-skin=comic] :focus-visible{outline:3px solid #111;outline-offset:2px}
 
+
+/* 26.11.31: big card view */
+.dflip-ph{width:100%;aspect-ratio:5/7;border-radius:18px;background:rgba(128,128,128,.12)}
+.cbig{position:fixed;inset:0;z-index:460;background:rgba(10,8,30,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom));cursor:zoom-out;-webkit-tap-highlight-color:transparent;animation:cbigIn .18s ease-out}
+.cbig-card{width:calc(250px * var(--bs,1.4));height:calc(350px * var(--bs,1.4));position:relative;flex:none}
+.cbig .dflip{position:absolute;left:0;top:0;width:250px;transform:scale(var(--bs,1.4));transform-origin:0 0;cursor:grab}
+.cbig-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;color:#fff;font-weight:800;font-size:15px;text-align:center}
+.cbig-bar .btn{background:#fff;color:#1e1b3a;border:0;min-height:44px;padding:0 18px;font-size:16px}
+.dfliphint .dflipbtn{margin-left:6px;vertical-align:middle;min-height:34px;padding:0 12px;font-size:13px;opacity:1}
+.dfliphint{opacity:.85}
+@keyframes cbigIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.cbig{animation:none}}
 /* ===== 26.11.27: the menu never gets cut off (6 or 7 tabs since Kanji was added) =====
    Every menu bar can now scroll if it is ever too long, gets more compact before that happens,
    and never hides the first tab (Quests) off the left edge. */
@@ -4333,35 +4345,79 @@ function hlLoop(now){
   requestAnimationFrame(hlLoop);
 }
 function hlStart(){ if(!HL.run){ HL.run = true; HL.t0 = 0; requestAnimationFrame(hlLoop); } }
+/* 26.11.31: card flip + big view.
+   - Swipe (finger or stylus) flips. It now always settles exactly on the front or back,
+     even if you grab the card while it is still turning (it used to stop part-way).
+   - Tap the card: see it big. In the big view, tap anywhere to close; swipe still flips.
+   - The Flip button flips with a tap. */
+function hlSnap(a){ return Math.round(a/180)*180; }
+function hlFlipNow(){ HLF.target = hlSnap(HLF.target) + 180; try{ Sound.flip(); }catch(_){} }
 function hlFlipBind(el){
   HLF.el = el; HLF.ang = 0; HLF.target = 0; HLF.drag = null; HLF.just = false;
-  el.addEventListener('pointerdown', function(e){ HLF.drag = {x:e.clientX, y:e.clientY, a:HLF.ang, on:false, id:e.pointerId, w:el.offsetWidth || 250}; });
+  el.addEventListener('pointerdown', function(e){
+    if(HLF.drag && HLF.drag.id !== e.pointerId) return;           // ignore a second finger
+    var w = el.getBoundingClientRect().width || el.offsetWidth || 250;
+    HLF.drag = {x:e.clientX, y:e.clientY, a:HLF.ang, base:hlSnap(HLF.ang), on:false, id:e.pointerId, w:w};
+  });
   el.addEventListener('pointermove', function(e){
-    var d = HLF.drag; if(!d) return;
+    var d = HLF.drag; if(!d || e.pointerId !== d.id) return;
     var dx = e.clientX - d.x, dy = e.clientY - d.y;
     if(!d.on){
       if(Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)*1.2){ d.on = true; try{ el.setPointerCapture(d.id); }catch(_){} }
-      else if(Math.abs(dy) > 14){ HLF.drag = null; }
+      else if(Math.abs(dy) > 14){ HLF.drag = null; HLF.target = hlSnap(HLF.target); }
       return;
     }
     HLF.ang = d.a + dx/d.w*180; HLF.target = HLF.ang;
     HL.ptr = {x:hlClamp(.5 + dx/d.w), y:HL.y};
   });
-  function end(){
-    var d = HLF.drag; HLF.drag = null; HL.ptr = null;
-    if(!d || !d.on) return;
+  function end(e){
+    var d = HLF.drag; if(d && e && e.pointerId !== undefined && e.pointerId !== d.id) return;
+    HLF.drag = null; HL.ptr = null;
+    if(!d || !d.on){ HLF.target = hlSnap(HLF.target); return; }
     HLF.just = true; setTimeout(function(){ HLF.just = false; }, 350);
     var moved = HLF.ang - d.a, steps = Math.abs(moved) > 55 ? (moved > 0 ? 1 : -1)*Math.max(1, Math.round(Math.abs(moved)/180)) : 0;
-    HLF.target = d.a + steps*180;
+    HLF.target = d.base + steps*180;                              // always a whole side
     if(steps){ try{ Sound.flip(); }catch(_){} }
   }
-  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
   el.addEventListener('click', function(e){
     if(HLF.just){ e.stopPropagation(); e.preventDefault(); return; }
-    if(e.target.closest('[data-say]')) return;
-    HLF.target += 180; try{ Sound.flip(); }catch(_){}
+    if(e.target.closest('[data-say],button,a')) return;
+    if(el.closest('#cbig')) return;                               // big view: the backdrop handler closes it
+    cardBigOpen();
   });
 }
+function cardBigFit(){
+  var o = $('cbig'), f = $('dflip'); if(!o || !f) return;
+  var k = Math.min((window.innerWidth - 28)/250, (window.innerHeight - 110)/350);
+  o.style.setProperty('--bs', Math.max(1, k).toFixed(3));
+}
+function cardBigOpen(){
+  var f = $('dflip'); if(!f || $('cbig')) return;
+  var ph = document.createElement('div'); ph.id = 'dflipPh'; ph.className = 'dflip-ph'; f.parentNode.insertBefore(ph, f);
+  var o = document.createElement('div'); o.id = 'cbig'; o.className = 'cbig'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Big card view');
+  o.innerHTML = '<div class="cbig-card"></div><div class="cbig-bar"><button class="btn cbig-flip" type="button">↻ Flip</button><span>↔ Swipe to flip · tap anywhere to close</span></div>';
+  o.querySelector('.cbig-card').appendChild(f);
+  document.body.appendChild(o); cardBigFit();
+  HLF.target = hlSnap(HLF.target);
+  o.addEventListener('click', function(e){
+    if(HLF.just){ return; }
+    if(e.target.closest('.cbig-flip')){ e.stopPropagation(); hlFlipNow(); return; }
+    if(e.target.closest('[data-say]')) return;                    // 🔊 on the back still speaks
+    cardBigClose();
+  });
+  try{ Sound.tap(); }catch(_){}
+}
+function cardBigClose(){
+  var o = $('cbig'); if(!o) return;
+  var f = $('dflip'), ph = $('dflipPh');
+  if(f && ph && ph.parentNode){ ph.parentNode.insertBefore(f, ph); }
+  if(ph && ph.parentNode) ph.parentNode.removeChild(ph);
+  o.parentNode.removeChild(o);
+}
+window.addEventListener('resize', cardBigFit);
+window.addEventListener('popstate', function(){ cardBigClose(); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && $('cbig')){ e.stopImmediatePropagation(); cardBigClose(); } }, true);
 
 /* =========================================================
    RENDER
@@ -4823,7 +4879,7 @@ function helpData(){
     {q:'What is in a pack?', a:li(['Each pack has <b>3 cards</b>.','The last card is always <b>Uncommon or better</b>.','Every '+PITY_LIMIT+' packs you are <b>guaranteed</b> a Super Rare (S) or better.','You can open up to <b>'+(packMax > 0 ? packMax : 'lots of')+' pack'+(packMax === 1 ? '' : 's')+' a day</b>.'])},
     {q:'What do C, B, A, S, SSR and SSSR mean?', a:'They show how rare a card is:'+li(['<b>C</b> Common (lots of these)','<b>B</b> Uncommon','<b>A</b> Rare','<b>S</b> Super Rare','<b>SSR</b> Super Super Rare','<b>SSSR</b> Legendary: one very special card','In the <b>Cards</b> tab, tap the pack panel to see the exact chances.'])},
     {q:'I got a card I already have. What happens?', a:'A duplicate goes in your <b>🫙 jar</b>. Every time the jar gets to <b>'+dper+'</b>, you earn <b>1 point</b>. Rarer duplicates fill the jar faster, and the leftovers stay for next time.'},
-    {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
+    {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Inside, <b>tap the card</b> to see it big (tap anywhere to close), and <b>swipe</b> it or press <b>↻ Flip</b> to see the back. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
       {q:'Why do some cards shine?', a:'Rare cards (A and up) have a shiny <b>holo</b> foil. Tilt the tablet or move your finger over the card to make it sparkle. The rarer the card, the fancier the shine! Tap a card in a new pack to <b>flip</b> it over.'},
       {q:'What are the quotes on my cards?', a:'Many history cards have a famous quote near the bottom: words that person said or wrote, or a famous line about them. Tap 🔊 to hear it (Chinese quotes are in Cantonese). Tap the quote to see what it means, and tap anywhere to close. If it is one of your Japanese sayings, you can jump to it in your saying book!'},
     {q:'What is my level title?', a:'Your title grows as you find cards: Rookie Explorer, Time Traveler, History Hunter, and all the way to <b>History Legend</b> 👑. Check Me → My Adventure.'}
@@ -5170,6 +5226,7 @@ function mhBack(){
   return true;
 }
 function openModal(html){
+  try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){}
   /* 26.11.29: a NEW window (different title/type, or nothing open) always starts at the top,
      so opening a card from a scrolled list shows the card, not the text below it.
      Re-drawing the same window (filters, answers) keeps its place. Callers that restore a
@@ -5247,7 +5304,7 @@ function showNudge(){
   var f = window[n]; if(typeof f !== 'function') return;
   window[n] = function(){ KN2.inLearn = true; try{ return f.apply(this, arguments); } finally{ KN2.inLearn = false; } };
 });
-function closeModal(){ window.__parSec = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
+function closeModal(){ try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){} window.__parSec = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
 function askPin(onOk){
@@ -5941,7 +5998,7 @@ function showCardDetail(id, fromParent){
   var lbl = c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:');
   var h = '<span data-closable></span>';
   if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
-  h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">↔ Swipe or tap the card to flip it</div></div><div class="dt">';
+  h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">Tap the card to see it big · ↔ swipe to flip <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
@@ -5953,7 +6010,7 @@ function showCardDetail(id, fromParent){
   h += '</div></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
   openModal(h);
-  if($('dflip')){ hlFlipBind($('dflip')); hlStart(); }
+  if($('dflip')){ hlFlipBind($('dflip')); hlStart(); var fb_ = $('dflipBtn'); if(fb_) fb_.onclick = function(ev){ ev.stopPropagation(); hlFlipNow(); }; }
   $('modal').onchange = null;
   $('modal').onclick = function(e){
     if(e.target.closest('[data-pback]')){ stopSpeak(); showParentCards(PCV.scroll); return; }
