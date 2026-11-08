@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.37', errs = [], shown = false;
+  var V = '26.11.38', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4456,15 +4456,7 @@ function backHTML(k){
 var HL = {x:.5, y:.5, tx:.5, ty:.5, tilt:0, base:null, run:false, ptr:null, t0:0};
 var HL_RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 function hlClamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
-window.addEventListener('deviceorientation', function(e){
-  if(e.beta == null || e.gamma == null) return;
-  var ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0, lr = e.gamma, fb = e.beta;
-  if(ang == 90){ lr = e.beta; fb = -e.gamma; } else if(ang == -90 || ang == 270){ lr = -e.beta; fb = e.gamma; } else if(ang == 180){ lr = -e.gamma; fb = -e.beta; }
-  if(!HL.base) HL.base = {lr:lr, fb:fb};
-  HL.base.lr += (lr - HL.base.lr)*.004; HL.base.fb += (fb - HL.base.fb)*.004;
-  HL.tx = hlClamp(.5 + (lr - HL.base.lr)/36); HL.ty = hlClamp(.5 + (fb - HL.base.fb)/36);
-  HL.tilt = Date.now();
-});
+/* 26.11.38: the holo/tilt follows only a finger or mouse on the card. Moving the device no longer tilts cards. */
 var HLF = {el:null, ang:0, target:0, drag:null, just:false};
 function hlLoop(now){
   var sc = document.querySelectorAll('.hlsc');
