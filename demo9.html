@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — The True TCG Loop</title>
+<title>Immersive Card Animation — The Physical Portal</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -36,76 +36,74 @@
     transform-origin: 50% 50%;
     will-change: transform;
     overflow: hidden;
-    /* We transition padding and background so the border can disappear */
-    transition: transform 800ms cubic-bezier(0.3, 0, 0.2, 1), padding 600ms ease, background 600ms ease;
+    /* Fast zoom-in by default */
+    transition: transform 450ms cubic-bezier(0.3, 0, 0.2, 1), padding 450ms ease, background 450ms ease;
   }
   
   .llx-in {
     position: relative; width: 100%; height: 100%;
     border-radius: 10px; overflow: hidden;
     background: #000;
-    transition: border-radius 600ms ease;
+    transition: border-radius 450ms ease;
   }
 
   /* The Layers */
-  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 0.8s ease; }
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  
+  /* The Glass Frame layers (Body, Cracks, Charms) */
   .llx-d { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease; }
+  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
   
   .llx-body { z-index: 2; }
   .llx-cracks { z-index: 3; mix-blend-mode: screen; }
   .llx-charms { z-index: 4; }
 
-  .portal-vignette {
-    position: absolute; inset: 0; z-index: 5; pointer-events: none;
-    box-shadow: inset 0 0 80px 20px rgba(0,0,0,0.8);
-    opacity: 0; transition: opacity 0.7s ease;
-  }
-
-  /* --- THE CARD WHILE FLYING --- */
   .card.flying {
     position: fixed; z-index: 100;
     cursor: default;
     pointer-events: none;
   }
 
-  /* --- STATE 1: FOCUSED (Full screen, glass visible and glowing) --- */
-  .card.focused .llx-art { transform: scale(1); }
-  .card.focused .llx-body {
-    opacity: 1;
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
-  }
-  .card.focused .llx-charms {
-    opacity: 1;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
-  }
-
-  /* --- STATE 2: IMMERSED (Glass gone, art edge-to-edge) --- */
-  /* The card padding vanishes */
+  /* --- THE IMMERSED STATE (Diving In) --- */
   .card.immersed {
     padding: 0;
-    background: transparent; /* Gold border disappears */
+    background: transparent;
   }
-  .card.immersed .llx-in {
-    border-radius: 0; /* Square edges to fill screen */
-  }
+  .card.immersed .llx-in { border-radius: 0; }
   
-  /* The glass frame, cracks, and charms fade out completely */
-  .card.immersed .llx-body,
-  .card.immersed .llx-cracks,
-  .card.immersed .llx-charms {
-    opacity: 0;
-  }
-
-  /* The art expands to fill the room */
+  /* The art gently breathes */
   .card.immersed .llx-art {
     transform: scale(1.15);
     animation: breatheArt 10s ease-in-out infinite alternate;
   }
 
+  /* THE MAGIC: The glass frame stays 100% opaque, but scales up 3.5x.
+     Because the glass has a hole in the middle, scaling it up makes the hole expand 
+     until the shattered edges fly off the screen, revealing the whole art. */
+  .card.immersed .llx-body {
+    transform: scale(3.5) translateZ(50px);
+    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1); /* Fast dive in */
+  }
+  .card.immersed .llx-cracks {
+    transform: scale(3.5) translateZ(80px);
+    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card.immersed .llx-charms {
+    transform: scale(4.0) translateZ(100px);
+    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   @keyframes breatheArt {
     0% { transform: scale(1.15) translate(0, 0); }
     100% { transform: scale(1.25) translate(-2%, 2%); }
+  }
+
+  /* --- THE EXIT (Diving Out) --- */
+  /* When closing, we change the transition duration to be slow (1800ms) */
+  .card.closing-slow .llx-body,
+  .card.closing-slow .llx-cracks,
+  .card.closing-slow .llx-charms {
+    transition: transform 1800ms ease-in-out;
   }
 
   /* The flash of light */
@@ -121,7 +119,7 @@
     opacity: 0; pointer-events: none; transition: opacity 600ms ease;
   }
   #overlay.show { opacity: 1; pointer-events: auto; }
-  #overlay.closing { transition: opacity 500ms ease 700ms; }
+  #overlay.closing { transition: opacity 500ms ease 1200ms; } /* Fades back to grid at the end */
   
   #hint {
     position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
@@ -138,7 +136,7 @@
 </style>
 </head>
 <body>
-  <div id="label">Demo 8 · True TCG Loop</div>
+  <div id="label">Demo 9 · The Physical Portal</div>
   <div id="grid"></div>
   <div id="overlay"></div>
   <div id="hint">Tap to close</div>
@@ -176,7 +174,6 @@
           <img class="llx-l llx-cracks" src="${baseUrl + data.cracks}">
           <img class="llx-l llx-charms" src="${baseUrl + data.charms}">
         </div>
-        <div class="portal-vignette"></div>
       </div>
     `;
     
@@ -210,7 +207,7 @@
     overlay.classList.add('show');
     label.classList.add('hide');
 
-    // 1. Zoom to full screen
+    // 1. Fast zoom to full screen
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
@@ -222,38 +219,37 @@
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'opening') return;
       
-      // 2. Pause on the glowing glass frame
-      st.phase = 'focusing';
-      card.classList.add('focused');
+      // 2. Trigger the fast "dive in" (the hole expands)
+      st.phase = 'playing';
+      card.classList.add('immersed');
       hint.classList.add('show');
-
-      // 3. Dive through: Glass fades out completely, art fills screen
-      setTimeout(function() {
-        if (st.phase !== 'focusing') return;
-        st.phase = 'playing';
-        card.classList.remove('focused');
-        card.classList.add('immersed');
-      }, 600); // Wait 600ms to see the glass
-      
     };
     card.addEventListener('transitionend', onEnd);
   }
 
   function close() {
     if (st.phase !== 'playing') return;
-    st.phase = 'refocusing';
+    st.phase = 'closing';
     var card = st.card;
     hint.classList.remove('show');
 
-    // 1. Pull out of the story: Glass fades back in, gold border returns
+    // 1. Add the slow class so the glass shrinks back over 1800ms
+    card.classList.add('closing-slow');
+    
+    // 2. Remove the immersed class. The glass will slowly shrink back into place.
     card.classList.remove('immersed');
-    card.classList.add('focused');
+    
+    // Stop the art from breathing so it holds still while we back out
+    card.querySelector('.llx-art').style.animation = 'none';
+    card.querySelector('.llx-art').style.transform = 'scale(1)';
 
-    // 2. Wait for glass to refocus, then shrink back to grid
+    // 3. Wait for the slow dive out to finish (1800ms), THEN shrink the card back to grid
     setTimeout(function() {
-      if (st.phase !== 'refocusing') return;
-      st.phase = 'closing';
+      if (st.phase !== 'closing') return;
 
+      // Restore the fast transitions for the card shrinking
+      card.classList.remove('closing-slow');
+      
       card.style.transform = `translate(0,0) scale(1)`;
       overlay.classList.add('closing');
       overlay.classList.remove('show');
@@ -264,13 +260,13 @@
         if (st.phase !== 'closing') return;
         
         card.style.cssText = ''; 
-        card.classList.remove('flying', 'focused');
+        card.classList.remove('flying');
         st.phase = 'idle'; st.card = null;
         label.classList.remove('hide');
       };
       card.addEventListener('transitionend', onEnd);
 
-    }, 800); // 800ms pause on the clear glass before shrinking
+    }, 1800); // 1800ms for the slow dive out
   }
 
   grid.addEventListener('click', function(e) {
