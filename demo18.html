@@ -7,7 +7,7 @@
 <style>
   /* --- EXACT APP VARIABLES --- */
   :root {
-    --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, system-ui, sans-serif;
+    --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
     --ink: #eaeeff; --muted: #8e97c4; --line: rgba(255,255,255,.13);
     --accent: #8b7bff; --accent-2: #5ee7df; --accent-soft: rgba(139,123,255,.22);
     --shadow-1: 0 18px 36px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.08);
@@ -17,7 +17,6 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
   html, body { margin: 0; min-height: 100%; font-family: var(--font); background: var(--bg); color: var(--ink); overflow: hidden; }
   
-  /* Blurred fake background to simulate app behind modal */
   #fake-app-bg {
     position: absolute; inset: 0;
     background: radial-gradient(700px 480px at 88% -8%, rgba(155,123,255,.40), transparent 70%),
@@ -26,21 +25,27 @@
     filter: blur(12px); z-index: 1;
   }
 
-  /* Overlay / Modal */
+  /* Overlay / Modal (overflow: visible is crucial for 3D flying) */
   .overlay { position: fixed; inset: 0; background: rgba(24,22,60,.55); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .modal { background: #11163a; border-radius: 30px; max-width: 760px; width: 100%; max-height: 94vh; overflow: auto; padding: 24px; box-shadow: var(--shadow-2); border: 1px solid var(--line); position: relative; transition: opacity 0.4s ease; }
+  .modal { background: #11163a; border-radius: 30px; max-width: 760px; width: 100%; max-height: 94vh; overflow-y: auto; overflow-x: hidden; padding: 24px; box-shadow: var(--shadow-2); border: 1px solid var(--line); position: relative; transition: opacity 0.4s ease; }
   .modal.hide-ui { opacity: 0; pointer-events: none; }
   
-  .detail { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
-  .detail .dc { width: min(100%, 250px); flex: none; position: relative; }
+  .mxw { position: absolute; right: 16px; top: 16px; z-index: 40; }
+  .mx { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #ece9fb; color: #1e2142; font-size: 17px; font-weight: 900; line-height: 36px; cursor: pointer; box-shadow: 0 2px 6px rgba(30,33,66,.25); }
 
-  /* The Card Flip Container */
-  .dflip { position: relative; width: 100%; aspect-ratio: 5/7; transform-style: preserve-3d; cursor: grab; transition: transform 0.1s ease-out; }
-  .dflip-in { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .detail { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; justify-content: center; margin-top: 10px; }
+  .detail .dc { width: min(100%, 250px); flex: none; position: relative; perspective: 750px; }
+
+  /* The Card Flip Container (NO preserve-3d here!) */
+  .dflip { position: relative; width: 100%; aspect-ratio: 5/7; cursor: grab; transition: transform 0.1s ease-out; }
+  .dflip-in { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); }
   .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 
-  /* --- EXACT LLX CARD CSS FROM index.html --- */
-  .tcg.llx { padding: 0; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); color: #fff; animation: none; position: absolute; inset: 0; border-radius: 1.2em; overflow: hidden; }
+  /* EXACT TCG BOX FOR CQW SCALING */
+  .tcgbox { container-type: inline-size; width: 100%; aspect-ratio: 5/7; position: relative; }
+
+  /* --- EXACT LLX CARD CSS --- */
+  .tcg.llx { padding: 0; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); color: #fff; position: absolute; inset: 0; border-radius: 1.2em; overflow: hidden; font-size: 6.4cqw; line-height: 1.1; }
   .llx-in { position: absolute; inset: .16em; border-radius: 1.06em; overflow: hidden; background: #000; isolation: isolate; transform-style: preserve-3d; }
   .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   
@@ -48,13 +53,12 @@
   .llx-l { position: absolute; pointer-events: none; }
   .llx-flat, .llx-fade { inset: 0; width: 100%; height: 100%; }
   
-  /* Tilt Math */
   .llx { --dx: calc((var(--mx, .5) - .5)*2); --dy: calc((var(--my, .5) - .5)*2); --mag: clamp(.25, calc(.25 + (var(--dx)*var(--dx) + var(--dy)*var(--dy))*.75), 1); }
   
-  /* Glass Frame Group (70% Opacity) */
+  /* Glass Frame Group */
   .llx-g { inset: -4%; width: 108%; height: 108%; transform: translate3d(calc(var(--dx)*1.6%), calc(var(--dy)*1.6%), 0); }
   div.llx-g > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .llx-body { opacity: 0.7; } /* 70% opaque as requested */
+  .llx-body { opacity: 0.7; }
   
   .llx-holo { background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); background-size: 260% 260%; background-position: calc(50% + var(--dx)*45%) calc(50% + var(--dy)*45%); mix-blend-mode: screen; }
   .llx-bh { opacity: calc(.10 + var(--mag)*.32); }
@@ -105,7 +109,6 @@
   
   .btn.llwatch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; background: #11163a; color: #fff; border: 2px solid #f2c75c; border-radius: 16px; padding: 14px; font-weight: 900; font-size: 17px; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
   .btn.llwatch:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.4); }
-  
   .spk { font-size: 0.6em; opacity: 0.55; }
 
   /* --- THE ANIMATION OVERRIDES --- */
@@ -162,57 +165,77 @@
 
 <div class="overlay" id="main-modal">
   <div class="modal">
+    
+    <div class="mxw"><button class="mx">←</button></div>
+
     <div class="detail">
       
       <!-- THE CARD -->
-      <div class="dc">
-        <div class="dflip hlsc" id="dflip" style="--mx: 0.5; --my: 0.5;">
+      <div class="dc" id="card-container">
+        <div class="dflip hlsc" id="dflip" style="--mx: 0.5; --my: 0.5; --rx: 0deg; --ry: 0deg;">
           <div class="dflip-in">
             <div class="flip-face dfront">
-              <div class="tcg r-LL reg-GL llx">
-                <div class="llx-in">
-                  <!-- Kaguya Art -->
-                  <img class="llx-art" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll02.9f4fc321.webp">
-                  <div class="llx-d">
-                    
-                    <div class="llx-l llx-g">
-                      <img class="llx-body" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
-                      <i class="llx-holo llx-bh"></i>
-                      <i class="llx-bs"></i>
-                      <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp" style="position:absolute;inset:0;width:100%;height:100%">
-                      <i class="llx-holo llx-ch"></i>
-                      <i class="llx-cg"></i>
-                    </div>
-                    
-                    <i class="llx-l llx-glare"></i>
-                    
-                    <div class="llx-l llx-c">
-                      <div class="llx-bob">
-                        <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/charms.aade78ba.webp">
-                        <i class="llx-holo llx-cmh"></i>
-                        <!-- The Sparks -->
-                        <span class="hlx-sp">
-                          <i class="sb" style="left:10%;top:10%;--d:-0.5s"></i>
-                          <i class="sa" style="left:80%;top:20%;--d:-1.2s"></i>
-                          <i class="sb" style="left:90%;top:70%;--d:-0.8s"></i>
-                          <i class="sa" style="left:20%;top:80%;--d:-1.5s"></i>
-                          <i class="sb" style="left:50%;top:50%;--d:-0.2s"></i>
-                          <i class="sa" style="left:15%;top:45%;--d:-0.9s"></i>
-                          <i class="sb" style="left:75%;top:85%;--d:-1.1s"></i>
-                        </span>
+              <div class="tcgbox">
+                <div class="tcg r-LL reg-GL llx">
+                  <div class="llx-in">
+                    <img class="llx-art" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll02.9f4fc321.webp">
+                    <div class="llx-d">
+                      
+                      <div class="llx-l llx-g">
+                        <img class="llx-body" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
+                        <i class="llx-holo llx-bh"></i>
+                        <i class="llx-bs"></i>
+                        <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp" style="position:absolute;inset:0;width:100%;height:100%">
+                        <i class="llx-holo llx-ch"></i>
+                        <i class="llx-cg"></i>
+                      </div>
+                      
+                      <i class="llx-l llx-glare"></i>
+                      
+                      <div class="llx-l llx-c">
+                        <div class="llx-bob">
+                          <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/charms.aade78ba.webp">
+                          <i class="llx-holo llx-cmh"></i>
+                          
+                          <span class="hlx-sp">
+                            <i class="sb" style="left:8.5%;top:4.0%;width:9.0cqw;--x:0.036;--y:-0.016;--d:-0.00s"></i>
+                            <i class="sa" style="left:21.4%;top:11.0%;width:9.0cqw;--x:0.179;--y:0.063;--d:-0.53s"></i>
+                            <i class="sa" style="left:11.4%;top:21.5%;width:14.0cqw;--x:0.067;--y:0.181;--d:-1.06s"></i>
+                            <i class="sb" style="left:11.5%;top:41.3%;width:6.0cqw;--x:0.069;--y:0.403;--d:-1.59s"></i>
+                            <i class="sa" style="left:87.0%;top:12.5%;width:14.0cqw;--x:0.914;--y:0.080;--d:-2.12s"></i>
+                            <i class="sa" style="left:87.9%;top:32.0%;width:9.0cqw;--x:0.925;--y:0.299;--d:-0.05s"></i>
+                            <i class="sb" style="left:94.7%;top:25.9%;width:6.0cqw;--x:1.000;--y:0.230;--d:-0.58s"></i>
+                            <i class="sa" style="left:5.1%;top:65.2%;width:9.0cqw;--x:-0.003;--y:0.671;--d:-1.11s"></i>
+                            <i class="sa" style="left:15.0%;top:74.3%;width:14.0cqw;--x:0.108;--y:0.773;--d:-1.64s"></i>
+                            <i class="sb" style="left:18.6%;top:85.8%;width:9.0cqw;--x:0.149;--y:0.901;--d:-2.17s"></i>
+                            <i class="sa" style="left:31.9%;top:97.0%;width:6.0cqw;--x:0.297;--y:1.026;--d:-0.10s"></i>
+                            <i class="sa" style="left:91.2%;top:74.3%;width:9.0cqw;--x:0.961;--y:0.772;--d:-0.63s"></i>
+                            <i class="sb" style="left:79.3%;top:80.9%;width:9.0cqw;--x:0.828;--y:0.846;--d:-1.16s"></i>
+                            <i class="sa" style="left:9.0%;top:14.0%;width:4.6cqw;--x:0.041;--y:0.097;--d:-1.69s"></i>
+                            <i class="sa" style="left:86.0%;top:11.0%;width:5.2cqw;--x:0.903;--y:0.063;--d:-2.22s"></i>
+                            <i class="sb" style="left:14.0%;top:47.0%;width:5.0cqw;--x:0.097;--y:0.466;--d:-0.15s"></i>
+                            <i class="sa" style="left:91.0%;top:58.0%;width:5.6cqw;--x:0.959;--y:0.590;--d:-0.68s"></i>
+                            <i class="sa" style="left:8.0%;top:82.0%;width:4.8cqw;--x:0.030;--y:0.858;--d:-1.21s"></i>
+                            <i class="sb" style="left:80.0%;top:88.0%;width:5.4cqw;--x:0.836;--y:0.926;--d:-1.74s"></i>
+                            <i class="sa" style="left:70.0%;top:20.0%;width:4.4cqw;--x:0.724;--y:0.164;--d:-2.27s"></i>
+                            <i class="sa" style="left:22.0%;top:25.0%;width:4.6cqw;--x:0.186;--y:0.220;--d:-0.20s"></i>
+                            <i class="sb" style="left:88.0%;top:34.0%;width:5.0cqw;--x:0.926;--y:0.321;--d:-0.73s"></i>
+                          </span>
+
+                        </div>
                       </div>
                     </div>
+                    
+                    <div class="llx-fade"></div>
+                    <div class="llx-top">
+                      <div class="llx-nm">Princess Kaguya</div>
+                      <div class="llx-nat">かぐや姫</div>
+                    </div>
+                    <div class="llx-rar">LL</div>
+                    <div class="llx-tag">The girl from the Moon</div>
+                    <div class="llx-foot">🇯🇵 LEGEND · OVER 1,000 YEARS OLD</div>
+                    <div class="llx-play">▶</div>
                   </div>
-                  
-                  <div class="llx-fade"></div>
-                  <div class="llx-top">
-                    <div class="llx-nm">Princess Kaguya</div>
-                    <div class="llx-nat">かぐや姫</div>
-                  </div>
-                  <div class="llx-rar">LL</div>
-                  <div class="llx-tag">The girl from the Moon</div>
-                  <div class="llx-foot">🇯🇵 LEGEND · OVER 1,000 YEARS OLD</div>
-                  <div class="llx-play">▶</div>
                 </div>
               </div>
             </div>
@@ -242,7 +265,6 @@
   </div>
 </div>
 
-<!-- Invisible layer to catch taps during the story -->
 <div id="closer"></div>
 
 <script>
@@ -250,14 +272,15 @@
   'use strict';
 
   var card = document.getElementById('dflip');
+  var cardContainer = document.getElementById('card-container');
   var modal = document.getElementById('main-modal');
   var closer = document.getElementById('closer');
   var btnWatch = document.getElementById('btn-watch');
-  var st = { phase: 'idle' };
+  var st = { phase: 'idle', originalParent: cardContainer };
 
-  // --- 1. EXACT 3D TILT LOGIC ---
+  // --- 1. EXACT TILT MATH FROM APP ---
   card.addEventListener('pointermove', function(e) {
-    if (st.phase !== 'idle' && st.phase !== 'playing') return;
+    if (st.phase !== 'idle') return; 
     
     var r = card.getBoundingClientRect();
     if(!r.width || !r.height) return;
@@ -268,16 +291,15 @@
     card.style.setProperty('--mx', mx);
     card.style.setProperty('--my', my);
     
-    if (st.phase === 'idle') {
-      var rx = (0.5 - my) * 20;
-      var ry = (mx - 0.5) * 20;
-      card.querySelector('.dflip-in').style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    }
+    var rot = 20.8; // data-rotp
+    card.style.setProperty('--ry', ((mx - .5)*rot).toFixed(2)+'deg');
+    card.style.setProperty('--rx', ((.5 - my)*rot).toFixed(2)+'deg');
   });
 
   card.addEventListener('pointerleave', function() {
     if (st.phase === 'idle') {
-      card.querySelector('.dflip-in').style.transform = `rotateX(0deg) rotateY(0deg)`;
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
       card.style.setProperty('--mx', 0.5);
       card.style.setProperty('--my', 0.5);
     }
@@ -287,108 +309,20 @@
 
   function startStory(e) {
     if (st.phase !== 'idle') return;
-    
-    // Ignore clicks if we were just dragging/tilting
     if (e && e.type === 'click' && window.__justDragged) return;
 
     st.phase = 'opening';
 
     // Reset tilt for the zoom
-    card.querySelector('.dflip-in').style.transform = `rotateX(0deg) rotateY(0deg)`;
+    card.style.setProperty('--rx', '0deg');
+    card.style.setProperty('--ry', '0deg');
     
     var rect = card.getBoundingClientRect();
+    
+    // Rip the card out of the modal
+    document.body.appendChild(card);
+
     var vw = window.innerWidth, vh = window.innerHeight;
     var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
     var tx = vw / 2 - (rect.left + rect.width / 2);
-    var ty = vh / 2 - (rect.top + rect.height / 2);
-
-    card.style.position = 'fixed';
-    card.style.left = rect.left + 'px';
-    card.style.top = rect.top + 'px';
-    card.style.width = rect.width + 'px';
-    card.style.height = rect.height + 'px';
-    card.style.margin = '0';
-    card.classList.add('flying');
-    void card.offsetWidth;
-
-    // Hide the UI behind the card
-    modal.classList.add('hide-ui');
-
-    // 1. Fast zoom to full screen
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
-      });
-    });
-
-    var onEnd = function(e) {
-      if (e.propertyName !== 'transform') return;
-      card.removeEventListener('transitionend', onEnd);
-      if (st.phase !== 'opening') return;
-      
-      st.phase = 'focusing';
-
-      // 2. Pause for 400ms so the 70% glass and charms are visible
-      setTimeout(function() {
-        if (st.phase !== 'focusing') return;
-        st.phase = 'playing';
-        
-        // 3. Dive in
-        card.classList.add('immersed');
-        closer.style.display = 'block'; // Enable tap anywhere to close
-        
-      }, 400);
-      
-    };
-    card.addEventListener('transitionend', onEnd);
-  }
-
-  function endStory() {
-    if (st.phase !== 'playing') return;
-    st.phase = 'closing';
-    closer.style.display = 'none';
-
-    // 1. Trigger the slow 1800ms pull-back
-    card.classList.add('closing-slow');
-    card.classList.remove('immersed');
-    
-    // Stop the art breathing
-    card.querySelector('.llx-art').style.animation = 'none';
-    card.querySelector('.llx-art').style.transform = 'scale(1)';
-
-    // 2. Wait for the slow dive out to finish, then shrink back to window
-    setTimeout(function() {
-      if (st.phase !== 'closing') return;
-
-      card.classList.remove('closing-slow');
-      card.style.transform = `translate(0,0) scale(1)`;
-      
-      var onEnd = function(e) {
-        if (e.propertyName !== 'transform') return;
-        card.removeEventListener('transitionend', onEnd);
-        if (st.phase !== 'closing') return;
-        
-        // Cleanup
-        card.style.cssText = ''; 
-        card.classList.remove('flying');
-        card.style.setProperty('--mx', 0.5);
-        card.style.setProperty('--my', 0.5);
-        
-        // Bring the UI back
-        modal.classList.remove('hide-ui');
-        st.phase = 'idle'; 
-      };
-      card.addEventListener('transitionend', onEnd);
-
-    }, 1800); 
-  }
-
-  // Event listeners
-  card.addEventListener('click', startStory);
-  btnWatch.addEventListener('click', startStory);
-  closer.addEventListener('click', endStory);
-
-  // Prevent accidental clicks when dragging to tilt
-  var startX, startY;
-  card.addEventListener('pointerdown', function(e) {
-    startX 
+    var ty = vh / 2 - (re
