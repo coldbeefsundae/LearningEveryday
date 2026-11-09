@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.50', errs = [], shown = false;
+  var V = '26.11.51', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2474,7 +2474,7 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 #llfx.dark .llfx-bg{opacity:1}
 #llfx .llfx-card{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;--mx:.5;--my:.5;--rx:0deg;--ry:0deg;--ll-art-a:1.15;--ll-art-b:1.25}
 #llfx .llfx-card.go{transition:transform 400ms cubic-bezier(.3,0,.2,1)}
-#llfx .llfx-card.snap{transition:transform 430ms cubic-bezier(.18,.9,.3,1.18)}
+#llfx .llfx-card.snap{transition:transform 430ms cubic-bezier(.22,.8,.25,1)}
 #llfx .llx-top,#llfx .llx-rar,#llfx .llx-tag,#llfx .llx-foot,#llfx .llx-play,#llfx .llx-fade,#llfx .hlx-sp{transition:opacity .35s ease}
 #llfx .imm .tcg,#llfx .imm .llx-in{border-radius:0}
 #llfx .imm .llx-art{transform:scale(var(--ll-art-a));animation:llFxBreathe 10s ease-in-out 800ms infinite alternate;transition:transform 800ms ease}
