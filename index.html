@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.40', errs = [], shown = false;
+  var V = '26.11.41', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -373,7 +373,7 @@ h1,h2,h3,p{margin:0}
 .hf-holo .tcg-shine,.hf-ssr .tcg-shine{display:none}
 .flip.on.fx-SSR .flip-front .hf-ssr .tcg.r-SSR{animation:ssrpop 1.4s ease-out}
 /* card detail: swipe or tap to flip */
-.dflip{position:relative;width:100%;aspect-ratio:5/7;perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.dflip{position:relative;width:100%;aspect-ratio:5/7;perspective:750px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
 .dflip-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--fa,0deg) + var(--ry,0deg)))}
 .dflip .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .dflip .dback{transform:rotateY(180deg);pointer-events:none}
@@ -4467,10 +4467,11 @@ function hlLoop(now){
   else if(HL.ptr){ tx = HL.ptr.x; ty = HL.ptr.y; }
   else if(live){ tx = HL.tx; ty = HL.ty; }
   else if(!HL_RM){ var t = (now - HL.t0)/1000; tx = .5 + .32*Math.sin(t*.55); ty = .5 + .26*Math.sin(t*.37 + 1); }
-  var hk_ = HL.hold ? .35 : .14; HL.x += (tx - HL.x)*hk_; HL.y += (ty - HL.y)*hk_;
+  var dt_ = HL.last ? Math.min(100, now - HL.last) : 16.7; HL.last = now;   /* 26.11.41: smoothing by time, not by frame: same feel at 60 and 144 Hz and on a slow frame */
+  var hk_ = 1 - Math.exp(-dt_/(HL.hold ? 38.7 : 110)); HL.x += (tx - HL.x)*hk_; HL.y += (ty - HL.y)*hk_;
   for(var i = 0; i < sc.length; i++){
-    var aiming = HL.ptr && !HL.hold && !(HLF.drag && HLF.drag.on);           // 26.11.34: lean more toward a finger/mouse
-    var st = sc[i].style, rot = +(sc[i].getAttribute('data-rot') || 0) * (aiming ? 1.6 : live ? .4 : 1);
+    var aiming = HL.ptr && !HL.hold;           // 26.11.41: finger or mouse on the card tilts the whole card like the LR preview, +30% (data-rotp)
+    var st = sc[i].style, rot = +(sc[i].getAttribute(aiming ? 'data-rotp' : 'data-rot') || sc[i].getAttribute('data-rot') || 0) * (!aiming && live ? .4 : 1);
     st.setProperty('--mx', HL.x.toFixed(4)); st.setProperty('--my', HL.y.toFixed(4));
     if(rot){ st.setProperty('--ry', ((HL.x - .5)*rot).toFixed(2)+'deg'); st.setProperty('--rx', ((.5 - HL.y)*rot).toFixed(2)+'deg'); }
   }
@@ -4484,7 +4485,7 @@ function hlLoop(now){
   }
   requestAnimationFrame(hlLoop);
 }
-function hlStart(){ if(!HL.run){ HL.run = true; HL.t0 = 0; requestAnimationFrame(hlLoop); } }
+function hlStart(){ if(!HL.run){ HL.run = true; HL.t0 = 0; HL.last = 0; requestAnimationFrame(hlLoop); } }
 /* 26.11.31: card flip + big view.
    - 26.11.36: sliding a finger (or moving the mouse) only tilts the card; it no longer flips.
    - Tap the card: see it big. In the big view, tap anywhere to close.
@@ -4545,7 +4546,7 @@ function cardBigFit(){
   var bar = o.querySelector('.cbig-bar'), gap = 18;
   var availW = W - px(cs.paddingLeft) - px(cs.paddingRight) - (land && bar ? bar.offsetWidth + gap : 0);
   var availH = H - px(cs.paddingTop) - px(cs.paddingBottom) - (!land && bar ? bar.offsetHeight + gap : 0);
-  var k = Math.min(availW/250, availH/350);
+  var k = Math.min(availW/250, availH/350) * .95;   /* 26.11.41: a little room, because the tilted card's near edge grows a few percent */
   o.style.setProperty('--bs', Math.max(.5, k).toFixed(3));
 }
 function cardBigOpen(){
@@ -6274,7 +6275,7 @@ function showCardDetail(id, fromParent){
   var lbl = c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:');
   var h = '<span data-closable></span>';
   if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
-  h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">Tap the card to see it big · slide to tilt <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
+  h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10" data-rotp="20.8"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">Tap the card to see it big · slide to tilt <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
