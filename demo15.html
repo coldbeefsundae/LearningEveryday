@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>StarQuest · Princess Kaguya</title>
+<style>
+  /* --- EXACT APP VARIABLES --- */
+  :root {
+    --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, system-ui, sans-serif;
+    --ink: #eaeeff; --muted: #8e97c4; --line: rgba(255,255,255,.13);
+    --accent: #8b7bff; --accent-2: #5ee7df; --accent-soft: rgba(139,123,255,.22);
+    --shadow-1: 0 18px 36px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.08);
+    --shadow-2: 0 30px 60px -20px rgba(0,0,0,.85);
+    --bg: #0a0e20;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  html, body { margin: 0; min-height: 100%; font-family: var(--font); background: var(--bg); color: var(--ink); overflow: hidden; }
+  
+  /* Blurred fake background to simulate app behind modal */
+  #fake-app-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(700px 480px at 88% -8%, rgba(155,123,255,.40), transparent 70%),
+                radial-gradient(640px 480px at -4% 104%, rgba(94,231,223,.24), transparent 70%),
+                radial-gradient(500px 360px at 60% 110%, rgba(255,123,208,.16), transparent 70%), #0a0e20;
+    filter: blur(12px); z-index: 1;
+  }
+
+  /* Overlay / Modal */
+  .overlay { position: fixed; inset: 0; background: rgba(24,22,60,.55); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal { background: #11163a; border-radius: 30px; max-width: 760px; width: 100%; max-height: 94vh; overflow: auto; padding: 24px; box-shadow: var(--shadow-2); border: 1px solid var(--line); position: relative; transition: opacity 0.4s ease; }
+  .modal.hide-ui { opacity: 0; pointer-events: none; }
+  
+  .detail { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; justify-content: center; }
+  .detail .dc { width: min(100%, 250px); flex: none; position: relative; }
+
+  /* The Card Flip Container */
+  .dflip { position: relative; width: 100%; aspect-ratio: 5/7; transform-style: preserve-3d; cursor: grab; transition: transform 0.1s ease-out; }
+  .dflip-in { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+  /* --- EXACT LLX CARD CSS FROM index.html --- */
+  .tcg.llx { padding: 0; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); color: #fff; animation: none; position: absolute; inset: 0; border-radius: 1.2em; overflow: hidden; }
+  .llx-in { position: absolute; inset: .16em; border-radius: 1.06em; overflow: hidden; background: #000; isolation: isolate; transform-style: preserve-3d; }
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  
+  .llx-d { position: absolute; inset: 0; transition: opacity .32s ease-in; transform-style: preserve-3d; }
+  .llx-l { position: absolute; pointer-events: none; }
+  .llx-flat, .llx-fade { inset: 0; width: 100%; height: 100%; }
+  
+  /* Tilt Math */
+  .llx { --dx: calc((var(--mx, .5) - .5)*2); --dy: calc((var(--my, .5) - .5)*2); --mag: clamp(.25, calc(.25 + (var(--dx)*var(--dx) + var(--dy)*var(--dy))*.75), 1); }
+  
+  /* Glass Frame Group (70% Opacity) */
+  .llx-g { inset: -4%; width: 108%; height: 108%; transform: translate3d(calc(var(--dx)*1.6%), calc(var(--dy)*1.6%), 0); }
+  div.llx-g > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .llx-body { opacity: 0.7; } /* 70% opaque as requested */
+  
+  .llx-holo { background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); background-size: 260% 260%; background-position: calc(50% + var(--dx)*45%) calc(50% + var(--dy)*45%); mix-blend-mode: screen; }
+  .llx-bh { opacity: calc(.10 + var(--mag)*.32); }
+  .llx-bs, .llx-cg { mix-blend-mode: screen; background-size: 300% 300%; background-position: calc(50% - var(--dx)*60% - var(--dy)*20%) calc(50% - var(--dy)*60%); }
+  .llx-bs { background-image: linear-gradient(120deg,transparent 35%,rgba(255,255,255,.20) 47%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.20) 53%,transparent 65%); }
+  .llx-cg { background-image: linear-gradient(120deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%); }
+  .llx-ch { mix-blend-mode: multiply; opacity: .62; }
+  .llx-glare { inset: 0; background: radial-gradient(circle at calc(50% + var(--dx)*55%) calc(35% + var(--dy)*55%),rgba(255,255,255,.55),rgba(255,255,255,0) 42%); mix-blend-mode: overlay; opacity: calc(var(--mag)*.9); }
+  
+  /* Charms */
+  .llx-c { inset: -6%; width: 112%; height: 112%; transform: translate3d(calc(var(--dx)*4.2%), calc(var(--dy)*4.2%), 0); }
+  .llx-bob { position: absolute; inset: 0; animation: llxbob 7s ease-in-out infinite; }
+  .llx-bob > img, .llx-bob > i { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .llx-cmh { mix-blend-mode: screen; opacity: calc(.35 + var(--mag)*.55); background-size: 200% 200%; animation: llxdrift 9s linear infinite; background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); }
+  @keyframes llxbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8%); } }
+  @keyframes llxdrift { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+
+  /* Sparks */
+  .hlx-sp { position: absolute; inset: 0; pointer-events: none; }
+  .hlx-sp i { position: absolute; width: 3.2cqw; height: 3.2cqw; margin: -1.6cqw; background: radial-gradient(circle,#fff 0 12%,transparent 13%),linear-gradient(0deg,transparent 46%,#fff 50%,transparent 54%),linear-gradient(90deg,transparent 46%,#fff 50%,transparent 54%); animation: hltw 1.8s ease-in-out infinite; }
+  @keyframes hltw { 0%,100% { transform: scale(.35); opacity: .4; } 50% { transform: scale(1); opacity: 1; } }
+
+  /* Text Layers */
+  .llx-fade { background: linear-gradient(180deg,rgba(0,0,0,.62) 0,rgba(0,0,0,0) 17%),linear-gradient(0deg,rgba(0,0,0,.75) 0,rgba(0,0,0,0) 24%); z-index: 5; pointer-events: none; transition: opacity 0.4s ease; }
+  .llx-top { position: absolute; left: 6%; top: 3.4%; right: 25%; z-index: 6; transition: opacity 0.4s ease; }
+  .llx-nm { font: 900 .98em/1.05 Georgia, serif; color: #fff; text-shadow: 0 .05em .08em #000,0 0 .3em rgba(0,0,0,.7); }
+  .llx-nat { margin-top: .3em; font-weight: 700; font-size: .46em; line-height: 1.2; color: #f6e8be; text-shadow: 0 .05em .12em #000; }
+  .llx-rar { position: absolute; right: 5%; top: 3.6%; background: #000; color: #f2c75c; box-shadow: inset 0 0 0 .14em #f2c75c,0 0 .5em rgba(242,199,92,.35); border-radius: 9em; padding: .24em .62em; font-weight: 900; font-size: .46em; line-height: 1; z-index: 6; transition: opacity 0.4s ease; }
+  .llx-tag { position: absolute; left: 6%; right: 22%; bottom: 9.5%; font: italic 700 .56em/1.15 Georgia, serif; color: #fff; text-shadow: 0 .06em .1em #000; z-index: 6; transition: opacity 0.4s ease; }
+  .llx-foot { position: absolute; left: 6%; right: 22%; bottom: 4%; font-weight: 800; font-size: .38em; line-height: 1.2; letter-spacing: .08em; color: #f2d68a; text-transform: uppercase; text-shadow: 0 .05em .1em #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 6; transition: opacity 0.4s ease; }
+  .llx-play { position: absolute; right: 5%; bottom: 3.4%; width: 12%; aspect-ratio: 1; border-radius: 50%; background: rgba(0,0,0,.55); box-shadow: inset 0 0 0 .1em #f2c75c; color: #f2c75c; display: grid; place-items: center; font-size: .6em; line-height: 1; padding-left: .1em; z-index: 6; transition: opacity 0.4s ease; }
+
+  /* UI Text / Details */
+  .dfliphint { text-align: center; font-size: 13px; font-weight: 800; opacity: .6; margin-top: 10px; }
+  .btn.flip-btn { display: block; margin: 10px auto 20px; background: #262c55; color: #fff; border: 2px solid rgba(255,255,255,.4); border-radius: 16px; padding: 8px 24px; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.3); }
+  .btn.flip-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.3); }
+  
+  .tagrow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tag { font-size: 13px; font-weight: 900; padding: 5px 12px; border-radius: 99px; background: #f0effa; color: #4a4670; display: inline-flex; align-items: center; gap: 4px; }
+  .tag.rr { color: #fff; background: #000; border: 2px solid #f2c75c; }
+  .tag.say { cursor: pointer; }
+  
+  .dt { flex: 1; min-width: 260px; text-align: left; }
+  .dt h2 { font-size: 28px; margin: 0; letter-spacing: -.4px; color: var(--accent-2); display: flex; align-items: center; gap: 8px; }
+  .dt .nat { font-size: 20px; font-weight: 700; color: var(--muted); margin-top: 4px; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; }
+  .dt .era { font-weight: 800; color: var(--accent); margin: 8px 0; }
+  .dt .tagline { font-weight: 800; font-size: 16px; color: var(--ink); margin-bottom: 8px; }
+  
+  .btn.llwatch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; background: #11163a; color: #fff; border: 2px solid #f2c75c; border-radius: 16px; padding: 14px; font-weight: 900; font-size: 17px; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+  .btn.llwatch:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.4); }
+  
+  .spk { font-size: 0.6em; opacity: 0.55; }
+
+  /* --- THE ANIMATION OVERRIDES --- */
+  #closer { position: fixed; inset: 0; z-index: 9999; display: none; cursor: pointer; }
+
+  .dflip.flying {
+    position: fixed; z-index: 1000;
+    cursor: default;
+    pointer-events: none;
+    transition: transform 400ms cubic-bezier(0.3, 0, 0.2, 1), padding 400ms ease, background 400ms ease, border-radius 400ms ease;
+  }
+
+  .dflip.immersed { padding: 0; border-radius: 0; }
+  .dflip.immersed .tcg { border-radius: 0; }
+  .dflip.immersed .llx-in { border-radius: 0; }
+  
+  .dflip.immersed .llx-art {
+    transform: scale(1.15);
+    animation: breatheArt 10s ease-in-out infinite alternate;
+    transition: transform 800ms ease;
+  }
+  
+  /* Dive In */
+  .dflip.immersed .llx-g, .dflip.immersed .llx-c {
+    transition: transform 700ms cubic-bezier(0.7, 0, 1, 1);
+  }
+  .dflip.immersed .llx-g { transform: scale(2.8) translateZ(50px); }
+  .dflip.immersed .llx-c { transform: scale(3.0) translateZ(80px); }
+  
+  /* Hide Text */
+  .dflip.immersed .llx-top, .dflip.immersed .llx-rar, .dflip.immersed .llx-tag, .dflip.immersed .llx-foot, .dflip.immersed .llx-play, .dflip.immersed .llx-fade, .dflip.immersed .hlx-sp {
+    opacity: 0 !important;
+    transition: opacity 0.4s ease;
+  }
+
+  @keyframes breatheArt { 0% { transform: scale(1.15) translate(0,0); } 100% { transform: scale(1.25) translate(-2%,2%); } }
+
+  /* Dive Out */
+  .dflip.closing-slow .llx-g, .dflip.closing-slow .llx-c {
+    transition: transform 1800ms ease-in-out;
+  }
+
+  .dflip.flying::before {
+    content: ""; position: absolute; inset: 0; z-index: 99;
+    background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.9), transparent 70%);
+    opacity: 0; pointer-events: none; animation: flash 600ms ease-out;
+  }
+  @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div id="fake-app-bg"></div>
+
+<div class="overlay" id="main-modal">
+  <div class="modal">
+    <div class="detail">
+      
+      <!-- THE CARD -->
+      <div class="dc">
+        <div class="dflip hlsc" id="dflip" style="--mx: 0.5; --my: 0.5;">
+          <div class="dflip-in">
+            <div class="flip-face dfront">
+              <div class="tcg r-LL reg-GL llx">
+                <div class="llx-in">
+                  <!-- Kaguya Art -->
+                  <img class="llx-art" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll02.9f4fc321.webp">
+                  <div class="llx-d">
+                    
+                    <div class="llx-l llx-g">
+                      <img class="llx-body" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
+                      <i class="llx-holo llx-bh"></i>
+                      <i class="llx-bs"></i>
+                      <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp" style="position:absolute;inset:0;width:100%;height:100%">
+                      <i class="llx-holo llx-ch"></i>
+                      <i class="llx-cg"></i>
+                    </div>
+                    
+                    <i class="llx-l llx-glare"></i>
+                    
+                    <div class="llx-l llx-c">
+                      <div class="llx-bob">
+                        <img src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/charms.aade78ba.webp">
+                        <i class="llx-holo llx-cmh"></i>
+                        <!-- The Sparks -->
+                        <span class="hlx-sp">
+                          <i class="sb" style="left:10%;top:10%;--d:-0.5s"></i>
+                          <i class="sa" style="left:80%;top:20%;--d:-1.2s"></i>
+                          <i class="sb" style="left:90%;top:70%;--d:-0.8s"></i>
+                          <i class="sa" style="left:20%;top:80%;--d:-1.5s"></i>
+                          <i class="sb" style="left:50%;top:50%;--d:-0.2s"></i>
+                          <i class="sa" style="left:15%;top:45%;--d:-0.9s"></i>
+                          <i class="sb" style="left:75%;top:85%;--d:-1.1s"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="llx-fade"></div>
+                  <div class="llx-top">
+                    <div class="llx-nm">Princess Kaguya</div>
+                    <div class="llx-nat">かぐや姫</div>
+                  </div>
+                  <div class="llx-rar">LL</div>
+                  <div class="llx-tag">The girl from the Moon</div>
+                  <div class="llx-foot">🇯🇵 LEGEND · OVER 1,000 YEARS OLD</div>
+                  <div class="llx-play">▶</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dfliphint">Tap the card to see it big · slide to tilt</div>
+        <button class="btn flip-btn">↻ Flip</button>
+      </div>
+
+      <!-- THE TEXT DETAILS -->
+      <div class="dt">
+        <div class="tagrow">
+          <span class="tag rr">LL</span>
+          <span class="tag say">🇯🇵 Japan 🔊</span>
+          <span class="tag">Legend</span>
+          <span class="tag">#308</span>
+        </div>
+        <h2>Princess Kaguya <span class="spk">🔊</span></h2>
+        <div class="nat">かぐや姫 <span class="spk">🔊</span></div>
+        <div class="era"><b>When:</b> over 1,000 years old <span class="spk">🔊</span></div>
+        <div class="tagline">The girl from the Moon <span class="spk">🔊</span></div>
+        
+        <button class="btn llwatch" id="btn-watch">▶ Watch the story</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Invisible layer to catch taps during the story -->
+<div id="closer"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  var card = document.getElementById('dflip');
+  var modal = document.getElementById('main-modal');
+  var closer = document.getElementById('closer');
+  var btnWatch = document.getElementById('btn-watch');
+  var st = { phase: 'idle' };
+
+  // --- 1. EXACT 3D TILT LOGIC ---
+  card.addEventListener('pointermove', function(e) {
+    if (st.phase !== 'idle' && st.phase !== 'playing') return;
+    
+    var r = card.getBoundingClientRect();
+    if(!r.width || !r.height) return;
+    
+    var mx = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    var my = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+    
+    card.style.setProperty('--mx', mx);
+    card.style.setProperty('--my', my);
+    
+    if (st.phase === 'idle') {
+      var rx = (0.5 - my) * 20;
+      var ry = (mx - 0.5) * 20;
+      card.querySelector('.dflip-in').style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
+  });
+
+  card.addEventListener('pointerleave', function() {
+    if (st.phase === 'idle') {
+      card.querySelector('.dflip-in').style.transform = `rotateX(0deg) rotateY(0deg)`;
+      card.style.setProperty('--mx', 0.5);
+      card.style.setProperty('--my', 0.5);
+    }
+  });
+
+  // --- 2. THE PORTAL ANIMATION ---
+
+  function startStory(e) {
+    if (st.phase !== 'idle') return;
+    
+    // Ignore clicks if we were just dragging/tilting
+    if (e && e.type === 'click' && window.__justDragged) return;
+
+    st.phase = 'opening';
+
+    // Reset tilt for the zoom
+    card.querySelector('.dflip-in').style.transform = `rotateX(0deg) rotateY(0deg)`;
+    
+    var rect = card.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
+    var tx = vw / 2 - (rect.left + rect.width / 2);
+    var ty = vh / 2 - (rect.top + rect.height / 2);
+
+    card.style.position = 'fixed';
+    card.style.left = rect.left + 'px';
+    card.style.top = rect.top + 'px';
+    card.style.width = rect.width + 'px';
+    card.style.height = rect.height + 'px';
+    card.style.margin = '0';
+    card.classList.add('flying');
+    void card.offsetWidth;
+
+    // Hide the UI behind the card
+    modal.classList.add('hide-ui');
+
+    // 1. Fast zoom to full screen
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
+      });
+    });
+
+    var onEnd = function(e) {
+      if (e.propertyName !== 'transform') return;
+      card.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'opening') return;
+      
+      st.phase = 'focusing';
+
+      // 2. Pause for 400ms so the 70% glass and charms are visible
+      setTimeout(function() {
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        
+        // 3. Dive in
+        card.classList.add('immersed');
+        closer.style.display = 'block'; // Enable tap anywhere to close
+        
+      }, 400);
+      
+    };
+    card.addEventListener('transitionend', onEnd);
+  }
+
+  function endStory() {
+    if (st.phase !== 'playing') return;
+    st.phase = 'closing';
+    closer.style.display = 'none';
+
+    // 1. Trigger the slow 1800ms pull-back
+    card.classList.add('closing-slow');
+    card.classList.remove('immersed');
+    
+    // Stop the art breathing
+    card.querySelector('.llx-art').style.animation = 'none';
+    card.querySelector('.llx-art').style.transform = 'scale(1)';
+
+    // 2. Wait for the slow dive out to finish, then shrink back to window
+    setTimeout(function() {
+      if (st.phase !== 'closing') return;
+
+      card.classList.remove('closing-slow');
+      card.style.transform = `translate(0,0) scale(1)`;
+      
+      var onEnd = function(e) {
+        if (e.propertyName !== 'transform') return;
+        card.removeEventListener('transitionend', onEnd);
+        if (st.phase !== 'closing') return;
+        
+        // Cleanup
+        card.style.cssText = ''; 
+        card.classList.remove('flying');
+        card.style.setProperty('--mx', 0.5);
+        card.style.setProperty('--my', 0.5);
+        
+        // Bring the UI back
+        modal.classList.remove('hide-ui');
+        st.phase = 'idle'; 
+      };
+      card.addEventListener('transitionend', onEnd);
+
+    }, 1800); 
+  }
+
+  // Event listeners
+  card.addEventListener('click', startStory);
+  btnWatch.addEventListener('click', startStory);
+  closer.addEventListener('click', endStory);
+
+  // Prevent accidental clicks when dragging to tilt
+  var startX, startY;
+  card.addEventListener('pointerdown', function(e) {
+    startX 
