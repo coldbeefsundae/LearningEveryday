@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — Demo</title>
+<title>Immersive Card Animation — Real Art</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -16,7 +16,7 @@
     user-select: none; -webkit-user-select: none;
   }
   #grid {
-    padding: 24px;
+    padding: 60px 24px 24px 24px; /* Made room for the title */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 20px;
@@ -28,6 +28,7 @@
   .card {
     position: absolute; inset: 0;
     border-radius: 14px;
+    /* Using your actual LL card frame style */
     background: linear-gradient(145deg, #f7e08a 0%, #b8862c 35%, #f2d36b 60%, #8a6418 100%);
     padding: 5px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.12);
@@ -46,7 +47,7 @@
   .card .art-inner {
     position: absolute; inset: 0;
     background-size: cover;
-    background-position: center;
+    background-position: center top; /* align to top so faces aren't cut off */
     transform-origin: 50% 50%;
     will-change: transform;
     transform: scale(1);
@@ -72,6 +73,7 @@
     25%  { opacity: 1; }
     100% { opacity: 0; }
   }
+  /* Slow pan for the "story" phase */
   .card.flying.playing .art-inner {
     animation: panScene 10s linear forwards;
   }
@@ -110,17 +112,18 @@
     top: calc(20px + env(safe-area-inset-top, 0px));
     left: 20px; right: 20px;
     font-size: 12px;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.65);
     z-index: 102;
     letter-spacing: 0.5px;
     transition: opacity 300ms ease;
     text-align: center;
+    font-weight: bold;
   }
   #label.hide { opacity: 0; }
 </style>
 </head>
 <body>
-  <div id="label">Immersive Card Demo · Tap a card</div>
+  <div id="label">Real Assets Demo · Tap a card</div>
   <div id="grid"></div>
   <div id="overlay"></div>
   <div id="hint">Tap anywhere to close</div>
@@ -129,36 +132,35 @@
 (function(){
   'use strict';
 
-  var SCENE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" preserveAspectRatio="xMidYMid slice">'
-    + '<defs>'
-    + '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2178"/><stop offset="0.45" stop-color="#6a4c9c"/><stop offset="0.75" stop-color="#d96a8a"/><stop offset="1" stop-color="#ff9f5a"/></linearGradient>'
-    + '<linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a6a"/><stop offset="1" stop-color="#1a1440"/></linearGradient>'
-    + '<linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3a8a"/><stop offset="1" stop-color="#2a1a50"/></linearGradient>'
-    + '<radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff4d0"/><stop offset="0.5" stop-color="#ffd060"/><stop offset="1" stop-color="#ff9f5a" stop-opacity="0"/></radialGradient>'
-    + '</defs>'
-    + '<rect width="400" height="560" fill="url(#sky)"/>'
-    + '<circle cx="320" cy="180" r="80" fill="url(#sun)"/>'
-    + '<circle cx="320" cy="180" r="28" fill="#fff4d0"/>'
-    + '<path d="M0,350 L100,220 L180,300 L280,180 L400,320 L400,560 L0,560 Z" fill="url(#m1)"/>'
-    + '<path d="M0,420 L80,340 L160,380 L260,300 L400,400 L400,560 L0,560 Z" fill="url(#m2)"/>'
-    + '<path d="M0,500 L120,440 L220,470 L340,420 L400,450 L400,560 L0,560 Z" fill="#1a0f30"/>'
-    + '<g opacity="0.7" fill="#fff"><circle cx="80" cy="60" r="1.2"/><circle cx="150" cy="40" r="0.8"/><circle cx="230" cy="80" r="1"/><circle cx="60" cy="120" r="0.9"/><circle cx="280" cy="60" r="1.1"/></g>'
-    + '</svg>';
-  var sceneUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SCENE);
+  // YOUR ACTUAL GITHUB PAGES URL
+  var baseUrl = 'https://coldbeefsundae.github.io/LearningEveryday/';
+  
+  // Your actual Living Legendary card images
+  var cardFiles = [
+    'assets/cards/ll01.62f53c62.webp',
+    'assets/cards/ll02.09c27c67.webp',
+    'assets/cards/ll03.c9fd830b.webp',
+    'assets/cards/ll04.a5196965.webp',
+    'assets/cards/ll05.189ec36c.webp',
+    'assets/cards/ll06.a273f4ce.webp'
+  ];
 
   var grid = document.getElementById('grid');
   var overlay = document.getElementById('overlay');
   var hint = document.getElementById('hint');
   var label = document.getElementById('label');
 
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < cardFiles.length; i++) {
     var slot = document.createElement('div');
     slot.className = 'card-slot';
     var card = document.createElement('div');
     card.className = 'card';
     var art = document.createElement('div'); art.className = 'art';
     var inner = document.createElement('div'); inner.className = 'art-inner';
-    inner.style.backgroundImage = 'url("' + sceneUri + '")';
+    
+    // Load the actual image from your GitHub
+    inner.style.backgroundImage = 'url("' + baseUrl + cardFiles[i] + '")';
+    
     art.appendChild(inner); card.appendChild(art); slot.appendChild(card);
     grid.appendChild(slot);
   }
@@ -171,6 +173,7 @@
 
     var rect = card.getBoundingClientRect();
     var vw = window.innerWidth, vh = window.innerHeight;
+    
     // Scale so the art fills the viewport, plus 8% so the frame sits off-screen on every side
     var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
     var tx = vw / 2 - (rect.left + rect.width / 2);
@@ -213,7 +216,6 @@
     var card = st.card;
     hint.classList.remove('show');
 
-    // Freeze the art-inner at whatever pan pose it's on, then smoothly un-pan it
     var inner = card.querySelector('.art-inner');
     var cur = getComputedStyle(inner).transform;
     card.classList.remove('playing');
@@ -222,10 +224,7 @@
     inner.style.transition = 'transform 500ms ease-out';
     inner.style.transform = 'scale(1)';
 
-    // Reverse the scale+translate — the frame re-enters from off-screen in step with the art
     card.style.transform = 'translate(0,0) scale(1)';
-
-    // Keep the black backdrop behind the card until it lands, then fade the grid in
     overlay.classList.add('closing');
     overlay.classList.remove('show');
 
