@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.45', errs = [], shown = false;
+  var V = '26.11.46', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2467,32 +2467,32 @@ div.llx-g>*{position:absolute;inset:0;width:100%;height:100%;display:block}
 .llx-play{position:absolute;right:5%;bottom:3.4%;width:12%;aspect-ratio:1;border-radius:50%;background:rgba(0,0,0,.55);box-shadow:inset 0 0 0 .1em #f2c75c;color:#f2c75c;display:grid;place-items:center;font-size:.6em;line-height:1;padding-left:.1em}
 
 /* 26.11.42: approved LL card fly transition, integrated with the existing story iframe. */
-.ll-fly-card{position:fixed!important;z-index:2147482999;pointer-events:none;transform-origin:top left;will-change:transform;transform:var(--ll-fly-transform,none);transition:transform 800ms cubic-bezier(.3,0,.2,1)}
+.ll-fly-card{position:fixed!important;z-index:2147482999;pointer-events:none;animation:none!important;transform-origin:0 0;will-change:transform;transform:var(--ll-fly-transform,none);transition:none}
+/* 26.11.46 phase 1 (fly): the card holds its face and glides to full screen. Glass and charms ride along at 1x. */
+.ll-fly-card.ll-fly-go{transition:transform 400ms cubic-bezier(.3,0,.2,1)}
+/* phase 4 (snap): back into the frame */
 .ll-fly-card.ll-fly-snap{transition:transform 430ms cubic-bezier(.18,.9,.3,1.18)}
-.ll-fly-card.ll-fly-opening .llx-g{transform:scale(3.2749983) translateZ(50px);transition:transform 800ms cubic-bezier(.3,0,.2,1)}
-.ll-fly-card.ll-fly-opening .llx-c{transform:scale(3) translateZ(80px);transition:transform 800ms cubic-bezier(.3,0,.2,1)}
 .ll-fly-card.ll-fly-immersed .tcg,.ll-fly-card.ll-fly-immersed .llx-in{border-radius:0}
 .ll-fly-card.ll-fly-immersed .tcg.llx,.ll-fly-card.ll-fly-closing .tcg.llx{background:transparent;box-shadow:none}
 .ll-fly-card.ll-fly-immersed .llx-in,.ll-fly-card.ll-fly-closing .llx-in{inset:-.08em;border-radius:0}
+/* phase 2 (dive): only after the fly ends, the art holds and breathes while glass and charms dive past the camera */
 .ll-fly-card.ll-fly-immersed .llx-art{transform:scale(1.15);animation:llFlyBreatheArt 10s ease-in-out infinite alternate;transition:transform 800ms ease}
 .ll-fly-card.ll-fly-immersed .llx-g{transform:scale(3.2749983) translateZ(50px);transition:transform 700ms cubic-bezier(.7,0,1,1)}
 .ll-fly-card.ll-fly-immersed .llx-c{transform:scale(3) translateZ(80px);transition:transform 700ms cubic-bezier(.7,0,1,1)}
 .ll-fly-card.ll-fly-immersed .llx-top,.ll-fly-card.ll-fly-immersed .llx-rar,.ll-fly-card.ll-fly-immersed .llx-tag,.ll-fly-card.ll-fly-immersed .llx-foot,.ll-fly-card.ll-fly-immersed .llx-play,.ll-fly-card.ll-fly-immersed .llx-fade,.ll-fly-card.ll-fly-immersed .hlx-sp{opacity:0!important;transition:opacity .4s ease}
+/* phase 3 (return): glass comes back slowly; the card face stays hidden until the snap is done */
 .ll-fly-card.ll-fly-closing .llx-g,.ll-fly-card.ll-fly-closing .llx-c{transition:transform 2400ms ease-in-out}
 .ll-fly-card.ll-fly-closing .llx-top,.ll-fly-card.ll-fly-closing .llx-rar,.ll-fly-card.ll-fly-closing .llx-tag,.ll-fly-card.ll-fly-closing .llx-foot,.ll-fly-card.ll-fly-closing .llx-play,.ll-fly-card.ll-fly-closing .llx-fade,.ll-fly-card.ll-fly-closing .hlx-sp{opacity:0!important;transition:opacity .4s ease}
 .ll-fly-card.ll-fly-closing .llx-art{transform:scale(1.15);animation:none}
-
 @keyframes llFlyBreatheArt{0%{transform:scale(1.15) translate(0,0)}100%{transform:scale(1.25) translate(-2%,2%)}}
 @media(max-width:820px){
-  .ll-fly-card.ll-fly-opening .llx-g{transform:scale(2.10535605) translateZ(24px)}
-  .ll-fly-card.ll-fly-opening .llx-c{transform:scale(2) translateZ(36px)}
   .ll-fly-card.ll-fly-immersed .llx-art{transform:scale(1.08)}
   .ll-fly-card.ll-fly-closing .llx-art{transform:scale(1.08)}
   .ll-fly-card.ll-fly-immersed .llx-g{transform:scale(2.10535605) translateZ(24px)}
   .ll-fly-card.ll-fly-immersed .llx-c{transform:scale(2) translateZ(36px)}
 }
 @media(prefers-reduced-motion:reduce){
-  .ll-fly-card{transition-duration:.01ms!important}
+  .ll-fly-card.ll-fly-go,.ll-fly-card.ll-fly-snap{transition-duration:.01ms!important}
   .ll-fly-card.ll-fly-immersed .llx-art{animation:none}
   .ll-fly-card.ll-fly-closing .llx-g,.ll-fly-card.ll-fly-closing .llx-c{transition-duration:.01ms}
 }
@@ -4662,38 +4662,39 @@ function llFlyRect(el){
   var b = el.getBoundingClientRect();
   return b.width > 0 && b.height > 0 ? {left:b.left, top:b.top, width:b.width, height:b.height} : null;
 }
+function llFlyAfter(el, prop, ms, fn){
+  /* run fn once when el's own transition on prop ends, with a timer in case transitionend never comes (hidden tab, reduced motion) */
+  var done = false, t = 0;
+  function go(){ if(done) return; done = true; clearTimeout(t); el.removeEventListener('transitionend', h); fn(); }
+  function h(e){ if(e.target === el && e.propertyName === prop) go(); }
+  el.addEventListener('transitionend', h); t = setTimeout(go, ms + 250);
+  return go;
+}
 function llFlyRestore(f){
   if(!f || !f.card) return;
-  if(f.openEnd) f.card.removeEventListener('transitionend', f.openEnd);
-  if(f.snapEnd) f.card.removeEventListener('transitionend', f.snapEnd);
-  f.card.classList.remove('ll-fly-card','ll-fly-opening','ll-fly-immersed','ll-fly-closing','ll-fly-snap');
-  if(f.oldStyle === null) f.card.removeAttribute('style'); else f.card.setAttribute('style', f.oldStyle);
-  if(f.placeholder && f.placeholder.parentNode) f.placeholder.parentNode.insertBefore(f.card, f.placeholder);
-  if(f.placeholder && f.placeholder.parentNode) f.placeholder.parentNode.removeChild(f.placeholder);
-  if(f.visual) llxBack(f.visual);
-  HL.hold = 0;
+  var card = f.card;
+  card.classList.remove('ll-fly-card','ll-fly-go','ll-fly-immersed','ll-fly-closing','ll-fly-snap');
+  if(f.oldStyle === null) card.removeAttribute('style'); else card.setAttribute('style', f.oldStyle);
+  if(f.placeholder && f.placeholder.parentNode){ f.placeholder.parentNode.insertBefore(card, f.placeholder); f.placeholder.parentNode.removeChild(f.placeholder); }
+  (f.frozen || []).forEach(function(el){ el.classList.add('hlsc'); });
+  if(f.hlf) HLF.el = f.hlf;
+  if(f.visual) f.visual.classList.remove('llx-out');
+  HL.hold = 0; hlStart();
   if(LLF === f) LLF = null;
 }
 function llFlyCancel(card){
   if(!LLF || LLF.card !== card){ if(card) llxBack(card); HL.hold = 0; return; }
   var f = LLF; f.phase = 'cancelled'; llFlyRestore(f);
 }
+/* the transform that makes the full-screen-sized card look exactly like a given on-screen rect */
+function llFlyFrom(f, r){ var k = r.width / f.big.width; return 'translate3d('+(r.left - f.big.left)+'px,'+(r.top - f.big.top)+'px,0) scale3d('+k+','+k+',1)'; }
 function llFlySnap(f, done){
   if(!f || f.phase === 'snap' || f.phase === 'done') return;
   f.phase = 'snap';
-  var card = f.card, finished = false;
-  function end(e){
-    if(finished || e.target !== card || e.propertyName !== 'transform') return;
-    finished = true; card.removeEventListener('transitionend', end); f.snapEnd = null;
-    f.phase = 'done'; llFlyRestore(f); if(done) done();
-  }
-  f.snapEnd = end; card.addEventListener('transitionend', end);
-  card.classList.add('ll-fly-snap');
-  requestAnimationFrame(function(){ card.style.setProperty('--ll-fly-transform','none'); });
-  requestAnimationFrame(function(){
-    var d = parseFloat(getComputedStyle(card).transitionDuration) || 0;
-    if(d <= .01) end({target:card, propertyName:'transform'});
-  });
+  var card = f.card, home = (f.placeholder && llFlyRect(f.placeholder)) || f.home;
+  card.classList.remove('ll-fly-go'); card.classList.add('ll-fly-snap');
+  llFlyAfter(card, 'transform', 430, function(){ f.phase = 'done'; llFlyRestore(f); if(done) done(); });
+  card.style.setProperty('--ll-fly-transform', llFlyFrom(f, home));
 }
 function llFlyClose(card, done){
   if(!LLF || LLF.card !== card){ if(card) llxBack(card); HL.hold = 0; if(done) done(); return; }
@@ -4701,43 +4702,43 @@ function llFlyClose(card, done){
   if(f.phase === 'closing' || f.phase === 'snap') return;
   if(f.phase === 'opening'){ llFlyCancel(card); if(done) done(); return; }
   f.phase = 'closing';
-  var layers = [card.querySelector('.llx-g'), card.querySelector('.llx-c')].filter(Boolean), count = 0;
-  function maybeSnap(){ if(count === layers.length) llFlySnap(f, done); }
-  layers.forEach(function(layer){
-    function onEnd(e){
-      if(e.propertyName !== 'transform') return;
-      layer.removeEventListener('transitionend', onEnd); count++; maybeSnap();
-    }
-    layer.addEventListener('transitionend', onEnd);
-  });
-  if(layers[0]) void layers[0].offsetWidth;
+  var layers = [card.querySelector('.llx-g'), card.querySelector('.llx-c')].filter(Boolean), left = layers.length;
+  if(!left){ llFlySnap(f, done); return; }
+  layers.forEach(function(layer){ llFlyAfter(layer, 'transform', HL_RM ? 0 : 2400, function(){ if(--left === 0) llFlySnap(f, done); }); });
   card.classList.remove('ll-fly-immersed'); card.classList.add('ll-fly-closing');
-  requestAnimationFrame(function(){
-    var d = layers.reduce(function(max, layer){ return Math.max(max, parseFloat(getComputedStyle(layer).transitionDuration) || 0); }, 0);
-    if(d <= .01 || !layers.length) llFlySnap(f, done);
-  });
 }
-function llFlyOpen(card, visual){
-  if(!card || LLF) return null;
+function llFlyOpen(card, visual, onDive){
+  if(!card || LLF || !card.parentNode) return null;
   var r = llFlyRect(card); if(!r) return null;
+  /* full-screen box with the card's shape, centred (cover) */
+  var vv = window.visualViewport, W = (vv && vv.width) || window.innerWidth, H = (vv && vv.height) || window.innerHeight, ox = (vv && vv.offsetLeft) || 0, oy = (vv && vv.offsetTop) || 0;
+  var k = Math.max(W/r.width, H/r.height) * 1.05, bw = r.width*k, bh = r.height*k;
+  var big = {left: ox + (W-bw)/2, top: oy + (H-bh)/2, width: bw, height: bh};
   var ph = document.createElement('div'); ph.className = 'dflip-ph'; ph.style.width = r.width+'px'; ph.style.height = r.height+'px'; ph.setAttribute('aria-hidden','true');
-  if(!card.parentNode) return null;
-  var oldStyle = card.getAttribute('style'); var inherited = getComputedStyle(card); var mx = inherited.getPropertyValue('--mx').trim() || '.5', my = inherited.getPropertyValue('--my').trim() || '.5'; card.parentNode.insertBefore(ph, card); document.body.appendChild(card);
-  var f = {card:card, visual:visual || null, placeholder:ph, home:r, oldStyle:oldStyle, phase:'opening', openEnd:null, snapEnd:null, startStory:null};
-  LLF = f; card.classList.add('ll-fly-card'); card.style.setProperty('--mx',mx); card.style.setProperty('--my',my);
-  card.style.left = r.left+'px'; card.style.top = r.top+'px'; card.style.width = r.width+'px'; card.style.height = r.height+'px'; card.style.setProperty('--ll-fly-transform','none');
-  void card.offsetWidth; card.classList.add('ll-fly-opening');
-  var opened = false;
-  function openEnd(e){
-    if(opened || e.target !== card || e.propertyName !== 'transform' || f.phase !== 'opening') return;
-    opened = true; card.removeEventListener('transitionend', openEnd); f.openEnd = null; f.phase = 'immersed'; card.classList.add('ll-fly-immersed'); card.classList.remove('ll-fly-opening'); if(f.startStory){ var begin = f.startStory; f.startStory = null; begin(); }
-  }
-  f.openEnd = openEnd; card.addEventListener('transitionend', openEnd);
+  var f = {card:card, visual:visual || null, placeholder:ph, home:r, big:big, oldStyle:card.getAttribute('style'), phase:'opening', frozen:[], hlf:null};
+  LLF = f;
+  /* 1. freeze the tilt/holo loop on this card so nothing restyles it every frame during the flight */
+  [card].concat([].slice.call(card.querySelectorAll('.hlsc'))).forEach(function(el){ if(el.classList.contains('hlsc')){ el.classList.remove('hlsc'); f.frozen.push(el); } });
+  if(HLF.el === card){ f.hlf = card; HLF.el = null; }
+  /* 2. lift the card out, laid out at FULL-SCREEN size but transformed to look exactly like it did (inverse FLIP).
+        It is painted once, sharp, at the big size; the flight then only animates a GPU transform. */
+  card.parentNode.insertBefore(ph, card); document.body.appendChild(card);
+  card.classList.add('ll-fly-card');
+  var cs = card.style;
+  cs.setProperty('--mx','.5'); cs.setProperty('--my','.5'); cs.setProperty('--rx','0deg'); cs.setProperty('--ry','0deg');
+  cs.left = big.left+'px'; cs.top = big.top+'px'; cs.width = big.width+'px'; cs.height = big.height+'px';
+  cs.setProperty('--ll-fly-transform', llFlyFrom(f, r));
+  /* 3. wait two frames so that paint is done before anything moves (no first-frame hitch), then fly */
   requestAnimationFrame(function(){ requestAnimationFrame(function(){
     if(f.phase !== 'opening') return;
-    var vv = window.visualViewport, W = (vv && vv.width) || window.innerWidth, H = (vv && vv.height) || window.innerHeight, ox = (vv && vv.offsetLeft) || 0, oy = (vv && vv.offsetTop) || 0;
-    var scale = Math.max(W/r.width, H/r.height) * 1.05, left = ox + (W-r.width*scale)/2, top = oy + (H-r.height*scale)/2;
-    card.style.setProperty('--ll-fly-transform','translate3d('+(left-r.left)+'px,'+(top-r.top)+'px,0) scale3d('+scale+','+scale+',1)');
+    card.classList.add('ll-fly-go');
+    llFlyAfter(card, 'transform', HL_RM ? 0 : 400, function(){
+      if(f.phase !== 'opening') return;
+      /* 4. only now: hide the face, hold and breathe the art, dive the glass and charms */
+      f.phase = 'immersed'; card.classList.add('ll-fly-immersed');
+      if(onDive) onDive();
+    });
+    cs.setProperty('--ll-fly-transform','none');
   }); });
   return f;
 }
@@ -4760,9 +4761,10 @@ function llFly(id, el){
   var card = visual && visual.closest ? (visual.closest('.dflip') || visual.closest('.flip') || visual.closest('.tcgbox') || visual) : null;
   if(!visual || !visual.classList.contains('llx') || !card) return llPlay(id, (visual && visual.querySelector('.tcg-art')) || el);
   if(LLP || LLF || visual.classList.contains('llx-out')) return false;
-  var origin = llFlyRect(card), fly = llFlyOpen(card, visual); if(!fly) return false;
-  HL.hold = 1;
-  if(!llPlay(id, null, card, origin, visual)){ llFlyCancel(card); return false; }
+  HL.hold = 1; stopSpeak(); llDuck(true);
+  /* the story iframe is not created until the card has landed: loading it is heavy and would stutter the flight */
+  var fly = llFlyOpen(card, visual, function(){ if(!llPlay(id, null, card, null, visual)){ llDuck(false); llFlyClose(card); } });
+  if(!fly){ HL.hold = 0; llDuck(false); return false; }
   return true;
 }
 function llxBack(card){ HL.hold = 0; if(card) card.classList.remove('llx-out'); }
@@ -4775,6 +4777,7 @@ function llPlay(id, fromEl, flyCard, originRect, visualCard){
   if(a){ try{ g = a.createGain(); g.gain.value = 1; g.connect(sfxOut || a.destination); }catch(e){ g = null; } }
   var f = document.createElement('iframe');
   f.className = 'llstory'; f.setAttribute('title', BY_ID[id].n + ': story'); f.setAttribute('allow', 'autoplay');
+  if(flyCard) f.style.visibility = 'hidden';
   var me = {id:id, f:f, g:g, t:[], card:flyCard || null, visual:visualCard || null, outerFly:!!flyCard, started:false};
   LLP = me; llDuck(true);
   f.onload = function(){
@@ -4785,11 +4788,12 @@ function llPlay(id, fromEl, flyCard, originRect, visualCard){
       if(me.started || LLP !== me) return;
       me.started = true;
       try{ w.LL.play(me.outerFly ? null : r, {sound: !state.mute, reduce: !!(HL_RM || (state.ui && state.ui.calm)), music: window.LL_MUSIC, art: me.outerFly ? null : (me.card ? llxU().art[id] : null), radius: me.visual ? llxRad(me.visual) : 12}); }catch(e){ llClose(true); return; }
+      f.style.visibility = '';
       try{ w.focus(); }catch(e){}
       me.t.push(setTimeout(function(){ if(LLP === me) document.body.classList.add('llon'); }, 450));
       me.t.push(setTimeout(function(){ try{ if(LLP === me && !w.LL.live()) llClose(true); }catch(e){ llClose(true); } }, 1500));
     };
-    if(me.outerFly && LLF && LLF.phase === 'opening') LLF.startStory = beginStory; else beginStory();
+    beginStory();
   };
   f.src = src; document.body.appendChild(f); return true;
 }
