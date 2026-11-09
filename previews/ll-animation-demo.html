@@ -100,7 +100,8 @@ button { font: inherit; }
 .tip { margin-top: 20px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; color: var(--muted); background: rgba(255,255,255,.04); font-size: 13px; line-height: 1.45; }
 #closer { position: fixed; inset: 0; z-index: 9999; display: none; cursor: pointer; }
 #closer.show { display: block; }
-.dflip.flying { position: fixed; z-index: 1000; cursor: default; pointer-events: none; transform: var(--fly-transform, none); transition: left 400ms cubic-bezier(.3,0,.2,1), top 400ms cubic-bezier(.3,0,.2,1), transform 400ms cubic-bezier(.3,0,.2,1), padding 400ms ease, background 400ms ease, border-radius 400ms ease; }
+.dflip.flying { position: fixed; z-index: 1000; cursor: default; pointer-events: none; transform: var(--fly-transform, none); transform-origin: top left; will-change: transform; transition: transform 400ms cubic-bezier(.3,0,.2,1), padding 400ms ease, background 400ms ease, border-radius 400ms ease; }
+.dflip.closing-snap { transition: transform 430ms cubic-bezier(.18,.9,.3,1.18); }
 .dflip.immersed { padding: 0; border-radius: 0; }
 .dflip.immersed .tcg, .dflip.immersed .llx-in { border-radius: 0; }
 .dflip.immersed .llx-art { transform: scale(1.15); animation: breatheArt 10s ease-in-out infinite alternate; transition: transform 800ms ease; }
@@ -109,7 +110,7 @@ button { font: inherit; }
 .dflip.immersed .llx-c { transform: scale(3) translateZ(80px); }
 .dflip.immersed .llx-top, .dflip.immersed .llx-rar, .dflip.immersed .llx-tag, .dflip.immersed .llx-foot, .dflip.immersed .llx-play, .dflip.immersed .llx-fade, .dflip.immersed .hlx-sp { opacity: 0 !important; transition: opacity .4s ease; }
 @keyframes breatheArt { 0% { transform: scale(1.15) translate(0,0); } 100% { transform: scale(1.25) translate(-2%,2%); } }
-.dflip.closing-slow .llx-g, .dflip.closing-slow .llx-c { transition: transform 1800ms ease-in-out; }
+.dflip.closing-slow .llx-g, .dflip.closing-slow .llx-c { transition: transform 2400ms ease-in-out; }
 .dflip.flying::before { content: ""; position: absolute; inset: 0; z-index: 99; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,225,140,.9), transparent 70%); opacity: 0; animation: flash 600ms ease-out; }
 @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
 @media (max-width: 820px) {
@@ -229,7 +230,7 @@ button { font: inherit; }
   var btnWatch = document.getElementById('btn-watch');
   var btnClose = document.getElementById('close-modal');
   var btnReset = document.getElementById('flip-btn');
-  var st = { phase: 'idle', placeholder: null, home: null, token: 0, justDragged: false, pointer: null, endLayers: null, endDone: 0, openFinished: null };
+  var st = { phase: 'idle', placeholder: null, home: null, token: 0, justDragged: false, pointer: null, endLayers: null, endDone: 0, openFinished: null, snapFinished: null };
 
   function resetTilt(){
     card.style.setProperty('--rx','0deg'); card.style.setProperty('--ry','0deg');
@@ -266,6 +267,7 @@ button { font: inherit; }
     card.style.left = rect.left+'px'; card.style.top = rect.top+'px';
     card.style.width = rect.width+'px'; card.style.height = rect.height+'px';
     card.style.setProperty('--fly-transform','none');
+    void card.offsetWidth;
     closer.classList.add('show');
     modal.classList.add('hide-ui');
 
@@ -284,20 +286,42 @@ button { font: inherit; }
         var vw = vp ? vp.width : window.innerWidth, vh = vp ? vp.height : window.innerHeight;
         var ox = vp ? vp.offsetLeft : 0, oy = vp ? vp.offsetTop : 0;
         var scale = Math.max(vw/rect.width, vh/rect.height) * 1.05;
-        card.style.left = (ox + vw/2)+'px'; card.style.top = (oy + vh/2)+'px';
-        card.style.setProperty('--fly-transform','translate(-50%,-50%) scale('+scale+')');
+        var targetLeft = ox + (vw - rect.width * scale) / 2;
+        var targetTop = oy + (vh - rect.height * scale) / 2;
+        var dx = targetLeft - rect.left, dy = targetTop - rect.top;
+        card.style.setProperty('--fly-transform','translate3d('+dx+'px,'+dy+'px,0) scale3d('+scale+','+scale+',1)');
       });
     });
   }
 
   function finishClose(){
-    if(st.phase !== 'closing') return;
-    card.classList.remove('flying','closing-slow','immersed');
+    if(st.phase !== 'closing' && st.phase !== 'snapping') return;
+    card.classList.remove('flying','closing-slow','immersed','closing-snap');
     card.style.cssText = '--mx:.5;--my:.5;--rx:0deg;--ry:0deg';
     if(st.placeholder && st.placeholder.parentNode) st.placeholder.parentNode.replaceChild(card, st.placeholder);
     st.placeholder = null; st.endLayers = null; st.endDone = 0;
+    if(st.snapFinished){ card.removeEventListener('transitionend', st.snapFinished); st.snapFinished = null; }
     if(st.openFinished){ card.removeEventListener('transitionend', st.openFinished); st.openFinished = null; }
     closer.classList.remove('show'); modal.classList.remove('hide-ui'); st.phase = 'idle';
+  }
+
+  function beginSnapBack(){
+    if(st.phase !== 'closing') return;
+    st.phase = 'snapping';
+    var snapped = false;
+    function onSnapEnd(e){
+      if(snapped || e.target !== card || e.propertyName !== 'transform') return;
+      snapped = true; card.removeEventListener('transitionend', onSnapEnd); st.snapFinished = null;
+      finishClose();
+    }
+    st.snapFinished = onSnapEnd;
+    card.addEventListener('transitionend', onSnapEnd);
+    card.classList.add('closing-snap');
+    requestAnimationFrame(function(){ card.style.setProperty('--fly-transform','none'); });
+    requestAnimationFrame(function(){
+      var d = parseFloat(getComputedStyle(card).transitionDuration) || 0;
+      if(d <= 0.01) finishClose();
+    });
   }
 
   function closeStory(){
@@ -312,7 +336,7 @@ button { font: inherit; }
         if(e.propertyName !== 'transform') return;
         layer.removeEventListener('transitionend', onEnd);
         st.endDone++;
-        if(st.endDone === layers.length) finishClose();
+        if(st.endDone === layers.length) beginSnapBack();
       });
     });
     // Commit the immersed state before starting the deliberately slow reverse animation.
@@ -325,7 +349,7 @@ button { font: inherit; }
         var v = parseFloat(getComputedStyle(layer).transitionDuration) || 0;
         return Math.max(max, v);
       }, 0);
-      if(duration === 0 || !layers.length) finishClose();
+      if(duration <= 0.01 || !layers.length) beginSnapBack();
     });
   }
 
