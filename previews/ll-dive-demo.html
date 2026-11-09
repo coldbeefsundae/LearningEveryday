@@ -75,7 +75,7 @@
 
   #overlay{position:fixed;inset:0;z-index:99;background:#000;opacity:0;pointer-events:none;transition:opacity 600ms ease}
   #overlay.show{opacity:1;pointer-events:auto}
-  #overlay.closing{transition:opacity 500ms ease 1200ms}
+  #overlay.closing{transition:opacity 400ms ease}   /* fades during the fly-back, so the grid is revealed as the card lands */
   #hint{position:fixed;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:14px;color:rgba(255,255,255,.7);z-index:101;opacity:0;transition:opacity 400ms ease;pointer-events:none}
   #hint.show{opacity:1;pointer-events:auto}
 </style>
