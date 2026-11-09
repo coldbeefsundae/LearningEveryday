@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Immersive Card Animation — Final Integration</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #0a0e20;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #fff;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+    perspective: 1200px; /* For the 3D tilt */
+  }
+
+  /* The backdrop to simulate the app behind the modal */
+  #backdrop {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, #1b1740, #0a0e20);
+    z-index: 1;
+  }
+
+  /* The Modal Window */
+  #card-view-window {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+
+  .card-wrapper {
+    width: 280px;
+    aspect-ratio: 5/7;
+    perspective: 1000px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+  }
+
+  .card {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #f7e08a 0%, #b8862c 35%, #f2d36b 60%, #8a6418 100%);
+    padding: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12);
+    transform-origin: 50% 50%;
+    will-change: transform;
+    overflow: hidden;
+    transition: transform 0.1s ease-out; /* Smooth tilt */
+    transform-style: preserve-3d;
+  }
+  
+  .llx-in {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 12px; overflow: hidden;
+    background: #000;
+  }
+
+  /* The Layers */
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 0.4s ease; }
+  .llx-d { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+  
+  /* The Glass & Charms */
+  .llx-body { z-index: 2; opacity: 0.7; }
+  .llx-cracks { z-index: 3; opacity: 0.8; mix-blend-mode: screen; }
+  .llx-charms { z-index: 4; opacity: 1; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+
+  /* The Text Layer (Fades out during dive) */
+  .text-layer {
+    position: absolute; inset: 0; z-index: 10; pointer-events: none;
+    padding: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    transition: opacity 0.4s ease;
+  }
+  .text-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .text-name { font-family: Georgia, serif; font-weight: 900; font-size: 20px; line-height: 1.1; color: #fff; }
+  .text-nat { font-size: 11px; color: #f6e8be; margin-top: 4px; }
+  .text-rar { background: #000; color: #f2c75c; border: 1px solid #f2c75c; border-radius: 99px; padding: 2px 8px; font-weight: 900; font-size: 10px; letter-spacing: 0.5px; }
+  .text-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .text-tag { font-family: Georgia, serif; font-style: italic; font-size: 13px; color: #fff; }
+  .text-foot { font-size: 9px; font-weight: 800; color: #f2d68a; text-transform: uppercase; letter-spacing: 1px; }
+  .play-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid #f2c75c; color: #f2c75c; display: flex; align-items: center; justify-content: center; font-size: 12px; padding-left: 2px; }
+
+  /* The Holo Effect */
+  .holo-layer {
+    position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.4) 48%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.4) 52%, transparent 70%);
+    background-size: 250% 250%;
+    background-position: calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%);
+    mix-blend-mode: overlay;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+  }
+
+  /* --- THE ANIMATION STATES --- */
+  .card.flying {
+    position: fixed; z-index: 100;
+    cursor: default;
+    pointer-events: none;
+    /* Fast zoom out of the window */
+    transition: transform 400ms cubic-bezier(0.3, 0, 0.2, 1), padding 400ms ease, background 400ms ease, border-radius 400ms ease;
+  }
+
+  .card.flying .text-layer, .card.flying .holo-layer { opacity: 0; }
+
+  /* The Dive In */
+  .card.immersed {
+    padding: 0;
+    background: transparent;
+  }
+  .card.immersed .llx-in { border-radius: 0; }
+  .card.immersed .llx-art {
+    transform: scale(1.15);
+    animation: breatheArt 10s ease-in-out infinite alternate;
+    transition: transform 800ms ease;
+  }
+  .card.immersed .llx-body { transform: scale(2.8); transition: transform 700ms cubic-bezier(0.7, 0, 1, 1); }
+  .card.immersed .llx-cracks { transform: scale(2.8); transition: transform 700ms cubic-bezier(0.7, 0, 1, 1); }
+  .card.immersed .llx-charms { transform: scale(3.0); transition: transform 700ms cubic-bezier(0.7, 0, 1, 1); }
+
+  @keyframes breatheArt {
+    0% { transform: scale(1.15) translate(0, 0); }
+    100% { transform: scale(1.25) translate(-2%, 2%); }
+  }
+
+  /* The Dive Out */
+  .card.closing-slow .llx-body, .card.closing-slow .llx-cracks, .card.closing-slow .llx-charms {
+    transition: transform 1800ms ease-in-out;
+  }
+
+  /* The flash */
+  .card.flying::before {
+    content: ""; position: absolute; inset: 0; z-index: 20;
+    background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.9), transparent 70%);
+    opacity: 0; pointer-events: none; animation: flash 600ms ease-out;
+  }
+  @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+
+  #dark-overlay {
+    position: fixed; inset: 0; z-index: 99; background: #000;
+    opacity: 0; pointer-events: none; transition: opacity 600ms ease;
+  }
+  #dark-overlay.show { opacity: 1; pointer-events: auto; }
+  #dark-overlay.closing { transition: opacity 500ms ease 1200ms; }
+  
+  #hint {
+    position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
+    text-align: center; font-size: 14px; color: rgba(255,255,255,0.7);
+    z-index: 101; opacity: 0; transition: opacity 400ms ease; pointer-events: none;
+  }
+  #hint.show { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body>
+  <div id="backdrop"></div>
+  
+  <div id="card-view-window">
+    <div class="card-wrapper" id="main-wrapper">
+      <div class="card" id="main-card">
+        <div class="llx-in">
+          <img class="llx-art" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll01.ca3c9638.webp">
+          <div class="llx-d">
+            <img class="llx-l llx-body" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
+            <img class="llx-l llx-cracks" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp">
+            <img class="llx-l llx-charms" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/charms.aade78ba.webp">
+          </div>
+          <div class="holo-layer"></div>
+          
+          <div class="text-layer">
+            <div class="text-top">
+              <div>
+                <div class="text-name">Halley's Comet</div>
+                <div class="text-nat">ハレー彗星</div>
+              </div>
+              <div class="text-rar">LL</div>
+            </div>
+            <div class="text-bottom">
+              <div>
+                <div class="text-tag">The comet that keeps its promise</div>
+                <div class="text-foot">GL · EVENT · every ~76 years</div>
+              </div>
+              <div class="play-btn">▶</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dark-overlay"></div>
+  <div id="hint">Tap to close</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var card = document.getElementById('main-card');
+  var hint = document.getElementById('hint');
+  var darkOverlay = document.getElementById('dark-overlay');
+  var st = { phase: 'idle' };
+
+  // --- 3D TILT & HOLO ---
+  document.addEventListener('pointermove', function(e) {
+    if (st.phase !== 'idle') return; // Only tilt when resting in the window
+    
+    var rect = card.getBoundingClientRect();
+    // Calculate -0.5 to 0.5
+    var x = (e.clientX - rect.left) / rect.width - 0.5;
+    var y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    // Tilt limits (15 degrees)
+    var rx = -y * 15;
+    var ry = x * 15;
+
+    card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+
+    // Move the holo glare (0 to 1)
+    card.style.setProperty('--mx', (x + 0.5));
+    card.style.setProperty('--my', (y + 0.5));
+  });
+
+  // Reset tilt when leaving
+  document.addEventListener('pointerleave', function() {
+    if (st.phase === 'idle') card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  });
+
+  // --- THE PORTAL ANIMATION ---
+
+  function open() {
+    if (st.phase !== 'idle') return;
+    st.phase = 'opening';
+
+    // Reset tilt for the zoom
+    card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+    
+    // Get current position in the window
+    var rect = card.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
+    var tx = vw / 2 - (rect.left + rect.width / 2);
+    var ty = vh / 2 - (rect.top + rect.height / 2);
+
+    // Pin it to the screen
+    card.style.position = 'fixed';
+    card.style.left = rect.left + 'px';
+    card.style.top = rect.top + 'px';
+    card.style.width = rect.width + 'px';
+    card.style.height = rect.height + 'px';
+    card.style.margin = '0';
+    card.classList.add('flying');
+    void card.offsetWidth;
+
+    darkOverlay.classList.remove('closing');
+    darkOverlay.classList.add('show');
+
+    // 1. Zoom to full screen
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        card.style.transform = `translate(${tx}px,${ty}px) scale(${s}) rotateX(0deg) rotateY(0deg)`;
+      });
+    });
+
+    var onEnd = function(e) {
+      if (e.propertyName !== 'transform') return;
+      card.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'opening') return;
+      
+      // 2. Focus on glass
+      st.phase = 'focusing';
+      hint.classList.add('show');
+
+      // 3. Dive In
+      setTimeout(function() {
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        card.classList.add('immersed');
+      }, 400);
+      
+    };
+    card.addEventListener('transitionend', onEnd);
+  }
+
+  function close() {
+    if (st.phase !== 'playing') return;
+    st.phase = 'closing';
+    hint.classList.remove('show');
+
+    card.classList.add('closing-slow');
+    card.classList.remove('immersed');
+    
+    card.querySelector('.llx-art').style.animation = 'none';
+    card.querySelector('.llx-art').style.transform = 'scale(1)';
+
+    // 1. Wait for the slow 1800ms dive out
+    setTimeout(function() {
+      if (st.phase !== 'closing') return;
+
+      card.classList.remove('closing-slow');
+      
+      // 2. Shrink back to the modal window
+      card.style.transform = `translate(0,0) scale(1) rotateX(0deg) rotateY(0deg)`;
+      darkOverlay.classList.add('closing');
+      darkOverlay.classList.remove('show');
+
+      var onEnd = function(e) {
+        if (e.propertyName !== 'transform') return;
+        card.removeEventListener('transitionend', onEnd);
+        if (st.phase !== 'closing') return;
+        
+        // 3. Cleanup
+        card.style.cssText = ''; 
+        card.classList.remove('flying');
+        st.phase = 'idle'; 
+      };
+      card.addEventListener('transitionend', onEnd);
+
+    }, 1800); 
+  }
+
+  card.addEventListener('click', function(e) {
+    if (st.phase === 'idle') {
+      open();
+    } else if (st.phase === 'playing') {
+      close();
+    }
+  });
+  darkOverlay.addEventListener('click', close);
+  hint.addEventListener('click', close);
+
+})();
+</script>
+</body>
+</html>
