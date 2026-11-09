@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — Portal Frame</title>
+<title>Immersive Card Animation — Perfect Loop</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -44,68 +44,79 @@
     background: #000;
   }
 
-  /* The layers */
-  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  /* The Layers */
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 0.8s ease, filter 0.8s ease; }
   .llx-d { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; transition: transform 0.8s ease, filter 0.8s ease, opacity 0.8s ease; }
   
   .llx-body { z-index: 2; }
   .llx-cracks { z-index: 3; mix-blend-mode: screen; }
   .llx-charms { z-index: 4; }
 
-  /* The Portal Vignette (Our version of the TCG oval) */
   .portal-vignette {
     position: absolute; inset: 0; z-index: 5; pointer-events: none;
     box-shadow: inset 0 0 100px 40px rgba(0,0,0,0.8), inset 0 0 20px 5px rgba(255,215,0,0.4);
-    opacity: 0; transition: opacity 0.7s ease;
+    opacity: 0; transition: opacity 0.8s ease;
   }
 
   .card.flying {
     position: fixed; z-index: 100;
     cursor: default;
-    transition: transform 750ms cubic-bezier(0.3, 0, 0.2, 1);
+    transition: transform 800ms cubic-bezier(0.3, 0, 0.2, 1);
     pointer-events: none;
-    /* Apply 3D tilt here so the whole card tilts */
-    transform-style: preserve-3d;
   }
 
-  /* When the card opens, the glass frame stretches to become the screen border */
-  .card.flying.playing .portal-vignette {
+  /* --- THE SHARED "REFOCUS" STATE (Used for both Start and End) --- */
+  /* The camera pulls back, 3D stops, glass glows and sharpens */
+  .card.focused .llx-art {
+    transform: scale(1);
+  }
+  .card.focused .llx-body {
+    transform: scale(1);
     opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
   }
+  .card.focused .llx-charms {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+  }
+  .card.focused .portal-vignette {
+    opacity: 0;
+  }
+
+  /* --- THE "IMMERSED" STATE (Playing) --- */
+  .card.immersed .portal-vignette { opacity: 1; }
   
-  .card.flying.playing .llx-body {
-    /* The glass frame scales up slightly and moves back to act as the window */
-    transform: scale(1.15) translateZ(-20px);
-    opacity: 0.8;
-  }
-
-  .card.flying.playing .llx-charms {
-    /* The charms float forward into the room */
-    transform: scale(1.1) translateZ(40px);
-    animation: floatCharms 6s ease-in-out infinite alternate;
-  }
-
-  .card.flying.playing .llx-art {
-    /* The art is the deepest layer, so it scales the most to simulate camera push-in */
+  .card.immersed .llx-art {
     transform: scale(1.25);
     animation: breatheArt 10s ease-in-out infinite alternate;
+  }
+  
+  .card.immersed .llx-body {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+  
+  .card.immersed .llx-charms {
+    transform: scale(1.15);
+    filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));
+    animation: floatCharms 6s ease-in-out infinite alternate;
   }
 
   @keyframes breatheArt {
     0% { transform: scale(1.25) translate(0, 0); }
-    100% { transform: scale(1.35) translate(-2%, 2%); }
+    100% { transform: scale(1.32) translate(-2%, 2%); }
   }
   @keyframes floatCharms {
-    0% { transform: scale(1.1) translateZ(40px) translateY(0); }
-    100% { transform: scale(1.1) translateZ(40px) translateY(-10px); }
+    0% { transform: scale(1.15) translateY(0); }
+    100% { transform: scale(1.15) translateY(-8px); }
   }
 
   /* The flash of light when passing through the frame */
   .card.flying::before {
     content: ""; position: absolute; inset: 0; z-index: 10;
     background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.9), transparent 70%);
-    opacity: 0; pointer-events: none; animation: flash 800ms ease-out;
+    opacity: 0; pointer-events: none; animation: flash 600ms ease-out;
   }
   @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
 
@@ -114,7 +125,7 @@
     opacity: 0; pointer-events: none; transition: opacity 600ms ease;
   }
   #overlay.show { opacity: 1; pointer-events: auto; }
-  #overlay.closing { transition: opacity 400ms ease 500ms; }
+  #overlay.closing { transition: opacity 500ms ease 700ms; }
   
   #hint {
     position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
@@ -131,10 +142,10 @@
 </style>
 </head>
 <body>
-  <div id="label">Demo 5 · The Portal Frame</div>
+  <div id="label">Demo 7 · Perfect Loop</div>
   <div id="grid"></div>
   <div id="overlay"></div>
-  <div id="hint">Tap anywhere to close</div>
+  <div id="hint">Tap to close</div>
 
 <script>
 (function(){
@@ -185,7 +196,6 @@
 
     var rect = card.getBoundingClientRect();
     var vw = window.innerWidth, vh = window.innerHeight;
-    // Scale so the frame expands to fill the viewport
     var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
     var tx = vw / 2 - (rect.left + rect.width / 2);
     var ty = vh / 2 - (rect.top + rect.height / 2);
@@ -198,61 +208,73 @@
     card.style.margin = '0';
     card.style.transform = 'translate(0,0) scale(1)';
     card.classList.add('flying');
-    void card.offsetWidth; // force reflow
+    void card.offsetWidth;
 
     overlay.classList.remove('closing');
     overlay.classList.add('show');
     label.classList.add('hide');
 
-    // Trigger the expansion
+    // Step 1: Zoom the card to fill the screen
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
       });
     });
 
-    // Once the card has expanded, switch to the immersive playing state
+    // Step 2: Once zoomed, pause and "refocus" the glass (glow/sharpen)
     var onEnd = function(e) {
       if (e.propertyName !== 'transform') return;
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'opening') return;
       
-      st.phase = 'playing';
-      card.classList.add('playing');
+      st.phase = 'focusing';
+      card.classList.add('focused');
       hint.classList.add('show');
+
+      // Step 3: After a brief pause to admire the glass, dive into the 3D scene
+      setTimeout(function() {
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        card.classList.remove('focused');
+        card.classList.add('immersed');
+      }, 700); // 700ms pause on the clear glass frame
+      
     };
     card.addEventListener('transitionend', onEnd);
   }
 
   function close() {
     if (st.phase !== 'playing') return;
-    st.phase = 'closing';
+    st.phase = 'refocusing';
     var card = st.card;
     hint.classList.remove('show');
 
-    // 1. Stop the breathing/parallax animations and snap layers back
-    card.classList.remove('playing');
-    
-    // 2. Shrink the card back down. The glass frame and charms will 
-    // naturally slide back in from the screen edges as the card shrinks.
-    card.style.transform = `translate(0,0) scale(1)`;
-    
-    overlay.classList.add('closing');
-    overlay.classList.remove('show');
+    // Step 1: Pull camera back out. Stop 3D, glow/sharpen the glass.
+    card.classList.remove('immersed');
+    card.classList.add('focused');
 
-    var onEnd = function(e) {
-      if (e.propertyName !== 'transform') return;
-      card.removeEventListener('transitionend', onEnd);
-      if (st.phase !== 'closing') return;
-      
-      // Cleanup
-      card.style.cssText = ''; 
-      card.classList.remove('flying');
-      st.phase = 'idle'; st.card = null;
-      label.classList.remove('show');
-      label.classList.remove('hide');
-    };
-    card.addEventListener('transitionend', onEnd);
+    // Step 2: Wait for the glass to refocus, then shrink the card back to grid
+    setTimeout(function() {
+      if (st.phase !== 'refocusing') return;
+      st.phase = 'closing';
+
+      card.style.transform = `translate(0,0) scale(1)`;
+      overlay.classList.add('closing');
+      overlay.classList.remove('show');
+
+      var onEnd = function(e) {
+        if (e.propertyName !== 'transform') return;
+        card.removeEventListener('transitionend', onEnd);
+        if (st.phase !== 'closing') return;
+        
+        card.style.cssText = ''; 
+        card.classList.remove('flying', 'focused');
+        st.phase = 'idle'; st.card = null;
+        label.classList.remove('hide');
+      };
+      card.addEventListener('transitionend', onEnd);
+
+    }, 900); // 900ms pause on the clear glass frame before shrinking
   }
 
   grid.addEventListener('click', function(e) {
