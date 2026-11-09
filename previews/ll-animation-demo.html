@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>StarQuest · Living Legendary Preview Demo</title>
+<style>
+:root {
+  --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+  --ink: #eaeeff;
+  --muted: #8e97c4;
+  --line: rgba(255,255,255,.13);
+  --accent: #8b7bff;
+  --accent-2: #5ee7df;
+  --bg: #0a0e20;
+  --shadow-1: 0 18px 36px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.08);
+  --shadow-2: 0 30px 60px -20px rgba(0,0,0,.85);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+html, body { margin: 0; min-height: 100%; overflow: hidden; font-family: var(--font); color: var(--ink); background: var(--bg); }
+button { font: inherit; }
+#fake-app-bg {
+  position: fixed; inset: 0; z-index: 1;
+  background: radial-gradient(700px 480px at 88% -8%, rgba(155,123,255,.40), transparent 70%),
+              radial-gradient(640px 480px at -4% 104%, rgba(94,231,223,.24), transparent 70%),
+              radial-gradient(500px 360px at 60% 110%, rgba(255,123,208,.16), transparent 70%), #0a0e20;
+  filter: blur(12px);
+}
+.overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(24,22,60,.55); backdrop-filter: blur(4px); }
+.modal.hide-ui { opacity: 0; pointer-events: none; }
+.modal { position: relative; width: min(760px, 100%); max-height: 94vh; overflow-y: auto; overflow-x: hidden; padding: 24px; border: 1px solid var(--line); border-radius: 30px; background: #11163a; box-shadow: var(--shadow-2); }
+.mxw { position: absolute; right: 16px; top: 16px; z-index: 40; }
+.mx, .reset { border: 0; border-radius: 999px; cursor: pointer; font-weight: 900; }
+.mx { width: 36px; height: 36px; background: #ece9fb; color: #1e2142; font-size: 17px; box-shadow: 0 2px 6px rgba(30,33,66,.25); }
+.detail { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; justify-content: center; margin-top: 10px; }
+.detail .dc { width: min(100%, 250px); flex: none; position: relative; perspective: 750px; }
+.dflip { position: relative; width: 100%; aspect-ratio: 5 / 7; cursor: grab; transition: transform .1s ease-out; }
+.dflip:active { cursor: grabbing; }
+.dflip-in { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); }
+.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.tcgbox { container-type: inline-size; width: 100%; aspect-ratio: 5 / 7; position: relative; }
+.tcg.llx { position: absolute; inset: 0; padding: 0; overflow: hidden; border-radius: 1.2em; color: #fff; line-height: 1.1; font-size: 6.4cqw; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); }
+.llx-in { position: absolute; inset: .16em; overflow: hidden; isolation: isolate; border-radius: 1.06em; background: #000; transform-style: preserve-3d; }
+.llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.llx-d { position: absolute; inset: 0; transition: opacity .32s ease-in; transform-style: preserve-3d; }
+.llx-l { position: absolute; pointer-events: none; }
+.llx-flat, .llx-fade { inset: 0; width: 100%; height: 100%; }
+.llx { --dx: calc((var(--mx, .5) - .5) * 2); --dy: calc((var(--my, .5) - .5) * 2); --mag: clamp(.25, calc(.25 + (var(--dx) * var(--dx) + var(--dy) * var(--dy)) * .75), 1); }
+.llx-g { inset: -4%; width: 108%; height: 108%; transform: translate3d(calc(var(--dx) * 1.6%), calc(var(--dy) * 1.6%), 0); }
+.llx-g > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.llx-body { opacity: .7; }
+.llx-holo { background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); background-size: 260% 260%; background-position: calc(50% + var(--dx) * 45%) calc(50% + var(--dy) * 45%); mix-blend-mode: screen; }
+.llx-bh { opacity: calc(.10 + var(--mag) * .32); }
+.llx-bs, .llx-cg { mix-blend-mode: screen; background-size: 300% 300%; background-position: calc(50% - var(--dx) * 60% - var(--dy) * 20%) calc(50% - var(--dy) * 60%); }
+.llx-bs { background-image: linear-gradient(120deg,transparent 35%,rgba(255,255,255,.20) 47%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.20) 53%,transparent 65%); }
+.llx-cg { background-image: linear-gradient(120deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%); }
+.llx-ch { mix-blend-mode: multiply; opacity: .62; }
+.llx-glare { inset: 0; background: radial-gradient(circle at calc(50% + var(--dx) * 55%) calc(35% + var(--dy) * 55%),rgba(255,255,255,.55),rgba(255,255,255,0) 42%); mix-blend-mode: overlay; opacity: calc(var(--mag) * .9); }
+.llx-c { inset: -6%; width: 112%; height: 112%; transform: translate3d(calc(var(--dx) * 4.2%), calc(var(--dy) * 4.2%), 0); }
+.llx-bob { position: absolute; inset: 0; animation: llxbob 7s ease-in-out infinite; }
+.llx-bob > img, .llx-bob > i { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.llx-cmh { mix-blend-mode: screen; opacity: calc(.35 + var(--mag) * .55); background-size: 200% 200%; animation: llxdrift 9s linear infinite; background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); }
+@keyframes llxbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8%); } }
+@keyframes llxdrift { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+.hlx-sp { position: absolute; inset: 0; pointer-events: none; }
+.hlx-sp i { position: absolute; width: 3.2cqw; height: 3.2cqw; margin: -1.6cqw; background: radial-gradient(circle,#fff 0 12%,transparent 13%),linear-gradient(0deg,transparent 46%,#fff 50%,transparent 54%),linear-gradient(90deg,transparent 46%,#fff 50%,transparent 54%); animation: hltw 1.8s ease-in-out infinite; }
+@keyframes hltw { 0%,100% { transform: scale(.35); opacity: .4; } 50% { transform: scale(1); opacity: 1; } }
+.llx-fade { background: linear-gradient(180deg,rgba(0,0,0,.62) 0,rgba(0,0,0,0) 17%),linear-gradient(0deg,rgba(0,0,0,.75) 0,rgba(0,0,0,0) 24%); z-index: 5; pointer-events: none; transition: opacity .4s ease; }
+.llx-top { position: absolute; left: 6%; top: 3.4%; right: 25%; z-index: 6; transition: opacity .4s ease; }
+.llx-nm { font: 900 .98em/1.05 Georgia, serif; color: #fff; text-shadow: 0 .05em .08em #000,0 0 .3em rgba(0,0,0,.7); }
+.llx-nat { margin-top: .3em; font-weight: 700; font-size: .46em; line-height: 1.2; color: #f6e8be; text-shadow: 0 .05em .12em #000; }
+.llx-rar { position: absolute; right: 5%; top: 3.6%; z-index: 6; border-radius: 9em; padding: .24em .62em; color: #f2c75c; background: #000; box-shadow: inset 0 0 0 .14em #f2c75c,0 0 .5em rgba(242,199,92,.35); font-weight: 900; font-size: .46em; line-height: 1; transition: opacity .4s ease; }
+.llx-tag { position: absolute; left: 6%; right: 22%; bottom: 9.5%; z-index: 6; color: #fff; font: italic 700 .56em/1.15 Georgia, serif; text-shadow: 0 .06em .1em #000; transition: opacity .4s ease; }
+.llx-foot { position: absolute; left: 6%; right: 22%; bottom: 4%; z-index: 6; overflow: hidden; color: #f2d68a; font-weight: 800; font-size: .38em; line-height: 1.2; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; text-shadow: 0 .05em .1em #000; transition: opacity .4s ease; }
+.llx-play { position: absolute; right: 5%; bottom: 3.4%; z-index: 6; width: 12%; aspect-ratio: 1; display: grid; place-items: center; padding-left: .1em; border-radius: 50%; color: #f2c75c; background: rgba(0,0,0,.55); box-shadow: inset 0 0 0 .1em #f2c75c; font-size: .6em; line-height: 1; transition: opacity .4s ease; }
+.dfliphint { margin-top: 10px; text-align: center; font-size: 13px; font-weight: 800; opacity: .6; }
+.btn { border: 0; cursor: pointer; }
+.flip-btn, .llwatch { display: block; border-radius: 16px; color: #fff; font-weight: 900; box-shadow: 0 4px 0 rgba(0,0,0,.3); }
+.flip-btn { margin: 10px auto 20px; padding: 8px 24px; background: #262c55; border: 2px solid rgba(255,255,255,.4); font-size: 15px; }
+.llwatch { width: 100%; margin-top: 16px; padding: 14px; background: #11163a; border: 2px solid #f2c75c; font-size: 17px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+.flip-btn:active, .llwatch:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.3); }
+.tagrow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 99px; background: #f0effa; color: #4a4670; font-size: 13px; font-weight: 900; }
+.tag.rr { color: #fff; background: #000; border: 2px solid #f2c75c; }
+.dt { flex: 1; min-width: 260px; text-align: left; }
+.dt h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--accent-2); font-size: 28px; letter-spacing: -.4px; }
+.dt .nat { margin-top: 4px; color: var(--muted); font-size: 20px; font-weight: 700; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; }
+.dt .era { margin: 8px 0; color: var(--accent); font-weight: 800; }
+.dt .tagline { margin-bottom: 8px; color: var(--ink); font-size: 16px; font-weight: 800; }
+.tip { margin-top: 20px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; color: var(--muted); background: rgba(255,255,255,.04); font-size: 13px; line-height: 1.45; }
+#closer { position: fixed; inset: 0; z-index: 9999; display: none; cursor: pointer; }
+#closer.show { display: block; }
+.dflip.flying { position: fixed; z-index: 1000; cursor: default; pointer-events: none; transition: left 400ms cubic-bezier(.3,0,.2,1), top 400ms cubic-bezier(.3,0,.2,1), transform 400ms cubic-bezier(.3,0,.2,1), padding 400ms ease, background 400ms ease, border-radius 400ms ease; }
+.dflip.immersed { padding: 0; border-radius: 0; }
+.dflip.immersed .tcg, .dflip.immersed .llx-in { border-radius: 0; }
+.dflip.immersed .llx-art { transform: scale(1.15); animation: breatheArt 10s ease-in-out infinite alternate; transition: transform 800ms ease; }
+.dflip.immersed .llx-g, .dflip.immersed .llx-c { transition: transform 700ms cubic-bezier(.7,0,1,1); }
+.dflip.immersed .llx-g { transform: scale(2.8) translateZ(50px); }
+.dflip.immersed .llx-c { transform: scale(3) translateZ(80px); }
+.dflip.immersed .llx-top, .dflip.immersed .llx-rar, .dflip.immersed .llx-tag, .dflip.immersed .llx-foot, .dflip.immersed .llx-play, .dflip.immersed .llx-fade, .dflip.immersed .hlx-sp { opacity: 0 !important; transition: opacity .4s ease; }
+@keyframes breatheArt { 0% { transform: scale(1.15) translate(0,0); } 100% { transform: scale(1.25) translate(-2%,2%); } }
+.dflip.closing-slow .llx-g, .dflip.closing-slow .llx-c { transition: transform 1800ms ease-in-out; }
+.dflip.flying::before { content: ""; position: absolute; inset: 0; z-index: 99; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,225,140,.9), transparent 70%); opacity: 0; animation: flash 600ms ease-out; }
+@keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+@media (max-width: 640px) { .modal { padding: 20px 16px; border-radius: 24px; } .dt { min-width: 0; width: 100%; } .detail .dc { width: min(74vw, 250px); } .dt h2 { font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<div id="fake-app-bg"></div>
+<div class="overlay" id="main-modal">
+  <div class="modal">
+    <div class="mxw"><button class="mx" id="close-modal" aria-label="Close preview">←</button></div>
+    <div class="detail">
+      <div class="dc" id="card-container">
+        <div class="dflip hlsc" id="dflip" style="--mx:.5;--my:.5;--rx:0deg;--ry:0deg" tabindex="0" role="button" aria-label="Watch Princess Kaguya story">
+          <div class="dflip-in">
+            <div class="flip-face dfront">
+              <div class="tcgbox">
+                <div class="tcg r-LL reg-JP llx">
+                  <div class="llx-in">
+                    <img class="llx-art" alt="Princess Kaguya card art" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll02.9f4fc321.webp">
+                    <div class="llx-d">
+                      <div class="llx-l llx-g">
+                        <img class="llx-body" alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
+                        <i class="llx-holo llx-bh"></i><i class="llx-bs"></i>
+                        <img alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp">
+                        <i class="llx-holo llx-ch"></i><i class="llx-cg"></i>
+                      </div>
+                      <i class="llx-l llx-glare"></i>
+                      <div class="llx-l llx-c">
+                        <div class="llx-bob">
+                          <img alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/charms.aade78ba.webp">
+                          <i class="llx-holo llx-cmh"></i>
+                          <span class="hlx-sp">
+                            <i class="sb" style="left:8.5%;top:4%;--x:.036;--y:-.016;--d:0s"></i>
+                            <i class="sa" style="left:21.4%;top:11%;--x:.179;--y:.063;--d:-.53s"></i>
+                            <i class="sa" style="left:11.4%;top:21.5%;--x:.067;--y:.181;--d:-1.06s"></i>
+                            <i class="sb" style="left:11.5%;top:41.3%;--x:.069;--y:.403;--d:-1.59s"></i>
+                            <i class="sa" style="left:87%;top:12.5%;--x:.914;--y:.080;--d:-2.12s"></i>
+                            <i class="sa" style="left:87.9%;top:32%;--x:.925;--y:.299;--d:-.05s"></i>
+                            <i class="sb" style="left:94.7%;top:25.9%;--x:1;--y:.230;--d:-.58s"></i>
+                            <i class="sa" style="left:5.1%;top:65.2%;--x:-.003;--y:.671;--d:-1.11s"></i>
+                            <i class="sa" style="left:15%;top:74.3%;--x:.108;--y:.773;--d:-1.64s"></i>
+                            <i class="sb" style="left:18.6%;top:85.8%;--x:.149;--y:.901;--d:-2.17s"></i>
+                            <i class="sa" style="left:91.2%;top:74.3%;--x:.961;--y:.772;--d:-.63s"></i>
+                            <i class="sb" style="left:79.3%;top:80.9%;--x:.828;--y:.846;--d:-1.16s"></i>
+                            <i class="sa" style="left:70%;top:20%;--x:.724;--y:.164;--d:-2.27s"></i>
+                            <i class="sa" style="left:22%;top:25%;--x:.186;--y:.220;--d:-.20s"></i>
+                            <i class="sb" style="left:88%;top:34%;--x:.926;--y:.321;--d:-.73s"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="llx-fade"></div>
+                    <div class="llx-top"><div class="llx-nm">Princess Kaguya</div><div class="llx-nat">かぐや姫</div></div>
+                    <div class="llx-rar">LL</div>
+                    <div class="llx-tag">The girl from the Moon</div>
+                    <div class="llx-foot">🇯🇵 LEGEND · OVER 1,000 YEARS OLD</div>
+                    <div class="llx-play">▶</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dfliphint">Tap the card or Watch the story · slide to tilt</div>
+        <button class="btn flip-btn" id="flip-btn">↻ Reset tilt</button>
+      </div>
+      <div class="dt">
+        <div class="tagrow"><span class="tag rr">LL</span><span class="tag">🇯🇵 Japan 🔊</span><span class="tag">Legend</span><span class="tag">#308</span></div>
+        <h2>Princess Kaguya <span style="font-size:.6em;opacity:.55">🔊</span></h2>
+        <div class="nat">かぐや姫 <span style="font-size:.7em;opacity:.55">🔊</span></div>
+        <div class="era"><b>When:</b> over 1,000 years old <span style="font-size:.8em;opacity:.55">🔊</span></div>
+        <div class="tagline">The girl from the Moon <span style="font-size:.8em;opacity:.55">🔊</span></div>
+        <button class="btn llwatch" id="btn-watch">▶ Watch the story</button>
+        <div class="tip"><b>Demo behavior:</b> the preview card lifts out of the modal, expands to fill the screen, keeps the living card layers moving, then returns to the preview when you tap or press Escape.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="closer" aria-label="Close story animation"></div>
+<script>
+(function(){
+  'use strict';
+  var card = document.getElementById('dflip');
+  var cardContainer = document.getElementById('card-container');
+  var modal = document.getElementById('main-modal');
+  var closer = document.getElementById('closer');
+  var btnWatch = document.getElementById('btn-watch');
+  var btnClose = document.getElementById('close-modal');
+  var btnReset = document.getElementById('flip-btn');
+  var st = { phase: 'idle', placeholder: null, home: null };
+
+  function resetTilt(){
+    card.style.setProperty('--rx','0deg'); card.style.setProperty('--ry','0deg');
+    card.style.setProperty('--mx',.5); card.style.setProperty('--my',.5);
+  }
+  function setTilt(e){
+    if(st.phase !== 'idle') return;
+    var r = card.getBoundingClientRect(); if(!r.width || !r.height) return;
+    var mx = Math.max(0, Math.min(1, (e.clientX-r.left)/r.width));
+    var my = Math.max(0, Math.min(1, (e.clientY-r.top)/r.height));
+    card.style.setProperty('--mx',mx); card.style.setProperty('--my',my);
+    var rot = 20.8;
+    card.style.setProperty('--ry',((mx-.5)*rot).toFixed(2)+'deg');
+    card.style.setProperty('--rx',((.5-my)*rot).toFixed(2)+'deg');
+  }
+  card.addEventListener('pointermove', setTilt);
+  card.addEventListener('pointerleave', function(){ if(st.phase === 'idle') resetTilt(); });
+
+  function startStory(){
+    if(st.phase !== 'idle') return;
+    st.phase = 'opening'; resetTilt();
+    var rect = card.getBoundingClientRect();
+    st.home = {left:rect.left, top:rect.top, width:rect.width, height:rect.height};
+    st.placeholder = document.createElement('div');
+    st.placeholder.style.width = rect.width+'px'; st.placeholder.style.height = rect.height+'px';
+    st.placeholder.setAttribute('aria-hidden','true');
+    cardContainer.insertBefore(st.placeholder, card);
+    document.body.appendChild(card);
+    card.classList.add('flying');
+    card.style.left = rect.left+'px'; card.style.top = rect.top+'px';
+    card.style.width = rect.width+'px'; card.style.height = rect.height+'px';
+    card.style.transform = 'none';
+    closer.classList.add('show');
+    modal.classList.add('hide-ui');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var scale = Math.max(vw/rect.width, vh/rect.height) * 1.05;
+        card.style.left = (vw/2)+'px'; card.style.top = (vh/2)+'px';
+        card.style.transform = 'translate(-50%,-50%) scale('+scale+')';
+        setTimeout(function(){ card.classList.add('immersed'); st.phase = 'immersed'; }, 330);
+      });
+    });
+  }
+
+  function closeStory(){
+    if(st.phase !== 'immersed' && st.phase !== 'opening') return;
+    st.phase = 'closing';
+    card.classList.remove('immersed'); card.classList.add('closing-slow');
+    var h = st.home;
+    card.style.left = h.left+'px'; card.style.top = h.top+'px';
+    card.style.transform = 'none';
+    setTimeout(function(){
+      card.classList.remove('flying','closing-slow');
+      card.style.cssText = '--mx:.5;--my:.5;--rx:0deg;--ry:0deg';
+      if(st.placeholder && st.placeholder.parentNode) st.placeholder.parentNode.replaceChild(card, st.placeholder);
+      st.placeholder = null; closer.classList.remove('show'); modal.classList.remove('hide-ui'); st.phase = 'idle';
+    }, 430);
+  }
+
+  card.addEventListener('click', function(e){ if(st.phase === 'idle') startStory(e); });
+  card.addEventListener('keydown', function(e){ if((e.key === 'Enter' || e.key === ' ') && st.phase === 'idle'){ e.preventDefault(); startStory(); } });
+  btnWatch.addEventListener('click', startStory);
+  closer.addEventListener('click', closeStory);
+  btnClose.addEventListener('click', function(){ if(st.phase !== 'idle') closeStory(); });
+  btnReset.addEventListener('click', resetTilt);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeStory(); });
+})();
+</script>
+</body>
+</html>
