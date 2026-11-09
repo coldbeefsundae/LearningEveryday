@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.47', errs = [], shown = false;
+  var V = '26.11.48', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2473,8 +2473,6 @@ div.llx-g>*{position:absolute;inset:0;width:100%;height:100%;display:block}
 /* phase 4 (snap): back into the frame */
 .ll-fly-card.ll-fly-snap{transition:transform 430ms cubic-bezier(.18,.9,.3,1.18)}
 .ll-fly-card.ll-fly-immersed .tcg,.ll-fly-card.ll-fly-immersed .llx-in{border-radius:0}
-.ll-fly-card.ll-fly-immersed .tcg.llx,.ll-fly-card.ll-fly-closing .tcg.llx{background:transparent;box-shadow:none}
-.ll-fly-card.ll-fly-immersed .llx-in,.ll-fly-card.ll-fly-closing .llx-in{inset:-.08em;border-radius:0}
 /* phase 2 (dive): only after the fly ends, the art holds and breathes while glass and charms dive past the camera */
 .ll-fly-card{--ll-art-a:1.15;--ll-art-b:1.25}
 .ll-fly-card.ll-fly-immersed .llx-art{transform:scale(var(--ll-art-a));animation:llFlyBreatheArt 10s ease-in-out 800ms infinite alternate;transition:transform 800ms ease}
@@ -2487,6 +2485,7 @@ div.llx-g>*{position:absolute;inset:0;width:100%;height:100%;display:block}
 .ll-fly-card.ll-fly-closing .llx-art{animation:none;transition:transform 2400ms ease-in-out}
 .tcg.llx .llx-top,.tcg.llx .llx-rar,.tcg.llx .llx-tag,.tcg.llx .llx-foot,.tcg.llx .llx-play,.tcg.llx .llx-fade,.tcg.llx .hlx-sp{transition:opacity .35s ease}
 iframe.llstory{transition:opacity .45s ease}
+.ll-fly-ph{display:block;visibility:hidden;flex:none}
 .ll-fly-shield{position:fixed;inset:0;z-index:2147482998;background:transparent;touch-action:none}
 @keyframes llFlyBreatheArt{0%{transform:scale(var(--ll-art-a)) translate(0,0)}100%{transform:scale(var(--ll-art-b)) translate(-2%,2%)}}
 @media(max-width:820px){
@@ -2497,7 +2496,7 @@ iframe.llstory{transition:opacity .45s ease}
 @media(prefers-reduced-motion:reduce){
   .ll-fly-card.ll-fly-go,.ll-fly-card.ll-fly-snap{transition-duration:.01ms!important}
   .ll-fly-card.ll-fly-immersed .llx-art{animation:none}
-  .ll-fly-card.ll-fly-closing .llx-g,.ll-fly-card.ll-fly-closing .llx-c{transition-duration:.01ms}
+  .ll-fly-card.ll-fly-closing .llx-g,.ll-fly-card.ll-fly-closing .llx-c,.ll-fly-card.ll-fly-closing .llx-art{transition-duration:.01ms}
 }
 
 </style>
@@ -4677,7 +4676,8 @@ function llFlyRestore(f){
   if(!f || !f.card) return;
   var card = f.card, art = card.querySelector('.llx-art');
   if(f.shield && f.shield.parentNode) f.shield.parentNode.removeChild(f.shield);
-  if(f.placeholder && f.placeholder.parentNode){ f.placeholder.parentNode.insertBefore(card, f.placeholder); f.placeholder.parentNode.removeChild(f.placeholder); }
+  if(f.placeholder && f.placeholder.isConnected){ f.placeholder.parentNode.insertBefore(card, f.placeholder); f.placeholder.parentNode.removeChild(f.placeholder); }
+  else { if(card.parentNode) card.parentNode.removeChild(card); if(f.placeholder && f.placeholder.parentNode) f.placeholder.parentNode.removeChild(f.placeholder); }
   void card.offsetWidth;
   card.classList.remove('ll-fly-card','ll-fly-go','ll-fly-immersed','ll-fly-closing','ll-fly-snap');
   if(f.oldStyle === null) card.removeAttribute('style'); else card.setAttribute('style', f.oldStyle);
@@ -4690,11 +4690,24 @@ function llFlyRestore(f){
   if(LLF === f) LLF = null;
 }
 /* moving a node in the DOM restarts its CSS animations. Switch off one-shot ones (deal-in, LL pop) so they don't replay mid-flight or on return. */
+var LLKF = {};
+function llKfOpenEnd(name){
+  if(name in LLKF) return LLKF[name];
+  var ok = false;
+  try{ [].forEach.call(document.styleSheets, function(sh){ var rs; try{ rs = sh.cssRules; }catch(e){ return; }
+    [].forEach.call(rs || [], function(r){ if(r.type === 7 && r.name === name){ ok = ![].some.call(r.cssRules, function(k){ return /100%|to/.test(k.keyText); }); } }); }); }catch(e){}
+  return (LLKF[name] = ok);
+}
 function llFlyNoReplay(root){
   [root].concat([].slice.call(root.querySelectorAll('*'))).forEach(function(el){
     var cs = getComputedStyle(el); if(!cs.animationName || cs.animationName === 'none') return;
-    var n = cs.animationName.split(','), it = cs.animationIterationCount.split(','), hit = false;
-    n = n.map(function(x, i){ x = x.trim(); var c = (it[i % it.length] || '1').trim(); if(x !== 'none' && c !== 'infinite'){ hit = true; return 'none'; } return x; });
+    var n = cs.animationName.split(','), it = cs.animationIterationCount.split(','), fm = cs.animationFillMode.split(','), hit = false;
+    n = n.map(function(x, i){
+      x = x.trim(); var c = (it[i % it.length] || '1').trim(), fill = (fm[i % fm.length] || 'none').trim();
+      var safe = fill === 'none' || fill === 'backwards' || llKfOpenEnd(x);
+      if(x !== 'none' && c !== 'infinite' && safe){ hit = true; return 'none'; }
+      return x;
+    });
     if(hit) el.style.animationName = n.join(',');
   });
 }
@@ -4717,7 +4730,7 @@ function llFlyFrom(f, r){ var k = r.width / f.big.width; return 'translate3d('+(
 function llFlySnap(f, done){
   if(!f || f.phase === 'snap' || f.phase === 'done') return;
   f.phase = 'snap';
-  var card = f.card, home = (f.placeholder && llFlyRect(f.placeholder)) || f.home;
+  var card = f.card, home = (f.placeholder && f.placeholder.isConnected && llFlyRect(f.placeholder)) || f.home;
   card.classList.remove('ll-fly-go'); card.classList.add('ll-fly-snap');
   llFlyAfter(card, 'transform', 430, function(){ f.phase = 'done'; llFlyRestore(f); if(done) done(); });
   card.style.setProperty('--ll-fly-transform', llFlyFrom(f, home));
@@ -4744,7 +4757,7 @@ function llFlyOpen(card, visual, onDive){
   var vv = window.visualViewport, W = (vv && vv.width) || window.innerWidth, H = (vv && vv.height) || window.innerHeight, ox = (vv && vv.offsetLeft) || 0, oy = (vv && vv.offsetTop) || 0;
   var k = Math.max(W/r.width, H/r.height) * 1.05, bw = r.width*k, bh = r.height*k;
   var big = {left: ox + (W-bw)/2, top: oy + (H-bh)/2, width: bw, height: bh};
-  var ph = document.createElement('div'); ph.className = 'dflip-ph'; ph.style.width = r.width+'px'; ph.style.height = r.height+'px'; ph.setAttribute('aria-hidden','true');
+  var ph = document.createElement('div'); ph.className = 'll-fly-ph'; ph.style.width = r.width+'px'; ph.style.height = r.height+'px'; ph.setAttribute('aria-hidden','true');
   var f = {card:card, visual:visual || null, placeholder:ph, home:r, big:big, oldStyle:card.getAttribute('style'), phase:'opening', frozen:[], hlf:null};
   LLF = f;
   /* 1. freeze the tilt/holo loop on this card so nothing restyles it every frame during the flight */
@@ -4820,7 +4833,7 @@ function llPlay(id, fromEl, flyCard, originRect, visualCard){
     var beginStory = function(){
       if(me.started || LLP !== me) return;
       me.started = true;
-      try{ w.LL.play(me.outerFly ? null : r, {sound: !state.mute, reduce: !!(HL_RM || (state.ui && state.ui.calm)), music: window.LL_MUSIC, art: me.outerFly ? null : (me.card ? llxU().art[id] : null), radius: me.visual ? llxRad(me.visual) : 12}); }catch(e){ llClose(true); return; }
+      try{ w.LL.play(me.outerFly ? null : r, {sound: !state.mute, reduce: !!(HL_RM || (state.ui && state.ui.calm)), music: window.LL_MUSIC, art: me.outerFly ? null : (me.card ? llxU().art[id] : null), radius: me.visual ? llxRad(me.visual) : 12}); }catch(e){ if(me.card) llFinished(); else llClose(true); return; }
       f.style.visibility = '';
       try{ w.focus(); }catch(e){}
       me.t.push(setTimeout(function(){ if(LLP === me) document.body.classList.add('llon'); }, 450));
@@ -4847,8 +4860,9 @@ function llKill(p){
 function llClose(now){
   var p = LLP; if(!p) return;
   if(now){ LLP = null; document.body.classList.remove('llon'); llDuck(false); llKill(p); return; }
-  try{ p.f.contentWindow.LL.stop(); }catch(e){ llClose(true); return; }
-  p.t.push(setTimeout(function(){ if(LLP === p) llClose(true); }, 1200));
+  if(p.card && !p.started){ llFinished(); return; }
+  try{ p.f.contentWindow.LL.stop(); }catch(e){ if(p.card) llFinished(); else llClose(true); return; }
+  p.t.push(setTimeout(function(){ if(LLP === p){ if(p.card) llFinished(); else llClose(true); } }, 1200));
 }
 
 /* =========================================================
