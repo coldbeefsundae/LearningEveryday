@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>StarQuest · Living Legendary cards</title>
+<style>
+  :root{
+    --m-body:url("../assets/ll/body.08d68638.webp");
+    --m-cracks:url("../assets/ll/cracks.b00d0b68.webp");
+    --m-charms:url("../assets/ll/charms.aade78ba.webp");
+    --holo:linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#0a0e20;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  button{font:inherit;color:inherit}
+
+  /* ---------- top bar and grid ---------- */
+  #top{position:fixed;top:0;left:0;right:0;height:56px;padding:calc(env(safe-area-inset-top,0px)) 16px 0;display:flex;align-items:center;justify-content:space-between;z-index:45;pointer-events:none}
+  body.in-detail #top h1{visibility:hidden}
+  #top h1{font-size:15px;margin:0;letter-spacing:.4px;color:#ffd76a;text-shadow:0 1px 4px #000}
+  #fx{pointer-events:auto;background:#1d2445;border:1px solid #3b4680;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700}
+  #grid{padding:72px 20px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:18px;height:100vh;height:100dvh;overflow-y:auto;align-content:start}
+  .tile{background:#11173a;border:1px solid #2a3462;border-radius:14px;padding:8px;text-align:center;cursor:pointer}
+  .tile img{width:100%;aspect-ratio:5/7;object-fit:cover;border-radius:10px;display:block}
+  .tile b{display:block;margin-top:6px;font-size:13px}
+  .tile small{color:#9aa6d8;font-size:11px}
+
+  /* ---------- detail sheet (the card preview menu) ---------- */
+  #detail{position:fixed;inset:0;background:#0a0e20;z-index:40;overflow-y:auto;padding:70px 20px 40px;display:none}
+  #detail.show{display:block}
+  #back{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:14px;z-index:41;background:#1d2445;border:1px solid #3b4680;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:700}
+  .dwrap{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;max-width:920px;margin:0 auto}
+  .dleft{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .slot{width:250px;aspect-ratio:5/7;position:relative;perspective:750px}
+  .cap{font-size:12px;color:#9aa6d8;margin:0;text-align:center}
+  .dright{flex:1 1 320px;max-width:460px}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .bd{border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700;background:#1d2445;border:1px solid #3b4680}
+  .bd.ll{border-color:#ffd76a;color:#ffd76a}
+  .dright h2{margin:0;font-size:26px;color:#7fe7ff}
+  .jp{color:#9aa6d8;margin:2px 0 6px;font-size:15px}
+  .when{color:#b79cff;font-weight:700;font-size:14px}
+  .tag{color:#9aa6d8;font-weight:700;font-style:italic;margin:6px 0 10px}
+  .blurb{line-height:1.55;font-size:15px;color:#e6eaff}
+  .watch{margin:16px 0;background:#2b3a7a;border:1px solid #5b6ec0;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer}
+  .fun{background:#fff8d6;color:#5a4000;border-radius:14px;padding:12px 14px;line-height:1.5;font-size:14px;margin:10px 0}
+  .ll-box{border:1px solid #c9a23b;background:#17152a;border-radius:14px;padding:12px 14px;margin-top:12px}
+  .ll-box h3{margin:0 0 8px;font-size:12px;letter-spacing:2px;color:#ffd76a}
+  .ll-box p{margin:0 0 8px;font-size:14px;line-height:1.4}
+  .ll-box p span{display:block;color:#9aa6d8;font-size:12px}
+
+  /* ---------- card (same layer stack as the app) ---------- */
+  .card{position:absolute;inset:0;border-radius:14px;background:linear-gradient(145deg,#f7e08a 0%,#b8862c 35%,#f2d36b 60%,#8a6418 100%);padding:5px;box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12);cursor:pointer;overflow:hidden;transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform 220ms ease-out,padding 400ms ease,background 400ms ease;touch-action:pan-y;outline:none}
+  .card:focus-visible{box-shadow:0 0 0 3px #ffd76a}
+  .llx-in{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#000;isolation:isolate}
+  .llx-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform 800ms ease}
+  .llx-d{position:absolute;inset:0;pointer-events:none;z-index:2}
+  .llx-g{position:absolute;inset:-4%;width:108%;height:108%;translate:calc(var(--dx,0)*1.6%) calc(var(--dy,0)*1.6%);transition:transform 700ms cubic-bezier(.7,0,1,1)}
+  .llx-g>*,.bob>*{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .llx-body{opacity:.85}
+  .llx-cr{opacity:.8}
+  .llx-c{position:absolute;inset:-6%;width:112%;height:112%;translate:calc(var(--dx,0)*4.2%) calc(var(--dy,0)*4.2%);transition:transform 700ms cubic-bezier(.7,0,1,1)}
+  .bob{position:absolute;inset:0;animation:bob 7s ease-in-out infinite}
+  .llx-ch{filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+  .mk{pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;background:var(--holo);background-size:260% 260%}
+  .mb{-webkit-mask-image:var(--m-body);mask-image:var(--m-body)}
+  .mc{-webkit-mask-image:var(--m-cracks);mask-image:var(--m-cracks)}
+  .mh{-webkit-mask-image:var(--m-charms);mask-image:var(--m-charms)}
+  .hb{background-position:calc(50% + var(--dx,0)*45%) calc(50% + var(--dy,0)*45%);opacity:calc(.08 + var(--mag,0)*.22)}
+  .sb{background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.2) 47%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.2) 53%,transparent 65%);background-size:300% 300%;background-position:calc(50% - var(--dx,0)*60%) 50%;opacity:.8}
+  .hc{background-position:calc(50% + var(--dx,0)*45%) calc(50% + var(--dy,0)*45%);opacity:.4}
+  .cg{background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);background-size:300% 300%;background-position:calc(50% - var(--dx,0)*60% - var(--dy,0)*20%) calc(50% - var(--dy,0)*60%);opacity:calc(.12 + var(--mag,0)*.4)}
+  .hch{background-size:200% 200%;background-position:50% 50%;opacity:calc(.25 + var(--mag,0)*.35)}
+  .sp{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .sp i{position:absolute;width:var(--s);aspect-ratio:1;margin:calc(var(--s)*-.5);background:radial-gradient(circle,#fff 0 12%,transparent 14%),linear-gradient(0deg,transparent 44%,var(--c) 50%,transparent 56%),linear-gradient(90deg,transparent 44%,var(--c) 50%,transparent 56%);animation:tw 2.6s ease-in-out infinite;animation-delay:var(--d)}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2%)}}
+  @keyframes tw{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+  @keyframes breathe{0%{transform:scale(1.15) translate(0,0)}100%{transform:scale(1.25) translate(-2%,2%)}}
+
+  /* light mode: no pointer or holo effects, same look as the first dive demo */
+  body.light .hb,body.light .sb,body.light .hc,body.light .cg,body.light .hch,body.light .sp{display:none}
+  body.light .bob{animation:none}
+  body.light .llx-ch{filter:none}
+
+  /* ---------- the dive (new start and end) ---------- */
+  .card.flying{position:fixed;z-index:100;cursor:default;pointer-events:none}
+  .card.flying::before{content:"";position:absolute;inset:0;z-index:10;background:radial-gradient(circle at 50% 50%,rgba(255,225,140,.9),transparent 70%);opacity:0;pointer-events:none;animation:flash 600ms ease-out}
+  @keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+  .card.immersed{padding:0;background:transparent}
+  .card.immersed .llx-in{border-radius:0}
+  .card.immersed .llx-art{transform:scale(1.15);animation:breathe 10s ease-in-out infinite alternate;transition:transform 800ms ease}
+  .card.immersed .llx-g{transform:scale(2.8)}
+  .card.immersed .llx-c{transform:scale(3)}
+  .card.closing-slow .llx-g,.card.closing-slow .llx-c{transition:transform 1800ms ease-in-out}
+  .card.closing-slow .llx-art{animation:none;transform:scale(1);transition:transform 1800ms ease-in-out}
+  #overlay{position:fixed;inset:0;z-index:99;background:#000;opacity:0;pointer-events:none;transition:opacity 600ms ease}
+  #overlay.show{opacity:1;pointer-events:auto}
+  #overlay.closing{transition:opacity 400ms ease}
+  #hint{position:fixed;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:14px;color:#fff;text-shadow:0 1px 6px #000,0 0 3px #000;z-index:101;opacity:0;transition:opacity 400ms ease;pointer-events:none}
+  #hint.show{opacity:1}
+
+  /* ---------- story player ---------- */
+  #story{position:fixed;inset:0;background:#000;z-index:200;display:none}
+  #story.show{display:block}
+  #sframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+  #sload{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#c9d2ff;font-size:14px;background:#000;z-index:1}
+  #sload.hide{display:none}
+  .spin{width:34px;height:34px;border-radius:50%;border:3px solid #33406f;border-top-color:#ffd76a;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #sclose{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:14px;z-index:2;background:rgba(10,14,32,.7);border:1px solid #3b4680;border-radius:99px;width:40px;height:40px;font-size:16px}
+
+  #label{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.5);z-index:102;pointer-events:none}
+  #label.hide{opacity:0}
+
+  @media (prefers-reduced-motion:reduce){.bob,.sp i,.card.immersed .llx-art{animation:none}}
+</style>
+</head>
+<body>
+  <header id="top"><h1>Living Legendary</h1><button id="fx" aria-label="Effects">Effects: Full</button></header>
+  <main id="grid"></main>
+
+  <section id="detail" aria-label="Card preview">
+    <button id="back">‹ Cards</button>
+    <div class="dwrap">
+      <div class="dleft" id="dleft"></div>
+      <div class="dright" id="dright"></div>
+    </div>
+  </section>
+
+  <div id="overlay"></div>
+  <div id="hint">Tap to close · slide to look around</div>
+  <div id="label" class="hide">Living Legendary · tap the card to see it big</div>
+
+  <section id="story" aria-label="Story">
+    <div id="sload"><div class="spin"></div><span id="sloadtxt">Loading story…</span></div>
+    <iframe id="sframe" title="Story" allow="autoplay"></iframe>
+    <button id="sclose" aria-label="Close story">✕</button>
+  </section>
+
+<script>
+(function(){
+  'use strict';
+  var BASE = '../assets/ll/';
+  var STORY_BASE = '../assets/stories/';
+  var FILE_BODY = 'body.08d68638.webp', FILE_CRACKS = 'cracks.b00d0b68.webp', FILE_CHARMS = 'charms.aade78ba.webp';
+  var CARDS = [{"id": "ll01", "name": "Halley's Comet", "jp": "ハレー彗星", "region": "🌐 Global", "when": "every ~76 years", "tagline": "The comet that keeps its promise", "blurb": "Halley's Comet is a giant ball of ice and dust that loops around the Sun and comes back about every 76 years. In 1705 Edmond Halley worked out that the comets seen in 1531, 1607 and 1682 were all the same one, and he predicted it would return in 1758. He died before then, but on Christmas night 1758 it came back, just as he said, and it was named after him.", "extra": "In 1986 a team of space probes flew out to meet it, including Japan's Suisei and Sakigake. Its next visit is on 28 July 2061.", "art": "art-ll01.ca3c9638.webp", "story": "halley.5cb11136.html", "key": "halley", "facts": [["☄️ Comes back about every <b>76 years<\/b>", "約76年ごとに もどってくる"], ["🔭 Edmond Halley predicted its return in <b>1705<\/b>", "1705年に ハレーが よそくした"], ["🧊 Its icy heart is about <b>15 km<\/b> long and darker than coal", "こおりの しんは 長さ 約15km。すみよりも 黒い"], ["📅 Next visit: <b>28 July 2061<\/b>", "つぎは 2061年7月28日"]], "big": false}, {"id": "ll02", "name": "Princess Kaguya", "jp": "かぐや姫", "region": "🇯🇵 Japan", "when": "over 1,000 years old", "tagline": "The girl from the Moon", "blurb": "An old bamboo cutter found a tiny girl inside a glowing bamboo stalk and raised her as his daughter. She grew up to be the beautiful Princess Kaguya. Many nobles, and even the Emperor, wanted to marry her, but she gave them impossible tasks. On a full-moon night, people from the Moon came down to take her home.", "extra": "The Tale of the Bamboo Cutter is often called Japan's oldest story. Some say Mount Fuji got its name from its ending, when the Emperor's letter was burned on the tallest mountain, closest to the sky.", "art": "art-ll02.9f4fc321.webp", "story": "kaguya.2d525221.html", "key": "kaguya", "facts": [["🎋 Found inside a <b>glowing bamboo<\/b> stalk", "光る 竹の 中から 見つかった"], ["📜 From <b>The Tale of the Bamboo Cutter<\/b>, Japan's oldest story", "『竹取物語』 日本で いちばん 古い 物語"], ["🌕 She went home to the Moon on a <b>full moon<\/b> night", "まんげつの 夜に 月へ 帰った"], ["🗻 Some say <b>Mount Fuji<\/b> got its name from this story", "富士山の 名前は この お話から 来たとも 言われる"]], "big": false}, {"id": "ll03", "name": "Kowloon Walled City", "jp": "九龍城寨", "region": "🇨🇳 China", "when": "1847–1994", "tagline": "Nicknamed the City of Darkness", "blurb": "It began as a small Chinese fort in Kowloon, Hong Kong. When Britain leased the land around it in 1898, the fort was left out, so no government really looked after it. Buildings were piled on top of each other until about 33,000 people lived in about 350 buildings, with almost no laws. Gangs ran some parts and the alleys were dark and dirty, but most people were ordinary families, shopkeepers and workers who helped each other.", "extra": "It was torn down in 1993–94 and became Kowloon Walled City Park in 1995. Its crowded towers inspired many sci-fi films, comics and games.", "art": "art-ll03.7e3b83c6.webp", "story": "kowloon.31bbedb9.html", "key": "kowloon", "facts": [["🏯 Began as a Chinese <b>fort<\/b>, left out when Britain leased the land around it in 1898", "イギリスが 1898年に まわりを かりた とき、とりでだけ 外された"], ["🏙️ About <b>33,000 people<\/b> in 350 buildings, one of the most crowded places ever", "やく 350の ビルに 3万3千人。世界で いちばん こんでいた 場所の 1つ"], ["🎮 Inspired many <b>sci-fi<\/b> films, comics and games", "SF映画、まんが、ゲームの ヒントに なった"], ["🌳 Now <b>Kowloon Walled City Park<\/b> (opened 1995)", "いまは 九龍寨城公園 (1995年〜)"]], "big": true}, {"id": "ll04", "name": "Nian", "jp": "年獸", "region": "🇨🇳 China", "when": "Lunar New Year", "tagline": "The monster who was scared of red", "blurb": "An old Chinese legend says a monster called Nian came out every New Year's Eve to frighten villages and eat their crops. Then the villagers found out Nian was scared of the colour red, bright lights and loud noises. So they hung up red decorations, lit lanterns and banged drums, and Nian ran away.", "extra": "That is why Lunar New Year is full of red lanterns, red envelopes, firecrackers and lion dances. Some say 過年 (celebrating New Year) means \"getting past Nian\".", "art": "art-ll04.a80fb2a4.webp", "story": "nian.ddf22375.html", "key": "nian", "facts": [["🧧 Nian was scared of <b>red<\/b>, bright light and loud noise", "赤い 色、明るい 光、大きな 音が にがて"], ["🏮 That is why New Year has <b>red lanterns<\/b> and red envelopes", "だから お正月には 赤い ちょうちんと お年玉ぶくろ"], ["🥁 Drums, gongs and <b>lion dances<\/b> chase bad luck away", "たいこ、ドラ、獅子舞で わるい ことを 追いはらう"], ["🎆 Some say <b>過年<\/b> (celebrating New Year) means \"getting past Nian\"", "「過年」は「年を のりこえる」という いみ とも 言われる"]], "big": false}, {"id": "ll05", "name": "The Great Wave", "jp": "神奈川沖浪裏", "region": "🇯🇵 Japan", "when": "about 1831", "tagline": "The most famous wave in the world", "blurb": "The Great Wave off Kanagawa is a woodblock print by Katsushika Hokusai, made when he was about 70. A giant wave curls over three boats of rowers, and little Mount Fuji sits far away, under the wave. The picture was carved into wooden blocks and printed many times.", "extra": "Its bright blue was a new paint from Europe called Prussian blue. Hokusai kept practising all his life and said he hoped to be really great by the age of 110!", "art": "art-ll05.6fe512ec.webp", "story": "wave.ffd84f53.html", "key": "wave", "facts": [["🎨 By <b>Katsushika Hokusai<\/b>, made when he was about 70", "葛飾北斎が 70さいごろに かいた"], ["🗻 Look closely: <b>Mount Fuji<\/b> is tiny, under the wave", "よく 見ると 富士山が 波の 下に 小さく"], ["🪵 A <b>woodblock print<\/b>: carved wood, printed many times", "木はんが：木を ほって 何まいも 刷った"], ["🔵 Its blue was a new paint from Europe: <b>Prussian blue<\/b>", "青は ヨーロッパから 来た 新しい 色「ベロ藍」"]], "big": false}, {"id": "ll06", "name": "Dragon Gate Carp", "jp": "鯉躍龍門", "region": "🇨🇳 China", "when": "Yellow River legend", "tagline": "Never give up!", "blurb": "An old Chinese legend says carp swim up the Yellow River to a huge waterfall called the Dragon Gate. Most of them give up, but a carp that keeps trying and leaps all the way to the top turns into a dragon.", "extra": "In Japan this story is why carp streamers (koinobori) fly on Children's Day, 5 May. 鯉の滝登り (a carp climbing a waterfall) means working hard to succeed.", "art": "art-ll06.f594235e.webp", "story": "carp.f555b8ba.html", "key": "carp", "facts": [["🐟 A carp that climbs the <b>Dragon Gate<\/b> falls becomes a dragon", "竜門の 滝を のぼった 鯉は 竜に なる"], ["🌊 The Dragon Gate is on China's <b>Yellow River<\/b>", "竜門は 中国の 黄河に ある"], ["🎏 That is why <b>koinobori<\/b> fly on Children's Day, May 5", "だから 5月5日 こどもの日に こいのぼり"], ["📝 鯉の滝登り / 鯉躍龍門: working hard to <b>succeed<\/b>", "「鯉の滝登り」は がんばって 出世する こと"]], "big": false}];
+  var SPARKS = [[18,22,7,'#fff6c8',0],[78,16,5,'#9fe8ff',.7],[64,40,9,'#ffd2f0',1.4],[28,58,6,'#fff6c8',.3],[84,62,8,'#c9b3ff',1.9],[40,80,5,'#ffe08a',1.1],[12,84,7,'#9fe8ff',2.2]];
+  var RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  var root = document.documentElement.style;
+  root.setProperty('--m-body', 'url("' + BASE + FILE_BODY + '")');
+  root.setProperty('--m-cracks', 'url("' + BASE + FILE_CRACKS + '")');
+  root.setProperty('--m-charms', 'url("' + BASE + FILE_CHARMS + '")');
+
+  var fx = {full: true};
+  var el = function(tag, cls){ var e = document.createElement(tag); if (cls) e.className = cls; return e; };
+  var img = function(cls, file){ var i = el('img', cls); i.src = BASE + file; i.alt = ''; i.draggable = false; return i; };
+
+  // ---------- card builder: the same layer stack as the app ----------
+  function makeCard(c){
+    var card = el('div', 'card');
+    card.setAttribute('role', 'button'); card.tabIndex = 0;
+    card.setAttribute('aria-label', c.name + '. Tap to see it big.');
+    var inn = el('div', 'llx-in');
+    inn.appendChild(img('llx-art', c.art));
+    var d = el('div', 'llx-d');
+    var g = el('div', 'llx-g');
+    g.appendChild(img('llx-body', FILE_BODY));
+    g.appendChild(el('i', 'mk mb hb'));
+    g.appendChild(el('i', 'mk mb sb'));
+    g.appendChild(img('llx-cr', FILE_CRACKS));
+    g.appendChild(el('i', 'mk mc hc'));
+    g.appendChild(el('i', 'mk mc cg'));
+    var cc = el('div', 'llx-c'), bob = el('div', 'bob');
+    bob.appendChild(img('llx-ch', FILE_CHARMS));
+    bob.appendChild(el('i', 'mk mh hch'));
+    var sp = el('span', 'sp');
+    SPARKS.forEach(function(p){
+      var i = el('i');
+      i.style.left = p[0] + '%'; i.style.top = p[1] + '%';
+      i.style.setProperty('--s', p[2] + '%'); i.style.setProperty('--c', p[3]); i.style.setProperty('--d', p[4] + 's');
+      sp.appendChild(i);
+    });
+    bob.appendChild(sp);
+    cc.appendChild(bob);
+    d.appendChild(g); d.appendChild(cc);
+    inn.appendChild(d); card.appendChild(inn);
+    return card;
+  }
+
+  // ---------- pointer: tilt (detail card) and parallax (both) ----------
+  var pend = null, raf = 0;
+  function layers(card, dx, dy){ pend = {card: card, dx: dx, dy: dy}; if (!raf) raf = requestAnimationFrame(flush); }
+  function flush(){ raf = 0; if (!pend) return; var q = pend; pend = null; apply(q.card, q.dx, q.dy); }
+  function clamp(v){ return Math.max(-1, Math.min(1, v)); }
+  function apply(card, dx, dy){
+    if (!fx.full || !card) return;
+    dx = clamp(dx); dy = clamp(dy);
+    card.style.setProperty('--dx', dx.toFixed(3));
+    card.style.setProperty('--dy', dy.toFixed(3));
+    card.style.setProperty('--mx', ((dx + 1) / 2).toFixed(3));
+    card.style.setProperty('--mag', Math.min(1, Math.hypot(dx, dy)).toFixed(3));
+  }
+  function tiltTo(card, nx, ny){
+    if (!fx.full || RM) return;
+    card.style.setProperty('--rx', (-ny * 10).toFixed(2) + 'deg');
+    card.style.setProperty('--ry', (nx * 10).toFixed(2) + 'deg');
+  }
+  function resetTilt(card){ card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); layers(card, 0, 0); }
+
+  var st = {phase: 'idle', flyer: null, ph: null, cur: null, dragged: false, down: null};
+
+  // detail card: tilt follows finger or mouse on the card
+  var dleft = document.getElementById('dleft');
+  dleft.addEventListener('pointermove', function(e){
+    if (st.phase !== 'idle' || !st.ph) return;
+    var s = st.ph.parentNode.getBoundingClientRect();
+    var nx = clamp((e.clientX - s.left) / s.width * 2 - 1), ny = clamp((e.clientY - s.top) / s.height * 2 - 1);
+    tiltTo(st.ph, nx, ny); layers(st.ph, nx, ny);
+  });
+  dleft.addEventListener('pointerleave', function(){ if (st.ph) resetTilt(st.ph); });
+  dleft.addEventListener('pointerdown', function(e){ st.down = {x: e.clientX, y: e.clientY}; st.dragged = false; });
+  dleft.addEventListener('pointerup', function(e){
+    if (st.down && Math.hypot(e.clientX - st.down.x, e.clientY - st.down.y) > 10) st.dragged = true;
+    st.down = null;
+  });
+  // while the card is big: any finger or mouse position moves the layers
+  window.addEventListener('pointermove', function(e){
+    if (!st.flyer || (st.phase !== 'opening' && st.phase !== 'focusing' && st.phase !== 'playing')) return;
+    layers(st.flyer, e.clientX / window.innerWidth * 2 - 1, e.clientY / window.innerHeight * 2 - 1);
+  });
+
+  // ---------- detail sheet (the preview menu) ----------
+  var detail = document.getElementById('detail');
+  function openDetail(c){
+    if (st.phase !== 'idle') return;
+    var l = document.getElementById('dleft'), r = document.getElementById('dright');
+    l.innerHTML = ''; r.innerHTML = '';
+    var slot = el('div', 'slot');
+    st.ph = makeCard(c);
+    slot.appendChild(st.ph); l.appendChild(slot);
+    var cap = el('p', 'cap'); cap.textContent = 'Tap the card to see it big · slide to tilt'; l.appendChild(cap);
+    var b = el('div', 'badges');
+    b.innerHTML = '<span class="bd ll">LL</span><span class="bd">' + c.region + '</span><span class="bd">' + c.when + '</span>';
+    r.appendChild(b);
+    var h = el('h2'); h.textContent = c.name; r.appendChild(h);
+    var jp = el('div', 'jp'); jp.textContent = c.jp; r.appendChild(jp);
+    var tag = el('div', 'tag'); tag.textContent = c.tagline; r.appendChild(tag);
+    var bl = el('p', 'blurb'); bl.textContent = c.blurb; r.appendChild(bl);
+    if (c.extra) { var ex = el('p', 'blurb'); ex.textContent = c.extra; r.appendChild(ex); }
+    var w = el('button', 'watch'); w.textContent = '▶ Watch the story'; w.addEventListener('click', function(){ openStory(c); }); r.appendChild(w);
+    var box = el('div', 'll-box'); var bh = el('h3'); bh.textContent = '★ LIVING LEGENDARY ★'; box.appendChild(bh);
+    c.facts.forEach(function(f){
+      var p = el('p'); p.innerHTML = f[0]; var s = el('span'); s.textContent = f[1]; p.appendChild(s); box.appendChild(p);
+    });
+    r.appendChild(box);
+    detail.classList.add('show');
+    document.body.classList.add('in-detail');
+    detail.scrollTop = 0;
+    st.cur = c;
+  }
+  document.getElementById('back').addEventListener('click', function(){
+    if (st.phase !== 'idle') return;
+    detail.classList.remove('show');
+    document.body.classList.remove('in-detail');
+    st.ph = null; st.cur = null;
+  });
+
+  // grid of tiles
+  var grid = document.getElementById('grid');
+  CARDS.forEach(function(c){
+    var t = el('div', 'tile');
+    t.setAttribute('role', 'button'); t.tabIndex = 0;
+    var im = img('', c.art); t.appendChild(im);
+    var n = el('b'); n.textContent = c.name; t.appendChild(n);
+    var s = el('small'); s.textContent = c.region + ' · ' + c.when; t.appendChild(s);
+    t.addEventListener('click', function(){ openDetail(c); });
+    t.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(c); } });
+    grid.appendChild(t);
+  });
+
+  // ---------- the dive: new start and end ----------
+  var overlay = document.getElementById('overlay'), hint = document.getElementById('hint'), label = document.getElementById('label');
+  function dive(card){
+    if (st.phase !== 'idle') return;
+    st.phase = 'opening';
+    var c = st.cur;
+    card.style.transform = 'none';
+    card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
+    var r0 = card.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(vw / r0.width, vh / r0.height) * 1.05;
+    var tx = vw / 2 - (r0.left + r0.width / 2), ty = vh / 2 - (r0.top + r0.height / 2);
+
+    var fl = makeCard(c);
+    fl.classList.add('flying');
+    fl.style.left = r0.left + 'px'; fl.style.top = r0.top + 'px';
+    fl.style.width = r0.width + 'px'; fl.style.height = r0.height + 'px';
+    fl.style.margin = '0';
+    fl.style.transform = 'translate(0,0) scale(1)';
+    document.body.appendChild(fl);
+    card.style.opacity = '0';
+    st.flyer = fl; st.origin = r0;
+    void fl.offsetWidth;
+    fl.style.transition = 'transform 400ms cubic-bezier(.3,0,.2,1)';
+
+    overlay.classList.remove('closing'); overlay.classList.add('show');
+    label.classList.add('hide');
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      fl.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+    }); });
+
+    var onEnd = function(e){
+      if (e.propertyName !== 'transform' || e.target !== fl) return;
+      fl.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'opening') return;
+      st.phase = 'focusing';
+      hint.classList.add('show');
+      setTimeout(function(){
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        fl.classList.add('immersed');
+      }, 400);
+    };
+    fl.addEventListener('transitionend', onEnd);
+  }
+
+  function closeDive(){
+    if (st.phase !== 'playing') return;
+    st.phase = 'closing';
+    var fl = st.flyer;
+    hint.classList.remove('show');
+    fl.classList.add('closing-slow');
+    fl.classList.remove('immersed');
+    setTimeout(function(){
+      if (st.phase !== 'closing') return;
+      fl.classList.remove('closing-slow');
+      var target = st.ph ? st.ph.parentNode.getBoundingClientRect() : st.origin;
+      var dx = target.left - st.origin.left, dy = target.top - st.origin.top;
+      fl.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1)';
+      overlay.classList.add('closing'); overlay.classList.remove('show');
+      var onEnd = function(e){
+        if (e.propertyName !== 'transform' || e.target !== fl) return;
+        fl.removeEventListener('transitionend', onEnd);
+        if (st.phase !== 'closing') return;
+        fl.remove();
+        if (st.ph) st.ph.style.opacity = '';
+        st.flyer = null; st.phase = 'idle';
+        label.classList.remove('hide');
+      };
+      fl.addEventListener('transitionend', onEnd);
+    }, 1800);
+  }
+
+  // tap the detail card to dive (ignore taps that were really drags)
+  dleft.addEventListener('click', function(e){
+    if (st.dragged) { st.dragged = false; return; }
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (card && st.ph === card) dive(card);
+  });
+  dleft.addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (card && st.ph === card) { e.preventDefault(); dive(card); }
+  });
+  overlay.addEventListener('click', closeDive);
+  hint.addEventListener('click', closeDive);
+
+  // ---------- story player (the same hand-off the app uses) ----------
+  var story = document.getElementById('story'), sframe = document.getElementById('sframe'), sload = document.getElementById('sload');
+  var actx = null;
+  // what the story page may ask the host for: the card's position (it flies back into the card) and the audio context
+  window.LL_HOST = {
+    ac: function(){ return actx; },
+    out: function(){ return null; },
+    rect: function(){
+      var c = st.ph; if (!c || !document.body.contains(c)) return null;
+      var b = c.getBoundingClientRect();
+      return (b.width > 0 && b.height > 0) ? {left: b.left, top: b.top, width: b.width, height: b.height} : null;
+    },
+    on: function(ev){ if (ev === 'done') finishStory(); }
+  };
+  function openStory(c){
+    // created on the tap, so the browser allows sound
+    try { if (!actx && window.AudioContext) actx = new AudioContext(); } catch (e) { actx = null; }
+    story.classList.add('show');
+    sload.classList.remove('hide');
+    document.getElementById('sloadtxt').textContent = 'Loading story…';
+    sframe.onload = function(){
+      var w = null; try { w = sframe.contentWindow; } catch (e) {}
+      if (!w || !w.LL) { document.getElementById('sloadtxt').textContent = 'The story could not start.'; return; }
+      try {
+        w.LL.play(window.LL_HOST.rect(), {sound: true, reduce: RM, art: new URL(BASE + c.art, location.href).href, radius: 14});
+        sload.classList.add('hide');
+      } catch (e) {
+        document.getElementById('sloadtxt').textContent = 'The story could not start.';
+      }
+    };
+    sframe.src = STORY_BASE + c.story;
+  }
+  function finishStory(){
+    setTimeout(function(){
+      try { sframe.contentWindow.LL.kill(); } catch (e) {}
+      sframe.src = 'about:blank';
+      story.classList.remove('show');
+    }, 2700);
+  }
+  function closeStory(){
+    var w = null; try { w = sframe.contentWindow; } catch (e) {}
+    if (w && w.LL) {
+      try { w.LL.stop(); } catch (e) {}
+      setTimeout(function(){ sframe.src = 'about:blank'; story.classList.remove('show'); }, 1200);
+    } else {
+      sframe.src = 'about:blank';
+      story.classList.remove('show');
+    }
+  }
+  document.getElementById('sclose').addEventListener('click', closeStory);
+
+  // ---------- effects toggle ----------
+  var fxBtn = document.getElementById('fx');
+  fxBtn.addEventListener('click', function(){
+    fx.full = !fx.full;
+    document.body.classList.toggle('light', !fx.full);
+    fxBtn.textContent = 'Effects: ' + (fx.full ? 'Full' : 'Light');
+    if (!fx.full && st.ph) resetTilt(st.ph);
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if (story.classList.contains('show')) closeStory();
+    else if (st.phase === 'playing') closeDive();
+    else if (st.phase === 'idle' && detail.classList.contains('show')) document.getElementById('back').click();
+  });
+})();
+</script>
+</body>
+</html>
