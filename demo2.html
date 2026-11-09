@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — Real Art</title>
+<title>Immersive Card Animation — Layered Glass</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -14,9 +14,10 @@
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     user-select: none; -webkit-user-select: none;
+    perspective: 1000px; /* Crucial for the 3D tilt effect */
   }
   #grid {
-    padding: 60px 24px 24px 24px; /* Made room for the title */
+    padding: 60px 24px 24px 24px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 20px;
@@ -25,10 +26,11 @@
     align-content: start;
   }
   .card-slot { aspect-ratio: 5/7; position: relative; }
+  
   .card {
     position: absolute; inset: 0;
     border-radius: 14px;
-    /* Using your actual LL card frame style */
+    /* The gold LL border */
     background: linear-gradient(145deg, #f7e08a 0%, #b8862c 35%, #f2d36b 60%, #8a6418 100%);
     padding: 5px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.12);
@@ -36,132 +38,118 @@
     transform-origin: 50% 50%;
     will-change: transform;
     overflow: hidden;
+    transform-style: preserve-3d;
   }
-  .card .art {
-    width: 100%; height: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    background: #1a1440;
-  }
-  .card .art-inner {
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center top; /* align to top so faces aren't cut off */
-    transform-origin: 50% 50%;
+  
+  .llx-in {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 10px; overflow: hidden;
+    background: #000; transform-style: preserve-3d;
     will-change: transform;
-    transform: scale(1);
   }
+
+  /* The actual layered images from your GitHub */
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .llx-d { position: absolute; inset: 0; pointer-events: none; transform-style: preserve-3d; }
+  .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+  
+  /* The glass, cracks, and charms */
+  .llx-body { z-index: 2; }
+  .llx-cracks { z-index: 3; mix-blend-mode: screen; }
+  .llx-charms { z-index: 4; transform-style: preserve-3d; }
+  
+  /* The glass glare */
+  .llx-glare { 
+    position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.6), transparent 60%); 
+    mix-blend-mode: overlay; opacity: 0; transition: opacity 0.3s;
+  }
+
   .card.flying {
-    position: fixed;
-    z-index: 100;
+    position: fixed; z-index: 100;
     cursor: default;
     transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
   .card.flying::before {
-    content: "";
-    position: absolute; inset: 6px;
-    border-radius: 10px;
+    content: ""; position: absolute; inset: 6px; border-radius: 10px;
     background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.85), transparent 60%);
-    opacity: 0;
-    pointer-events: none;
-    animation: flash 550ms ease-out;
+    opacity: 0; pointer-events: none; animation: flash 550ms ease-out; z-index: 10;
   }
-  @keyframes flash {
-    0%   { opacity: 0; }
-    25%  { opacity: 1; }
-    100% { opacity: 0; }
-  }
-  /* Slow pan for the "story" phase */
-  .card.flying.playing .art-inner {
-    animation: panScene 10s linear forwards;
-  }
-  @keyframes panScene {
-    0%   { transform: scale(1.04) translate(0%, 0%); }
-    20%  { transform: scale(1.12) translate(-2%, -1%); }
-    45%  { transform: scale(1.18) translate(-1%, 1.5%); }
-    70%  { transform: scale(1.14) translate(2%, 0.5%); }
-    100% { transform: scale(1.08) translate(0%, -1%); }
-  }
+  @keyframes flash { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+  
+  .card.flying.playing .llx-in { transition: transform 0.2s ease-out; }
+  .card.flying.playing .llx-glare { opacity: 1; }
+  .card.flying.playing .llx-charms { transition: transform 0.2s ease-out; }
+
   #overlay {
-    position: fixed; inset: 0;
-    z-index: 99;
-    background: #000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 500ms ease;
+    position: fixed; inset: 0; z-index: 99; background: #000;
+    opacity: 0; pointer-events: none; transition: opacity 500ms ease;
   }
   #overlay.show { opacity: 1; pointer-events: auto; }
   #overlay.closing { transition: opacity 400ms ease 400ms; }
+  
   #hint {
-    position: fixed;
-    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
-    left: 0; right: 0;
-    text-align: center;
-    font-size: 14px;
-    color: rgba(255,255,255,0.55);
-    z-index: 101;
-    opacity: 0;
-    transition: opacity 400ms ease;
-    pointer-events: none;
+    position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
+    text-align: center; font-size: 14px; color: rgba(255,255,255,0.7);
+    z-index: 101; opacity: 0; transition: opacity 400ms ease; pointer-events: none;
   }
   #hint.show { opacity: 1; pointer-events: auto; }
   #label {
-    position: fixed;
-    top: calc(20px + env(safe-area-inset-top, 0px));
-    left: 20px; right: 20px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.65);
-    z-index: 102;
-    letter-spacing: 0.5px;
-    transition: opacity 300ms ease;
-    text-align: center;
-    font-weight: bold;
+    position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 20px; right: 20px;
+    font-size: 12px; color: rgba(255,255,255,0.65); z-index: 102;
+    letter-spacing: 0.5px; transition: opacity 300ms ease; text-align: center; font-weight: bold;
   }
   #label.hide { opacity: 0; }
 </style>
 </head>
 <body>
-  <div id="label">Real Assets Demo · Tap a card</div>
+  <div id="label">Demo 3 · Layered Glass & Charms</div>
   <div id="grid"></div>
   <div id="overlay"></div>
-  <div id="hint">Tap anywhere to close</div>
+  <div id="hint">Drag to tilt · Tap to close</div>
 
 <script>
 (function(){
   'use strict';
 
-  // YOUR ACTUAL GITHUB PAGES URL
   var baseUrl = 'https://coldbeefsundae.github.io/LearningEveryday/';
+  var assetBase = baseUrl + 'assets/ll/';
   
-  // Your actual Living Legendary card images
-  var cardFiles = [
-    'assets/cards/ll01.62f53c62.webp',
-    'assets/cards/ll02.09c27c67.webp',
-    'assets/cards/ll03.c9fd830b.webp',
-    'assets/cards/ll04.a5196965.webp',
-    'assets/cards/ll05.189ec36c.webp',
-    'assets/cards/ll06.a273f4ce.webp'
-  ];
+  // The exact layered files from your app
+  var layers = {
+    art: assetBase + 'art-ll01.ca3c9638.webp',
+    body: assetBase + 'body.08d68638.webp',
+    cracks: assetBase + 'cracks.b00d0b68.webp',
+    charms: assetBase + 'charms.aade78ba.webp'
+  };
 
   var grid = document.getElementById('grid');
   var overlay = document.getElementById('overlay');
   var hint = document.getElementById('hint');
   var label = document.getElementById('label');
 
-  for (var i = 0; i < cardFiles.length; i++) {
+  // Build the layered cards
+  for (var i = 0; i < 6; i++) {
     var slot = document.createElement('div');
     slot.className = 'card-slot';
     var card = document.createElement('div');
     card.className = 'card';
-    var art = document.createElement('div'); art.className = 'art';
-    var inner = document.createElement('div'); inner.className = 'art-inner';
     
-    // Load the actual image from your GitHub
-    inner.style.backgroundImage = 'url("' + baseUrl + cardFiles[i] + '")';
+    // The internal layered structure
+    card.innerHTML = `
+      <div class="llx-in">
+        <img class="llx-art" src="${layers.art}">
+        <div class="llx-d">
+          <img class="llx-l llx-body" src="${layers.body}">
+          <img class="llx-l llx-cracks" src="${layers.cracks}">
+          <img class="llx-l llx-charms" src="${layers.charms}">
+        </div>
+        <div class="llx-glare"></div>
+      </div>
+    `;
     
-    art.appendChild(inner); card.appendChild(art); slot.appendChild(card);
+    slot.appendChild(card); 
     grid.appendChild(slot);
   }
 
@@ -173,8 +161,6 @@
 
     var rect = card.getBoundingClientRect();
     var vw = window.innerWidth, vh = window.innerHeight;
-    
-    // Scale so the art fills the viewport, plus 8% so the frame sits off-screen on every side
     var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
     var tx = vw / 2 - (rect.left + rect.width / 2);
     var ty = vh / 2 - (rect.top + rect.height / 2);
@@ -185,7 +171,7 @@
     card.style.width = rect.width + 'px';
     card.style.height = rect.height + 'px';
     card.style.margin = '0';
-    card.style.transform = 'translate(0,0) scale(1)';
+    card.style.transform = 'translate(0,0) scale(1) rotateX(0deg) rotateY(0deg)';
     card.classList.add('flying');
     void card.offsetWidth;
 
@@ -195,12 +181,12 @@
 
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
-        card.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+        card.style.transform = `translate(${tx}px,${ty}px) scale(${s}) rotateX(0deg) rotateY(0deg)`;
       });
     });
 
     var onEnd = function(e) {
-      if (e.propertyName !== 'transform') return;
+      if (e.propertyName !== 'transform' || e.target !== card) return;
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'opening') return;
       st.phase = 'playing';
@@ -210,21 +196,52 @@
     card.addEventListener('transitionend', onEnd);
   }
 
+  // The 3D Tilt / Parallax Effect
+  document.addEventListener('pointermove', function(e) {
+    if (st.phase !== 'playing') return;
+    var card = st.card;
+    var rect = card.getBoundingClientRect();
+    
+    // Calculate pointer position relative to the card center (-0.5 to 0.5)
+    var x = (e.clientX - rect.left) / rect.width - 0.5;
+    var y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    // Move the glare
+    var glare = card.querySelector('.llx-glare');
+    glare.style.setProperty('--mx', ((x + 0.5) * 100) + '%');
+    glare.style.setProperty('--my', ((y + 0.5) * 100) + '%');
+
+    // Apply 3D tilt to the whole card container
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
+    // We have to re-apply the scale/translate because we are overwriting the transform
+    card.style.transform = `translate(${vw/2 - (rect.width/2)}px, ${vh/2 - (rect.height/2)}px) scale(${s}) rotateX(${-y * 15}deg) rotateY(${x * 15}deg)`;
+
+    // Parallax layers (move independently)
+    var charms = card.querySelector('.llx-charms');
+    var cracks = card.querySelector('.llx-cracks');
+    
+    // Charms move the most (they are floating closest to us)
+    charms.style.transform = `translate(${x * 40}px, ${y * 40}px)`;
+    // Cracks move a little
+    cracks.style.transform = `translate(${x * 15}px, ${y * 15}px)`;
+  });
+
   function close() {
     if (st.phase !== 'playing') return;
     st.phase = 'closing';
     var card = st.card;
     hint.classList.remove('show');
 
-    var inner = card.querySelector('.art-inner');
-    var cur = getComputedStyle(inner).transform;
-    card.classList.remove('playing');
-    inner.style.transform = cur;
-    void inner.offsetWidth;
-    inner.style.transition = 'transform 500ms ease-out';
-    inner.style.transform = 'scale(1)';
+    // Reset parallax layers so they snap back cleanly
+    card.querySelector('.llx-charms').style.transform = 'none';
+    card.querySelector('.llx-cracks').style.transform = 'none';
+    card.querySelector('.llx-in').style.transform = 'none';
 
-    card.style.transform = 'translate(0,0) scale(1)';
+    // Shrink back down
+    var vw = window.innerWidth, vh = window.innerHeight;
+    card.style.transform = `translate(0,0) scale(1) rotateX(0deg) rotateY(0deg)`;
+    
     overlay.classList.add('closing');
     overlay.classList.remove('show');
 
@@ -232,16 +249,9 @@
       if (e.propertyName !== 'transform') return;
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'closing') return;
-      card.style.position = '';
-      card.style.left = '';
-      card.style.top = '';
-      card.style.width = '';
-      card.style.height = '';
-      card.style.margin = '';
-      card.style.transform = '';
-      card.classList.remove('flying');
-      inner.style.transition = '';
-      inner.style.transform = '';
+      
+      card.style.cssText = ''; // wipe all inline styles
+      card.classList.remove('flying', 'playing');
       st.phase = 'idle'; st.card = null;
       label.classList.remove('hide');
     };
