@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.42', errs = [], shown = false;
+  var V = '26.11.43', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4736,7 +4736,7 @@ function llFlyOpen(card, visual){
 window.LL_HOST = {
   ac: function(){ return state.mute ? null : audio(); },
   out: function(a){ return (LLP && LLP.g && a === LLP.g.context) ? LLP.g : null; },
-  rect: function(){ var c = LLP && LLP.card; if(!c || !document.body.contains(c)) return null; return llFlyRect(c); },
+  rect: function(){ var p = LLP; if(!p || p.outerFly) return null; var c = p.card; if(!c || !document.body.contains(c)) return null; return llFlyRect(c); },
   on: function(ev){
     if(!LLP) return;
     if(ev === 'closing'){ document.body.classList.remove('llon'); llDuck(false); if(LLP.f) LLP.f.style.opacity = '0'; }
@@ -4765,13 +4765,13 @@ function llPlay(id, fromEl, flyCard, originRect, visualCard){
   if(a){ try{ g = a.createGain(); g.gain.value = 1; g.connect(sfxOut || a.destination); }catch(e){ g = null; } }
   var f = document.createElement('iframe');
   f.className = 'llstory'; f.setAttribute('title', BY_ID[id].n + ': story'); f.setAttribute('allow', 'autoplay');
-  var me = {id:id, f:f, g:g, t:[], card:flyCard || null, visual:visualCard || null};
+  var me = {id:id, f:f, g:g, t:[], card:flyCard || null, visual:visualCard || null, outerFly:!!flyCard};
   LLP = me; llDuck(true);
   f.onload = function(){
     if(LLP !== me) return;
     var w = null; try{ w = f.contentWindow; }catch(e){}
     if(!w || !w.LL){ llClose(true); return; }
-    try{ w.LL.play(r, {sound: !state.mute, reduce: !!(HL_RM || (state.ui && state.ui.calm)), music: window.LL_MUSIC, art: me.card ? llxU().art[id] : null, radius: me.visual ? llxRad(me.visual) : 12}); }catch(e){ llClose(true); return; }
+    try{ w.LL.play(me.outerFly ? null : r, {sound: !state.mute, reduce: !!(HL_RM || (state.ui && state.ui.calm)), music: window.LL_MUSIC, art: me.card ? llxU().art[id] : null, radius: me.visual ? llxRad(me.visual) : 12}); }catch(e){ llClose(true); return; }
     try{ w.focus(); }catch(e){}
     me.t.push(setTimeout(function(){ if(LLP === me) document.body.classList.add('llon'); }, 450));
     me.t.push(setTimeout(function(){ try{ if(LLP === me && !w.LL.live()) llClose(true); }catch(e){ llClose(true); } }, 1500));
