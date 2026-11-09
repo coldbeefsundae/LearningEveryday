@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>StarQuest · LL dive demo</title>
+<style>
+  :root{
+    --m-body:url("../assets/ll/body.08d68638.webp");
+    --m-cracks:url("../assets/ll/cracks.b00d0b68.webp");
+    --m-charms:url("../assets/ll/charms.aade78ba.webp");
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#0a0e20;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  #label{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:16px;right:16px;font-size:12px;letter-spacing:.5px;font-weight:700;color:rgba(255,255,255,.65);text-align:center;z-index:102;transition:opacity .3s}
+  #label.hide{opacity:0}
+
+  #grid{padding:60px 24px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:20px;height:100vh;height:100dvh;overflow-y:auto;align-content:start}
+  .slot{aspect-ratio:5/7;position:relative}
+
+  /* ---- the card frame: tilts with the finger or mouse in the grid ---- */
+  .card{position:absolute;inset:0;border-radius:14px;background:linear-gradient(145deg,#f7e08a 0%,#b8862c 35%,#f2d36b 60%,#8a6418 100%);padding:5px;box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12);cursor:pointer;overflow:hidden;will-change:transform;transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform 220ms ease-out,padding 400ms ease,background 400ms ease;touch-action:pan-y;outline:none}
+  .card:focus-visible{box-shadow:0 0 0 3px #ffd76a,0 8px 24px rgba(0,0,0,.5)}
+  .llx-in{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#000;transition:border-radius 400ms ease}
+  .llx-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:scale 800ms ease}
+  .llx-d{position:absolute;inset:0;pointer-events:none;z-index:2}
+
+  /* ---- glass layer: 85% opaque (15% see-through), moves a little with the pointer ---- */
+  .llx-g{position:absolute;inset:-4%;width:108%;height:108%;translate:calc(var(--dx,0)*1.6%) calc(var(--dy,0)*1.6%);transition:scale 700ms cubic-bezier(.7,0,1,1)}
+  .llx-g>*{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .llx-body{opacity:.85}
+  .llx-cr{mix-blend-mode:screen;opacity:.8}
+
+  /* ---- holo and sheen, masked to the glass or the cracks so they only show on the shapes ---- */
+  .mk{pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+  .mb{-webkit-mask-image:var(--m-body);mask-image:var(--m-body)}
+  .mc{-webkit-mask-image:var(--m-cracks);mask-image:var(--m-cracks)}
+  .mh{-webkit-mask-image:var(--m-charms);mask-image:var(--m-charms)}
+  .holo{background:linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%);background-size:260% 260%}
+  .hb{background-position:calc(50% + var(--dx,0)*45%) calc(50% + var(--dy,0)*45%);mix-blend-mode:screen;opacity:calc(.10 + var(--mag,0)*.32)}
+  .sb{background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.20) 47%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.20) 53%,transparent 65%);background-size:300% 300%;background-position:calc(50% - var(--dx,0)*60%) 50%;mix-blend-mode:screen}
+  .hc{background-position:calc(50% + var(--dx,0)*45%) calc(50% + var(--dy,0)*45%);mix-blend-mode:multiply;opacity:.62}
+  .cg{background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);background-size:300% 300%;background-position:calc(50% - var(--dx,0)*60% - var(--dy,0)*20%) calc(50% - var(--dy,0)*60%);mix-blend-mode:screen;opacity:calc(.15 + var(--mag,0)*.6)}
+
+  /* ---- charms: move more than the glass (depth) and bob gently ---- */
+  .llx-c{position:absolute;inset:-6%;width:112%;height:112%;translate:calc(var(--dx,0)*4.2%) calc(var(--dy,0)*4.2%);transition:scale 700ms cubic-bezier(.7,0,1,1)}
+  .bob{position:absolute;inset:0;animation:bob 7s ease-in-out infinite}
+  .bob>*{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .llx-ch{filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+  .hch{background-position:0% 50%;background-size:200% 200%;mix-blend-mode:screen;opacity:calc(.35 + var(--mag,0)*.55);animation:drift 9s linear infinite}
+
+  /* ---- sparks: sparse, hue shifts with the pointer ---- */
+  .sp{filter:hue-rotate(calc(var(--mx,.5)*90deg - 45deg)) saturate(1.2)}
+  .sp i{position:absolute;width:var(--s);aspect-ratio:1;margin:calc(var(--s)*-.5);background:radial-gradient(circle,#fff 0 12%,transparent 14%),linear-gradient(0deg,transparent 44%,var(--c) 50%,transparent 56%),linear-gradient(90deg,transparent 44%,var(--c) 50%,transparent 56%);filter:drop-shadow(0 0 3px var(--c));animation:tw 2.6s ease-in-out infinite;animation-delay:var(--d)}
+
+  /* ---- the dive: the glass and charms rush toward you at different speeds ---- */
+  .card.flying{position:fixed;z-index:100;cursor:default;pointer-events:none}
+  .card.immersed{padding:0;background:transparent}
+  .card.immersed .llx-in{border-radius:0}
+  .card.immersed .llx-art{scale:1.15;animation:breathe 10s ease-in-out infinite alternate}
+  .card.immersed .llx-g{scale:2.8}
+  .card.immersed .llx-c{scale:3}
+  .card.closing-slow .llx-g,.card.closing-slow .llx-c{transition:scale 1800ms ease-in-out}
+  .card.closing-slow .llx-art{animation:none;scale:1;transition:scale 1800ms ease-in-out}
+  .card.flying::before{content:"";position:absolute;inset:0;z-index:10;background:radial-gradient(circle at 50% 50%,rgba(255,225,140,.9),transparent 70%);opacity:0;pointer-events:none;animation:flash 600ms ease-out}
+
+  @keyframes breathe{0%{scale:1.15;translate:0 0}100%{scale:1.25;translate:-2% 2%}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2%)}}
+  @keyframes drift{from{background-position:0% 50%}to{background-position:200% 50%}}
+  @keyframes tw{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+  @keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+
+  .rm .bob,.rm .hch,.rm .sp i,.rm .card.immersed .llx-art{animation:none}
+  @media (prefers-reduced-motion:reduce){.bob,.hch,.sp i,.card.immersed .llx-art{animation:none}}
+
+  #overlay{position:fixed;inset:0;z-index:99;background:#000;opacity:0;pointer-events:none;transition:opacity 600ms ease}
+  #overlay.show{opacity:1;pointer-events:auto}
+  #overlay.closing{transition:opacity 500ms ease 1200ms}
+  #hint{position:fixed;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:14px;color:rgba(255,255,255,.7);z-index:101;opacity:0;transition:opacity 400ms ease;pointer-events:none}
+  #hint.show{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+  <div id="label">LL dive demo · glass 85% · holo · charms · sparks · tilt</div>
+  <div id="grid"></div>
+  <div id="overlay"></div>
+  <div id="hint">Tap to close · slide to look around</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var BASE = '../assets/ll/';
+  var FILE_BODY = 'body.08d68638.webp', FILE_CRACKS = 'cracks.b00d0b68.webp', FILE_CHARMS = 'charms.aade78ba.webp';
+  var CARDS = [
+    {n:1, art:'art-ll01.ca3c9638.webp'}, {n:2, art:'art-ll02.9f4fc321.webp'}, {n:3, art:'art-ll03.7e3b83c6.webp'},
+    {n:4, art:'art-ll04.a80fb2a4.webp'}, {n:5, art:'art-ll05.6fe512ec.webp'}, {n:6, art:'art-ll06.f594235e.webp'}
+  ];
+  // sparse sparks: x%, y%, size, colour, delay (seconds)
+  var SPARKS = [[18,22,7,'#fff6c8',0],[78,16,5,'#9fe8ff',.7],[64,40,9,'#ffd2f0',1.4],[28,58,6,'#fff6c8',.3],[84,62,8,'#c9b3ff',1.9],[40,80,5,'#ffe08a',1.1],[12,84,7,'#9fe8ff',2.2]];
+
+  var RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (RM) document.body.classList.add('rm');
+
+  var root = document.documentElement.style;
+  root.setProperty('--m-body', 'url("' + BASE + FILE_BODY + '")');
+  root.setProperty('--m-cracks', 'url("' + BASE + FILE_CRACKS + '")');
+  root.setProperty('--m-charms', 'url("' + BASE + FILE_CHARMS + '")');
+
+  var grid = document.getElementById('grid');
+  var overlay = document.getElementById('overlay');
+  var hint = document.getElementById('hint');
+  var label = document.getElementById('label');
+
+  function el(cls, tag){ var e = document.createElement(tag || 'i'); e.className = cls; return e; }
+  function img(cls, file){ var i = document.createElement('img'); i.className = cls; i.src = BASE + file; i.alt = ''; i.draggable = false; return i; }
+  function sparks(){
+    var s = el('sp', 'span');
+    SPARKS.forEach(function(p){
+      var i = el('', 'i');
+      i.style.left = p[0] + '%'; i.style.top = p[1] + '%';
+      i.style.setProperty('--s', p[2] + '%'); i.style.setProperty('--c', p[3]); i.style.setProperty('--d', p[4] + 's');
+      s.appendChild(i);
+    });
+    return s;
+  }
+  function build(c){
+    var slot = el('slot', 'div'), card = el('card', 'div');
+    card.setAttribute('role', 'button'); card.tabIndex = 0;
+    card.setAttribute('aria-label', 'Living Legendary card ' + c.n + '. Press to open.');
+    var inn = el('llx-in', 'div');
+    inn.appendChild(img('llx-art', c.art));
+    var d = el('llx-d', 'div');
+    var g = el('llx-g', 'div');
+    g.appendChild(img('llx-body', FILE_BODY));
+    g.appendChild(el('mk mb holo hb'));
+    g.appendChild(el('mk mb sb'));
+    g.appendChild(img('llx-cr', FILE_CRACKS));
+    g.appendChild(el('mk mc holo hc'));
+    g.appendChild(el('mk mc cg'));
+    var cc = el('llx-c', 'div'), bob = el('bob', 'div');
+    bob.appendChild(img('llx-ch', FILE_CHARMS));
+    bob.appendChild(el('mk mh holo hch'));
+    bob.appendChild(sparks());
+    cc.appendChild(bob);
+    d.appendChild(g); d.appendChild(cc);
+    inn.appendChild(d); card.appendChild(inn); slot.appendChild(card);
+    return slot;
+  }
+  CARDS.forEach(function(c){ grid.appendChild(build(c)); });
+
+  // ---- pointer: sets the depth parallax, holo angle, sheen and spark colour ----
+  function setLayers(card, dx, dy){
+    dx = Math.max(-1, Math.min(1, dx)); dy = Math.max(-1, Math.min(1, dy));
+    card.style.setProperty('--dx', dx.toFixed(3));
+    card.style.setProperty('--dy', dy.toFixed(3));
+    card.style.setProperty('--mx', ((dx + 1) / 2).toFixed(3));
+    card.style.setProperty('--my', ((dy + 1) / 2).toFixed(3));
+    card.style.setProperty('--mag', Math.min(1, Math.hypot(dx, dy)).toFixed(3));
+  }
+  function resetCard(card){
+    card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
+    setLayers(card, 0, 0);
+  }
+
+  var st = {card:null, phase:'idle', hover:null, down:null, dragged:false};
+
+  grid.addEventListener('pointermove', function(e){
+    if (st.phase !== 'idle') return;
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (st.hover && st.hover !== card) { resetCard(st.hover); st.hover = null; }
+    if (!card) return;
+    st.hover = card;
+    var s = card.parentNode.getBoundingClientRect();
+    var nx = (e.clientX - s.left) / s.width * 2 - 1;
+    var ny = (e.clientY - s.top) / s.height * 2 - 1;
+    nx = Math.max(-1, Math.min(1, nx)); ny = Math.max(-1, Math.min(1, ny));
+    if (!RM) {
+      card.style.setProperty('--rx', (-ny * 10).toFixed(2) + 'deg');
+      card.style.setProperty('--ry', (nx * 10).toFixed(2) + 'deg');
+    }
+    setLayers(card, nx, ny);
+  });
+  grid.addEventListener('pointerleave', function(){ if (st.hover) { resetCard(st.hover); st.hover = null; } });
+  grid.addEventListener('pointerdown', function(e){ st.down = {x:e.clientX, y:e.clientY}; st.dragged = false; });
+  grid.addEventListener('pointerup', function(e){
+    if (st.down && Math.hypot(e.clientX - st.down.x, e.clientY - st.down.y) > 10) st.dragged = true;
+    st.down = null;
+  });
+
+  // While the card is open, any pointer or finger position moves the glass, charms and holo.
+  window.addEventListener('pointermove', function(e){
+    if (!st.card || st.phase === 'idle' || st.phase === 'closing') return;
+    setLayers(st.card, e.clientX / window.innerWidth * 2 - 1, e.clientY / window.innerHeight * 2 - 1);
+  });
+
+  // ---- open / close (the same dive as before, with the full layer stack) ----
+  function open(card){
+    if (st.phase !== 'idle') return;
+    st.phase = 'opening'; st.card = card;
+    card.style.transition = 'none';
+    card.style.transform = 'none';
+    card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
+
+    var rect = card.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
+    var tx = vw / 2 - (rect.left + rect.width / 2);
+    var ty = vh / 2 - (rect.top + rect.height / 2);
+
+    card.style.position = 'fixed';
+    card.style.left = rect.left + 'px'; card.style.top = rect.top + 'px';
+    card.style.width = rect.width + 'px'; card.style.height = rect.height + 'px';
+    card.style.margin = '0';
+    card.style.transform = 'translate(0,0) scale(1)';
+    card.classList.add('flying');
+    void card.offsetWidth;
+    card.style.transition = 'transform 400ms cubic-bezier(.3,0,.2,1)';
+
+    overlay.classList.remove('closing');
+    overlay.classList.add('show');
+    label.classList.add('hide');
+
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      card.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+    }); });
+
+    var onEnd = function(e){
+      if (e.propertyName !== 'transform' || e.target !== card) return;
+      card.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'opening') return;
+      st.phase = 'focusing';
+      hint.classList.add('show');
+      setTimeout(function(){
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        card.classList.add('immersed');
+      }, 400);
+    };
+    card.addEventListener('transitionend', onEnd);
+  }
+
+  function close(){
+    if (st.phase !== 'playing') return;
+    st.phase = 'closing';
+    var card = st.card;
+    hint.classList.remove('show');
+    card.classList.add('closing-slow');
+    card.classList.remove('immersed');
+
+    setTimeout(function(){
+      if (st.phase !== 'closing') return;
+      card.classList.remove('closing-slow');
+      card.style.transform = 'translate(0,0) scale(1)';
+      overlay.classList.add('closing');
+      overlay.classList.remove('show');
+      var onEnd = function(e){
+        if (e.propertyName !== 'transform' || e.target !== card) return;
+        card.removeEventListener('transitionend', onEnd);
+        if (st.phase !== 'closing') return;
+        card.style.cssText = '';
+        card.classList.remove('flying');
+        st.phase = 'idle'; st.card = null;
+        label.classList.remove('hide');
+      };
+      card.addEventListener('transitionend', onEnd);
+    }, 1800);
+  }
+
+  grid.addEventListener('click', function(e){
+    if (st.dragged) { st.dragged = false; return; }
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (card && !card.classList.contains('flying')) open(card);
+  });
+  grid.addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (card) { e.preventDefault(); open(card); }
+  });
+  overlay.addEventListener('click', close);
+  hint.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>
