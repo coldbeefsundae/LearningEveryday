@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — The Physical Portal</title>
+<title>Immersive Card Animation — Final Polish</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -36,27 +36,38 @@
     transform-origin: 50% 50%;
     will-change: transform;
     overflow: hidden;
-    /* Fast zoom-in by default */
-    transition: transform 450ms cubic-bezier(0.3, 0, 0.2, 1), padding 450ms ease, background 450ms ease;
+    transition: transform 400ms cubic-bezier(0.3, 0, 0.2, 1), padding 400ms ease, background 400ms ease;
   }
   
   .llx-in {
     position: relative; width: 100%; height: 100%;
     border-radius: 10px; overflow: hidden;
     background: #000;
-    transition: border-radius 450ms ease;
+    transition: border-radius 400ms ease;
   }
 
   /* The Layers */
-  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 0.4s ease; }
   
-  /* The Glass Frame layers (Body, Cracks, Charms) */
   .llx-d { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
   .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
   
-  .llx-body { z-index: 2; }
-  .llx-cracks { z-index: 3; mix-blend-mode: screen; }
-  .llx-charms { z-index: 4; }
+  /* Restored the faint, ghostly opacities from your app */
+  .llx-body { 
+    z-index: 2; 
+    opacity: 0.5; /* The glass frame itself */
+    mix-blend-mode: screen;
+  }
+  .llx-cracks { 
+    z-index: 3; 
+    opacity: 0.3; /* The shattered cracks */
+    mix-blend-mode: screen; 
+  }
+  .llx-charms { 
+    z-index: 4; 
+    opacity: 0.15; /* The 15% floating charms */
+    mix-blend-mode: screen; 
+  }
 
   .card.flying {
     position: fixed; z-index: 100;
@@ -64,33 +75,31 @@
     pointer-events: none;
   }
 
-  /* --- THE IMMERSED STATE (Diving In) --- */
+  /* --- THE DIVE IN --- */
   .card.immersed {
     padding: 0;
     background: transparent;
   }
   .card.immersed .llx-in { border-radius: 0; }
   
-  /* The art gently breathes */
   .card.immersed .llx-art {
     transform: scale(1.15);
     animation: breatheArt 10s ease-in-out infinite alternate;
+    transition: transform 800ms ease;
   }
 
-  /* THE MAGIC: The glass frame stays 100% opaque, but scales up 3.5x.
-     Because the glass has a hole in the middle, scaling it up makes the hole expand 
-     until the shattered edges fly off the screen, revealing the whole art. */
+  /* 700ms, starts slow, accelerates fast */
   .card.immersed .llx-body {
-    transform: scale(3.5) translateZ(50px);
-    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1); /* Fast dive in */
+    transform: scale(2.8);
+    transition: transform 700ms cubic-bezier(0.7, 0, 1, 1);
   }
   .card.immersed .llx-cracks {
-    transform: scale(3.5) translateZ(80px);
-    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(2.8);
+    transition: transform 700ms cubic-bezier(0.7, 0, 1, 1);
   }
   .card.immersed .llx-charms {
-    transform: scale(4.0) translateZ(100px);
-    transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(3.0); 
+    transition: transform 700ms cubic-bezier(0.7, 0, 1, 1);
   }
 
   @keyframes breatheArt {
@@ -98,8 +107,7 @@
     100% { transform: scale(1.25) translate(-2%, 2%); }
   }
 
-  /* --- THE EXIT (Diving Out) --- */
-  /* When closing, we change the transition duration to be slow (1800ms) */
+  /* --- THE SLOW DIVE OUT (1800ms) --- */
   .card.closing-slow .llx-body,
   .card.closing-slow .llx-cracks,
   .card.closing-slow .llx-charms {
@@ -119,7 +127,7 @@
     opacity: 0; pointer-events: none; transition: opacity 600ms ease;
   }
   #overlay.show { opacity: 1; pointer-events: auto; }
-  #overlay.closing { transition: opacity 500ms ease 1200ms; } /* Fades back to grid at the end */
+  #overlay.closing { transition: opacity 500ms ease 1200ms; }
   
   #hint {
     position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
@@ -136,7 +144,7 @@
 </style>
 </head>
 <body>
-  <div id="label">Demo 9 · The Physical Portal</div>
+  <div id="label">Demo 11 · Final Polish</div>
   <div id="grid"></div>
   <div id="overlay"></div>
   <div id="hint">Tap to close</div>
@@ -207,7 +215,6 @@
     overlay.classList.add('show');
     label.classList.add('hide');
 
-    // 1. Fast zoom to full screen
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
@@ -219,10 +226,16 @@
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'opening') return;
       
-      // 2. Trigger the fast "dive in" (the hole expands)
-      st.phase = 'playing';
-      card.classList.add('immersed');
+      st.phase = 'focusing';
       hint.classList.add('show');
+
+      // Pause for 400ms so the 15% charms can be seen clearly
+      setTimeout(function() {
+        if (st.phase !== 'focusing') return;
+        st.phase = 'playing';
+        card.classList.add('immersed');
+      }, 400);
+      
     };
     card.addEventListener('transitionend', onEnd);
   }
@@ -233,23 +246,16 @@
     var card = st.card;
     hint.classList.remove('show');
 
-    // 1. Add the slow class so the glass shrinks back over 1800ms
     card.classList.add('closing-slow');
-    
-    // 2. Remove the immersed class. The glass will slowly shrink back into place.
     card.classList.remove('immersed');
     
-    // Stop the art from breathing so it holds still while we back out
     card.querySelector('.llx-art').style.animation = 'none';
     card.querySelector('.llx-art').style.transform = 'scale(1)';
 
-    // 3. Wait for the slow dive out to finish (1800ms), THEN shrink the card back to grid
     setTimeout(function() {
       if (st.phase !== 'closing') return;
 
-      // Restore the fast transitions for the card shrinking
       card.classList.remove('closing-slow');
-      
       card.style.transform = `translate(0,0) scale(1)`;
       overlay.classList.add('closing');
       overlay.classList.remove('show');
@@ -266,7 +272,7 @@
       };
       card.addEventListener('transitionend', onEnd);
 
-    }, 1800); // 1800ms for the slow dive out
+    }, 1800); 
   }
 
   grid.addEventListener('click', function(e) {
