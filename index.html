@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.49', errs = [], shown = false;
+  var V = '26.11.50', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4604,7 +4604,7 @@ function cardBigClose(){
 window.addEventListener('resize', cardBigFit);
 window.addEventListener('orientationchange', function(){ setTimeout(cardBigFit, 250); });
 if(window.visualViewport) window.visualViewport.addEventListener('resize', cardBigFit);
-window.addEventListener('popstate', function(){ if(LLP || LLX){ closeTopLayer(); return; } cardBigClose(); });
+window.addEventListener('popstate', function(){ if(LLP || LLFX){ closeTopLayer(); return; } cardBigClose(); });
 
 /* =========================================================
    26.11.35: LIVING LEGENDARY (LL) STORIES
@@ -4653,7 +4653,7 @@ function llDuck(on){
 }
 
 /* 26.11.49: LL story transition (see #llfx CSS). Phases: prep > fly > dive > load > story > return > snap > face. */
-var LLX = null;
+var LLFX = null;
 
 /* ---- debug overlay: open the app once with ?lldebug=1 (turn off with ?lldebug=0). Tap the panel to hide it. ---- */
 var LLDBG = (function(){ try{ var m = /[?&]lldebug=([01])/.exec(location.search); if(m) localStorage.setItem('sqLLDebug', m[1]); return localStorage.getItem('sqLLDebug') === '1'; }catch(e){ return false; } })();
@@ -4715,12 +4715,12 @@ function llFxOpen(id, visual, real){
   var x = {id:id, root:root, bg:bg, cd:cd, real:real, realVis:real.style.visibility, w:r.width, h:r.height, home:r, phase:'prep', abort:false, after:null, timers:[]};
   cd.style.width = r.width + 'px'; cd.style.height = r.height + 'px';
   cd.style.transform = llFxPlace(x, r);
-  LLX = x; lldPhase('prep');
+  LLFX = x; lldPhase('prep');
   document.body.appendChild(root);
   var imgs = [].slice.call(cp.querySelectorAll('img')).map(function(im){ im.loading = 'eager'; return im.decode ? im.decode().catch(function(){}) : null; });
   var started = false, t0 = performance.now();
   function go(){
-    if(started || LLX !== x || x.phase !== 'prep') return; started = true;
+    if(started || LLFX !== x || x.phase !== 'prep') return; started = true;
     lldLog('copy ready in ' + Math.round(performance.now() - t0) + 'ms');
     real.style.visibility = 'hidden';            /* the copy is already painted on top, so nothing changes on screen */
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ llFxFly(x); }); });
@@ -4730,22 +4730,22 @@ function llFxOpen(id, visual, real){
 }
 /* ---- 2. fly: the card (face showing, glass at 1x) glides to cover the screen while the app fades to dark ---- */
 function llFxFly(x){
-  if(LLX !== x || x.phase !== 'prep') return;
+  if(LLFX !== x || x.phase !== 'prep') return;
   x.phase = 'fly'; lldPhase('fly');
   x.cd.classList.add('go'); x.root.classList.add('dark');
-  llFxAfter(x, x.bg, 'opacity', 400, function(){ if(LLX === x && /fly|dive|load/.test(x.phase)){ document.body.classList.add('llfxhide'); lldLog('app hidden behind'); } });
+  llFxAfter(x, x.bg, 'opacity', 400, function(){ if(LLFX === x && /fly|dive|load/.test(x.phase)){ document.body.classList.add('llfxhide'); lldLog('app hidden behind'); } });
   llFxAfter(x, x.cd, 'transform', 400, function(){ llFxLanded(x); });
   x.cd.style.transform = llFxCover(x);
 }
 /* ---- 3. dive: only after landing, the face fades, the art holds and breathes, glass and charms dive past ---- */
 function llFxLanded(x){
-  if(LLX !== x || x.phase !== 'fly') return;
+  if(LLFX !== x || x.phase !== 'fly') return;
   if(x.abort){ lldLog('cancelled during fly'); llFxSnap(x); return; }
   x.phase = 'dive'; lldPhase('dive');
   x.cd.classList.add('imm');
   var g = x.cd.querySelector('.llx-g');
   var next = function(){
-    if(LLX !== x || x.phase !== 'dive') return;
+    if(LLFX !== x || x.phase !== 'dive') return;
     /* ---- 4. load: the story page is only created now, so its loading cannot stutter the animation ---- */
     x.phase = 'load'; lldPhase('load');
     if(!llPlay(x.id, null, x)){ lldLog('story could not start'); llFxClose(x); }
@@ -4755,7 +4755,7 @@ function llFxLanded(x){
 /* ---- 6. return: glass and art ease home slowly; the face stays hidden ---- */
 function llFxClose(x, done){
   if(done) x && (x.after = done);
-  if(!x || LLX !== x){ var a = done; if(x) x.after = null; if(a) a(); return; }
+  if(!x || LLFX !== x){ var a = done; if(x) x.after = null; if(a) a(); return; }
   if(x.phase === 'prep'){ llFxDone(x); return; }
   if(x.phase === 'fly'){ x.abort = true; return; }          /* turns around when it lands */
   if(!/dive|load|story/.test(x.phase)) return;               /* already returning */
@@ -4770,7 +4770,7 @@ function llFxClose(x, done){
 }
 /* ---- 7. snap: the card snaps back to wherever the real card is now, the app fades back in ---- */
 function llFxSnap(x){
-  if(LLX !== x || x.phase === 'snap' || x.phase === 'face') return;
+  if(LLFX !== x || x.phase === 'snap' || x.phase === 'face') return;
   x.phase = 'snap'; lldPhase('snap');
   document.body.classList.remove('llfxhide');
   var h = (x.real.isConnected && llFxRect(x.real.querySelector('.tcg') || x.real)) || x.home;
@@ -4780,7 +4780,7 @@ function llFxSnap(x){
 }
 /* ---- 8. face: name, LL badge and sparkles fade back in on the copy, then the real card takes over ---- */
 function llFxFace(x){
-  if(LLX !== x || x.phase !== 'snap') return;
+  if(LLFX !== x || x.phase !== 'snap') return;
   x.phase = 'face'; lldPhase('face');
   x.cd.classList.remove('ret', 'imm');
   x.timers.push(setTimeout(function(){ llFxDone(x); }, 360));
@@ -4791,12 +4791,12 @@ function llFxDone(x){
   if(x.real) x.real.style.visibility = x.realVis || '';
   if(x.root.parentNode) x.root.parentNode.removeChild(x.root);
   document.body.classList.remove('llfxhide');
-  if(LLX === x){ LLX = null; HL.hold = 0; hlStart(); if(!LLP) llDuck(false); lldEnd(); }
+  if(LLFX === x){ LLFX = null; HL.hold = 0; hlStart(); if(!LLP) llDuck(false); lldEnd(); }
   x.phase = 'end';
   var a = x.after; x.after = null; if(a) a();
 }
 /* Escape / back while there is no story yet: turn around. During the return: ignore. */
-function llFxEsc(){ if(LLX && /prep|fly|dive|load/.test(LLX.phase)) llFxClose(LLX); }
+function llFxEsc(){ if(LLFX && /prep|fly|dive|load/.test(LLFX.phase)) llFxClose(LLFX); }
 
 /* what the story page is allowed to use from the app */
 window.LL_HOST = {
@@ -4814,7 +4814,7 @@ window.LL_HOST = {
 function llFly(id, el){
   var visual = el && el.closest ? el.closest('.tcg') : null;
   if(!visual || !visual.classList.contains('llx')) return llPlay(id, (visual && visual.querySelector('.tcg-art')) || el);
-  if(LLP || LLX) return false;
+  if(LLP || LLFX) return false;
   var real = visual.closest('.dflip') || visual.closest('.flip') || visual.closest('.tcgbox') || visual;
   lldStart(); lldLog('tap ' + id);
   HL.hold = 1; stopSpeak(); llDuck(true);
@@ -4863,7 +4863,7 @@ function llxRad(card){ try{ return parseFloat(getComputedStyle(card).borderRadiu
 function llKill(p){
   if(p.dead) return; p.dead = true;
   p.t.forEach(clearTimeout);
-  if(p.fx && LLX === p.fx) llFxDone(p.fx);
+  if(p.fx && LLFX === p.fx) llFxDone(p.fx);
   try{ p.f.contentWindow.LL.kill(); }catch(e){}
   if(p.g){ try{ p.g.gain.setTargetAtTime(0, p.g.context.currentTime, .03); }catch(e){} setTimeout(function(){ try{ p.g.disconnect(); }catch(e){} }, 300); }
   if(p.f.parentNode) p.f.parentNode.removeChild(p.f);
@@ -7181,7 +7181,7 @@ function parentSaveLock(){
    big card 460, Kit bubble 125, window 50). Press Escape again for the next one.
    To add a new pop-up layer, add it here in its stacking order. */
 var LAYERS = [
-  {name:'LL story',       open:function(){ return !!LLP || !!LLX; }, close:function(){ if(LLP) llClose(); else llFxEsc(); }},
+  {name:'LL story',       open:function(){ return !!LLP || !!LLFX; }, close:function(){ if(LLP) llClose(); else llFxEsc(); }},
   {name:'say pop-up',     open:function(){ var p = $('ksay'); return !!(p && p.classList.contains('show')); }, close:function(){ hideSayPop(); }},
   {name:'journal writer', open:function(){ return !!JW.el; },        close:function(){ jwClose(); }},
   {name:'big card',       open:function(){ return !!$('cbig'); },    close:function(){ cardBigClose(); }},
