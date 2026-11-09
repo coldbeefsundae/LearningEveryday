@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Immersive Card Animation — Layered Glass</title>
+<title>Immersive Card Animation — Portal Frame</title>
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -14,7 +14,6 @@
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     user-select: none; -webkit-user-select: none;
-    perspective: 1000px; /* Crucial for the 3D tilt effect */
   }
   #grid {
     padding: 60px 24px 24px 24px;
@@ -30,7 +29,6 @@
   .card {
     position: absolute; inset: 0;
     border-radius: 14px;
-    /* The gold LL border */
     background: linear-gradient(145deg, #f7e08a 0%, #b8862c 35%, #f2d36b 60%, #8a6418 100%);
     padding: 5px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.12);
@@ -38,56 +36,85 @@
     transform-origin: 50% 50%;
     will-change: transform;
     overflow: hidden;
-    transform-style: preserve-3d;
   }
   
   .llx-in {
     position: relative; width: 100%; height: 100%;
     border-radius: 10px; overflow: hidden;
-    background: #000; transform-style: preserve-3d;
-    will-change: transform;
+    background: #000;
   }
 
-  /* The actual layered images from your GitHub */
-  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .llx-d { position: absolute; inset: 0; pointer-events: none; transform-style: preserve-3d; }
+  /* The layers */
+  .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .llx-d { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
   .llx-l { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
   
-  /* The glass, cracks, and charms */
   .llx-body { z-index: 2; }
   .llx-cracks { z-index: 3; mix-blend-mode: screen; }
-  .llx-charms { z-index: 4; transform-style: preserve-3d; }
-  
-  /* The glass glare */
-  .llx-glare { 
+  .llx-charms { z-index: 4; }
+
+  /* The Portal Vignette (Our version of the TCG oval) */
+  .portal-vignette {
     position: absolute; inset: 0; z-index: 5; pointer-events: none;
-    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.6), transparent 60%); 
-    mix-blend-mode: overlay; opacity: 0; transition: opacity 0.3s;
+    box-shadow: inset 0 0 100px 40px rgba(0,0,0,0.8), inset 0 0 20px 5px rgba(255,215,0,0.4);
+    opacity: 0; transition: opacity 0.7s ease;
   }
 
   .card.flying {
     position: fixed; z-index: 100;
     cursor: default;
-    transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 750ms cubic-bezier(0.3, 0, 0.2, 1);
     pointer-events: none;
+    /* Apply 3D tilt here so the whole card tilts */
+    transform-style: preserve-3d;
   }
-  .card.flying::before {
-    content: ""; position: absolute; inset: 6px; border-radius: 10px;
-    background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.85), transparent 60%);
-    opacity: 0; pointer-events: none; animation: flash 550ms ease-out; z-index: 10;
+
+  /* When the card opens, the glass frame stretches to become the screen border */
+  .card.flying.playing .portal-vignette {
+    opacity: 1;
   }
-  @keyframes flash { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
   
-  .card.flying.playing .llx-in { transition: transform 0.2s ease-out; }
-  .card.flying.playing .llx-glare { opacity: 1; }
-  .card.flying.playing .llx-charms { transition: transform 0.2s ease-out; }
+  .card.flying.playing .llx-body {
+    /* The glass frame scales up slightly and moves back to act as the window */
+    transform: scale(1.15) translateZ(-20px);
+    opacity: 0.8;
+  }
+
+  .card.flying.playing .llx-charms {
+    /* The charms float forward into the room */
+    transform: scale(1.1) translateZ(40px);
+    animation: floatCharms 6s ease-in-out infinite alternate;
+  }
+
+  .card.flying.playing .llx-art {
+    /* The art is the deepest layer, so it scales the most to simulate camera push-in */
+    transform: scale(1.25);
+    animation: breatheArt 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes breatheArt {
+    0% { transform: scale(1.25) translate(0, 0); }
+    100% { transform: scale(1.35) translate(-2%, 2%); }
+  }
+  @keyframes floatCharms {
+    0% { transform: scale(1.1) translateZ(40px) translateY(0); }
+    100% { transform: scale(1.1) translateZ(40px) translateY(-10px); }
+  }
+
+  /* The flash of light when passing through the frame */
+  .card.flying::before {
+    content: ""; position: absolute; inset: 0; z-index: 10;
+    background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.9), transparent 70%);
+    opacity: 0; pointer-events: none; animation: flash 800ms ease-out;
+  }
+  @keyframes flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
 
   #overlay {
     position: fixed; inset: 0; z-index: 99; background: #000;
-    opacity: 0; pointer-events: none; transition: opacity 500ms ease;
+    opacity: 0; pointer-events: none; transition: opacity 600ms ease;
   }
   #overlay.show { opacity: 1; pointer-events: auto; }
-  #overlay.closing { transition: opacity 400ms ease 400ms; }
+  #overlay.closing { transition: opacity 400ms ease 500ms; }
   
   #hint {
     position: fixed; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
@@ -104,54 +131,51 @@
 </style>
 </head>
 <body>
-  <div id="label">Demo 3 · Layered Glass & Charms</div>
+  <div id="label">Demo 5 · The Portal Frame</div>
   <div id="grid"></div>
   <div id="overlay"></div>
-  <div id="hint">Drag to tilt · Tap to close</div>
+  <div id="hint">Tap anywhere to close</div>
 
 <script>
 (function(){
   'use strict';
 
-  var baseUrl = 'https://coldbeefsundae.github.io/LearningEveryday/';
-  var assetBase = baseUrl + 'assets/ll/';
-  
-  // The exact layered files from your app
-  var layers = {
-    art: assetBase + 'art-ll01.ca3c9638.webp',
-    body: assetBase + 'body.08d68638.webp',
-    cracks: assetBase + 'cracks.b00d0b68.webp',
-    charms: assetBase + 'charms.aade78ba.webp'
-  };
+  var baseUrl = 'https://coldbeefsundae.github.io/LearningEveryday/assets/ll/';
+  var cardsData = [
+    { art: 'art-ll01.ca3c9638.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' },
+    { art: 'art-ll02.9f4fc321.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' },
+    { art: 'art-ll03.7e3b83c6.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' },
+    { art: 'art-ll04.a80fb2a4.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' },
+    { art: 'art-ll05.6fe512ec.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' },
+    { art: 'art-ll06.f594235e.webp', body: 'body.08d68638.webp', cracks: 'cracks.b00d0b68.webp', charms: 'charms.aade78ba.webp' }
+  ];
 
   var grid = document.getElementById('grid');
   var overlay = document.getElementById('overlay');
   var hint = document.getElementById('hint');
   var label = document.getElementById('label');
 
-  // Build the layered cards
-  for (var i = 0; i < 6; i++) {
+  cardsData.forEach(function(data) {
     var slot = document.createElement('div');
     slot.className = 'card-slot';
     var card = document.createElement('div');
     card.className = 'card';
     
-    // The internal layered structure
     card.innerHTML = `
       <div class="llx-in">
-        <img class="llx-art" src="${layers.art}">
+        <img class="llx-art" src="${baseUrl + data.art}">
         <div class="llx-d">
-          <img class="llx-l llx-body" src="${layers.body}">
-          <img class="llx-l llx-cracks" src="${layers.cracks}">
-          <img class="llx-l llx-charms" src="${layers.charms}">
+          <img class="llx-l llx-body" src="${baseUrl + data.body}">
+          <img class="llx-l llx-cracks" src="${baseUrl + data.cracks}">
+          <img class="llx-l llx-charms" src="${baseUrl + data.charms}">
         </div>
-        <div class="llx-glare"></div>
+        <div class="portal-vignette"></div>
       </div>
     `;
     
     slot.appendChild(card); 
     grid.appendChild(slot);
-  }
+  });
 
   var st = { card: null, phase: 'idle' };
 
@@ -161,7 +185,8 @@
 
     var rect = card.getBoundingClientRect();
     var vw = window.innerWidth, vh = window.innerHeight;
-    var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
+    // Scale so the frame expands to fill the viewport
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.05;
     var tx = vw / 2 - (rect.left + rect.width / 2);
     var ty = vh / 2 - (rect.top + rect.height / 2);
 
@@ -171,24 +196,27 @@
     card.style.width = rect.width + 'px';
     card.style.height = rect.height + 'px';
     card.style.margin = '0';
-    card.style.transform = 'translate(0,0) scale(1) rotateX(0deg) rotateY(0deg)';
+    card.style.transform = 'translate(0,0) scale(1)';
     card.classList.add('flying');
-    void card.offsetWidth;
+    void card.offsetWidth; // force reflow
 
     overlay.classList.remove('closing');
     overlay.classList.add('show');
     label.classList.add('hide');
 
+    // Trigger the expansion
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
-        card.style.transform = `translate(${tx}px,${ty}px) scale(${s}) rotateX(0deg) rotateY(0deg)`;
+        card.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
       });
     });
 
+    // Once the card has expanded, switch to the immersive playing state
     var onEnd = function(e) {
-      if (e.propertyName !== 'transform' || e.target !== card) return;
+      if (e.propertyName !== 'transform') return;
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'opening') return;
+      
       st.phase = 'playing';
       card.classList.add('playing');
       hint.classList.add('show');
@@ -196,51 +224,18 @@
     card.addEventListener('transitionend', onEnd);
   }
 
-  // The 3D Tilt / Parallax Effect
-  document.addEventListener('pointermove', function(e) {
-    if (st.phase !== 'playing') return;
-    var card = st.card;
-    var rect = card.getBoundingClientRect();
-    
-    // Calculate pointer position relative to the card center (-0.5 to 0.5)
-    var x = (e.clientX - rect.left) / rect.width - 0.5;
-    var y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    // Move the glare
-    var glare = card.querySelector('.llx-glare');
-    glare.style.setProperty('--mx', ((x + 0.5) * 100) + '%');
-    glare.style.setProperty('--my', ((y + 0.5) * 100) + '%');
-
-    // Apply 3D tilt to the whole card container
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
-    // We have to re-apply the scale/translate because we are overwriting the transform
-    card.style.transform = `translate(${vw/2 - (rect.width/2)}px, ${vh/2 - (rect.height/2)}px) scale(${s}) rotateX(${-y * 15}deg) rotateY(${x * 15}deg)`;
-
-    // Parallax layers (move independently)
-    var charms = card.querySelector('.llx-charms');
-    var cracks = card.querySelector('.llx-cracks');
-    
-    // Charms move the most (they are floating closest to us)
-    charms.style.transform = `translate(${x * 40}px, ${y * 40}px)`;
-    // Cracks move a little
-    cracks.style.transform = `translate(${x * 15}px, ${y * 15}px)`;
-  });
-
   function close() {
     if (st.phase !== 'playing') return;
     st.phase = 'closing';
     var card = st.card;
     hint.classList.remove('show');
 
-    // Reset parallax layers so they snap back cleanly
-    card.querySelector('.llx-charms').style.transform = 'none';
-    card.querySelector('.llx-cracks').style.transform = 'none';
-    card.querySelector('.llx-in').style.transform = 'none';
-
-    // Shrink back down
-    var vw = window.innerWidth, vh = window.innerHeight;
-    card.style.transform = `translate(0,0) scale(1) rotateX(0deg) rotateY(0deg)`;
+    // 1. Stop the breathing/parallax animations and snap layers back
+    card.classList.remove('playing');
+    
+    // 2. Shrink the card back down. The glass frame and charms will 
+    // naturally slide back in from the screen edges as the card shrinks.
+    card.style.transform = `translate(0,0) scale(1)`;
     
     overlay.classList.add('closing');
     overlay.classList.remove('show');
@@ -250,9 +245,11 @@
       card.removeEventListener('transitionend', onEnd);
       if (st.phase !== 'closing') return;
       
-      card.style.cssText = ''; // wipe all inline styles
-      card.classList.remove('flying', 'playing');
+      // Cleanup
+      card.style.cssText = ''; 
+      card.classList.remove('flying');
       st.phase = 'idle'; st.card = null;
+      label.classList.remove('show');
       label.classList.remove('hide');
     };
     card.addEventListener('transitionend', onEnd);
