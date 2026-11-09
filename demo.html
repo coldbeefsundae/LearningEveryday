@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Immersive Card Animation — Demo</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #0a0e20;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #fff;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+  }
+  #grid {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+    height: 100vh; height: 100dvh;
+    overflow-y: auto;
+    align-content: start;
+  }
+  .card-slot { aspect-ratio: 5/7; position: relative; }
+  .card {
+    position: absolute; inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #f7e08a 0%, #b8862c 35%, #f2d36b 60%, #8a6418 100%);
+    padding: 5px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.12);
+    cursor: pointer;
+    transform-origin: 50% 50%;
+    will-change: transform;
+    overflow: hidden;
+  }
+  .card .art {
+    width: 100%; height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background: #1a1440;
+  }
+  .card .art-inner {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform-origin: 50% 50%;
+    will-change: transform;
+    transform: scale(1);
+  }
+  .card.flying {
+    position: fixed;
+    z-index: 100;
+    cursor: default;
+    transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+  .card.flying::before {
+    content: "";
+    position: absolute; inset: 6px;
+    border-radius: 10px;
+    background: radial-gradient(circle at 50% 50%, rgba(255,225,140,0.85), transparent 60%);
+    opacity: 0;
+    pointer-events: none;
+    animation: flash 550ms ease-out;
+  }
+  @keyframes flash {
+    0%   { opacity: 0; }
+    25%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  .card.flying.playing .art-inner {
+    animation: panScene 10s linear forwards;
+  }
+  @keyframes panScene {
+    0%   { transform: scale(1.04) translate(0%, 0%); }
+    20%  { transform: scale(1.12) translate(-2%, -1%); }
+    45%  { transform: scale(1.18) translate(-1%, 1.5%); }
+    70%  { transform: scale(1.14) translate(2%, 0.5%); }
+    100% { transform: scale(1.08) translate(0%, -1%); }
+  }
+  #overlay {
+    position: fixed; inset: 0;
+    z-index: 99;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms ease;
+  }
+  #overlay.show { opacity: 1; pointer-events: auto; }
+  #overlay.closing { transition: opacity 400ms ease 400ms; }
+  #hint {
+    position: fixed;
+    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    z-index: 101;
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+  #hint.show { opacity: 1; pointer-events: auto; }
+  #label {
+    position: fixed;
+    top: calc(20px + env(safe-area-inset-top, 0px));
+    left: 20px; right: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    z-index: 102;
+    letter-spacing: 0.5px;
+    transition: opacity 300ms ease;
+    text-align: center;
+  }
+  #label.hide { opacity: 0; }
+</style>
+</head>
+<body>
+  <div id="label">Immersive Card Demo · Tap a card</div>
+  <div id="grid"></div>
+  <div id="overlay"></div>
+  <div id="hint">Tap anywhere to close</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var SCENE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" preserveAspectRatio="xMidYMid slice">'
+    + '<defs>'
+    + '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2178"/><stop offset="0.45" stop-color="#6a4c9c"/><stop offset="0.75" stop-color="#d96a8a"/><stop offset="1" stop-color="#ff9f5a"/></linearGradient>'
+    + '<linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a6a"/><stop offset="1" stop-color="#1a1440"/></linearGradient>'
+    + '<linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3a8a"/><stop offset="1" stop-color="#2a1a50"/></linearGradient>'
+    + '<radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff4d0"/><stop offset="0.5" stop-color="#ffd060"/><stop offset="1" stop-color="#ff9f5a" stop-opacity="0"/></radialGradient>'
+    + '</defs>'
+    + '<rect width="400" height="560" fill="url(#sky)"/>'
+    + '<circle cx="320" cy="180" r="80" fill="url(#sun)"/>'
+    + '<circle cx="320" cy="180" r="28" fill="#fff4d0"/>'
+    + '<path d="M0,350 L100,220 L180,300 L280,180 L400,320 L400,560 L0,560 Z" fill="url(#m1)"/>'
+    + '<path d="M0,420 L80,340 L160,380 L260,300 L400,400 L400,560 L0,560 Z" fill="url(#m2)"/>'
+    + '<path d="M0,500 L120,440 L220,470 L340,420 L400,450 L400,560 L0,560 Z" fill="#1a0f30"/>'
+    + '<g opacity="0.7" fill="#fff"><circle cx="80" cy="60" r="1.2"/><circle cx="150" cy="40" r="0.8"/><circle cx="230" cy="80" r="1"/><circle cx="60" cy="120" r="0.9"/><circle cx="280" cy="60" r="1.1"/></g>'
+    + '</svg>';
+  var sceneUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SCENE);
+
+  var grid = document.getElementById('grid');
+  var overlay = document.getElementById('overlay');
+  var hint = document.getElementById('hint');
+  var label = document.getElementById('label');
+
+  for (var i = 0; i < 6; i++) {
+    var slot = document.createElement('div');
+    slot.className = 'card-slot';
+    var card = document.createElement('div');
+    card.className = 'card';
+    var art = document.createElement('div'); art.className = 'art';
+    var inner = document.createElement('div'); inner.className = 'art-inner';
+    inner.style.backgroundImage = 'url("' + sceneUri + '")';
+    art.appendChild(inner); card.appendChild(art); slot.appendChild(card);
+    grid.appendChild(slot);
+  }
+
+  var st = { card: null, phase: 'idle' };
+
+  function open(card) {
+    if (st.phase !== 'idle') return;
+    st.phase = 'opening'; st.card = card;
+
+    var rect = card.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    // Scale so the art fills the viewport, plus 8% so the frame sits off-screen on every side
+    var s = Math.max(vw / rect.width, vh / rect.height) * 1.08;
+    var tx = vw / 2 - (rect.left + rect.width / 2);
+    var ty = vh / 2 - (rect.top + rect.height / 2);
+
+    card.style.position = 'fixed';
+    card.style.left = rect.left + 'px';
+    card.style.top = rect.top + 'px';
+    card.style.width = rect.width + 'px';
+    card.style.height = rect.height + 'px';
+    card.style.margin = '0';
+    card.style.transform = 'translate(0,0) scale(1)';
+    card.classList.add('flying');
+    void card.offsetWidth;
+
+    overlay.classList.remove('closing');
+    overlay.classList.add('show');
+    label.classList.add('hide');
+
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        card.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+      });
+    });
+
+    var onEnd = function(e) {
+      if (e.propertyName !== 'transform') return;
+      card.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'opening') return;
+      st.phase = 'playing';
+      card.classList.add('playing');
+      hint.classList.add('show');
+    };
+    card.addEventListener('transitionend', onEnd);
+  }
+
+  function close() {
+    if (st.phase !== 'playing') return;
+    st.phase = 'closing';
+    var card = st.card;
+    hint.classList.remove('show');
+
+    // Freeze the art-inner at whatever pan pose it's on, then smoothly un-pan it
+    var inner = card.querySelector('.art-inner');
+    var cur = getComputedStyle(inner).transform;
+    card.classList.remove('playing');
+    inner.style.transform = cur;
+    void inner.offsetWidth;
+    inner.style.transition = 'transform 500ms ease-out';
+    inner.style.transform = 'scale(1)';
+
+    // Reverse the scale+translate — the frame re-enters from off-screen in step with the art
+    card.style.transform = 'translate(0,0) scale(1)';
+
+    // Keep the black backdrop behind the card until it lands, then fade the grid in
+    overlay.classList.add('closing');
+    overlay.classList.remove('show');
+
+    var onEnd = function(e) {
+      if (e.propertyName !== 'transform') return;
+      card.removeEventListener('transitionend', onEnd);
+      if (st.phase !== 'closing') return;
+      card.style.position = '';
+      card.style.left = '';
+      card.style.top = '';
+      card.style.width = '';
+      card.style.height = '';
+      card.style.margin = '';
+      card.style.transform = '';
+      card.classList.remove('flying');
+      inner.style.transition = '';
+      inner.style.transform = '';
+      st.phase = 'idle'; st.card = null;
+      label.classList.remove('hide');
+    };
+    card.addEventListener('transitionend', onEnd);
+  }
+
+  grid.addEventListener('click', function(e) {
+    var card = e.target.closest('.card');
+    if (card && !card.classList.contains('flying')) open(card);
+  });
+  overlay.addEventListener('click', close);
+  hint.addEventListener('click', close);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
+</body>
+</html>
