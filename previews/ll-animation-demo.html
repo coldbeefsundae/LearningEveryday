@@ -39,7 +39,7 @@ button { font: inherit; }
 .dflip-in { position: absolute; inset: 0; transform-style: preserve-3d; }
 .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .tcgbox { container-type: inline-size; width: 100%; aspect-ratio: 5 / 7; position: relative; }
-.tcg.llx { position: absolute; inset: 0; padding: 0; overflow: hidden; border-radius: 1.2em; color: #fff; line-height: 1.1; font-size: 6.4cqw; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); }
+.tcg.llx { animation: none; position: absolute; inset: 0; padding: 0; overflow: hidden; border-radius: 1.2em; color: #fff; line-height: 1.1; font-size: 6.4cqw; background: linear-gradient(145deg,#f7e08a,#b8862c 38%,#f2d36b 62%,#8a6418); box-shadow: 0 .3em .9em -.25em rgba(20,20,60,.5); }
 .llx-in { position: absolute; inset: .16em; overflow: hidden; isolation: isolate; border-radius: 1.06em; background: #000; transform-style: preserve-3d; }
 .llx-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .llx-d { position: absolute; inset: 0; transition: opacity .32s ease-in; transform-style: preserve-3d; }
@@ -63,7 +63,7 @@ button { font: inherit; }
 .llx-c { inset: -6%; width: 112%; height: 112%; transform: translate3d(calc(var(--dx) * 4.2%), calc(var(--dy) * 4.2%), 0); }
 .llx-bob { position: absolute; inset: 0; animation: llxbob 7s ease-in-out infinite; }
 .llx-bob > img, .llx-bob > i { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.llx-cmh { opacity: calc(.35 + var(--mag) * .55); background-size: 200% 200%; animation: llxdrift 9s linear infinite; background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); }
+.llx-cmh { mix-blend-mode: screen; opacity: calc(.35 + var(--mag) * .55); background-size: 200% 200%; animation: llxdrift 9s linear infinite; background: linear-gradient(115deg,#ff4d6d 0%,#ffb34d 12%,#f6ff6a 24%,#5dffb0 36%,#4dd2ff 48%,#8a6bff 60%,#ff5dd8 72%,#ff4d6d 84%,#ffb34d 100%); }
 @keyframes llxbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8%); } }
 @keyframes llxdrift { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
 .llx .hlx-sp { z-index: 2; }
@@ -154,11 +154,12 @@ button { font: inherit; }
                   <div class="llx-in">
                     <img class="llx-art" alt="Princess Kaguya card art" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/art-ll02.9f4fc321.webp">
                     <div class="llx-d">
+                      <img class="llx-l llx-g llx-sh" alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/shadow.da723488.webp">
                       <div class="llx-l llx-g">
                         <img class="llx-body" alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/body.08d68638.webp">
-                        <i class="llx-holo llx-bm llx-bh"></i><i class="llx-bs"></i>
+                        <i class="llx-holo llx-bm llx-bh"></i><i class="llx-bm llx-bs"></i>
                         <img alt="" draggable="false" src="https://coldbeefsundae.github.io/LearningEveryday/assets/ll/cracks.b00d0b68.webp">
-                        <i class="llx-holo llx-km llx-ch"></i><i class="llx-cg"></i>
+                        <i class="llx-holo llx-km llx-ch"></i><i class="llx-km llx-cg"></i>
                       </div>
                       <i class="llx-l llx-glare"></i>
                       <div class="llx-l llx-c">
