@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kowloon story · Song of Sunset music</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#05070f;color:#dfe6ff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden}
+  #start{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:5;background:radial-gradient(circle at 50% 30%,#2a2060,#05070f 70%)}
+  #start h1{margin:0;font-size:20px;color:#ffd76a}
+  #start p{margin:0;font-size:13px;color:#9aa6d8;text-align:center;max-width:320px;line-height:1.5}
+  #start button{background:#ffc94a;border:0;border-radius:99px;padding:14px 28px;font:inherit;font-size:16px;font-weight:800;color:#2a1b00;cursor:pointer}
+  #start.hide{display:none}
+  #story{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000;display:none}
+  #story.show{display:block}
+</style>
+</head>
+<body>
+  <div id="start">
+    <h1>Kowloon Walled City</h1>
+    <p>Story demo with the new music. Tap to start; sound needs one tap to begin.</p>
+    <button id="go">▶ Start the story</button>
+  </div>
+  <iframe id="story" title="Kowloon story" src="about:blank"></iframe>
+
+<script>
+(function(){
+  'use strict';
+  var CARD_ART = '../../assets/cards/cn01.2494d666.webp';
+  var actx = null;
+  // what the story asks of its host: the card position (used for its fly-in and fly-back) and the audio context
+  window.LL_HOST = {
+    ac: function(){ return actx; },
+    out: function(){ return null; },
+    rect: function(){
+      var w = Math.min(250, innerWidth * .6), h = w * 1.4;
+      return {left: (innerWidth - w) / 2, top: (innerHeight - h) / 2, width: w, height: h};
+    },
+    on: function(ev){ if (ev === 'done') { document.getElementById('start').classList.remove('hide'); } }
+  };
+  var frame = document.getElementById('story');
+  document.getElementById('go').addEventListener('click', function(){
+    try { if (!actx && window.AudioContext) actx = new AudioContext(); } catch (e) { actx = null; }
+    frame.onload = function(){
+      var w = frame.contentWindow;
+      if (!w || !w.LL) return;
+      document.getElementById('start').classList.add('hide');
+      frame.classList.add('show');
+      w.LL.play(window.LL_HOST.rect(), {sound: true, art: new URL(CARD_ART, location.href).href, radius: 14});
+    };
+    frame.src = 'story.html';
+  });
+})();
+</script>
+</body>
+</html>
