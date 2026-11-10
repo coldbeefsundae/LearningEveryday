@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.56', errs = [], shown = false;
+  var V = '26.11.58', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2483,6 +2483,9 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 #llfx .llfx-card{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;--mx:.5;--my:.5;--rx:0deg;--ry:0deg;--ll-art-a:1.15;--ll-art-b:1.25}
 #llfx .llfx-card.go{transition:transform 400ms cubic-bezier(.3,0,.2,1)}
 #llfx .llfx-card.snap{transition:transform 430ms cubic-bezier(.18,.9,.3,1.18)}
+/* 26.11.58: fly only grows the card until it fits the screen; the dive then pushes through it, and the return backs out the same way */
+#llfx .llfx-card.dv{transition:transform 700ms cubic-bezier(.7,0,1,1)}
+#llfx .llfx-card.rt{transition:transform 2400ms ease-in-out}
 #llfx .llx-top,#llfx .llx-rar,#llfx .llx-tag,#llfx .llx-foot,#llfx .llx-play,#llfx .llx-fade,#llfx .hlx-sp{transition:opacity .35s ease}
 #llfx .imm .tcg,#llfx .imm .llx-in{border-radius:0}
 #llfx .imm .llx-art{transform:scale(var(--ll-art-a));animation:llFxBreathe 10s ease-in-out 800ms infinite alternate;transition:transform 800ms ease}
@@ -4700,6 +4703,7 @@ function lldEnd(){ if(!LLD) return; lldLog('done'); cancelAnimationFrame(LLD.raf
 function llFxRect(el){ if(!el || !el.getBoundingClientRect) return null; var b = el.getBoundingClientRect(); return b.width > 0 && b.height > 0 ? {left:b.left, top:b.top, width:b.width, height:b.height} : null; }
 function llFxView(){ var vv = window.visualViewport; return {w:(vv && vv.width) || window.innerWidth, h:(vv && vv.height) || window.innerHeight, x:(vv && vv.offsetLeft) || 0, y:(vv && vv.offsetTop) || 0}; }
 function llFxPlace(x, r){ var k = r.width / x.w; return 'translate3d(' + r.left + 'px,' + r.top + 'px,0) scale3d(' + k + ',' + k + ',1)'; }
+function llFxFit(x){ var v = llFxView(), k = Math.min(v.w / x.w, v.h / x.h) * 0.92; return 'translate3d(' + (v.x + (v.w - x.w*k)/2) + 'px,' + (v.y + (v.h - x.h*k)/2) + 'px,0) scale3d(' + k + ',' + k + ',1)'; }
 function llFxCover(x){ var v = llFxView(), k = Math.max(v.w / x.w, v.h / x.h) * 1.05; return 'translate3d(' + (v.x + (v.w - x.w*k)/2) + 'px,' + (v.y + (v.h - x.h*k)/2) + 'px,0) scale3d(' + k + ',' + k + ',1)'; }
 /* run fn once when el's OWN transition on prop ends; a timer covers hidden tabs and reduced motion */
 function llFxAfter(x, el, prop, ms, fn){
@@ -4743,7 +4747,7 @@ function llFxFly(x){
   x.cd.classList.add('go'); x.root.classList.add('dark');
   llFxAfter(x, x.bg, 'opacity', 400, function(){ if(LLFX === x && /fly|dive|load/.test(x.phase)){ document.body.classList.add('llfxhide'); lldLog('app hidden behind'); } });
   llFxAfter(x, x.cd, 'transform', 400, function(){ llFxLanded(x); });
-  x.cd.style.transform = llFxCover(x);
+  x.cd.style.transform = llFxFit(x);
 }
 /* ---- 3. dive: only after landing, the face fades, the art holds and breathes, glass and charms dive past ---- */
 function llFxLanded(x){
@@ -4751,6 +4755,7 @@ function llFxLanded(x){
   if(x.abort){ lldLog('cancelled during fly'); llFxSnap(x); return; }
   x.phase = 'dive'; lldPhase('dive');
   x.cd.classList.add('imm');
+  x.cd.classList.remove('go'); x.cd.classList.add('dv'); x.cd.style.transform = llFxCover(x);
   var g = x.cd.querySelector('.llx-g');
   var next = function(){
     if(LLFX !== x || x.phase !== 'dive') return;
@@ -4770,7 +4775,7 @@ function llFxClose(x, done){
   x.phase = 'return'; lldPhase('return');
   var cd = x.cd, art = cd.querySelector('.llx-art'), m = art ? getComputedStyle(art).transform : 'none';
   if(art){ art.style.transition = 'none'; art.style.transform = m; }   /* freeze the breathing exactly where it is */
-  cd.classList.remove('imm'); cd.classList.add('ret');
+  cd.classList.remove('imm', 'dv'); cd.classList.add('ret', 'rt'); cd.style.transform = llFxFit(x);
   if(art){ void art.offsetWidth; art.style.transition = ''; art.style.transform = 'none'; }
   var layers = [cd.querySelector('.llx-g'), cd.querySelector('.llx-c')].filter(Boolean), left = layers.length;
   if(!left){ llFxSnap(x); return; }
@@ -4782,7 +4787,7 @@ function llFxSnap(x){
   x.phase = 'snap'; lldPhase('snap');
   document.body.classList.remove('llfxhide');
   var h = (x.real.isConnected && llFxRect(x.real.querySelector('.tcg') || x.real)) || x.home;
-  x.cd.classList.remove('go'); x.cd.classList.add('snap'); x.root.classList.remove('dark');
+  x.cd.classList.remove('go', 'dv', 'rt'); x.cd.classList.add('snap'); x.root.classList.remove('dark');
   llFxAfter(x, x.cd, 'transform', 430, function(){ llFxFace(x); });
   x.cd.style.transform = llFxPlace(x, h);
 }
@@ -6396,6 +6401,31 @@ function natLang(c){
   return SPEAK_LANG[c.r] || 'ja-JP';
 }
 var speakingEl = null;
+/* 26.11.57: iPad Safari may ignore only-`lang` utterances for non-default
+   languages. Cache its voices and select the matching voice explicitly. */
+var SQ_SPEECH_VOICES = null;
+function sqSpeechVoices(){
+  try{
+    var v = window.speechSynthesis && window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+    if(v && v.length) SQ_SPEECH_VOICES = v;
+  }catch(e){}
+  return SQ_SPEECH_VOICES || [];
+}
+function sqSpeechVoice(lang){
+  var want = String(lang || '').toLowerCase().replace(/_/g,'-'), vs = sqSpeechVoices(), aliases = [want];
+  if(want === 'zh-hk') aliases = ['zh-hk','zh-hant-hk','yue-hk','yue'];
+  else if(want === 'ja-jp') aliases = ['ja-jp','ja'];
+  for(var i=0;i<vs.length;i++){
+    var got = String(vs[i].lang || '').toLowerCase().replace(/_/g,'-');
+    if(aliases.indexOf(got) > -1) return vs[i];
+  }
+  return null;
+}
+try{
+  if(window.speechSynthesis && window.speechSynthesis.addEventListener){
+    window.speechSynthesis.addEventListener('voiceschanged', sqSpeechVoices);
+  }
+}catch(e){}
 /* Android app (Capacitor): the WebView has no speech, so talk to the phone's own text-to-speech through the app. */
 /* ---------- screen-time alerts: small chime + vibration (plays even when sounds are off), and an Android notification so it still rings while she is in another app ---------- */
 function toneAlways(f, st, d, ty, v){ var m = state.mute; state.mute = false; try{ tone(f, st, d, ty, v); }catch(e){} state.mute = m; }
@@ -6439,8 +6469,10 @@ function spokenYear(y){
 }
 function webSpeak(txt, lang, el){
   try{
-    var u = new SpeechSynthesisUtterance(txt);
-    u.lang = lang || 'en-US'; u.rate = 0.92; u.pitch = 1.05;
+    var u = new SpeechSynthesisUtterance(txt), v = sqSpeechVoice(lang);
+    u.lang = v ? v.lang : (lang || 'en-US');
+    if(v) u.voice = v;
+    u.rate = 0.92; u.pitch = 1.05; u.volume = 1;
     if(el){ speakingEl = el; el.classList.add('speaking'); }
     var clear = function(){ if(el) el.classList.remove('speaking'); if(speakingEl === el) speakingEl = null; };
     u.onend = clear; u.onerror = clear;
@@ -10487,7 +10519,7 @@ function kotoCardsFor(i){ var w = KOTO[i][0], out = []; CARD_QUOTES.forEach(func
 function cqKoto(q){ if(!q[7]) return -1; for(var i = 0; i < KOTO.length; i++) if(KOTO[i][0] === q[7]) return i; return -1; }
 function speakCQ(txt, lang, el){
   if(lang !== 'zh-HK'){ speakText(txt, lang, el); return; }
-  var hint = '🔊 To hear Cantonese, add the voice once: Android Settings → Text-to-speech → Google → Install voice data → Chinese (Hong Kong).';
+  var hint = '🔊 To hear Cantonese, install the iPad voice called Chinese (Hong Kong) or Cantonese (Hong Kong), then reload StarQuest.';
   if(state.mute){ speakText(txt, lang, el); return; }
   var cap = nativeCap();
   if(cap){
@@ -10495,7 +10527,7 @@ function speakCQ(txt, lang, el){
     catch(e){ speakText(txt, lang, el); }
     return;
   }
-  try{ if('speechSynthesis' in window){ var v = window.speechSynthesis.getVoices(); if(v.length && !v.some(function(x){ return /zh[-_]HK|yue/i.test(x.lang); })){ toast(hint, 9000); return; } } }catch(e){}
+  try{ if('speechSynthesis' in window){ var v = sqSpeechVoices(); if(v.length && !sqSpeechVoice('zh-HK')){ toast(hint, 9000); return; } } }catch(e){}
   speakText(txt, lang, el);
 }
 function cqSpeak(id, which, el){
