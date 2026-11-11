@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.77', errs = [], shown = false;
+  var V = '26.11.78', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -309,6 +309,15 @@ h1,h2,h3,p{margin:0}
 .r-SSR.tcg{background-size:300% 300%;animation:holo 5s linear infinite}
 @keyframes holo{to{background-position:300% 0}}
 .r-SSR .tcg-art::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,150,.2),rgba(0,200,255,.2),rgba(255,230,0,.2));mix-blend-mode:overlay}
+/* 26.11.78: regional SSR frames (painted overlay + pearl sheen that follows the tilt; Canada's aurora gets the colour holo) */
+.frm{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden}
+.frm>i{position:absolute;inset:0;display:block}
+.fimg{background-position:center;background-size:100% 100%;background-repeat:no-repeat;opacity:.85}
+.frm.big .fimg{filter:drop-shadow(0 0 .7px rgba(55,35,90,.6)) drop-shadow(0 .6px .8px rgba(55,35,90,.32))}
+.fsheen,.fglint{-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.fsheen{background-size:320% 320%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,#ffd1ea 0%,#d7c8ff 14%,#bfeaff 28%,#fff1c4 42%,#ffd1ea 56%,#c9ffe6 70%,#d7c8ff 84%,#ffd1ea 100%);mix-blend-mode:multiply;opacity:.4675}
+.fsheen.holo{background-image:linear-gradient(110deg,#7dffc4,#9fe8ff 18%,#c9a6ff 36%,#ff9fe0 54%,#7dffc4 72%,#a8f0ff 90%);opacity:.561}
+.fglint{background-size:250% 250%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 48%,transparent 58%);mix-blend-mode:screen;opacity:.595}
 .reg-CN{--art:linear-gradient(160deg,#ffdcd2,#ff8a76);--paper:#fff7ef}
 .reg-JP{--art:linear-gradient(160deg,#ffe4ef,#ff9dbd);--paper:#fffafc}
 .reg-KR{--art:linear-gradient(160deg,#d9edff,#7cb3ff);--paper:#f7fbff}
@@ -1511,6 +1520,9 @@ body[data-ts=S]{zoom:.92}
    Text size setting (zoom on body). Undo that zoom for it, so the card stays centred and lands on its slot. */
 body[data-ts=L] #llfx{zoom:.892857}
 body[data-ts=S] #llfx{zoom:1.086957}
+/* 26.11.78: flying allowance coins are placed from measured screen positions, so they undo the Text size zoom too */
+body[data-ts=L] .bkfly,body[data-ts=L] .bkfall{zoom:.892857}
+body[data-ts=S] .bkfly,body[data-ts=S] .bkfall{zoom:1.086957}
 body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{animation:none!important;transition:none!important}
 .banner.rest{background:linear-gradient(135deg,#e6e1ff,#d5e8ff);color:#2d2a6e}
 .banner.streak{background:linear-gradient(135deg,#fff0d6,#ffe0e6);color:#7a3b00;padding:12px 18px}
@@ -4770,6 +4782,26 @@ function rollPack(){
 }
 
 /* ---------- card visuals ---------- */
+/* 26.11.78: regional SSR frames. One painted frame per region; SSSR uses the same frame. A region with no frame simply shows none. */
+var FRM = {"AF":{"f":"assets/frames/af.6ac0c6c5.webp","s":"assets/frames/af-s.902ebf4c.webp"},"AM":{"f":"assets/frames/am.e1ba09d9.webp","s":"assets/frames/am-s.62b174db.webp"},"AS":{"f":"assets/frames/as.27f432a6.webp","s":"assets/frames/as-s.e63a222f.webp"},"AU":{"f":"assets/frames/au.d0d8a984.webp","s":"assets/frames/au-s.f9179247.webp"},"CA":{"f":"assets/frames/ca.ed5fa541.webp","s":"assets/frames/ca-s.3aaa2104.webp"},"CN":{"f":"assets/frames/cn.ad847d09.webp","s":"assets/frames/cn-s.afcb89a0.webp"},"EU":{"f":"assets/frames/eu.b751a737.webp","s":"assets/frames/eu-s.c4a5b032.webp"},"GL":{"f":"assets/frames/gl.3699395a.webp","s":"assets/frames/gl-s.39a58eaa.webp"},"JP":{"f":"assets/frames/jp.71df7220.webp","s":"assets/frames/jp-s.f3597f32.webp"},"KR":{"f":"assets/frames/kr.7677bd93.webp","s":"assets/frames/kr-s.a46e3f99.webp"},"SA":{"f":"assets/frames/sa.0c73b977.webp","s":"assets/frames/sa-s.91919f3a.webp"}}, FRM_HOLO = {CA: 1}, FRM_CSS = false;
+function frmCSS(){
+  if(FRM_CSS) return; FRM_CSS = true;
+  try{
+    var t = '';
+    Object.keys(FRM).forEach(function(r){
+      t += '.frm-' + r + ' .fimg{background-image:url("' + FRM[r].s + '")}';
+      t += '.frm-' + r + '.big .fimg{background-image:url("' + FRM[r].f + '")}';
+      t += '.frm-' + r + ' .fm{-webkit-mask-image:url("' + FRM[r].f + '");mask-image:url("' + FRM[r].f + '")}';
+    });
+    var st = document.createElement('style'); st.textContent = t; document.head.appendChild(st);
+  }catch(e){}
+}
+function frameHTML(c, big){
+  if(!(c.k === 'SSR' || c.k === 'SSSR') || !FRM[c.r]) return '';
+  frmCSS();
+  if(!big) return '<div class="frm frm-' + c.r + '" aria-hidden="true"><i class="fimg"></i></div>';
+  return '<div class="frm big frm-' + c.r + '" aria-hidden="true"><i class="fimg"></i><i class="fsheen fm' + (FRM_HOLO[c.r] ? ' holo' : '') + '"></i><i class="fglint fm"></i></div>';
+}
 function faceHTML(c, o){
   o = o || {};
   if(c.k === 'LL' && window.LLX && LLX.art && LLX.art[c.id]) return llxFaceHTML(c, o);
@@ -4781,7 +4813,7 @@ function faceHTML(c, o){
   h += '<div class="tcg-art'+(u?' has-img':'')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')+(c.k === 'LL' ? '<span class="ll-play" aria-hidden="true">▶</span>' : '')+'</div>';
   h += '<div class="tcg-tag" data-say="tag:'+c.id+'">'+esc(c.s)+'</div>';
   h += '<div class="tcg-foot"><span data-say="place:'+c.id+'">'+rg.flag+' '+TYPE_LABEL[c.t]+'</span><span class="tcg-year" data-say="year:'+c.id+'">'+esc(c.y)+'</span></div>';
-  h += '</div>'+(hf ? hlDeco(c.k) : '')+'<i class="tcg-shine"></i></div>';
+  h += '</div>'+(hf ? hlDeco(c.k) : '')+frameHTML(c, !!o.holo)+'<i class="tcg-shine"></i></div>';
   if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
   if(o.count > 1) h += '<span class="tbadge ct">×'+o.count+'</span>';
   return h + '</div>';
@@ -5028,16 +5060,19 @@ function hlFlipBind(el){
     cardBigOpen();
   });
 }
+/* 26.11.78: Text size zooms the page. Measured screen pixels are divided by this before placing things inside the page. */
+function tsZoom(){ var t = document.body && document.body.getAttribute('data-ts'); return t === 'L' ? 1.12 : t === 'S' ? .92 : 1; }
 function cardBigFit(){
   /* 26.11.33: the whole card always fits on screen. Sideways (landscape) the card gets the full
      screen height and the Flip button sits beside it; upright it sits under the card. */
   var o = $('cbig'), f = $('dflip'); if(!o || !f) return;
-  var vv = window.visualViewport, W = (vv && vv.width) || window.innerWidth, H = (vv && vv.height) || window.innerHeight;
+  var vv = window.visualViewport, z = tsZoom(), W = ((vv && vv.width) || window.innerWidth)/z, H = ((vv && vv.height) || window.innerHeight)/z;
   var land = W > H; o.classList.toggle('cbig-land', land);
   var cs = getComputedStyle(o), px = function(v){ return parseFloat(v) || 0; };
   var bar = o.querySelector('.cbig-bar'), gap = 18;
-  var availW = W - px(cs.paddingLeft) - px(cs.paddingRight) - (land && bar ? bar.offsetWidth + gap : 0);
-  var availH = H - px(cs.paddingTop) - px(cs.paddingBottom) - (!land && bar ? bar.offsetHeight + gap : 0);
+  var br = bar ? bar.getBoundingClientRect() : null, bw = br ? br.width/z : 0, bh = br ? br.height/z : 0;
+  var availW = W - px(cs.paddingLeft) - px(cs.paddingRight) - (land && bar ? bw + gap : 0);
+  var availH = H - px(cs.paddingTop) - px(cs.paddingBottom) - (!land && bar ? bh + gap : 0);
   var k = Math.min(availW/250, availH/350) * .95;   /* 26.11.41: a little room, because the tilted card's near edge grows a few percent */
   o.style.setProperty('--bs', Math.max(.5, k).toFixed(3));
 }
@@ -13447,7 +13482,7 @@ function kitBubble(anchor, html, ms){
   el.className = 'kitbub'; el.setAttribute('role', 'status');
   el.innerHTML = '<span class="embkit">'+kitSVG('happy','face')+'</span><div class="kbtxt">'+html+'</div>';
   el.style.visibility = 'hidden'; document.body.appendChild(el);
-  var r = anchor.getBoundingClientRect(), w = el.offsetWidth || 320, vw = window.innerWidth || 1024;
+  var z = tsZoom(), r0 = anchor.getBoundingClientRect(), r = {left:r0.left/z, width:r0.width/z, bottom:r0.bottom/z}, w = (el.getBoundingClientRect().width/z) || el.offsetWidth || 320, vw = (window.innerWidth || 1024)/z;
   var left = Math.max(8, Math.min(r.left + r.width/2 - w/2, vw - w - 8));
   el.style.left = left+'px'; el.style.top = (r.bottom + 10)+'px';
   el.style.setProperty('--ax', Math.max(22, Math.min(w - 22, r.left + r.width/2 - left))+'px');
