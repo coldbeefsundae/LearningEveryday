@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.63', errs = [], shown = false;
+  var V = '26.11.64', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2496,16 +2496,17 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 #llfx .ret .llx-top,#llfx .ret .llx-rar,#llfx .ret .llx-tag,#llfx .ret .llx-foot,#llfx .ret .llx-play,#llfx .ret .llx-fade,#llfx .ret .hlx-sp{opacity:0!important}
 #llfx .ret .llx-g,#llfx .ret .llx-c{transition:transform 2400ms ease-in-out}
 #llfx .ret .llx-art{animation:none;transition:transform 2400ms ease-in-out}
-/* 26.11.63: the new LL glass, drawn on one canvas above the card (26.11.61 used 22 separate layers, too heavy on phones).
-   The card's own glass and charms fade out as the pieces start to move, and fade back in as the pieces land. */
+/* 26.11.64: the LL glass now copies the approved demo step by step. The card stays in the middle of the screen
+   (it grows a little), the 22 pieces fly past it, and only then does the story start. No full-screen zoom of the card.
+   The pieces are drawn on one canvas above the card (light enough for phones). */
 #llfx .llg-cv{position:absolute;left:0;top:0;pointer-events:none;transition:opacity .45s linear}
-#llfx .llfx-card.llg div.llx-g,#llfx .llfx-card.llg .llx-bob>img,#llfx .llfx-card.llg .llx-cmh{transition:opacity .15s linear}
+#llfx .llfx-card.llg div.llx-g,#llfx .llfx-card.llg .llx-bob>img,#llfx .llfx-card.llg .llx-cmh,#llfx .llfx-card.llg .hlx-sp{transition:opacity .15s linear}
 #llfx .llfx-card.llg.llgb div.llx-g,#llfx .llfx-card.llg.llgb .llx-bob>img,#llfx .llfx-card.llg.llgb .llx-cmh{transition:opacity .45s linear}
 #llfx .llfx-card.llg.llgh div.llx-g,#llfx .llfx-card.llg.llgh .llx-bob>img,#llfx .llfx-card.llg.llgh .llx-cmh{opacity:0}
-#llfx .llfx-card.llg div.llx-g{transform:none!important}
-#llfx .llfx-card.llg .llx-c{transform:none!important;transition:none!important}
-#llfx .llfx-card.llg.rt{transition:transform 4000ms ease-in-out}
-#llfx .llfx-card.llg.ret .llx-g,#llfx .llfx-card.llg.ret .llx-art{transition-duration:4000ms}
+#llfx .llfx-card.llg.llgs .hlx-sp{opacity:0!important;transition:opacity .3s linear}
+#llfx .llfx-card.llg .llx-top,#llfx .llfx-card.llg .llx-rar,#llfx .llfx-card.llg .llx-tag,#llfx .llfx-card.llg .llx-foot,#llfx .llfx-card.llg .llx-play,#llfx .llfx-card.llg .llx-fade{transition:opacity .3s ease}
+#llfx .llfx-card.llg.llgt .llx-top,#llfx .llfx-card.llg.llgt .llx-rar,#llfx .llfx-card.llg.llgt .llx-tag,#llfx .llfx-card.llg.llgt .llx-foot,#llfx .llfx-card.llg.llgt .llx-play,#llfx .llfx-card.llg.llgt .llx-fade{opacity:0}
+#llfx .llfx-card.llg div.llx-g,#llfx .llfx-card.llg .llx-c{transform:none!important}
 @keyframes llFxBreathe{0%{transform:scale(var(--ll-art-a)) translate(0,0)}100%{transform:scale(var(--ll-art-b)) translate(-2%,2%)}}
 @media(max-width:820px){
   #llfx .llfx-card{--ll-art-a:1.08;--ll-art-b:1.16}
@@ -4752,44 +4753,57 @@ function llgEase(v){ var x = v < 0 ? 0 : v > 1 ? 1 : v; return x*x*(3 - 2*x); }
 function llgOn(x){
   if(!LLG.list || !x.cd.querySelector('div.llx-g') || !x.cd.querySelector('.llx-bob')) return;
   var cv = document.createElement('canvas'); cv.className = 'llg-cv'; x.root.appendChild(cv);
-  x.lg = {cv: cv, g: cv.getContext('2d'), q: 0, vis: 0, raf: 0, tm: 0, r: null};
+  x.lg = {cv: cv, g: cv.getContext('2d'), q: 0, f: 0, vis: 0, raf: 0, tm: 0, io: null,
+    frame: x.cd.querySelector('.tcg'), inn: x.cd.querySelector('.llx-in'), sh: x.cd.querySelector('.llx-sh')};
   x.cd.classList.add('llg'); lldLog('22-piece glass ready');
 }
-/* size the canvas to the screen and find where the card's picture area is (call while the card sits still) */
+function llgCalm(){ return !!(HL_RM || (state.ui && state.ui.calm)); }
 function llgSize(x){
   var L = x.lg, d = Math.min(2, window.devicePixelRatio || 1), W = window.innerWidth, H = window.innerHeight;
   L.d = d; L.cv.width = Math.round(W*d); L.cv.height = Math.round(H*d); L.cv.style.width = W + 'px'; L.cv.style.height = H + 'px';
 }
+/* where the picture area sits inside the card (as fractions), and its corner radius; read once while the card is still */
 function llgMeasure(x){
-  var L = x.lg, inn = x.cd.querySelector('.llx-in'); if(!inn) return;
+  var L = x.lg, inn = L.inn; if(!inn) return;
   var c = x.cd.getBoundingClientRect(), r = inn.getBoundingClientRect(), rad = 0;
   try{ rad = parseFloat(getComputedStyle(inn).borderTopLeftRadius) || 0; }catch(e){}
-  L.io = {l: (r.left - c.left)/c.width, t: (r.top - c.top)/c.height, w: r.width/c.width, h: r.height/c.height, rad: rad/(inn.offsetWidth || 1)};
-  L.r = {x: r.left, y: r.top, w: r.width, h: r.height};
+  L.io = {l: (r.left - c.left)/c.width, t: (r.top - c.top)/c.height, w: r.width/c.width, h: r.height/c.height};
+  L.rad = rad; L.radK = r.width/(inn.offsetWidth || 1);
   llgSize(x);
 }
-/* where the picture area will be when the card is back at its 'fit' size (screen may have turned during the story) */
-function llgFitRect(x){
-  var L = x.lg, v = llFxView(), k = Math.min(v.w / x.w, v.h / x.h) * 0.92, cw = x.w*k, ch = x.h*k, cl = v.x + (v.w - cw)/2, ct = v.y + (v.h - ch)/2;
-  return {x: cl + L.io.l*cw, y: ct + L.io.t*ch, w: L.io.w*cw, h: L.io.h*ch};
+/* the card in the middle of the screen, grown by s (1 = its 'fit' size); same maths as llFxFit */
+function llgCard(x, s){
+  var v = llFxView(), k = Math.min(v.w / x.w, v.h / x.h) * 0.92 * s, cw = x.w*k, ch = x.h*k, cl = v.x + (v.w - cw)/2, ct = v.y + (v.h - ch)/2;
+  return {t: 'translate3d(' + cl + 'px,' + ct + 'px,0) scale3d(' + k + ',' + k + ',1)', l: cl, tp: ct, w: cw, h: ch};
 }
-function llgPaint(x){
-  var L = x.lg, g = L.g, q = L.q, R = L.r; if(!R) return;
+/* one frame: card size (f), pieces (q), frame and corners, exactly like the demo's paint() */
+function llgFrame(x){
+  var L = x.lg, q = L.q, f = L.f, calm = llgCalm(), s = calm ? 1 : 1 + f*.065;   /* the demo grows 12%; here the card already fills 92% of the screen, so it stops at 98% */
+  var C = llgCard(x, s); x.cd.style.transform = C.t;
+  var R = {x: C.l + L.io.l*C.w, y: C.tp + L.io.t*C.h, w: L.io.w*C.w, h: L.io.h*C.h};
+  /* through the glass: the gold frame goes and the corners square off, like the demo */
+  if(L.frame){ L.frame.style.background = q > 0 ? 'transparent' : ''; L.frame.style.boxShadow = q > 0 ? 'none' : ''; }
+  if(L.inn) L.inn.style.borderRadius = q > 0 ? (L.rad*(1 - q)).toFixed(2) + 'px' : '';
+  if(L.sh) L.sh.style.opacity = q > 0 ? (1 - llgEase(q*2)).toFixed(3) : '';
+  llgPaint(x, R, L.rad*L.radK*(1 - q));
+}
+function llgPaint(x, R, rr){
+  var L = x.lg, g = L.g, q = L.q;
   g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, L.cv.width, L.cv.height);
   if(L.vis <= 0) return;
   g.setTransform(L.d, 0, 0, L.d, 0, 0);
-  var calm = !!(HL_RM || (state.ui && state.ui.calm)), K = 1.0566;
+  var calm = llgCalm(), K = 1.0566;
   var CR = {x: R.x - R.w*(K - 1)/2, y: R.y - R.h*(K - 1)/2, w: R.w*K, h: R.h*K};
   g.save();
-  var e = llgEase(q*5);                                         /* at rest the pieces stay inside the rounded card; the clip opens as they fly */
-  if(e < 1){ var pad = e*Math.max(R.w, R.h)*3, rr = (L.io ? L.io.rad*R.w : 0)*(1 - e), x0 = R.x - pad, y0 = R.y - pad, w0 = R.w + pad*2, h0 = R.h + pad*2;
-    g.beginPath(); g.moveTo(x0 + rr, y0); g.arcTo(x0 + w0, y0, x0 + w0, y0 + h0, rr); g.arcTo(x0 + w0, y0 + h0, x0, y0 + h0, rr); g.arcTo(x0, y0 + h0, x0, y0, rr); g.arcTo(x0, y0, x0 + w0, y0, rr); g.closePath(); g.clip(); }
+  /* at rest the pieces are clipped to the rounded card; the clip opens as they fly (demo: inset(-400q%)) */
+  var pad = q*4*Math.max(R.w, R.h), x0 = R.x - pad, y0 = R.y - pad, w0 = R.w + pad*2, h0 = R.h + pad*2, r0 = Math.max(0, rr);
+  g.beginPath(); g.moveTo(x0 + r0, y0); g.arcTo(x0 + w0, y0, x0 + w0, y0 + h0, r0); g.arcTo(x0 + w0, y0 + h0, x0, y0 + h0, r0); g.arcTo(x0, y0 + h0, x0, y0, r0); g.arcTo(x0, y0, x0 + w0, y0, r0); g.closePath(); g.clip();
   LLG.list.forEach(function(p){
     var B = p.c ? CR : R, a = q*1.66/p.depth;
     var mag = calm ? 1 : 1/Math.max(.14, 1 - a), fade = calm ? 1 - llgEase(q) : 1 - llgEase((a - .59)/.35), al = fade*L.vis;
     if(al <= .004) return;
     var w = p.w*B.w, h = p.h*B.h, cx = B.x + p.cx*B.w, cy = B.y + p.cy*B.h;
-    if(!calm){ cx += (p.cx - .5)*B.w*(mag - 1); cy += (p.cy - .5)*B.h*(mag - 1); }
+    if(!calm){ cx += (p.cx - .5)*R.w*(mag - 1); cy += (p.cy - .5)*R.h*(mag - 1); }
     g.save(); g.translate(cx, cy); if(!calm) g.rotate(p.turn*llgEase(a)*Math.PI/180); g.scale(mag, mag);
     g.globalAlpha = al; g.drawImage(p.base, -w/2, -h/2, w, h);
     var extra = q > 0 ? Math.min(.85, p.rest*(1 + 1.4*Math.min(1, Math.max(0, a)))) - p.rest : 0;
@@ -4798,27 +4812,38 @@ function llgPaint(x){
   });
   g.restore();
 }
-/* run q from where it is to 'to' over ms; opt.at(k) is called each frame with progress 0..1; a timer finishes it if the screen is hidden */
-function llgRun(x, to, ms, fn, at){
-  var L = x.lg; if(!L) return;
-  if(L.raf) cancelAnimationFrame(L.raf); clearTimeout(L.tm);
-  var from = L.q, t0 = 0, done = false;
-  function end(){ if(done) return; done = true; cancelAnimationFrame(L.raf); L.raf = 0; clearTimeout(L.tm); if(LLFX !== x || x.lg !== L) return; L.q = to; if(at) at(1); llgPaint(x); if(fn) fn(); }
-  function step(now){ if(done || LLFX !== x) return; if(!t0) t0 = now; var k = Math.min(1, (now - t0)/ms); L.q = from + (to - from)*llgEase(k); if(at) at(k, now - t0); llgPaint(x); if(k >= 1) end(); else L.raf = requestAnimationFrame(step); }
-  L.raf = requestAnimationFrame(step); L.tm = setTimeout(end, ms + 400); x.timers.push(L.tm);
+/* one clock for both directions (the demo's loop); a timer finishes it if the screen is hidden */
+function llgLoop(x, ms, tick, fn){
+  var L = x.lg; if(L.raf) cancelAnimationFrame(L.raf); clearTimeout(L.tm);
+  var t0 = 0, done = false;
+  function end(){ if(done) return; done = true; cancelAnimationFrame(L.raf); L.raf = 0; clearTimeout(L.tm); if(LLFX !== x || x.lg !== L) return; tick(ms/1000); llgFrame(x); if(fn) fn(); }
+  function step(now){ if(done || LLFX !== x) return; if(!t0) t0 = now; var t = (now - t0)/1000; if(t*1000 >= ms){ end(); return; } tick(t); llgFrame(x); L.raf = requestAnimationFrame(step); }
+  L.raf = requestAnimationFrame(step); L.tm = setTimeout(end, ms + 500); x.timers.push(L.tm);
 }
-/* break: the canvas pieces fade in over 0.15 s while the card's own glass fades out, then fly past (1 s) */
+/* in: 0.5 s the card grows 12% and the words fade (the pieces quietly take over from the card's glass);
+   then 0.8 s the pieces fly past with the break sound. Then the story starts (next). */
 function llgGo(x, next){
-  var L = x.lg; L.cv.style.opacity = '1'; x.cd.classList.remove('llgb'); x.cd.classList.add('llgh');
-  llgRun(x, 1, 1000, next, function(k, t){ L.vis = Math.min(1, (t == null ? 1000 : t)/150); });
+  var L = x.lg, broke = false, swap = false;
+  x.cd.classList.remove('go', 'llgb'); x.cd.classList.add('llgt');
+  llgMeasure(x); L.cv.style.opacity = '1';
+  llgLoop(x, 1300, function(t){
+    L.f = llgEase(t/.5); L.q = llgEase((t - .5)/.8);
+    if(!swap && t >= .3){ swap = true; x.cd.classList.add('llgh'); }
+    L.vis = Math.min(1, Math.max(0, (t - .3)/.15));
+    if(!broke && t >= .5){ broke = true; x.cd.classList.add('llgs'); llgBreak(); }
+  }, next);
 }
-/* return: the pieces drift home over 4 s; in the last half second the card's own glass fades back in under them */
+/* back: the pieces drift home over 4 s while the card waits, grown and dark; then 1 s it settles to its fit size
+   and the words come back; then the app's usual snap home */
 function llgBack(x){
-  var L = x.lg, swapped = false; L.vis = 1;
-  llgSize(x); L.r = llgFitRect(x);
-  llgRun(x, 0, 4000, function(){ x.timers.push(setTimeout(function(){ llFxSnap(x); }, 120)); }, function(k){
-    if(!swapped && k >= .88){ swapped = true; x.cd.classList.add('llgb'); x.cd.classList.remove('llgh'); L.cv.style.opacity = '0'; }
-  });
+  var L = x.lg, q0 = L.q, f0 = L.f, swap = false, words = false; L.vis = 1;
+  llgSize(x); L.cv.style.opacity = '1';
+  x.cd.classList.remove('go', 'dv', 'rt', 'imm');
+  llgLoop(x, 5000, function(t){
+    L.q = q0*(1 - llgEase(t/4)); L.f = f0*(1 - llgEase(t - 4));
+    if(!swap && t >= 3.7){ swap = true; x.cd.classList.add('llgb'); x.cd.classList.remove('llgh', 'llgs'); L.cv.style.opacity = '0'; }
+    if(!words && t >= 4.3){ words = true; x.cd.classList.remove('llgt'); }
+  }, function(){ llFxSnap(x); });
 }
 /* sounds: a soft whoosh and glassy tings when it breaks; seven tings and a soft chord as it comes back together */
 function llgOut(){ if(state.mute) return null; var a = audio(); return a ? {a: a, o: sfxOut || a.destination} : null; }
@@ -4929,7 +4954,10 @@ function llFxLanded(x){
   if(LLFX !== x || x.phase !== 'fly') return;
   if(x.abort){ lldLog('cancelled during fly'); llFxSnap(x); return; }
   x.phase = 'dive'; lldPhase('dive');
-  if(x.lg) llgMeasure(x);                      /* 26.11.63: where the card sits, before it starts to grow */
+  if(x.lg){                                    /* 26.11.64: the demo's sequence instead of the full-screen zoom */
+    var nx = function(){ if(LLFX !== x || x.phase !== 'dive') return; x.phase = 'load'; lldPhase('load'); if(!llPlay(x.id, null, x)){ lldLog('story could not start'); llFxClose(x); } };
+    llgGo(x, nx); return;
+  }
   x.cd.classList.add('imm');
   x.cd.classList.remove('go'); x.cd.classList.add('dv'); x.cd.style.transform = llFxCover(x);
   var g = x.cd.querySelector('.llx-g');
@@ -4939,7 +4967,6 @@ function llFxLanded(x){
     x.phase = 'load'; lldPhase('load');
     if(!llPlay(x.id, null, x)){ lldLog('story could not start'); llFxClose(x); }
   };
-  if(x.lg){ llgBreak(); llgGo(x, next); return; }   /* 26.11.63 */
   if(g) llFxAfter(x, g, 'transform', 700, next); else next();
 }
 /* ---- 6. return: glass and art ease home slowly; the face stays hidden ---- */
@@ -4950,11 +4977,11 @@ function llFxClose(x, done){
   if(x.phase === 'fly'){ x.abort = true; return; }          /* turns around when it lands */
   if(!/dive|load|story/.test(x.phase)) return;               /* already returning */
   x.phase = 'return'; lldPhase('return');
+  if(x.lg){ llgForm(); llgBack(x); return; }   /* 26.11.64: the pieces drift home to the waiting card (4 s), then it settles (1 s) */
   var cd = x.cd, art = cd.querySelector('.llx-art'), m = art ? getComputedStyle(art).transform : 'none';
   if(art){ art.style.transition = 'none'; art.style.transform = m; }   /* freeze the breathing exactly where it is */
   cd.classList.remove('imm', 'dv'); cd.classList.add('ret', 'rt'); cd.style.transform = llFxFit(x);
   if(art){ void art.offsetWidth; art.style.transition = ''; art.style.transform = 'none'; }
-  if(x.lg){ llgForm(); llgBack(x); return; }   /* 26.11.63: the pieces drift home over 4 s */
   var layers = [cd.querySelector('.llx-g'), cd.querySelector('.llx-c')].filter(Boolean), left = layers.length;
   if(!left){ llFxSnap(x); return; }
   layers.forEach(function(l){ llFxAfter(x, l, 'transform', 2400, function(){ if(--left === 0) llFxSnap(x); }); });
