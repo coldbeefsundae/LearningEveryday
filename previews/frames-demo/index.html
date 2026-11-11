@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>SSR frames demo 0.2.0</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#16142b;color:#f1eefc}
+body{padding:12px 12px 40px}
+h1{font-size:18px;margin:4px 0 2px}
+.sub{opacity:.7;font-size:13px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit;border-radius:999px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.chip.on{background:#7a5cff;border-color:#7a5cff}
+.main{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.stage{flex:none;width:min(86vw,380px);perspective:900px;touch-action:none;user-select:none;-webkit-user-select:none}
+.side{flex:1;min-width:260px;max-width:520px}
+.panel{background:rgba(255,255,255,.07);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.panel h3{margin:0 0 6px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:inherit;border-radius:10px;padding:9px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.btn.on{background:#7a5cff;border-color:#7a5cff}
+input[type=range]{width:100%}
+label{font-size:13px;opacity:.85}
+.note{font-size:13.5px;line-height:1.45}
+.note b{color:#ffd98a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:10px}
+.cell{cursor:pointer}
+.cell .cap{font-size:12px;text-align:center;margin-top:5px;opacity:.8}
+.cell .tcgbox{pointer-events:none}
+.hide{display:none!important}
+/* ---- copy of the app's card styles (SSR) ---- */
+.tcgbox{container-type:inline-size;width:100%;aspect-ratio:5/7;position:relative}
+.tcg{position:absolute;inset:0;font-size:6.4cqw;border-radius:1.2em;padding:.42em;background:var(--fr);box-shadow:0 .3em .9em -.25em rgba(20,20,60,.5),inset 0 0 0 .08em rgba(255,255,255,.55);color:#2a2540;overflow:hidden;line-height:1.1}
+.tcg-in{position:relative;height:100%;border-radius:.9em;background:var(--paper,#fffaf0);padding:.55em .6em .5em;display:flex;flex-direction:column;gap:.38em;overflow:hidden}
+.tcg-top{display:flex;align-items:flex-start;gap:.4em;justify-content:space-between}
+.tcg-name{font-weight:900;font-size:1.05em;line-height:1.05}
+.tcg-nat{font-size:.74em;font-weight:700;opacity:.6;margin-top:.18em;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif CJK JP","Noto Serif JP","Noto Serif SC",serif}
+.tcg-rar{flex:none;font-weight:900;font-size:.82em;padding:.14em .6em;border-radius:99px;color:#fff;background:var(--fr);box-shadow:0 .1em .3em rgba(0,0,0,.28);letter-spacing:.04em;text-shadow:0 .05em .1em rgba(0,0,0,.35)}
+.tcg-art{flex:1;min-height:0;border-radius:.75em;background:var(--art);display:grid;place-items:center;position:relative;overflow:hidden;box-shadow:inset 0 0 0 .08em rgba(0,0,0,.08)}
+.tcg-art::before{content:"";position:absolute;width:80%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.8),rgba(255,255,255,0) 70%)}
+.tcg-emoji{position:relative;font-size:5.2em;filter:drop-shadow(0 .12em .12em rgba(0,0,0,.28))}
+.tcg-tag{font-weight:800;font-size:.76em;text-align:center;line-height:1.15}
+.tcg-foot{display:flex;justify-content:space-between;align-items:center;font-size:.64em;font-weight:800;opacity:.72;gap:.4em}
+.tcg-shine{display:none;position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.6) 50%,transparent 65%);background-size:260% 100%;animation:sweep 3.4s ease-in-out infinite}
+@keyframes sweep{0%{background-position:130% 0}60%,100%{background-position:-60% 0}}
+.r-S .tcg-shine,.r-SSR .tcg-shine,.r-SSSR .tcg-shine{display:block}
+.r-C{--fr:linear-gradient(135deg,#cfd5e0,#8f99ab)}
+.r-B{--fr:linear-gradient(135deg,#7ee2b3,#25a475)}
+.r-A{--fr:linear-gradient(135deg,#86b9ff,#3e6de4)}
+.r-S{--fr:linear-gradient(135deg,#dcaaff,#8b4fe9 55%,#ffd36b)}
+.r-SSR{--fr:linear-gradient(120deg,#ff5f6d,#ffc371,#fff17a,#7bff9b,#6ad1ff,#b07bff,#ff5f6d)}
+.r-SSR.tcg{background-size:300% 300%;animation:holo 5s linear infinite}
+@keyframes holo{to{background-position:300% 0}}
+.r-SSR .tcg-art::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,150,.2),rgba(0,200,255,.2),rgba(255,230,0,.2));mix-blend-mode:overlay}
+.reg-CN{--art:linear-gradient(160deg,#ffdcd2,#ff8a76);--paper:#fff7ef}
+.reg-JP{--art:linear-gradient(160deg,#ffe4ef,#ff9dbd);--paper:#fffafc}
+.reg-KR{--art:linear-gradient(160deg,#d9edff,#7cb3ff);--paper:#f7fbff}
+.reg-CA{--art:linear-gradient(160deg,#ffe1e1,#ff7a7a);--paper:#fff8f8}
+.reg-EU{--art:linear-gradient(160deg,#e4e1ff,#9b92ff);--paper:#fbfaff}
+.reg-SA{--art:linear-gradient(160deg,#daf7d3,#6dd37a);--paper:#f8fff6}
+.reg-AF{--art:linear-gradient(160deg,#ffedc9,#ffb347);--paper:#fffaf0}
+.reg-AU{--art:linear-gradient(160deg,#d3f6f0,#38c7b3);--paper:#f6fffd}
+.reg-AS{--art:linear-gradient(160deg,#f6e1ff,#c38aff);--paper:#fdf8ff}
+.reg-AM{--art:linear-gradient(160deg,#dcebff,#84a7ff);--paper:#f8faff}
+.reg-FAM{--art:linear-gradient(160deg,#fff0c9,#ffc86b);--paper:#fffaf0}
+.reg-GL{--art:linear-gradient(160deg,#d8f6ef,#5fd1b8);--paper:#f6fffc}
+.tcg{transform:rotateX(calc((var(--py,.5) - .5) * -9deg)) rotateY(calc((var(--px,.5) - .5) * 11deg));transform-style:preserve-3d;transition:transform .08s linear}
+/* ---- the frame layers (new, 0.2.0: painted overlays + pearl sheen) ---- */
+.frm{position:absolute;inset:0;pointer-events:none;z-index:6;border-radius:1.2em;overflow:hidden}
+.off .frm{display:none}
+.fimg{position:absolute;inset:0;background-size:100% 100%;background-repeat:no-repeat;opacity:var(--str,.85);filter:drop-shadow(0 0 .7px rgba(55,35,90,.6)) drop-shadow(0 .6px .8px rgba(55,35,90,.32))}
+.fsheen{position:absolute;inset:0;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;background-size:320% 320%;background-position:calc(var(--px,.5)*100%) calc(var(--py,.5)*100%);background-image:linear-gradient(115deg,#ffd1ea 0%,#d7c8ff 14%,#bfeaff 28%,#fff1c4 42%,#ffd1ea 56%,#c9ffe6 70%,#d7c8ff 84%,#ffd1ea 100%);mix-blend-mode:multiply;opacity:calc(var(--sh,.55)*var(--str,.85))}
+.fsheen.holo{background-image:linear-gradient(110deg,#7dffc4,#9fe8ff 18%,#c9a6ff 36%,#ff9fe0 54%,#7dffc4 72%,#a8f0ff 90%);opacity:calc(var(--sh,.55)*1.2*var(--str,.85))}
+.fglint{position:absolute;inset:0;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;background-size:250% 250%;background-position:calc(var(--px,.5)*100%) calc(var(--py,.5)*100%);background-image:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 48%,transparent 58%);mix-blend-mode:screen;opacity:calc(.7*var(--str,.85))}
+.rm .r-SSR.tcg{animation:none}
+.rm .tcg-shine{animation:none}
+.guides .tcg-in::after{content:"";position:absolute;inset:0;pointer-events:none;border:1px dashed rgba(255,0,100,.7);border-radius:.9em;z-index:9;margin:0}
+.guides .tcg-in::before{content:"text zones";position:absolute;left:.6em;right:.6em;top:.5em;height:2.3em;border:1px dashed rgba(0,120,255,.8);font-size:.45em;color:#06c;z-index:9;pointer-events:none}
+.guides .tcg-foot{outline:1px dashed rgba(0,120,255,.8)}
+</style></head><body>
+<h1>SSR regional frames · demo 0.2.0</h1>
+<div class="sub">Drag or tilt the card. Frames are painted overlays with a pearl sheen that follows the tilt. Nothing here is connected to the app.</div>
+<div class="chips" id="chips"></div>
+<div class="main">
+  <div class="stage" id="stage"><div class="tcgbox" id="box"></div></div>
+  <div class="side">
+    <div class="panel"><h3 id="ptitle"></h3><div class="note" id="pnote"></div></div>
+    <div class="panel">
+      <div class="row"><button class="btn on" id="bFrame">Frame: on</button><button class="btn" id="bAuto">Auto sway: off</button><button class="btn" id="bGuides">Guides: off</button></div>
+      <div class="row"><button class="btn" id="bRm">Reduced motion: off</button><button class="btn" id="bGyro">Use device tilt</button><button class="btn" id="bAll">Compare all</button></div>
+      <label>Strength <b id="vStr">85%</b></label><input id="rStr" type="range" min="20" max="100" value="85">
+      <label>Pearl sheen <b id="vSh">55%</b></label><input id="rSh" type="range" min="0" max="100" value="55">
+      <label>Tilt X <b id="vX">50</b></label><input id="rX" type="range" min="0" max="100" value="50">
+      <label>Tilt Y <b id="vY">50</b></label><input id="rY" type="range" min="0" max="100" value="50">
+    </div>
+    <div class="panel note">The card styles are copied from StarQuest, so the rainbow SSR border and the sweep are the real ones. The frame sits above the border; the pearl sheen and a soft glint move with the tilt. Strength and sheen are adjustable so we can agree on the right level. Edit nothing here; tell me what to change.</div>
+  </div>
+</div>
+<div class="grid hide" id="grid"></div>
+<script>
+/* StarQuest SSR regional frames (demo). Every frame is a list of layers: {k:kind, svg:mask svg, op:opacity}.
+   Each svg is drawn on a 250 x 350 card (1 unit = 0.4cqw). White = visible, alpha = strength. */
+
+
+var REG = [
+ {id:'CN',flag:'🇨🇳',name:'China',card:{n:'Zhuge Liang',nat:'诸葛亮',e:'🪭',tag:'The wise strategist',foot:'China',yr:'181 – 234'},
+  note:'<b>Dry-bristle ink arc</b> bleeding off the left edge, thick in the middle and thinning to wisps. Ink-wash clouds fade into the top-left and bottom-right corners with a small ruyi curl each. The ink is pearl-grey, not black.'},
+ {id:'JP',flag:'🇯🇵',name:'Japan',card:{n:'Miyamoto Musashi',nat:'宮本武蔵',e:'⚔️',tag:'The sword saint',foot:'Japan',yr:'1584 – 1645'},
+  note:'<b>Two cherry branches</b>, top-right and bottom-left, in pale gold. Three blossoms on the top-right branch: open, half-open, bud. About 20 fixed petal dots sit on a separate layer above the card, so tilting makes them glint.'},
+ {id:'KR',flag:'🇰🇷',name:'Korea',card:{n:'King Sejong',nat:'세종대왕',e:'📜',tag:'Made the Korean alphabet',foot:'Korea',yr:'1397 – 1450'},
+  note:'<b>Turtle-shell lattice</b> corners (mother-of-pearl inlay feel) fading from each corner, joined by a double hairline border.'},
+ {id:'CA',flag:'🇨🇦',name:'Canada',card:{n:'Sample: Canada',nat:'',e:'🏔️',tag:'No SSR card here yet',foot:'Canada',yr:''},
+  note:'<b>Aurora curtains</b> along the top, the only multicolour holographic shimmer. Below: layered mountain ridges in the bottom corners, a column of conifers up the left rail, a winding river up the right rail. Pearl lines only.'},
+ {id:'EU',flag:'🇪🇺',name:'Europe',card:{n:'Leonardo da Vinci',nat:'',e:'🎨',tag:'Artist and inventor',foot:'Italy',yr:'1452 – 1519'},
+  note:'<b>Gothic</b> pointed arch with a quatrefoil on the top edge and quarter rose windows in the top corners. <b>Gaudi</b> trencadis (pearl broken-tile) mosaic in the bottom corners. <b>Romantic</b> ivy with curls on the side rails. Bottom edge stays clear.'},
+ {id:'AM',flag:'🗽',name:'North America',card:{n:'Simone Biles',nat:'',e:'🤸',tag:'Greatest gymnast',foot:'USA',yr:'1997 –'},
+  note:'<b>Art Deco</b> stepped chevron corners, a faint sunburst from the top edge, <b>monarch-wing</b> veins and border dots on the side rails, and a thin <b>skyline</b> with a few lit windows along the bottom.'},
+ {id:'SA',flag:'🌎',name:'South America',card:{n:'Sample: South America',nat:'',e:'🦙',tag:'No SSR card here yet',foot:'Peru',yr:''},
+  note:'<b>Step-fret</b> hairlines along the top and bottom, a half sun at the top centre (12 rays, no face), tiny chakana crosses in the corners, and two vine tendrils down the sides.'},
+ {id:'AF',flag:'🌍',name:'Africa',card:{n:'Great Pyramid of Giza',nat:'',e:'🔺',tag:'Wonder of the ancient world',foot:'Egypt',yr:'c. 2560 BCE'},
+  note:'<b>Woven diamond and chevron filigree</b> in gold along both side rails, with a dot at every diamond centre. Generic by design; a card like Egypt could get its own override later.'},
+ {id:'AU',flag:'🇦🇺',name:'Australia & Oceania',card:{n:'Sample: Oceania',nat:'',e:'🐚',tag:'No SSR card here yet',foot:'Oceania',yr:''},
+  note:'<b>Abstract ripples</b> (solid and dotted arcs) in two corners, <b>shell curls</b>, and a row of <b>wave crests</b> along the bottom. Nothing copied from real dot paintings.'},
+ {id:'AS',flag:'🌏',name:'Asia & Mideast',card:{n:'Sample: Asia',nat:'',e:'🕌',tag:'No SSR card here yet',foot:'Asia',yr:''},
+  note:'<b>Multifoil pavilion arches</b> scalloping into each corner with a second inner line, and a whisper-thin <b>lotus fan</b> at the base.'},
+ {id:'GL',flag:'🌐',name:'Global',card:{n:'Sample: Global',nat:'',e:'🌠',tag:'No SSR card here yet',foot:'World',yr:''},
+  note:'<b>Four thin golden orbits</b> that run in and out across the card edge, with two satellites, a few stars and dots along them.'}
+];
+var STATE={id:'JP',frame:true,auto:false,guides:false,rm:matchMedia('(prefers-reduced-motion: reduce)').matches,str:.85,sh:.55,px:.5,py:.5,all:false,gyro:false,last:0};
+var SHEEN={CA:'holo'};
+function frameHTML(id){
+  var u='frames/'+id+'.webp', m="-webkit-mask-image:url('"+u+"');mask-image:url('"+u+"')";
+  return '<div class="frm"><div class="fimg" style="background-image:url(\''+u+'\')"></div><div class="fsheen '+(SHEEN[id]||'')+'" style="'+m+'"></div><div class="fglint" style="'+m+'"></div></div>';
+}
+function cardHTML(r){
+  var c=r.card;
+  return '<div class="tcg r-SSR reg-'+r.id+'"><div class="tcg-in"><div class="tcg-top"><div><div class="tcg-name">'+c.n+'</div>'+(c.nat?'<div class="tcg-nat">'+c.nat+'</div>':'')+'</div><div class="tcg-rar">SSR</div></div><div class="tcg-art"><div class="tcg-emoji">'+c.e+'</div></div><div class="tcg-tag">'+c.tag+'</div><div class="tcg-foot"><span>'+r.flag+' '+c.foot+'</span><span>'+c.yr+'</span></div></div><div class="tcg-shine"></div>'+frameHTML(r.id)+'</div>';
+}
+function byId(id){return REG.filter(function(r){return r.id===id;})[0];}
+function render(){
+  var r=byId(STATE.id);
+  document.getElementById('box').innerHTML=cardHTML(r);
+  document.getElementById('ptitle').textContent=r.flag+' '+r.name;
+  document.getElementById('pnote').innerHTML=r.note;
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c.dataset.id===STATE.id);});
+  applyVars();
+}
+function applyVars(){
+  var b=document.body;
+  b.classList.toggle('off',!STATE.frame);b.classList.toggle('rm',STATE.rm);b.classList.toggle('guides',STATE.guides);
+  document.documentElement.style.setProperty('--px',STATE.px.toFixed(3));document.documentElement.style.setProperty('--py',STATE.py.toFixed(3));
+  document.documentElement.style.setProperty('--str',STATE.str);document.documentElement.style.setProperty('--sh',STATE.sh);
+  document.getElementById('rX').value=Math.round(STATE.px*100);document.getElementById('rY').value=Math.round(STATE.py*100);
+  document.getElementById('vX').textContent=Math.round(STATE.px*100);document.getElementById('vY').textContent=Math.round(STATE.py*100);
+}
+function setLabels(){
+  var $=function(i){return document.getElementById(i);};
+  $('bFrame').textContent='Frame: '+(STATE.frame?'on':'off');$('bFrame').classList.toggle('on',STATE.frame);
+  $('bAuto').textContent='Auto sway: '+(STATE.auto?'on':'off');$('bAuto').classList.toggle('on',STATE.auto);
+  $('bGuides').textContent='Guides: '+(STATE.guides?'on':'off');$('bGuides').classList.toggle('on',STATE.guides);
+  $('bRm').textContent='Reduced motion: '+(STATE.rm?'on':'off');$('bRm').classList.toggle('on',STATE.rm);
+  $('bAll').textContent=STATE.all?'Single card':'Compare all';
+}
+function buildGrid(){
+  var g=document.getElementById('grid');g.innerHTML='';
+  REG.forEach(function(r){var d=document.createElement('div');d.className='cell';d.innerHTML='<div class="tcgbox">'+cardHTML(r)+'</div><div class="cap">'+r.flag+' '+r.name+'</div>';d.onclick=function(){STATE.id=r.id;STATE.all=false;showMode();render();setLabels();};g.appendChild(d);});
+}
+function showMode(){document.getElementById('grid').classList.toggle('hide',!STATE.all);document.querySelector('.main').classList.toggle('hide',STATE.all);}
+(function init(){
+  var ch=document.getElementById('chips');
+  REG.forEach(function(r){var b=document.createElement('button');b.className='chip';b.dataset.id=r.id;b.textContent=r.flag+' '+r.name;b.onclick=function(){STATE.id=r.id;if(STATE.all){STATE.all=false;showMode();}render();setLabels();};ch.appendChild(b);});
+  var $=function(i){return document.getElementById(i);};
+  $('bFrame').onclick=function(){STATE.frame=!STATE.frame;applyVars();setLabels();};
+  $('bAuto').onclick=function(){STATE.auto=!STATE.auto;setLabels();};
+  $('bGuides').onclick=function(){STATE.guides=!STATE.guides;applyVars();setLabels();};
+  $('bRm').onclick=function(){STATE.rm=!STATE.rm;if(STATE.rm)STATE.auto=false;applyVars();setLabels();};
+  $('bAll').onclick=function(){STATE.all=!STATE.all;if(STATE.all)buildGrid();showMode();setLabels();};
+  $('rStr').oninput=function(){STATE.str=this.value/100;$('vStr').textContent=this.value+'%';applyVars();};
+  $('rSh').oninput=function(){STATE.sh=this.value/100;$('vSh').textContent=this.value+'%';applyVars();};
+  $('rX').oninput=function(){STATE.px=this.value/100;STATE.last=Date.now();applyVars();};
+  $('rY').oninput=function(){STATE.py=this.value/100;STATE.last=Date.now();applyVars();};
+  var st=$('stage');
+  function mv(e){var r=st.getBoundingClientRect(),t=e.touches?e.touches[0]:e;STATE.px=Math.min(1,Math.max(0,(t.clientX-r.left)/r.width));STATE.py=Math.min(1,Math.max(0,(t.clientY-r.top)/r.height));STATE.last=Date.now();applyVars();}
+  st.addEventListener('pointermove',mv);st.addEventListener('pointerdown',mv);
+  st.addEventListener('touchmove',function(e){mv(e);e.preventDefault();},{passive:false});
+  $('bGyro').onclick=function(){
+    function on(){STATE.gyro=true;$('bGyro').classList.add('on');addEventListener('deviceorientation',function(e){if(e.gamma==null)return;STATE.px=Math.min(1,Math.max(0,.5+e.gamma/60));STATE.py=Math.min(1,Math.max(0,.5+(e.beta-45)/60));STATE.last=Date.now();applyVars();});}
+    if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission){DeviceOrientationEvent.requestPermission().then(function(s){if(s==='granted')on();});}else on();
+  };
+  (function loop(t){requestAnimationFrame(loop);if(STATE.auto&&!STATE.rm&&Date.now()-STATE.last>1500){STATE.px=.5+.42*Math.sin(t/1700);STATE.py=.5+.36*Math.sin(t/2300+1);applyVars();}})(0);
+  var q=location.hash.slice(1).toUpperCase();if(byId(q))STATE.id=q;
+  render();setLabels();
+})();
+</script></body></html>
