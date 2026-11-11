@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.66', errs = [], shown = false;
+  var V = '26.11.67', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4995,7 +4995,7 @@ function llFxSnap(x){
   var h = (x.real.isConnected && llFxRect(x.real.querySelector('.tcg') || x.real)) || x.home;
   var stg = document.getElementById('stage'), onStage = !!(stg && x.real && stg.contains(x.real));
   var dur = onStage ? 900 : 430;   /* 26.11.66: pack screen glides into its slot over 0.9 s */
-  x.cd.style.transition = 'transform ' + dur + 'ms cubic-bezier(.22,.61,.36,1)';
+  if(onStage) x.cd.style.transition = 'transform ' + dur + 'ms cubic-bezier(.22,.61,.36,1)';   /* 26.11.67: only the pack screen; the menu keeps its stylesheet transition */
   x.cd.classList.remove('go', 'dv', 'rt'); x.cd.classList.add('snap'); x.root.classList.remove('dark');
   llFxAfter(x, x.cd, 'transform', dur, function(){ llFxFace(x); });
   x.cd.style.transform = llFxPlace(x, h);
