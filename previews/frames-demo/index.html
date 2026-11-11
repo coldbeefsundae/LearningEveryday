@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
-<title>SSR frames demo 0.1.0</title>
+<title>SSR frames demo 0.1.1</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#16142b;color:#f1eefc}
@@ -83,7 +83,7 @@ label{font-size:13px;opacity:.85}
 .guides .tcg-in::before{content:"text zones";position:absolute;left:.6em;right:.6em;top:.5em;height:2.3em;border:1px dashed rgba(0,120,255,.8);font-size:.45em;color:#06c;z-index:9;pointer-events:none}
 .guides .tcg-foot{outline:1px dashed rgba(0,120,255,.8)}
 </style></head><body>
-<h1>SSR regional frames · demo 0.1.0</h1>
+<h1>SSR regional frames · demo 0.1.1</h1>
 <div class="sub">Drag or tilt the card. Frames are drawn in code (vector), subtle by design. Nothing here is connected to the app.</div>
 <div class="chips" id="chips"></div>
 <div class="main">
@@ -432,7 +432,7 @@ var REG = [
 var STATE={id:'JP',frame:true,auto:false,guides:false,rm:matchMedia('(prefers-reduced-motion: reduce)').matches,str:1,px:.5,py:.5,all:false,gyro:false,last:0};
 var CACHE={};
 function layersFor(id){return CACHE[id]||(CACHE[id]=FR[id]());}
-function maskUrl(svg){return 'url("data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)+'")';}
+function maskUrl(svg){return "url('data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg).replace(/'/g,'%27')+"')";}
 function frameHTML(id){
   var h='<div class="frm">';
   layersFor(id).forEach(function(l,i){h+='<div class="fl fl-'+l.k+'" style="--op:'+l.op+';-webkit-mask-image:'+maskUrl(l.svg)+';mask-image:'+maskUrl(l.svg)+'"></div>';});
