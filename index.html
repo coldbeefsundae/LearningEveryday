@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.65', errs = [], shown = false;
+  var V = '26.11.68', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -411,8 +411,8 @@ h1,h2,h3,p{margin:0}
 .flip-front{transform:rotateY(180deg)}
 /* 26.11.56: Firefox and WebKit (all iPad browsers) can ignore backface-visibility when a face holds blend/glow layers, so the back stayed on top of the picture.
    Also swap visibility at the halfway point of the 0.75s turn so only one face is ever shown. */
-.flip-back{visibility:visible;transition:visibility 0s linear .375s}
-.flip-front{visibility:hidden;transition:visibility 0s linear .375s}
+.flip-back{visibility:visible;transition:visibility 0s linear .12s}
+.flip-front{visibility:hidden;transition:visibility 0s linear .12s}
 .flip.on .flip-back{visibility:hidden}
 .flip.on .flip-front{visibility:visible}
 @media (prefers-reduced-motion:reduce){.flip-back,.flip-front{transition-delay:0s!important}}
@@ -6552,7 +6552,7 @@ function flipCard(f){
     else if(c.k === 'S'){ Sound.rareS(); sparkles(f); }
     else if(c.k === 'A'){ Sound.chime(); }
     else { Sound.tap(); }
-  }, 380);
+  }, 120);
   if(stg.flipped >= stg.cards.length) setTimeout(stageDone, 900);
 }
 function stageDone(){
