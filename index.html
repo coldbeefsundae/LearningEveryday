@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.69', errs = [], shown = false;
+  var V = '26.11.73', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -63,6 +63,8 @@
 })();
 
 </script>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#6c5ce7">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1464,6 +1466,12 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   /*[MENU]*/body[data-skin=atlas] .navbtn{padding:0 12px;font-size:18px}
 }
 
+/* 26.11.70: the parent lock stays on the bottom menu in portrait and on phones too (the other round tools
+   still live on the Me tab there). It sits at the right end and stays in view even if the menu scrolls. */
+@media (orientation:portrait),(max-width:760px),(orientation:landscape) and (max-height:500px){
+  /*[MENU]*/.rail>#parentBtn.railtool{display:flex!important;align-items:center;justify-content:center;flex:none;width:46px;height:46px;min-width:46px;padding:0;font-size:20px;border-radius:15px;align-self:center;margin:0 2px 0 6px;position:sticky;right:0;z-index:2}
+}
+
 /* ---------- phones: menu bar never gets cut off ---------- */
 @media (max-width:760px){
   /*[MENU]*/.rail{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -1499,6 +1507,10 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
 /* ===================== PHASE 1: points, rewards, streak, calendar ===================== */
 body[data-ts=L]{zoom:1.12}
 body[data-ts=S]{zoom:.92}
+/* 26.11.71: the LL card animation works in real screen pixels, so it must not be shrunk or grown by the
+   Text size setting (zoom on body). Undo that zoom for it, so the card stays centred and lands on its slot. */
+body[data-ts=L] #llfx{zoom:.892857}
+body[data-ts=S] #llfx{zoom:1.086957}
 body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{animation:none!important;transition:none!important}
 .banner.rest{background:linear-gradient(135deg,#e6e1ff,#d5e8ff);color:#2d2a6e}
 .banner.streak{background:linear-gradient(135deg,#fff0d6,#ffe0e6);color:#7a3b00;padding:12px 18px}
@@ -2480,9 +2492,9 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 #llfx{position:fixed;inset:0;z-index:2147482990;overflow:hidden;touch-action:none}
 #llfx .llfx-bg{position:absolute;inset:0;background:#05070f;opacity:0;transition:opacity 400ms ease}
 #llfx.dark .llfx-bg{opacity:1}
-#llfx .llfx-card{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;--mx:.5;--my:.5;--rx:0deg;--ry:0deg;--ll-art-a:1.15;--ll-art-b:1.25}
+#llfx .llfx-card{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;pointer-events:none;--mx:.5;--my:.5;--rx:0deg;--ry:0deg;--ll-art-a:1.15;--ll-art-b:1.25}
 #llfx .llfx-card.go{transition:transform 400ms cubic-bezier(.3,0,.2,1)}
-#llfx .llfx-card.snap{transition:transform 430ms cubic-bezier(.18,.9,.3,1.18)}
+#llfx .llfx-card.snap{transition:transform 480ms cubic-bezier(.2,.8,.2,1)}   /* 26.11.71: glides in without overshooting (the bounce looked like it missed) */
 /* 26.11.58: fly only grows the card until it fits the screen; the dive then pushes through it, and the return backs out the same way */
 #llfx .llfx-card.dv{transition:transform 700ms cubic-bezier(.7,0,1,1)}
 #llfx .llfx-card.rt{transition:transform 2400ms ease-in-out}
@@ -4627,7 +4639,6 @@ function cardBigClose(){
 window.addEventListener('resize', cardBigFit);
 window.addEventListener('orientationchange', function(){ setTimeout(cardBigFit, 250); });
 if(window.visualViewport) window.visualViewport.addEventListener('resize', cardBigFit);
-window.addEventListener('popstate', function(){ if(LLP || LLFX){ closeTopLayer(); return; } cardBigClose(); });
 
 /* =========================================================
    26.11.35: LIVING LEGENDARY (LL) STORIES
@@ -4781,11 +4792,9 @@ function llgFrame(x){
   var L = x.lg, q = L.q, f = L.f, calm = llgCalm(), s = calm ? 1 : 1 + f*.065;   /* the demo grows 12%; here the card already fills 92% of the screen, so it stops at 98% */
   var C = llgCard(x, s); x.cd.style.transform = C.t;
   var R = {x: C.l + L.io.l*C.w, y: C.tp + L.io.t*C.h, w: L.io.w*C.w, h: L.io.h*C.h};
-  /* through the glass: the gold frame goes and the corners square off, like the demo */
-  if(L.frame){ L.frame.style.background = q > 0 ? 'transparent' : ''; L.frame.style.boxShadow = q > 0 ? 'none' : ''; }
-  if(L.inn) L.inn.style.borderRadius = q > 0 ? (L.rad*(1 - q)).toFixed(2) + 'px' : '';
+  /* 26.11.71: the gold frame and rounded corners now stay put (switching them made the whole card redraw and pop) */
   if(L.sh) L.sh.style.opacity = q > 0 ? (1 - llgEase(q*2)).toFixed(3) : '';
-  llgPaint(x, R, L.rad*L.radK*(1 - q));
+  llgPaint(x, R, L.rad*L.radK);
 }
 function llgPaint(x, R, rr){
   var L = x.lg, g = L.g, q = L.q;
@@ -4798,15 +4807,24 @@ function llgPaint(x, R, rr){
   /* at rest the pieces are clipped to the rounded card; the clip opens as they fly (demo: inset(-400q%)) */
   var pad = q*4*Math.max(R.w, R.h), x0 = R.x - pad, y0 = R.y - pad, w0 = R.w + pad*2, h0 = R.h + pad*2, r0 = Math.max(0, rr);
   g.beginPath(); g.moveTo(x0 + r0, y0); g.arcTo(x0 + w0, y0, x0 + w0, y0 + h0, r0); g.arcTo(x0 + w0, y0 + h0, x0, y0 + h0, r0); g.arcTo(x0, y0 + h0, x0, y0, r0); g.arcTo(x0, y0, x0 + w0, y0, r0); g.closePath(); g.clip();
+  var out = !!L.out, u = L.u || 0, eo = 1 - Math.pow(1 - u, 3);
   LLG.list.forEach(function(p){
     var B = p.c ? CR : R, a = q*1.66/p.depth;
-    var mag = calm ? 1 : 1/Math.max(.14, 1 - a), fade = calm ? 1 - llgEase(q) : 1 - llgEase((a - .59)/.35), al = fade*L.vis;
+    var mag = calm ? 1 : 1/Math.max(.14, 1 - a), fade = calm ? 1 - llgEase(q) : 1 - llgEase((a - .59)/.35);
+    var spin = 0;
+    if(out){
+      /* 26.11.73 break: burst away fast, then slow down and hang in the air; they fade by time over the last 45%,
+         so you can watch them float (the return below is unchanged) */
+      a = Math.min(.86, eo*.86*(1.25/p.depth));
+      mag = calm ? 1 : 1/(1 - a); fade = 1 - llgEase((u - .55)/.45); spin = calm ? 0 : p.turn*.6*u;
+    }
+    var al = fade*L.vis;
     if(al <= .004) return;
     var w = p.w*B.w, h = p.h*B.h, cx = B.x + p.cx*B.w, cy = B.y + p.cy*B.h;
     if(!calm){ cx += (p.cx - .5)*R.w*(mag - 1); cy += (p.cy - .5)*R.h*(mag - 1); }
-    g.save(); g.translate(cx, cy); if(!calm) g.rotate(p.turn*llgEase(a)*Math.PI/180); g.scale(mag, mag);
+    g.save(); g.translate(cx, cy); if(!calm) g.rotate((p.turn*llgEase(out ? a/.86 : a) + spin)*Math.PI/180); g.scale(mag, mag);
     g.globalAlpha = al; g.drawImage(p.base, -w/2, -h/2, w, h);
-    var extra = q > 0 ? Math.min(.85, p.rest*(1 + 1.4*Math.min(1, Math.max(0, a)))) - p.rest : 0;
+    var extra = (q > 0 || out) ? Math.min(.85, p.rest*(1 + 1.4*Math.min(1, Math.max(0, a)))) - p.rest : 0;
     if(extra > .01){ g.globalCompositeOperation = 'screen'; g.globalAlpha = al*extra; g.drawImage(p.holo, -w/2, -h/2, w, h); g.globalCompositeOperation = 'source-over'; }
     g.restore();
   });
@@ -4826,17 +4844,20 @@ function llgGo(x, next){
   var L = x.lg, broke = false, swap = false;
   x.cd.classList.remove('go', 'llgb'); x.cd.classList.add('llgt');
   llgMeasure(x); L.cv.style.opacity = '1';
-  llgLoop(x, 1300, function(t){
-    L.f = llgEase(t/.5); L.q = llgEase((t - .5)/.8);
+  /* 26.11.73: the fly-out now takes 2 s (was 0.8 s) */
+  L.out = true; L.u = 0;
+  llgLoop(x, 2500, function(t){
+    L.f = llgEase(t/.5); L.u = Math.min(1, Math.max(0, (t - .5)/2)); L.q = L.u;
     if(!swap && t >= .3){ swap = true; x.cd.classList.add('llgh'); }
     L.vis = Math.min(1, Math.max(0, (t - .3)/.15));
     if(!broke && t >= .5){ broke = true; x.cd.classList.add('llgs'); llgBreak(); }
-  }, next);
+  }, function(){ L.out = false; L.q = 1; if(next) next(); });
 }
 /* back: the pieces drift home over 4 s while the card waits, grown and dark; then 1 s it settles to its fit size
    and the words come back; then the app's usual snap home */
 function llgBack(x){
   var L = x.lg, q0 = L.q, f0 = L.f, swap = false, words = false; L.vis = 1;
+  if(L.out){ L.out = false; q0 = Math.min(1, L.u*.75); L.q = q0; }   /* 26.11.73: Back pressed mid-break: come home from about where they are */
   llgSize(x); L.cv.style.opacity = '1';
   x.cd.classList.remove('go', 'dv', 'rt', 'imm');
   llgLoop(x, 5000, function(t){
@@ -4867,13 +4888,13 @@ function llgTing(s, at, f, vol, pan){
 function llgBreak(){
   var s = llgOut(); if(!s) return;
   try{
-    var a = s.a, t = a.currentTime, len = .9, b = a.createBuffer(1, Math.floor(a.sampleRate*len), a.sampleRate), d = b.getChannelData(0);
+    var a = s.a, t = a.currentTime, len = 1.4, b = a.createBuffer(1, Math.floor(a.sampleRate*len), a.sampleRate), d = b.getChannelData(0);
     for(var i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1;
     var n = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); n.buffer = b;
     f.type = 'bandpass'; f.Q.value = 1.2; f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(1800, t + len);
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + len*.35); g.gain.linearRampToValueAtTime(0, t + len);
     n.connect(f); f.connect(g); g.connect(s.o); n.start(t); n.stop(t + len + .05);
-    [2093, 2637, 3136, 3951, 3520].forEach(function(fq, i){ llgTing(s, t + .02 + i*.06, fq, .03, i%2 ? .4 : -.4); });
+    [2093, 2637, 3136, 3951, 3520].forEach(function(fq, i){ llgTing(s, t + .02 + i*.09, fq, .03, i%2 ? .4 : -.4); });
   }catch(e){}
 }
 function llgForm(){
@@ -4934,9 +4955,14 @@ function llFxOpen(id, visual, real){
     if(started || LLFX !== x || x.phase !== 'prep') return; started = true;
     lldLog('copy ready in ' + Math.round(performance.now() - t0) + 'ms');
     llgOn(x);                                    /* 26.11.63: canvas for the 22 pieces (empty until the dive) */
-    real.style.visibility = 'hidden';            /* the copy is already painted on top, so nothing changes on screen */
-    visual.style.visibility = 'hidden';          /* 26.11.65: in the pack reveal the card face forces itself visible (.flip.on .flip-front), so hide the card itself too */
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ llFxFly(x); }); });
+    /* 26.11.72: the copy sits exactly on top of the real card for a few frames first, so the phone has finished
+       drawing its picture before the real card is hidden (the video showed a half-black copy for one frame) */
+    var n = 0;
+    (function wait(){ if(LLFX !== x || x.phase !== 'prep') return; if(++n < 4){ requestAnimationFrame(wait); return; }
+      real.style.visibility = 'hidden';
+      visual.style.visibility = 'hidden';        /* 26.11.65: in the pack reveal the card face forces itself visible (.flip.on .flip-front), so hide the card itself too */
+      llFxFly(x);
+    })();
   }
   Promise.all(imgs).then(go); x.timers.push(setTimeout(go, 400));
   return x;
@@ -5062,6 +5088,32 @@ function llTrackStop(fade){
   try{ var t = p.a.currentTime; p.g.gain.cancelScheduledValues(t); p.g.gain.setValueAtTime(p.g.gain.value, t); p.g.gain.linearRampToValueAtTime(0, t + f); p.s.stop(t + f + .02); }catch(e){}
 }
 llTrackPrefetch();
+/* 26.11.70: the device Back button steps back inside the app instead of closing it.
+   One extra history entry sits on top; each Back press uses it up, we do ONE step, then put it back:
+     1. a Parent section -> back to the Parent menu
+     2. the top-most pop-up (story, say pop-up, journal, big card, Kit bubble, window) -> closed (same order as Escape)
+     3. any other tab -> Quests
+     4. on Quests -> "Press back again to exit"; a second Back within 2.5 s closes the app. */
+var BACK = {t: 0};
+function backArm(){ try{ if(!(history.state && history.state.sqTop)) history.pushState({sqTop: 1}, ''); }catch(e){} }
+function backStep(){
+  try{
+    if(window.__parSec && $('overlay').classList.contains('show')){ var b = $('modal').querySelector('[data-act="pbackhome"]'); if(b){ b.click(); return 'parent section'; } }
+  }catch(e){}
+  var n = closeTopLayer(); if(n) return n;
+  if(tab !== 'home'){ setTab('home'); return 'tab'; }
+  return '';
+}
+window.addEventListener('popstate', function(){
+  var did = '';
+  try{ did = backStep(); }catch(e){}
+  if(did){ BACK.t = 0; backArm(); return; }
+  BACK.t = Date.now(); toast('Press back again to exit', 2400);
+  setTimeout(function(){ if(BACK.t && Date.now() - BACK.t >= 2400){ BACK.t = 0; backArm(); } }, 2500);
+});
+/* Chrome only trusts history entries added after a tap, so (re)arm on taps too */
+document.addEventListener('pointerdown', function(){ if(!BACK.t) backArm(); }, true);
+backArm();
 setTimeout(llgLoad, 1500);
 function llFly(id, el){
   var visual = el && el.closest ? el.closest('.tcg') : null;
@@ -10817,7 +10869,6 @@ document.addEventListener('click', function(e){
   }
 }, true);
 document.addEventListener('input', function(e){ if(e.target && e.target.id === 'kotoQ'){ KOTOF.q = e.target.value; kotoFilter(); } });
-window.addEventListener('popstate', function(){ hideSayPop(); });
 
 var KJT = {say:null, n:0};
 function kjExtra(){ var ks = kanjiState(); if(!ks.feel) ks.feel = {}; if(!ks.taught) ks.taught = {}; if(!ks.prac || ks.prac.d !== dateKey()) ks.prac = {d:dateKey(), n:0}; return ks; }
