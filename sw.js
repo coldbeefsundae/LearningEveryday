@@ -1,6 +1,6 @@
 // StarQuest service worker: makes the app work offline.
 // The app's "Check for updates" button reads the VERSION line below, so keep it equal to the version in index.html.
-const VERSION = '26.11.78';
+const VERSION = '26.11.79';
 const SHELL = 'sq-shell-' + VERSION;      // small app files, replaced on every version
 const ASSETS = 'sq-assets-v1';            // pictures + stories: file names carry a hash, so they never go stale
 const SHELL_FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
