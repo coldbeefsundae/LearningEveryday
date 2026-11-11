@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.64', errs = [], shown = false;
+  var V = '26.11.66', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4837,12 +4837,13 @@ function llgGo(x, next){
    and the words come back; then the app's usual snap home */
 function llgBack(x){
   var L = x.lg, q0 = L.q, f0 = L.f, swap = false, words = false; L.vis = 1;
+  var stg = document.getElementById('stage'), onStage = !!(stg && x.real && stg.contains(x.real));   /* 26.11.66: pack screen returns to its slot without the centred pause */
   llgSize(x); L.cv.style.opacity = '1';
   x.cd.classList.remove('go', 'dv', 'rt', 'imm');
-  llgLoop(x, 5000, function(t){
-    L.q = q0*(1 - llgEase(t/4)); L.f = f0*(1 - llgEase(t - 4));
+  llgLoop(x, onStage ? 4000 : 5000, function(t){
+    L.q = q0*(1 - llgEase(t/4)); L.f = f0*(1 - llgEase(Math.max(0, t - 4)));
     if(!swap && t >= 3.7){ swap = true; x.cd.classList.add('llgb'); x.cd.classList.remove('llgh', 'llgs'); L.cv.style.opacity = '0'; }
-    if(!words && t >= 4.3){ words = true; x.cd.classList.remove('llgt'); }
+    if(!words && t >= (onStage ? 3.5 : 4.3)){ words = true; x.cd.classList.remove('llgt'); }
   }, function(){ llFxSnap(x); });
 }
 /* sounds: a soft whoosh and glassy tings when it breaks; seven tings and a soft chord as it comes back together */
@@ -4992,8 +4993,11 @@ function llFxSnap(x){
   x.phase = 'snap'; lldPhase('snap');
   document.body.classList.remove('llfxhide');
   var h = (x.real.isConnected && llFxRect(x.real.querySelector('.tcg') || x.real)) || x.home;
+  var stg = document.getElementById('stage'), onStage = !!(stg && x.real && stg.contains(x.real));
+  var dur = onStage ? 900 : 430;   /* 26.11.66: pack screen glides into its slot over 0.9 s */
+  x.cd.style.transition = 'transform ' + dur + 'ms cubic-bezier(.22,.61,.36,1)';
   x.cd.classList.remove('go', 'dv', 'rt'); x.cd.classList.add('snap'); x.root.classList.remove('dark');
-  llFxAfter(x, x.cd, 'transform', 430, function(){ llFxFace(x); });
+  llFxAfter(x, x.cd, 'transform', dur, function(){ llFxFace(x); });
   x.cd.style.transform = llFxPlace(x, h);
 }
 /* ---- 8. face: name, LL badge and sparkles fade back in on the copy, then the real card takes over ---- */
@@ -5031,7 +5035,7 @@ window.LL_HOST = {
 
 /* tap Watch the story / the card's play button */
 /* ---- the card's music: starts at the tap and runs through the zoom, the story and the return ---- */
-var TRACK_URLS = {"kowloon": "./assets/music/kowloon.ca7b5f99.mp3", "carp": "./assets/music/carp.ed0b9398.mp3", "wave": "./assets/music/wave.39194482.mp3", "nian": "./assets/music/nian.61396b65.mp3", "halley": "./assets/music/halley.b9eba5bb.mp3", "kaguya": "./assets/music/kaguya.dd377bea.mp3"};
+var TRACK_URLS = {"kowloon": "./assets/music/kowloon.f029d70b.mp3", "carp": "./assets/music/carp.dcdee5af.mp3", "wave": "./assets/music/wave.e713f0cb.mp3", "nian": "./assets/music/nian.dd4c9f31.mp3", "halley": "./assets/music/halley.020da985.mp3", "kaguya": "./assets/music/kaguya.5fe1462b.mp3"};
 var LLTRK = {play:null, bytes:{}, tok:null};
 function llTrackPrefetch(){ Object.keys(TRACK_URLS).forEach(function(k){ if(LLTRK.bytes[k]) return; fetch(TRACK_URLS[k]).then(function(r){ return r.arrayBuffer(); }).then(function(b){ LLTRK.bytes[k] = b; }).catch(function(){}); }); }
 function llTrackStart(id){
