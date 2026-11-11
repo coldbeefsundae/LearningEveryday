@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.73', errs = [], shown = false;
+  var V = '26.11.74', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4312,7 +4312,80 @@ function poolFor(k, onlyMissing){
   if(k === 'LL' && onlyMissing){ var lm = BY_RAR.LL.filter(function(c){ return !state.cards[c.id]; }); if(lm.length) return lm; }
   return BY_RAR[k];
 }
+/* 26.11.74: Parent can plan upcoming packs, and on her birthday she gets a Birthday God Pack (only SSR and LL cards).
+   state.packPlan = [{s:[slot,...], note:''}, ...] used first-in first-out; a slot is 'R' (random, normal odds),
+   'K:LL' (any card of that rarity, new ones first) or 'C:ll03' (that exact card). */
+function packPlan(){ if(!Array.isArray(state.packPlan)) state.packPlan = []; return state.packPlan; }
+function godOn(){ return !state.eco || state.eco.godOn !== false; }
+function godDue(){ try{ var i = bdayInfo(); return !!(godOn() && i.on && i.today && state.godUsed !== i.key); }catch(e){ return false; } }
+/* on her birthday: one extra pack, once a year (opening it does not count toward the daily pack limit) */
+function godPackCheck(){
+  try{
+    var i = bdayInfo(); if(!godOn() || !i.on || !i.today || state.godGiven === i.key) return;
+    state.godGiven = i.key; state.packs += 1; save(); try{ renderTop(); }catch(e){}
+    toast('🎂 Happy birthday! A Birthday God Pack is waiting in your packs!', 4500);
+  }catch(e){}
+}
+function packPick(pool, avoid){
+  var miss = pool.filter(function(c){ return !state.cards[c.id] && avoid.indexOf(c.id) < 0; });
+  var free = pool.filter(function(c){ return avoid.indexOf(c.id) < 0; });
+  var l = miss.length ? miss : free.length ? free : pool;
+  return l.length ? l[Math.floor(Math.random()*l.length)] : null;
+}
+function packPity(out){
+  var gotS = false, gotE = false, gotF = false, gotL = false;
+  out.forEach(function(c){ if(c.k === 'SSSR') gotE = true; if(c.k === 'LL') gotL = true; if(FAM_IDS.indexOf(c.id) >= 0) gotF = true; if(c.k === 'S' || c.k === 'SSR' || c.k === 'SSSR' || c.k === 'LL') gotS = true; });
+  state.pity = gotS ? 0 : (state.pity || 0) + 1;
+  state.pityE = gotE ? 0 : (state.pityE || 0) + 1;
+  state.pityFam = gotF ? 0 : (state.pityFam || 0) + 1;
+  state.pityLL = gotL ? 0 : (state.pityLL || 0) + 1;
+}
+function rollGodPack(){
+  var out = [], ids = [];
+  for(var i = 0; i < CARDS_PER_PACK; i++){
+    var k = Math.random() < .4 ? 'LL' : 'SSR', pool = poolFor(k);
+    if(!pool.length){ k = k === 'LL' ? 'SSR' : 'LL'; pool = poolFor(k); }
+    var c = packPick(pool, ids); if(!c) continue; ids.push(c.id); out.push(c);
+  }
+  if(!out.some(function(c){ return c.k === 'LL'; }) && poolFor('LL').length && out.length){   /* always at least one LL */
+    var l = packPick(poolFor('LL'), ids); if(l) out[out.length - 1] = l;
+  }
+  packPity(out); return out;
+}
+function rollPlannedPack(p){
+  var out = [], ids = [], sl = (p && p.s) || [];
+  for(var i = 0; i < CARDS_PER_PACK; i++){
+    var v = sl[i] || 'R', c = null;
+    if(v.indexOf('C:') === 0) c = BY_ID[v.slice(2)] || null;
+    else if(v.indexOf('K:') === 0) c = packPick(poolFor(v.slice(2)), ids);
+    if(!c){ var k = rollK(), pool = poolFor(k); c = packPick(pool.length ? pool : poolFor('C'), ids); }
+    if(c){ ids.push(c.id); out.push(c); }
+  }
+  packPity(out); return out;
+}
+function packSlotLabel(v){
+  if(!v || v === 'R') return '🎲 Random';
+  if(v.indexOf('K:') === 0){ var k = v.slice(2); return '⭐ Any ' + (k === 'FAM' ? 'Family' : k); }
+  var c = BY_ID[v.slice(2)]; return c ? (c.e + ' ' + c.n + ' (' + (FAM_IDS.indexOf(c.id) >= 0 ? 'Family' : c.k) + ')') : '?';
+}
+function packSlotSelect(id){
+  var h = '<select id="' + id + '" style="width:100%"><option value="R">🎲 Random (normal odds)</option><optgroup label="Any card of a rarity (new ones first)">';
+  ['LL','SSSR','SSR','S','A','B','C'].forEach(function(k){ if(poolFor(k).length) h += '<option value="K:' + k + '">⭐ Any ' + k + '</option>'; });
+  if(FAM_IDS.length) h += '<option value="K:FAM">⭐ Any Family card</option>';
+  h += '</optgroup>';
+  ['LL','SSSR','SSR','S','A','B','C'].forEach(function(k){
+    var l = (BY_RAR[k] || []).filter(function(c){ return FAM_IDS.indexOf(c.id) < 0; }); if(!l.length) return;
+    h += '<optgroup label="' + k + ' cards">';
+    l.forEach(function(c){ h += '<option value="C:' + c.id + '">' + esc(c.e + ' ' + c.n) + (state.cards[c.id] ? '' : '  (new)') + '</option>'; });
+    h += '</optgroup>';
+  });
+  if(FAM_IDS.length){ h += '<optgroup label="Family cards">'; FAM_IDS.forEach(function(id){ var c = BY_ID[id]; if(c) h += '<option value="C:' + c.id + '">' + esc(c.e + ' ' + c.n) + (state.cards[c.id] ? '' : '  (new)') + '</option>'; }); h += '</optgroup>'; }
+  return h + '</select>';
+}
 function rollPack(){
+  /* 26.11.74: birthday god pack first, then any pack the parent planned */
+  if(godDue()){ var gi = bdayInfo(); state.godUsed = gi.key; if(stg) stg.god = true; return rollGodPack(); }
+  var pl = packPlan(); if(pl.length){ var pp = pl.shift(); if(stg) stg.note = pp.note || ''; return rollPlannedPack(pp); }
   var out = [], gotS = false, gotE = false, gotF = false, gotL = false;
   var eOwned = !!state.cards.fam03, fMiss = FAM_IDS.filter(function(id){ return !state.cards[id]; });
   var needE = !eOwned && BY_RAR.SSSR.length > 0 && (state.pityE || 0) >= PITY_E-1;
@@ -5875,7 +5948,7 @@ function updateTimerDisplays(){
   });
 }
 function tick(){
-  if(checkNewDay()){ toast('🌅 New day, new quests!'); render(); }
+  if(checkNewDay()){ toast('🌅 New day, new quests!'); render(); setTimeout(godPackCheck, 3000); }
   updateBed();
   try{ if(window.__bkDay !== dateKey()){ window.__bkDay = dateKey(); if(bankOn()){ var nn = bankCatchUp(); if(nn) render(); } } }catch(e){}
   musicTick();
@@ -6165,6 +6238,7 @@ function showParent(scrollTop){
   h += '<h3>🗂️ Settings</h3><div class="ptiles">';
   h += pTile('🎁', 'Rewards &amp; prices', 'Edit, group, price', 'data-act="rweditor"');
   h += pTile('⭐', 'Points &amp; bonuses', 'Daily points, bonus, rest day', 'data-act="psec" data-sec="pts"');
+  h += pTile('🎴', 'Card packs', 'Plan her next packs, birthday pack', 'data-act="psec" data-sec="packs"');
   h += pTile('🪥', 'Routines', 'Morning and evening checklists', 'data-act="psec" data-sec="rt"');
   h += pTile('👗', 'Kit\u2019s wardrobe & moves', 'Outfits and seasonal animations', 'data-act="psec" data-sec="kitlooks"');
   h += pTile('⏱️', 'Time &amp; limits', 'Screen time, bedtime, music', 'data-act="psec" data-sec="time"');
@@ -6185,7 +6259,7 @@ function showParent(scrollTop){
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
 }
-var PAR_SECTIONS = {pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
+var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
 function showParentSection(key, scrollTop){
   window.__parSec = key;
   var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Parent</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
@@ -6211,6 +6285,26 @@ function showParentSection(key, scrollTop){
     h += '<h3>Rest day</h3>';
     h += pTog('Allow one rest day per week', 'eRest', e.restOn);
     h += pTog('Use the rest day automatically if a day is missed', 'eAuto', e.autoRest);
+  } else if(key === 'packs'){
+    /* 26.11.74 */
+    var pl = packPlan();
+    h += '<h3>Planned packs</h3><div class="hint" style="margin-bottom:6px">Her next packs open in this order. Anything not planned uses the normal odds. A pack has ' + CARDS_PER_PACK + ' cards.</div>';
+    if(!pl.length) h += '<div class="hint" style="margin:6px 0 10px">Nothing planned. Her packs are random.</div>';
+    pl.forEach(function(p, n){
+      h += '<div class="card" style="padding:10px;margin:6px 0"><div class="row" style="justify-content:space-between;align-items:center"><b>Pack ' + (n + 1) + (n === 0 ? ' (next)' : '') + '</b><span>';
+      if(n > 0) h += '<button class="btn small" data-act="pnpup" data-i="' + n + '">↑</button> ';
+      h += '<button class="btn small" data-act="pnpdel" data-i="' + n + '">🗑️</button></span></div>';
+      if(p.note) h += '<div class="hint">💌 ' + esc(p.note) + '</div>';
+      h += '<div style="margin-top:4px">' + (p.s || []).slice(0, CARDS_PER_PACK).map(packSlotLabel).join('<br>') + '</div></div>';
+    });
+    h += '<h3>Plan a pack</h3>';
+    for(var si = 0; si < CARDS_PER_PACK; si++) h += '<div class="fld"><label>Card ' + (si + 1) + '</label>' + packSlotSelect('pnpS' + si) + '</div>';
+    h += '<div class="fld"><label>Message on the pack (optional)</label><input type="text" id="pnpNote" maxlength="60" placeholder="e.g. For finishing piano all week!"></div>';
+    h += '<button class="btn primary" data-act="pnpadd">➕ Add to the plan</button>';
+    h += '<h3 style="margin-top:16px">Birthday</h3>';
+    h += pTog('Birthday God Pack: on her birthday she gets an extra pack with only SSR and LL cards (at least one LL)', 'eGodOn', godOn());
+    var bi = null; try{ bi = bdayInfo(); }catch(_){}
+    h += '<div class="hint">' + (bi && bi.on ? 'Uses the birthday set in Celebrations.' : 'Set her birthday in Celebrations for this to work.') + '</div>';
   } else if(key === 'time'){
     h += '<h3>Screen time</h3><div class="ecogrid">';
     h += pTime('Screen time ends at', 'eScreenEnd', e.screenEnd || '20:45');
@@ -6297,6 +6391,7 @@ function applyParentSettings(){
   e.daily = e.base + e.finish;
   e.screenEnd = tm('eScreenEnd', e.screenEnd);
   e.curfewOn = ck('eCurfew', e.curfewOn);
+  e.godOn = ck('eGodOn', e.godOn !== false);
   if($('eWkOn')){
     e.wkOn = ck('eWkOn', true); e.wkSat = ck('eWkSat', true); e.wkSun = ck('eWkSun', true);
     e.wkPts = num('eWkPts', 1, 500, e.wkPts > 0 ? e.wkPts : 10); e.wkPer = num('eWkPer', 5, 240, e.wkPer > 0 ? e.wkPer : 30); e.wkCap = num('eWkCap', 0, 720, e.wkCap == null ? 240 : e.wkCap);
@@ -6405,6 +6500,12 @@ function parentClick(e){
       toast('🎁 Free break started: '+bm+' minutes.'+(curfewOn() && state.screenEndsAt > curfewDate().getTime() ? ' Note: that runs past '+fmt12(state.eco.screenEnd || '20:45')+'.' : ''), 4200);
       showParent(st); break;
     case 'psec': window.__parSec = b.getAttribute('data-sec'); showParentSection(window.__parSec); break;
+    case 'pnpadd': {   /* 26.11.74 */
+      var sl = []; for(var q = 0; q < CARDS_PER_PACK; q++){ var se = $('pnpS' + q); sl.push(se ? se.value : 'R'); }
+      var nt = $('pnpNote'); packPlan().push({s: sl, note: nt ? nt.value.trim().slice(0, 60) : ''});
+      applyParentSettings(); save(); toast('🎴 Pack added to the plan'); showParentSection('packs'); break; }
+    case 'pnpdel': { var di = +b.getAttribute('data-i'); packPlan().splice(di, 1); applyParentSettings(); save(); showParentSection('packs'); break; }
+    case 'pnpup': { var ui = +b.getAttribute('data-i'), pq = packPlan(); if(ui > 0){ var t = pq[ui]; pq[ui] = pq[ui - 1]; pq[ui - 1] = t; } applyParentSettings(); save(); showParentSection('packs'); break; }
     case 'pcardreset':
       var nc = Object.keys(state.cards || {}).length;
       confirmBox('🗑️ Reset all cards?', 'This removes all '+nc+' cards she has found, so she can collect them again. Points, card packs and badges stay. This cannot be undone.', 'Yes, reset all cards', function(){
@@ -6543,24 +6644,27 @@ function packsLeftToday(){
 function capMsg(){ return 'That’s enough packs for today 🌙 Your '+state.packs+' saved pack'+(state.packs===1?'':'s')+' will be ready tomorrow!'; }
 function openPackStage(){
   if(state.packs < 1){ toast('No packs yet! Finish your quests to earn some 🎴'); return; }
-  if(packsLeftToday() < 1){ toast(capMsg()); return; }
+  if(packsLeftToday() < 1 && !godDue()){ toast(capMsg()); return; }
   stg = {kind:'pack', cards:[], news:[], flipped:0, torn:false, rank:rankInfo().rank.title};
   $('stage').classList.add('show');
   drawPackStep();
 }
 function drawPackStep(){
   stg.torn = false; stg.cards = []; stg.news = []; stg.flipped = 0;
+  var god = godDue(), pn = !god && packPlan().length ? (packPlan()[0].note || '') : '';
   $('stage').innerHTML =
-    '<div class="stage-title">🎴 History Pack</div>'+
+    '<div class="stage-title">' + (god ? '🎂 Birthday God Pack!' : '🎴 History Pack') + '</div>' +
+    (pn ? '<div class="stage-hint" style="font-weight:900">💌 ' + esc(pn) + '</div>' : '') +
     '<div class="packart" id="packart" data-act="tear">'+packArtSVG()+'</div>'+
-    '<div class="stage-hint">Tap the pack to open it!</div>'+
+    '<div class="stage-hint">' + (god ? 'Only SSR and LL cards inside! Tap to open!' : 'Tap the pack to open it!') + '</div>'+
     '<div class="stage-actions"><button class="btn-ghostl" data-act="sclose">Not now</button></div>';
 }
 function tearPack(){
   if(!stg || stg.torn) return;
-  if(state.packs < 1 || packsLeftToday() < 1){ closeStage(); return; }
+  var god = godDue();
+  if(state.packs < 1 || (packsLeftToday() < 1 && !god)){ closeStage(); return; }
   stg.torn = true;
-  state.packs -= 1; state.packsOpened += 1; state.packDay.n += 1;
+  state.packs -= 1; state.packsOpened += 1; if(!god) state.packDay.n += 1;
   stg.cards = rollPack();
   stg.dup = 0; stg.dupCr = 0;
   stg.news = stg.cards.map(function(c){ var nn = addCard(c.id); stg.dup += lastDupPts; stg.dupCr += lastDupCr; return nn; });
@@ -6583,7 +6687,7 @@ function claimDaily(){
 }
 function drawReveal(){
   var cs = stg.cards, big = cs.length === 1;
-  var h = '<div class="stage-title">'+(stg.kind === 'daily' ? '🌅 Today\'s History Hero!' : '✨ Your new cards!')+'</div><div class="reveal-row hlsc">';
+  var h = '<div class="stage-title">'+(stg.kind === 'daily' ? '🌅 Today\'s History Hero!' : stg.god ? '🎂 Your Birthday God Pack!' : '✨ Your new cards!')+'</div><div class="reveal-row hlsc">';
   cs.forEach(function(c,i){
     var hint = c.k === 'SSSR' ? ' hint-SSSR' : c.k === 'LL' ? ' hint-LL' : '';
     h += '<div class="flip'+(big?' big':'')+hint+'" data-i="'+i+'" style="animation-delay:'+(i*.14)+'s"><div class="flip-in"><div class="flip-face flip-back">'+backHTML(c.k)+'</div><div class="flip-face flip-front">'+faceHTML(c,{isNew:stg.news[i], holo:true})+'</div></div></div>';
@@ -12382,6 +12486,7 @@ setTimeout(kitLoop, 5000);
 state = load();
 if(FAMPACK && FAMPACK.bday && FAMPACK.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:FAMPACK.bday.y, m:FAMPACK.bday.m, d:FAMPACK.bday.d}; }
 try{ checkNewDay(); }catch(e){ try{ console.error('newday', e); }catch(_){} }
+setTimeout(godPackCheck, 1500);
 save();
 render();
 try{ tick(); }catch(e){ try{ console.error('tick', e); }catch(_){} }
