@@ -1,15 +1,17 @@
-# Kowloon LL glass comparison demo 0.4.0
+# Kowloon LL story demo 0.5.0
 
-Upload into the existing `kowloon-demo` folder, replacing index.html and sw.js, and ADD kowloon-story.mp4 (same folder):
-
-- index.html (side-by-side page, all images embedded)
+Replace these three files in the existing `kowloon-demo` folder:
+- index.html (single view, Claude's glass, all images embedded)
 - sw.js (version marker only, deliberately not registered)
-- kowloon-story.mp4 (the four Argon clips joined with 0.25 s blends, silent, H.264, 39.25 s, ~12 MB)
+- kowloon-story.mp4 (sped up 1.32x: 29.75 s, ~9.5 MB, silent; first and last frames unchanged)
 
-Open https://coldbeefsundae.github.io/LearningEveryday/kowloon-demo/ and confirm the version reads kowloon-demo-0.4.0.
+Open https://coldbeefsundae.github.io/LearningEveryday/kowloon-demo/ and confirm kowloon-demo-0.5.0.
 
-Left: Claude's glass, 22 pieces cut from your artwork, independent depths. Right: your StarQuest LL layers (shadow, body + holo sheen, cracks, glare, bobbing charms) with the app's original dive: glass 3.275x and charms 3x over 700 ms cubic-bezier(.7,0,1,1), clipped to the card; return 2.4 s ease-in-out.
-Everything else is identical and runs from one timeline: card fit, drift-in to the video's frame (1.27x, ~10.5% trimmed per side), blend into the story, blend back, widen to the full card, glass returns.
+Changes from 0.4.0:
+- Side-by-side removed; Claude's 22-piece glass only.
+- Each piece has a holo sheen (rainbow, masked to the piece, brightens as it rushes toward you), a white glint sweep, and a twinkling sparkle. They animate at rest too. Reduced motion turns them off.
+- Opening faster: fit 0.5 s, glass crossing 0.8 s, dive 1.0 s, blend-in 0.45 s (was 0.7/1.1/1.4/0.6).
+- Ending slower: blend-out 0.9 s, pull-back 2.4 s, glass return 4.0 s, settle 1.0 s (was 0.6/1.6/2.8/0.7).
+- Video punch-in: the video fills the screen (no blurred sides). In landscape this crops the top and bottom heavily; "Show whole video" restores the fitted view with blurred sides for comparison.
 
-Differences from the live app on the right side: no tilt (static --dx/--dy), no sparks layer, no art "breathe" scale, the gold card border is the same thin rim used on the left.
 No StarQuest files, saved progress or service worker are touched. baseline-26.11.55 remains the StarQuest rollback.
