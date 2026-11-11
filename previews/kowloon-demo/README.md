@@ -1,21 +1,15 @@
-# Kowloon transition demo 0.2.0
+# Kowloon LL glass comparison demo 0.4.0
 
-## Upload to GitHub Pages
-Create a NEW folder named `kowloon-demo` in the root of LearningEveryday. Upload index.html and sw.js from this package INTO THAT FOLDER. Do not overwrite the main app index.html or sw.js.
+Upload into the existing `kowloon-demo` folder, replacing index.html and sw.js, and ADD kowloon-story.mp4 (same folder):
 
-After Pages deploys, open:
-https://coldbeefsundae.github.io/LearningEveryday/kowloon-demo/
+- index.html (side-by-side page, all images embedded)
+- sw.js (version marker only, deliberately not registered)
+- kowloon-story.mp4 (the four Argon clips joined with 0.25 s blends, silent, H.264, 39.25 s, ~12 MB)
 
-The HTML embeds all five images; no additional assets or build step are required. It can also be opened locally on a desktop. The companion sw.js has the matching version but is deliberately NOT registered, so the demo installs no cache and cannot take control of the app. An existing root-level app worker may still control navigation under the site; this demo does not modify or unregister it.
+Open https://coldbeefsundae.github.io/LearningEveryday/kowloon-demo/ and confirm the version reads kowloon-demo-0.4.0.
 
-## What to test
-Watch movie: card first fits the stage, then glass and charms pass beyond the picture. The original picture stays anchored. A five-second ambient hold is followed by a slower return. Test Replay, Return / Skip during approach and during the hold, Reset during return, rotation, Slow study and Reduced motion. The demo is silent. Full story, camera tilt, boat motion, music and landscape outpainting are not included.
+Left: Claude's glass, 22 pieces cut from your artwork, independent depths. Right: your StarQuest LL layers (shadow, body + holo sheen, cracks, glare, bobbing charms) with the app's original dive: glass 3.275x and charms 3x over 700 ms cubic-bezier(.7,0,1,1), clipped to the card; return 2.4 s ease-in-out.
+Everything else is identical and runs from one timeline: card fit, drift-in to the video's frame (1.27x, ~10.5% trimmed per side), blend into the story, blend back, widen to the full card, glass returns.
 
-Twelve charm clusters and ten irregular glass sections are extracted losslessly from existing images and embedded into the HTML. Each has an independent simulated depth, perspective scale, radial motion and restrained rotation. The same paths reverse on return. Glass masks approximate fracture boundaries; this is not physical 3D glass. At some scales, browser resampling may reveal thin mask seams and needs device review. At rest and after return, the home picture is identical. Ambient light/reflective overlays are prototype selections, not a reconstructed animated historical scene.
-
-No live-app files, saved progress, localStorage or IndexedDB are changed. baseline-26.11.55 remains the StarQuest rollback. Delete the separate demo folder to remove this experiment.
-
-Static checks: extracted inline JS and sw.js node --check; balanced CSS braces; exact version sync; declaration collision review; simulated timing/Skip/Reset paths. No browser was run. Visual quality still requires iPad testing.
-
-## Update from 0.1.0
-Replace BOTH index.html and sw.js in the SAME kowloon-demo folder. No other assets needed. The displayed version must read kowloon-demo-0.2.0. No image generation was used. Original 0.1.0 package remains available as a demo rollback.
+Differences from the live app on the right side: no tilt (static --dx/--dy), no sparks layer, no art "breathe" scale, the gold card border is the same thin rim used on the left.
+No StarQuest files, saved progress or service worker are touched. baseline-26.11.55 remains the StarQuest rollback.
