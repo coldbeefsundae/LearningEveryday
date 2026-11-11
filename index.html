@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.74', errs = [], shown = false;
+  var V = '26.11.76', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2529,6 +2529,39 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 iframe.llstory{transition:opacity .45s ease}
 #lldbg{display:none;position:fixed;left:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:2147483647;max-width:calc(100vw - 16px);max-height:70vh;overflow:auto;background:rgba(0,0,0,.86);color:#b6ffb0;font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;padding:8px 10px;border-radius:10px}
 
+
+/* 26.11.76: Parent full screen with side menu */
+.overlay.pf{padding:0}
+.modal.pfull{max-width:none;width:100%;height:100%;max-height:none;border-radius:0;padding:0;overflow:hidden;display:flex;position:relative;animation:none}
+.pshell{display:flex;width:100%;height:100%;position:relative;background:inherit}
+.pnav{flex:none;width:246px;height:100%;overflow:auto;padding:14px 10px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:3px;background:rgba(127,127,170,.13);border-right:1px solid rgba(127,127,170,.25);box-sizing:border-box}
+.pnt{font-weight:900;font-size:19px;padding:6px 10px 10px}
+.pngrp{font-size:12px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;opacity:.6;padding:12px 10px 4px}
+.pnavb{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-radius:14px;padding:10px 12px;font:inherit;font-weight:800;font-size:15px;color:inherit;background:transparent;cursor:pointer;min-height:44px}
+.pnavb:hover{background:rgba(127,127,170,.18)}
+.pnavb.on{background:var(--accent);color:#fff}
+.pni{width:24px;text-align:center;font-size:19px;flex:none}
+.pnl{flex:1}
+.pnbd{background:#c2185b;color:#fff;border-radius:999px;padding:1px 8px;font-size:12px}
+.pnsp{flex:1;min-height:12px}
+.pndone{width:100%}
+.pmain{background:inherit;flex:1;min-width:0;height:100%;overflow:auto;padding:0 22px 40px;box-sizing:border-box}
+.pbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;padding:14px 0 10px;margin-bottom:6px;background:inherit;backdrop-filter:blur(6px)}
+.pbt{font-size:22px;letter-spacing:-.3px}
+.pburger{display:none}
+.pscrim{display:none}
+.ptdh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.ptds{display:flex;gap:14px;font-weight:900;font-size:18px}
+.pbarw{height:12px;border-radius:99px;background:rgba(127,127,170,.22);overflow:hidden;margin:10px 0 4px}
+.pbarw i{display:block;height:100%;background:var(--accent);border-radius:99px}
+@media (orientation:portrait),(max-width:699px){
+  .pburger{display:inline-flex}
+  .pnav{position:absolute;left:0;top:0;bottom:0;z-index:6;transform:translateX(-105%);transition:transform .22s ease;width:min(82vw,300px);background:#f1effa;color:#241f4a;box-shadow:6px 0 24px rgba(0,0,0,.25)}
+  body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .pnav{background:#1a2050;color:#fff}
+  .pshell.open .pnav{transform:none}
+  .pshell.open .pscrim{display:block;position:absolute;inset:0;z-index:5;background:rgba(10,8,30,.45)}
+  .pmain{padding:0 14px 40px}
+}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -2672,7 +2705,7 @@ function freshState(){
     cardZoom:'L', skin:'hybrid',
     points:0, history:{}, streakBest:0, streakPaid:{}, restUsed:{}, restToday:false, restNote:null,
     extraToday:0, screenToday:0, pointsLog:[], rewards:defaultRewards(), requests:[], goalId:null,
-    journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{bedOn:false, bedTime:'21:00', wakeTime:'07:00', daily:30, base:20, finish:10, latePct:50, screenEnd:'20:45', curfewOn:true, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
+    dlog:{}, dmark:[], dnames:{}, dsig:null, journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{bedOn:false, bedTime:'21:00', wakeTime:'07:00', daily:30, base:20, finish:10, latePct:50, screenEnd:'20:45', curfewOn:true, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
     ui:{ts:'M', calm:false, sfx:100, music:false, mvol:50, track:'meadow', sleep:0, mascot:true, lang:'both'},
     news:[], bitesDate:null, dailyId:null,
     goals:{weeks:{}, col:{}, sparks:[], from:'Dad'},
@@ -2695,6 +2728,7 @@ function load(){
 }
 var idbTimer = null;
 function save(){
+  try{ dlDetect(); }catch(e){}
   var json = JSON.stringify(state);
   try{ localStorage.setItem(STORAGE_KEY, json); }catch(e){}
   clearTimeout(idbTimer);
@@ -2777,6 +2811,11 @@ function resetProgress(full){
 function checkNewDay(){
   var today = dateKey();
   if(state.date !== today){
+    try{
+      var dk = state.date, dg = 0;
+      dlClose(dk);
+      for(var kk = addDaysKey(dk, 1); kk < today && dg < 60; kk = addDaysKey(kk, 1), dg++) dlClose(kk);
+    }catch(e){}
     finalizePastDays(state.date, today);
     state.date = today;
     resetProgress(true);
@@ -3505,6 +3544,133 @@ function floatPts(id, n){
     el.appendChild(c); setTimeout(function(){ if(c.parentNode) c.parentNode.removeChild(c); }, 1400);
   }catch(e){}
 }
+
+/* ---------- 26.11.75: daily log (silent, on this device only; no journal text; included in backups) ----------
+   dlog[day] = {w:weekday, a:[active quest ids], q:{id:[minute done, order]}, r:{m|n:{n:items, by:minute, t:[[item,minute]], c:minute all done, ok:1 on time}},
+                rs:[routines scheduled], p:points earned, s:points spent, f:finished minute, e:1 early, g:1 app not opened that day, x:1 closed}
+   dmark = [{d:day, t:time, l:label, a:old, b:new}]  (parent changes, for before/after) */
+function dlNow(){ var n = new Date(); return n.getHours()*60 + n.getMinutes(); }
+function dlDay(k){
+  k = k || dateKey();
+  if(!state.dlog) state.dlog = {};
+  var d = state.dlog[k];
+  if(!d){ d = state.dlog[k] = {w:parseKey(k).getDay(), a:[], q:{}, r:{}, rs:[], p:0, s:0}; dlPrune(); }
+  return d;
+}
+function dlPrune(){
+  try{
+    var ks = Object.keys(state.dlog).sort();
+    while(ks.length > 400){ delete state.dlog[ks.shift()]; }
+  }catch(e){}
+}
+function dlActive(k){
+  var wd = parseKey(k).getDay();
+  return state.tasks.filter(function(t){
+    if(k === state.date && state.overrides && t.id in state.overrides) return !!state.overrides[t.id];
+    return t.days.indexOf(wd) !== -1;
+  }).map(function(t){ return t.id; });
+}
+function dlNames(){
+  if(!state.dnames) state.dnames = {};
+  state.tasks.forEach(function(t){ state.dnames[t.id] = String(t.name || t.title || t.id).slice(0, 40); });
+}
+function dlTask(id, on){
+  try{
+    var d = dlDay(), k = dateKey();
+    d.a = dlActive(k); dlNames();
+    if(on){
+      var o = 0; for(var x in d.q) o = Math.max(o, d.q[x][1]);
+      d.q[id] = [dlNow(), o + 1];
+    } else delete d.q[id];
+    var all = d.a.length > 0 && d.a.every(function(i){ return d.q[i]; });
+    if(all && !d.f){ d.f = dlNow(); try{ d.e = new Date() < deadlineDate() ? 1 : 0; }catch(e){} }
+    else if(!all){ delete d.f; delete d.e; }
+  }catch(e){}
+}
+function dlRoutine(w){
+  try{
+    var d = dlDay(), c = rtCfg(w), r = rtState(), ticks = r[w], by = ftMinOf(c.by);
+    var o = d.r[w] || (d.r[w] = {n:c.items.length, by:by, t:[]});
+    o.n = c.items.length; o.by = by;
+    var old = {}; o.t.forEach(function(x){ old[x[0]] = x[1]; });
+    o.t = ticks.map(function(i){ return [i, old[i] != null ? old[i] : dlNow()]; });
+    if(ticks.length >= c.items.length && c.items.length){ if(!o.c) o.c = o.t.reduce(function(m, x){ return Math.max(m, x[1]); }, 0); o.ok = o.c < by ? 1 : 0; }
+    else { delete o.c; delete o.ok; }
+  }catch(e){}
+}
+function dlPts(delta, why){
+  try{
+    var d = dlDay();
+    if(/parent/i.test(String(why || ''))){ dlMark('Points by parent', '', (delta > 0 ? '+' : '') + delta); return; }
+    if(delta > 0) d.p += delta; else d.s += -delta;
+  }catch(e){}
+}
+function dlMark(l, a, b){
+  try{
+    if(!state.dmark) state.dmark = [];
+    state.dmark.push({d:dateKey(), t:dlNow(), l:l, a:a, b:b});
+    if(state.dmark.length > 300) state.dmark.splice(0, state.dmark.length - 300);
+  }catch(e){}
+}
+/* what the parent can change that should show up as a before/after marker */
+var DL_LBL = {deadline:'Quest deadline', base:'Base points', finish:'Finish bonus', latePct:'Late bonus %', screenEnd:'Screen curfew', curfewOn:'Curfew on', bonus:'Bonus points',
+  screenCap:'Daily screen cap', extraCap:'Daily extra cap', bankCap:'Points bank cap', restOn:'Rest days', autoRest:'Auto rest', rtMOn:'Morning routine', rtNOn:'Evening routine',
+  rtMBy:'Morning routine by', rtNBy:'Evening routine by', rtMStart:'Morning routine start', rtNStart:'Evening routine start', rtReward:'Routine reward', rtPer:'Pieces per pack',
+  rtMItems:'Morning routine items', rtNItems:'Evening routine items', rtMDays:'Morning routine days', rtNDays:'Evening routine days', godOn:'Birthday God Pack', bonusOn:'Bonus challenge',
+  freePacks:'Free packs per day', packMax:'Packs per day', quizOn:'Quiz', bitesOn:'Bites', musicOn:'Music'};
+function dlSig(){
+  var o = {}, e = state.eco || {};
+  Object.keys(e).forEach(function(k){ var v = e[k]; if(v === null || typeof v === 'object' && !Array.isArray(v)) return; if(Array.isArray(v) && k.indexOf('Days') < 0) return; o['e.' + k] = Array.isArray(v) ? v.join(',') : String(v); });
+  o['e.deadline'] = String(state.deadline); o['e.bonusOn'] = String(state.bonusOn);
+  state.tasks.forEach(function(t){ o['t.' + t.id] = (t.name || t.title || '') + '|' + (t.days || []).join(',') + '|' + (t.minutes || 0); });
+  return o;
+}
+function dlDetect(){
+  try{
+    var now = dlSig(), old = state.dsig;
+    state.dsig = now;
+    if(!old) return;
+    var seen = false;
+    var all = {}; Object.keys(now).forEach(function(k){ all[k] = 1; }); Object.keys(old).forEach(function(k){ all[k] = 1; });
+    Object.keys(all).forEach(function(k){
+      if(old[k] === now[k]) return;
+      if(k.indexOf('e.') === 0){
+        var n = k.slice(2); if(!DL_LBL[n]) return;
+        if(/Items$/.test(n)){ dlMark(DL_LBL[n], '', 'edited'); return; }
+        dlMark(DL_LBL[n], old[k] == null ? '' : old[k], now[k]); seen = true;
+      } else if(k.indexOf('t.') === 0){
+        var id = k.slice(2), nm = (state.dnames && state.dnames[id]) || (now[k] || old[k] || '').split('|')[0];
+        if(old[k] == null) dlMark('Quest added: ' + (now[k] || '').split('|')[0], '', 'new');
+        else if(now[k] == null) dlMark('Quest removed: ' + (old[k] || '').split('|')[0], '', 'gone');
+        else dlMark('Quest changed: ' + (now[k] || '').split('|')[0], old[k], now[k]);
+      }
+    });
+  }catch(e){}
+}
+function dlClose(k){
+  try{
+    var d = dlDay(k), isGap = k !== state.date;
+    d.a = dlActive(k);
+    if(isGap){ d.g = 1; }
+    ['m','n'].forEach(function(w){
+      var c = rtCfg(w);
+      if(c.on && c.items.length && c.days.indexOf(d.w) > -1){ if(d.rs.indexOf(w) < 0) d.rs.push(w); if(!d.r[w] && !isGap) d.r[w] = {n:c.items.length, by:ftMinOf(c.by), t:[]}; }
+    });
+    d.x = 1;
+  }catch(e){}
+}
+function dlCSV(){
+  var ks = Object.keys(state.dlog || {}).sort(), rows = ['date,weekday,quests_active,quests_done,finished_at,on_time,order,morning_routine,evening_routine,points_earned,points_spent,app_opened'];
+  var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], hm = function(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; };
+  ks.forEach(function(k){
+    var d = state.dlog[k], ord = Object.keys(d.q || {}).sort(function(a, b){ return d.q[a][1] - d.q[b][1]; }).map(function(i){ return ((state.dnames && state.dnames[i]) || i).replace(/[,"]/g, ' ') + '@' + hm(d.q[i][0]); }).join(' > ');
+    var rt = function(w){ var r = d.r && d.r[w]; if(!r) return d.rs && d.rs.indexOf(w) > -1 ? 'missed' : ''; return r.c ? (r.ok ? 'on time ' : 'late ') + hm(r.c) : (r.t.length ? 'partial ' + r.t.length + '/' + r.n : 'missed'); };
+    rows.push([k, wd[d.w], (d.a || []).length, Object.keys(d.q || {}).length, hm(d.f), d.f ? (d.e ? 'yes' : 'no') : '', '"' + ord + '"', rt('m'), rt('n'), d.p || 0, d.s || 0, d.g ? 'no' : 'yes'].join(','));
+  });
+  rows.push(''); rows.push('parent changes: date,time,what,before,after');
+  (state.dmark || []).forEach(function(m){ rows.push([m.d, hm(m.t), '"' + String(m.l).replace(/"/g, "'") + '"', '"' + String(m.a).replace(/"/g, "'") + '"', '"' + String(m.b).replace(/"/g, "'") + '"'].join(',')); });
+  return rows.join('\n');
+}
 function toggleTask(id, cardEl){
   if(state.done[id]){
     delete state.done[id]; Sound.untick();
@@ -3512,6 +3678,7 @@ function toggleTask(id, cardEl){
     state.done[id] = true; Sound.chime();
     if(cardEl) sparkles(cardEl);
   }
+  dlTask(id, !!state.done[id]);
   afterProgressChange();
   if(state.done[id] && state.paidQ && state.paidQ[id]) floatPts(id, state.paidQ[id]);
 }
@@ -5171,6 +5338,9 @@ var BACK = {t: 0};
 function backArm(){ try{ if(!(history.state && history.state.sqTop)) history.pushState({sqTop: 1}, ''); }catch(e){} }
 function backStep(){
   try{
+    var psh = $('pshell');
+    if(psh && psh.classList.contains('open')){ psh.classList.remove('open'); return 'drawer'; }
+    if(!window.__parSec && psh && $('overlay').classList.contains('show') && window.__parView && window.__parView !== 'today'){ window.__parView = 'today'; showParent(); return 'parent view'; }
     if(window.__parSec && $('overlay').classList.contains('show')){ var b = $('modal').querySelector('[data-act="pbackhome"]'); if(b){ b.click(); return 'parent section'; } }
   }catch(e){}
   var n = closeTopLayer(); if(n) return n;
@@ -5554,7 +5724,7 @@ function rtHTML(){
 }
 function rtTick(w, i){
   var c = rtCfg(w), r = rtState(), ticks = r[w], at = ticks.indexOf(i), onTime = rtNow() < ftMinOf(c.by), rw = rtReward();
-  if(at > -1){ ticks.splice(at, 1); save(); renderHome(); return; }
+  if(at > -1){ ticks.splice(at, 1); dlRoutine(w); save(); renderHome(); return; }
   ticks.push(i); try{ Sound.tick(); }catch(_){}
   if(rw === 'points' && onTime && r.pt.indexOf(w+i) < 0){ r.pt.push(w+i); if(addPoints(1, c.name)) toast('⭐ +1 point', 1400); }
   if(ticks.length >= c.items.length && !r.got[w] && !r.late[w]){
@@ -5569,8 +5739,14 @@ function rtTick(w, i){
       r.late[w] = true; toast('🌟 All done! Tomorrow, try to finish by '+fmt12(c.by)+'.', 3800);
     }
   }
+  dlRoutine(w);
   save(); renderHome();
 }
+document.addEventListener('click', function(e){
+  var nb = e.target.closest && e.target.closest('.pnavb'); if(!nb) return;
+  var ps = $('pshell'); if(ps) ps.classList.remove('open');
+  if(window.__parSec){ try{ if(applyParentSettings() === false){ e.stopPropagation(); e.preventDefault(); } }catch(_){} }
+}, true);
 document.addEventListener('click', function(e){
   var t = e.target.closest && e.target.closest('[data-rt]'); if(!t) return;
   e.preventDefault(); e.stopPropagation();
@@ -6031,7 +6207,7 @@ function mhSnap(){
   var m = $('modal'), vals = [];
   m.querySelectorAll('input, textarea, select').forEach(function(el){ vals.push(el.type === 'checkbox' || el.type === 'radio' ? el.checked : el.value); });
   var html = m.innerHTML.replace(/<div class="mxw"[\s\S]*?<\/div>/, '');
-  return {sig:m.__sig || '', html:html, vals:vals, top:m.scrollTop, click:m.onclick, change:m.onchange, par:window.__parSec, home:!!m.querySelector('[data-act="pclose"]')};
+  return {sig:m.__sig || '', html:html, vals:vals, top:parScroller().scrollTop, click:m.onclick, change:m.onchange, par:window.__parSec, home:!!m.querySelector('[data-phome]')};
 }
 function mhTrack(html){
   var m = $('modal'), open = $('overlay').classList.contains('show') && m.firstChild, sig = mhSig(html);
@@ -6075,8 +6251,9 @@ function openModal(html){
     else if(KN.stack.length) html = html.replace(/(<div class="kjmodal[^"]*">)/, '$1' + KN_BAR);
   } else if(KN.cur || KN.stack.length){ knReset(); }
   if(window.KN2){ KN2.learn = KN2.inLearn; if(KN2.inLearn) KN2.sec = 0; }
+  var pf = html.indexOf('class="pshell"') > -1; $('modal').classList.toggle('pfull', pf); $('overlay').classList.toggle('pf', pf);
   $('modal').innerHTML = html; $('overlay').classList.add('show');
-  if(newWin) $('modal').scrollTop = 0;
+  if(newWin){ $('modal').scrollTop = 0; var pm_ = $('modal').querySelector('.pmain'); if(pm_) pm_.scrollTop = 0; }
 }
 /* ---------- Kit nudge: after a while of just browsing (Cards, Rewards, Money, Me), Kit pops in and suggests an unfinished quest ---------- */
 var KN2 = {sec:0, learn:false, inLearn:false, last:'', shown:false};
@@ -6089,7 +6266,7 @@ function nudgeExempt(){
   try{ if(ftActive()) return true; }catch(e){}                           /* her Free Time */
   if(state.screenEndsAt && state.screenEndsAt > Date.now()) return true;  /* screen time she earned */
   try{ if(bedMode()) return true; }catch(e){}
-  if(window.__parSec || ($('modal') && $('modal').querySelector('.ptiles, .pinpad, .psec'))) return true;
+  if(window.__parSec || ($('modal') && $('modal').querySelector('.ptiles, .pinpad, .psec, .pshell'))) return true;
   return false;
 }
 function nudgeKanjiBusy(){
@@ -6140,7 +6317,7 @@ function showNudge(){
   var f = window[n]; if(typeof f !== 'function') return;
   window[n] = function(){ KN2.inLearn = true; try{ return f.apply(this, arguments); } finally{ KN2.inLearn = false; } };
 });
-function closeModal(){ try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){} window.__parSec = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
+function closeModal(){ try{ $('modal').classList.remove('pfull'); $('overlay').classList.remove('pf'); }catch(_){} try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){} window.__parSec = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
 function askPin(onOk){
@@ -6203,16 +6380,71 @@ function parentOnChange(e){
     var id = el.getAttribute('data-id'), t = findTask(id);
     var want = el.checked, def = t.days.indexOf(new Date().getDay()) !== -1;
     if(want === def) delete state.overrides[id]; else state.overrides[id] = want;
-    save(); afterProgressChange(); showParent($('modal').scrollTop);
+    save(); afterProgressChange(); showParent(parScroller().scrollTop);
   } else if(el.getAttribute('data-act')==='pbonuson'){
     state.bonusOn = el.checked; save(); render();
   }
 }
 function showParentHome(scrollTop){ window.__parSec = null; showParent(scrollTop); }
+/* ---- 26.11.76: Parent mode is a full screen with a side menu (drawer in portrait) ---- */
+window.__parView = 'today';
+var PAR_VIEWS = {today:'🏠 Today', quests:'📋 Quests', points:'⭐ Points &amp; packs', rewards:'🎁 Rewards to give', more:'🧰 Tools'};
+function parNavBtn(ico, label, attr, on, badge){
+  return '<button class="pnavb'+(on ? ' on' : '')+'" '+attr+'><span class="pni">'+ico+'</span><span class="pnl">'+label+'</span>'+(badge ? '<span class="pnbd">'+badge+'</span>' : '')+'</button>';
+}
+function parNav(active){
+  var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
+  var v = function(k, ico, label, badge){ return parNavBtn(ico, label, 'data-act="pview" data-v="'+k+'"', active === k, badge); };
+  var sc = function(k, ico, label){ return parNavBtn(ico, label, 'data-act="psec" data-sec="'+k+'"', active === 's:'+k); };
+  var h = '<nav class="pnav" id="pnav"><div class="pnt">👪 Parent</div>';
+  h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '');
+  h += '<div class="pngrp">Settings</div>';
+  h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', false);
+  h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news');
+  h += parNavBtn('🎉', 'Celebrations &amp; alerts', 'data-act="pp4"', false);
+  h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', false);
+  h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', false);
+  h += parNavBtn('🔎', 'Card viewer', 'data-act="pcards"', false);
+  h += parNavBtn('👪', 'Family pack', 'data-fp="1"', false);
+  h += sc('safe', '💾', 'Backup &amp; log');
+  h += '<div class="pngrp">More</div>' + v('more', '🧰', 'Tools &amp; help');
+  h += '<div class="pnsp"></div><button class="btn primary pndone" data-act="pclose">✅ Done (saves and locks)</button></nav>';
+  return h;
+}
+function parShell(inner, title, active){
+  return '<div class="pshell" id="pshell">' + parNav(active) + '<div class="pscrim" data-act="pdrawer"></div><div class="pmain" id="pmain"><div class="pbar"><button class="btn small pburger" data-act="pdrawer" aria-label="Menu">☰ Menu</button><b class="pbt">'+title+'</b></div><div data-pview="1"'+(active.indexOf('s:') === 0 ? '' : ' data-phome="1"')+'>' + inner + '</div></div></div>';
+}
+function parScroller(){ var m = $('modal'); return (m && m.querySelector('.pmain')) || m; }
+function parHm(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; }
+function parToday(){
+  var k = dateKey(), d = (state.dlog && state.dlog[k]) || {q:{}, r:{}, p:0, s:0}, act = activeTasks(), done = act.filter(function(t){ return state.done[t.id]; }).length;
+  var h = '<div class="ptd"><div class="ptdh"><div><b style="font-size:20px">'+esc(DAY_NAMES[new Date().getDay()])+' '+esc(k)+'</b><div class="hint">'+(act.length ? done+' of '+act.length+' quests done' : 'No quests assigned today')+(state.restToday ? ' · rest day' : '')+'</div></div><div class="ptds"><span>🔥 '+streakNow()+'</span><span>⭐ '+state.points+'</span><span>🎴 '+state.packs+'</span></div></div>';
+  h += '<div class="pbarw"><i style="width:'+(act.length ? Math.round(done/act.length*100) : 0)+'%"></i></div>';
+  h += '<h3>Quests</h3>';
+  if(!act.length) h += '<div class="hint">Nothing assigned. Use Quests to assign some.</div>';
+  act.forEach(function(t){
+    var on = !!state.done[t.id], q = d.q && d.q[t.id];
+    h += '<div class="prow'+(on ? '' : ' off')+'"><div class="pe">'+(on ? '✅' : '⬜')+'</div><div class="pn">'+esc(t.emoji)+' '+esc(t.name)+'<small>'+(on ? 'Done'+(q ? ' at '+fmt12(parHm(q[0]))+(q[1] ? ' · #'+q[1] : '') : '') : 'Not yet')+'</small></div><button class="btn small" data-act="ptask" data-id="'+esc(t.id)+'">'+(on ? '↩️ Undo' : '✔ Mark done')+'</button></div>';
+  });
+  var rts = [];
+  ['m','n'].forEach(function(w){
+    var c = rtCfg(w); if(!c.on || !c.items.length || c.days.indexOf(new Date().getDay()) < 0) return;
+    var r = rtState(), n = r[w].length, st = r.got[w] ? 'Done on time ✅' : (r.late[w] ? 'Done late' : (n ? n+' of '+c.items.length+' steps' : (rtNow() > ftMinOf(c.by) ? 'Missed so far' : 'Not started')));
+    rts.push('<div class="prow"><div class="pe">'+c.ico+'</div><div class="pn">'+c.name+'<small>by '+fmt12(c.by)+' · '+st+'</small></div></div>');
+  });
+  if(rts.length) h += '<h3>Routines</h3>' + rts.join('');
+  var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
+  h += '<h3>Points today</h3><div class="hint">Earned '+(d.p || 0)+' · spent '+(d.s || 0)+(dayRemaining() > 0 ? ' · '+dayRemaining()+' still available today' : '')+'</div>';
+  h += '<h3>Quick actions</h3><div class="row"><button class="btn" data-act="pkplus">🎴 +1 pack</button><button class="btn" data-act="pplus10">⭐ +10</button><button class="btn" data-act="pbreak" data-m="30">🎁 30 min break</button>'+(npend ? '<button class="btn primary" data-act="pview" data-v="rewards">🎁 '+npend+' request'+(npend > 1 ? 's' : '')+'</button>' : '')+'</div>';
+  var mk = (state.dmark || []).slice(-4).reverse();
+  if(mk.length){ h += '<h3>Recent changes you made</h3>'; mk.forEach(function(m){ h += '<div class="hint">'+esc(m.d)+' '+esc(parHm(m.t))+' · '+esc(m.l)+(m.a !== '' && m.b !== '' && m.b !== 'edited' && String(m.l).indexOf('Quest') !== 0 ? ': '+esc(m.a)+' → '+esc(m.b) : (m.b === 'edited' ? ' (edited)' : (String(m.l).indexOf('Points') === 0 ? ' '+esc(m.b) : '')))+'</div>'; }); }
+  return h + '</div>';
+}
 function showParent(scrollTop){
   if(window.__parSec){ showParentSection(window.__parSec, scrollTop); return; }
-  var h = '<h2>👪 Parent Controls</h2>';
-  h += '<h3>Today\'s assigned quests <span class="hint">(switch on = assigned today)</span></h3>';
+  var v = window.__parView || 'today', h = '', k = v;
+  if(v === 'quests'){
+  h += '<h3>Quests assigned today <span class="hint">(switch on = assigned today)</span></h3>';
   state.tasks.forEach(function(t){
     var on = isActive(t);
     h += '<div class="prow'+(on?'':' off')+'"><label class="switch"><input type="checkbox" data-act="ptoggle" data-id="'+esc(t.id)+'" '+(on?'checked':'')+'><span></span></label>';
@@ -6221,6 +6453,8 @@ function showParent(scrollTop){
   });
   h += '<div class="row" style="margin-top:8px"><button class="btn good" data-act="padd">➕ Add new quest</button></div>';
 
+  }
+  else if(v === 'points'){
   h += '<h3>⭐ Points &amp; card packs</h3><div class="starctl"><button class="btn danger small" data-act="pminus10">− 10</button><button class="btn danger" data-act="pminus">− 1</button><div class="n" id="pstars">'+state.points+'</div><button class="btn good" data-act="pplus">+ 1</button><button class="btn good small" data-act="pplus10">+ 10</button><span class="hint">= '+fmtMinutes(state.points)+' of screen time</span></div>';
   h += '<div class="starctl" style="margin-top:12px"><button class="btn danger small" data-act="pkminus">− 1</button><div class="n" style="font-size:28px;min-width:150px">'+state.packs+'<small style="font-size:14px"> card packs</small></div><button class="btn good small" data-act="pkplus">+ 1</button></div>';
   if(state.screenEndsAt && state.screenEndsAt>Date.now()){
@@ -6232,37 +6466,28 @@ function showParent(scrollTop){
   h += '<h3>🎁 Free break</h3><div class="hint" style="margin-bottom:6px">Starts Free Time right now. No points, and it does not use her daily screen limit. For any day you want to give extra.</div><div class="row">';
   [30, 60, 90, 120].forEach(function(m){ h += '<button class="btn" data-act="pbreak" data-m="'+m+'">'+(m === 90 ? '1.5 hours' : (m < 60 ? m+' min' : (m/60)+(m === 60 ? ' hour' : ' hours')))+'</button>'; });
   h += '</div>';
+  }
+  else if(v === 'rewards'){
   var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
   h += '<h3>🎁 Rewards to give'+(npend?' <span class="tag" style="background:#c2185b;color:#fff">'+npend+'</span>':'')+'</h3>'+pendingRewardsHTML();
 
-  h += '<h3>🗂️ Settings</h3><div class="ptiles">';
-  h += pTile('🎁', 'Rewards &amp; prices', 'Edit, group, price', 'data-act="rweditor"');
-  h += pTile('⭐', 'Points &amp; bonuses', 'Daily points, bonus, rest day', 'data-act="psec" data-sec="pts"');
-  h += pTile('🎴', 'Card packs', 'Plan her next packs, birthday pack', 'data-act="psec" data-sec="packs"');
-  h += pTile('🪥', 'Routines', 'Morning and evening checklists', 'data-act="psec" data-sec="rt"');
-  h += pTile('👗', 'Kit\u2019s wardrobe & moves', 'Outfits and seasonal animations', 'data-act="psec" data-sec="kitlooks"');
-  h += pTile('⏱️', 'Time &amp; limits', 'Screen time, bedtime, music', 'data-act="psec" data-sec="time"');
-  h += pTile('📚', 'Learning &amp; news', 'Quiz, bites, kanji, news pack', 'data-act="psec" data-sec="learn"');
-  h += pTile('💵', 'Allowance money', 'Jar, allowance, goal', 'data-bkp="1"');
-  h += pTile('🎯', 'Goal cards', '“I saw you…”', 'data-glparent="1"');
-  h += pTile('🔎', 'Card viewer', 'See any card, even unfound', 'data-act="pcards"');
-  h += pTile('👪', 'Family pack', 'Private family cards', 'data-fp="1"');
-  h += pTile('🎉', 'Celebrations &amp; alerts', 'Birthday, holidays, journal', 'data-act="pp4"');
-  h += pTile('💾', 'Backup &amp; PIN', 'Backup code, restore, PIN', 'data-act="psec" data-sec="safe"');
-  h += '</div>';
+    h += '<div class="row" style="margin-top:12px"><button class="btn" data-act="rweditor">🎁 Rewards &amp; prices</button></div>';
+  }
+  else if(v === 'more'){
   h += '<h3>❓ Help</h3><div class="row"><button class="btn" data-act="phelp">❓ Parent guide &amp; FAQ</button></div>';
   h += '<h3>📅 Day tools</h3><div class="row"><button class="btn" data-act="pcalendar">📅 Streak calendar</button><button class="btn" data-act="preset">🔄 Reset today\'s board</button></div><div class="hint" style="margin-top:6px">Reset unchecks everything. The board also resets at midnight.</div>';
   h += '<div class="verrow" style="margin-top:20px"><span>'+esc(versionLine())+'</span><button class="btn small" data-act="chkupdate">🔄 Check for updates</button></div>';
-  h += '<div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn primary" data-act="pclose">✅ Done (saves and locks)</button></div>';
-  openModal(h);
-  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  }
+  else { v = k = 'today'; h = parToday(); }
+  openModal(parShell(h, PAR_VIEWS[v], k));
+  if(scrollTop !== undefined) parScroller().scrollTop = scrollTop;
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
 }
-var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; PIN'};
+var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log'};
 function showParentSection(key, scrollTop){
   window.__parSec = key;
-  var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Parent</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
+  var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Back</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
   h += '<h2 style="margin-top:12px">'+PAR_SECTIONS[key]+'</h2><div class="hint" style="margin-bottom:4px">Changes save automatically when you go back or close.</div>';
   if(key === 'pts'){
     h += '<h3>Daily points</h3><div class="ecogrid">';
@@ -6369,11 +6594,13 @@ function showParentSection(key, scrollTop){
   } else if(key === 'safe'){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
     h += '<h3>Backup</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
+    var dkn = Object.keys(state.dlog || {}).length;
+    h += '<h3>📊 Daily log</h3><div class="hint">Kept on this device only and included in backups. It records quest times and order, routines, points and your settings changes. Journal text is never stored. '+dkn+' day'+(dkn === 1 ? '' : 's')+' so far.</div><div class="row"><button class="btn small" data-act="pdlog">⬇️ Download log (CSV)</button></div>';
     h += '<h3>Parent PIN</h3><div class="fld"><label>Change parent PIN (4 digits)</label><input type="password" inputmode="numeric" maxlength="4" id="sPin" placeholder="Leave blank to keep current"></div>';
   }
-  h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pbackhome">← Parent</button><button class="btn primary" data-act="psave">💾 Save</button></div>';
-  openModal(h);
-  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pbackhome">← Back</button><button class="btn primary" data-act="psave">💾 Save</button></div>';
+  openModal(parShell(h, PAR_SECTIONS[key] || 'Settings', 's:' + key));
+  if(scrollTop !== undefined) parScroller().scrollTop = scrollTop;
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
   if(key === 'safe') fillStorageStatus();
@@ -6451,7 +6678,7 @@ function findTask(id){ return state.tasks.filter(function(t){return t.id===id;})
 function parentClick(e){
   var b = e.target.closest('[data-act]'); if(!b || b.tagName==='INPUT') return;
   var act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
-  var st = $('modal').scrollTop;
+  var st = parScroller().scrollTop;
   switch(act){
     case 'pedit': showTaskForm(findTask(id)); break;
     case 'padd': showTaskForm(null); break;
@@ -6499,7 +6726,17 @@ function parentClick(e){
       save(); render(); Sound.fanfare();
       toast('🎁 Free break started: '+bm+' minutes.'+(curfewOn() && state.screenEndsAt > curfewDate().getTime() ? ' Note: that runs past '+fmt12(state.eco.screenEnd || '20:45')+'.' : ''), 4200);
       showParent(st); break;
+    case 'pview': window.__parSec = null; window.__parView = b.getAttribute('data-v') || 'today'; showParent(); break;
+    case 'pdrawer': { var ps = $('pshell'); if(ps) ps.classList.toggle('open'); break; }
+    case 'ptask': { var tk = findTask(id); if(tk){ toggleTask(id); } showParent(st); break; }
     case 'psec': window.__parSec = b.getAttribute('data-sec'); showParentSection(window.__parSec); break;
+    case 'pdlog': {
+      try{
+        var bl = new Blob([dlCSV()], {type:'text/csv'}), al = document.createElement('a');
+        al.href = URL.createObjectURL(bl); al.download = 'starquest-log-'+dateKey()+'.csv';
+        document.body.appendChild(al); al.click(); al.remove(); toast('⬇️ Log saved to Downloads');
+      }catch(err){ toast('Could not save the log'); }
+      break; }
     case 'pnpadd': {   /* 26.11.74 */
       var sl = []; for(var q = 0; q < CARDS_PER_PACK; q++){ var se = $('pnpS' + q); sl.push(se ? se.value : 'R'); }
       var nt = $('pnpNote'); packPlan().push({s: sl, note: nt ? nt.value.trim().slice(0, 60) : ''});
@@ -7082,6 +7319,7 @@ function migrate(s){
 /* ---------- points ---------- */
 function logPts(delta, why){
   state.pointsLog.unshift({t:Date.now(), d:delta, w:why});
+  dlPts(delta, why);
   if(state.pointsLog.length > 40) state.pointsLog.length = 40;
 }
 function addPoints(n, why, extra){
