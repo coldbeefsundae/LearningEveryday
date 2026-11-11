@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.59', errs = [], shown = false;
+  var V = '26.11.61', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2496,6 +2496,26 @@ body.llfxhide>*:not(#llfx):not(.llstory):not(#lldbg){visibility:hidden}
 #llfx .ret .llx-top,#llfx .ret .llx-rar,#llfx .ret .llx-tag,#llfx .ret .llx-foot,#llfx .ret .llx-play,#llfx .ret .llx-fade,#llfx .ret .hlx-sp{opacity:0!important}
 #llfx .ret .llx-g,#llfx .ret .llx-c{transition:transform 2400ms ease-in-out}
 #llfx .ret .llx-art{animation:none;transition:transform 2400ms ease-in-out}
+/* 26.11.61: the new LL glass. Right after you tap Watch, the copy's glass and charm layers are swapped for 22 pieces
+   (10 glass, 12 charms) that look the same; each piece then flies past at its own depth, and on the way back
+   they drift home over 4 seconds. If the pieces file is missing, the old glass runs as before. */
+#llfx .llg-g,#llfx .llg-c{position:absolute;pointer-events:none}
+#llfx .llg-g{inset:0}
+#llfx .llg-c{left:2.83%;top:2.83%;width:94.34%;height:94.34%}
+#llfx .llgp{position:absolute;transform-origin:50% 50%;backface-visibility:hidden;will-change:transform,opacity}
+#llfx .llgp>img{position:absolute;inset:0;width:100%;height:100%;display:block}
+#llfx .llgp>i{position:absolute;inset:0;display:block;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+#llfx .llgp.g>img{opacity:.85}
+#llfx .llgp>.llx-holo{mix-blend-mode:screen;opacity:var(--ho,calc(.10 + var(--mag)*.32))}
+#llfx .llgp.c>.llx-holo{background-size:200% 200%;opacity:var(--ho,calc(.35 + var(--mag)*.55));animation:llxdrift 9s linear infinite}
+#llfx .llgp>.llg-gl{mix-blend-mode:screen;background-size:300% 300%;background-position:calc(50% - var(--dx)*60% - var(--dy)*20%) calc(50% - var(--dy)*60%);background-image:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.20) 47%,rgba(255,255,255,.34) 50%,rgba(255,255,255,.20) 53%,transparent 65%)}
+#llfx .llgp.c>.llg-gl{background-image:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%)}
+#llfx .llfx-card.llg div.llx-g,#llfx .llfx-card.llg .llx-bob>img,#llfx .llfx-card.llg .llx-cmh{visibility:hidden}
+#llfx .llfx-card.llg .llx-c{transform:none!important;transition:none!important}
+#llfx .llfx-card.llg.rt{transition:transform 4000ms ease-in-out}
+#llfx .llfx-card.llg.ret .llx-g,#llfx .llfx-card.llg.ret .llx-art{transition-duration:4000ms}
+#llfx .llx-calm .llgp.c>.llx-holo{animation:none}
+@media(prefers-reduced-motion:reduce){#llfx .llgp.c>.llx-holo{animation:none}}
 @keyframes llFxBreathe{0%{transform:scale(var(--ll-art-a)) translate(0,0)}100%{transform:scale(var(--ll-art-b)) translate(-2%,2%)}}
 @media(max-width:820px){
   #llfx .llfx-card{--ll-art-a:1.08;--ll-art-b:1.16}
@@ -4702,6 +4722,127 @@ function lldEnd(){ if(!LLD) return; lldLog('done'); cancelAnimationFrame(LLD.raf
 
 /* ---- geometry helpers ---- */
 function llFxRect(el){ if(!el || !el.getBoundingClientRect) return null; var b = el.getBoundingClientRect(); return b.width > 0 && b.height > 0 ? {left:b.left, top:b.top, width:b.width, height:b.height} : null; }
+/* 26.11.61: the new LL glass (22 pieces) and its sounds. The pieces live in one small file (LLG.url) that is
+   downloaded once a moment after the app opens, then kept by the offline cache. Until it has arrived (or if it
+   is missing) the old glass runs exactly as before. */
+var LLG = {url: './assets/ll/glass22.37500a79.json', list: null, busy: false, verb: null};
+function llgLoad(){
+  if(LLG.list || LLG.busy) return; LLG.busy = true;
+  var bl = function(d){ try{ var p = d.indexOf(','), bin = atob(d.slice(p + 1)), a = new Uint8Array(bin.length); for(var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([a], {type: 'image/webp'})); }catch(e){ return d; } };
+  fetch(LLG.url).then(function(r){ if(!r.ok) throw new Error('glass ' + r.status); return r.json(); }).then(function(d){
+    if(!d || !d.pieces || d.pieces.length !== 22) return;
+    LLG.list = d.pieces.map(function(p){ return {c: p.k === 'c', x: p.x, y: p.y, w: p.w, h: p.h, cx: p.cx, cy: p.cy, depth: p.depth, turn: p.turn, u: bl(p.src)}; });
+  }).catch(function(){}).then(function(){ LLG.busy = false; });
+}
+function llgEase(v){ var x = v < 0 ? 0 : v > 1 ? 1 : v; return x*x*(3 - 2*x); }
+/* build the pieces inside the copy (cp); they stay hidden until llgOn() */
+function llgBuild(cp){
+  if(!LLG.list) return null;
+  var old = cp.querySelector('div.llx-g'), bob = cp.querySelector('.llx-bob'); if(!old || !bob) return null;
+  var g = document.createElement('div'), c = document.createElement('div'), L = {g: g, c: c, pcs: [], imgs: [], q: 0, raf: 0, tm: 0};
+  g.className = 'llx-l llg-g'; c.className = 'llg-c'; g.style.visibility = c.style.visibility = 'hidden';
+  LLG.list.forEach(function(p){
+    var el = document.createElement('div'); el.className = 'llgp ' + (p.c ? 'c' : 'g');
+    el.style.left = (p.x*100) + '%'; el.style.top = (p.y*100) + '%'; el.style.width = (p.w*100) + '%'; el.style.height = (p.h*100) + '%';
+    var im = document.createElement('img'); im.src = p.u; im.alt = ''; im.draggable = false; im.loading = 'eager';
+    var ho = document.createElement('i'), gl = document.createElement('i'), mk = 'url("' + p.u + '")';
+    ho.className = 'llx-holo'; gl.className = 'llg-gl';
+    [ho, gl].forEach(function(n){ n.style.webkitMaskImage = mk; n.style.maskImage = mk; });
+    el.appendChild(im); el.appendChild(ho); el.appendChild(gl); (p.c ? c : g).appendChild(el);
+    L.pcs.push({el: el, ho: ho, p: p, base: p.c ? .6 : .3}); L.imgs.push(im);
+  });
+  old.parentNode.insertBefore(g, old.nextSibling);
+  bob.insertBefore(c, bob.querySelector('.hlx-sp'));
+  return L;
+}
+/* swap: only when every piece picture is ready, otherwise remove them and keep the old glass */
+function llgOn(x){
+  var L = x.lg; if(!L) return;
+  var ok = L.imgs.every(function(im){ return im.complete && im.naturalWidth > 0; });
+  if(!ok){ [L.g, L.c].forEach(function(n){ if(n.parentNode) n.parentNode.removeChild(n); }); x.lg = null; lldLog('glass pieces not ready: old glass'); return; }
+  L.g.style.visibility = L.c.style.visibility = '';
+  L.gw = L.g.offsetWidth; L.gh = L.g.offsetHeight; L.cw = L.c.offsetWidth; L.ch = L.c.offsetHeight;
+  x.cd.classList.add('llg'); lldLog('22-piece glass on');
+}
+/* q = 0: every piece in place; q = 1: all have flown past. Same maths as the approved demo. */
+function llgPaint(x, q){
+  var L = x.lg; if(!L) return; L.q = q;
+  var calm = !!(HL_RM || (state.ui && state.ui.calm));
+  L.pcs.forEach(function(n){
+    var p = n.p, a = q*1.66/p.depth, st = n.el.style;
+    if(q <= 0){ st.transform = ''; st.opacity = ''; n.ho.style.removeProperty('--ho'); return; }
+    var mag = calm ? 1 : 1/Math.max(.14, 1 - a), fade = calm ? 1 - llgEase(q) : 1 - llgEase((a - .59)/.35);
+    var W = p.c ? L.cw : L.gw, H = p.c ? L.ch : L.gh;
+    var dx = calm ? 0 : (p.cx - .5)*W*(mag - 1), dy = calm ? 0 : (p.cy - .5)*H*(mag - 1), rot = calm ? 0 : p.turn*llgEase(a);
+    st.opacity = fade.toFixed(3);
+    st.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + mag.toFixed(4) + ')';
+    n.ho.style.setProperty('--ho', Math.min(.85, n.base*(1 + 1.4*Math.min(1, Math.max(0, a)))).toFixed(3));
+  });
+}
+/* move q from where it is now to 'to' over ms (smooth start and end), then fn. A timer finishes it if the screen is hidden. */
+function llgRun(x, to, ms, fn){
+  var L = x.lg; if(!L) return;
+  if(L.raf) cancelAnimationFrame(L.raf); clearTimeout(L.tm);
+  var from = L.q, t0 = 0, done = false;
+  function end(){ if(done) return; done = true; cancelAnimationFrame(L.raf); L.raf = 0; clearTimeout(L.tm); if(LLFX !== x || x.lg !== L) return; llgPaint(x, to); if(fn) fn(); }
+  function step(now){ if(done || LLFX !== x) return; if(!t0) t0 = now; var k = Math.min(1, (now - t0)/ms); llgPaint(x, from + (to - from)*llgEase(k)); if(k >= 1) end(); else L.raf = requestAnimationFrame(step); }
+  L.raf = requestAnimationFrame(step); L.tm = setTimeout(end, ms + 400); x.timers.push(L.tm);
+}
+/* sounds: a soft whoosh and glassy tings when it breaks; seven tings and a soft chord as it comes back together */
+function llgOut(){ if(state.mute) return null; var a = audio(); return a ? {a: a, o: sfxOut || a.destination} : null; }
+function llgVerb(s){
+  if(LLG.verb && LLG.verb.a === s.a) return LLG.verb.n;
+  var n = s.o;
+  try{ var a = s.a, len = Math.floor(a.sampleRate*2.4), ir = a.createBuffer(2, len, a.sampleRate);
+    for(var c = 0; c < 2; c++){ var d = ir.getChannelData(c); for(var i = 0; i < len; i++) d[i] = (Math.random()*2 - 1)*Math.pow(1 - i/len, 3); }
+    var cv = a.createConvolver(), w = a.createGain(); cv.buffer = ir; w.gain.value = .35; cv.connect(w); w.connect(s.o); n = cv; }catch(e){}
+  LLG.verb = {a: s.a, n: n}; return n;
+}
+function llgTing(s, at, f, vol, pan){
+  var a = s.a, out = a.createGain(), v = llgVerb(s);
+  try{ var p = a.createStereoPanner(); p.pan.value = pan; out.connect(p); p.connect(s.o); if(v !== s.o) p.connect(v); }catch(e){ out.connect(s.o); }
+  [[f,'sine',1,1.8],[f*1.004,'sine',.45,1.5],[f*2,'triangle',.3,.8],[f*3.01,'sine',.12,.45],[f*5.02,'sine',.05,.25]].forEach(function(t){
+    var o = a.createOscillator(), g = a.createGain(); o.type = t[1]; o.frequency.value = t[0];
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol*t[2], at + .008); g.gain.exponentialRampToValueAtTime(.0003, at + t[3]);
+    o.connect(g); g.connect(out); o.start(at); o.stop(at + t[3] + .05);
+  });
+}
+function llgBreak(){
+  var s = llgOut(); if(!s) return;
+  try{
+    var a = s.a, t = a.currentTime, len = .9, b = a.createBuffer(1, Math.floor(a.sampleRate*len), a.sampleRate), d = b.getChannelData(0);
+    for(var i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1;
+    var n = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); n.buffer = b;
+    f.type = 'bandpass'; f.Q.value = 1.2; f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(1800, t + len);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + len*.35); g.gain.linearRampToValueAtTime(0, t + len);
+    n.connect(f); f.connect(g); g.connect(s.o); n.start(t); n.stop(t + len + .05);
+    [2093, 2637, 3136, 3951, 3520].forEach(function(fq, i){ llgTing(s, t + .02 + i*.06, fq, .03, i%2 ? .4 : -.4); });
+  }catch(e){}
+}
+function llgForm(){
+  var s = llgOut(); if(!s) return;
+  try{
+    var t = s.a.currentTime + .05, k = (HL_RM || (state.ui && state.ui.calm)) ? .6 : 1;
+    [[.35,1568],[.8,1319],[1.25,1175],[1.75,1047],[2.3,880],[2.9,784],[3.5,659]].forEach(function(n, i){ llgTing(s, t + n[0]*k, n[1], .05, i%2 ? .5 : -.5); if(i%2 === 0) llgTing(s, t + n[0]*k + .11, n[1]*1.5, .018, i%2 ? -.3 : .3); });
+    [523, 659, 784, 1047].forEach(function(f, i){ llgTing(s, t + 4.0*k + i*.03, f, .03, (i - 1.5)*.25); });
+  }catch(e){}
+}
+/* music: if the card is still on screen when the track would end, blend softly into an earlier part (never silent) */
+function llgCarry(tok, buf, a, t0){
+  if(!buf || !buf.duration) return;
+  var ms = Math.max(0, (t0 + buf.duration - 1.5 - a.currentTime)*1000);
+  setTimeout(function(){
+    var p = LLTRK.play; if(LLTRK.tok !== tok || !p) return;
+    try{
+      var now = a.currentTime, off = buf.duration*.25, s = a.createBufferSource(), g = a.createGain();
+      s.buffer = buf; g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(.65, now + 1.5); s.connect(g); g.connect(sfxOut || a.destination); s.start(now, off);
+      p.g.gain.cancelScheduledValues(now); p.g.gain.setValueAtTime(p.g.gain.value, now); p.g.gain.linearRampToValueAtTime(0, now + 1.5); p.s.stop(now + 1.6);
+      LLTRK.play = {s: s, g: g, a: a};
+      s.onended = function(){ if(LLTRK.play && LLTRK.play.s === s) LLTRK.play = null; };
+      llgCarry(tok, buf, a, now - off);
+    }catch(e){}
+  }, ms);
+}
 function llFxView(){ var vv = window.visualViewport; return {w:(vv && vv.width) || window.innerWidth, h:(vv && vv.height) || window.innerHeight, x:(vv && vv.offsetLeft) || 0, y:(vv && vv.offsetTop) || 0}; }
 function llFxPlace(x, r){ var k = r.width / x.w; return 'translate3d(' + r.left + 'px,' + r.top + 'px,0) scale3d(' + k + ',' + k + ',1)'; }
 function llFxFit(x){ var v = llFxView(), k = Math.min(v.w / x.w, v.h / x.h) * 0.92; return 'translate3d(' + (v.x + (v.w - x.w*k)/2) + 'px,' + (v.y + (v.h - x.h*k)/2) + 'px,0) scale3d(' + k + ',' + k + ',1)'; }
@@ -4725,7 +4866,7 @@ function llFxOpen(id, visual, real){
   cp.classList.remove('llx-out');
   [cp].concat([].slice.call(cp.querySelectorAll('[id]'))).forEach(function(n){ n.removeAttribute('id'); });
   box.appendChild(cp); cd.appendChild(box); root.appendChild(bg); root.appendChild(cd);
-  var x = {id:id, root:root, bg:bg, cd:cd, real:real, realVis:real.style.visibility, w:r.width, h:r.height, home:r, phase:'prep', abort:false, after:null, timers:[]};
+  var x = {id:id, root:root, bg:bg, cd:cd, real:real, realVis:real.style.visibility, w:r.width, h:r.height, home:r, phase:'prep', abort:false, after:null, timers:[], lg:llgBuild(cp)};
   cd.style.width = r.width + 'px'; cd.style.height = r.height + 'px';
   cd.style.transform = llFxPlace(x, r);
   LLFX = x; lldPhase('prep');
@@ -4735,6 +4876,7 @@ function llFxOpen(id, visual, real){
   function go(){
     if(started || LLFX !== x || x.phase !== 'prep') return; started = true;
     lldLog('copy ready in ' + Math.round(performance.now() - t0) + 'ms');
+    llgOn(x);                                    /* 26.11.61: the 22 pieces take over from the glass layers (same look) */
     real.style.visibility = 'hidden';            /* the copy is already painted on top, so nothing changes on screen */
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ llFxFly(x); }); });
   }
@@ -4764,6 +4906,7 @@ function llFxLanded(x){
     x.phase = 'load'; lldPhase('load');
     if(!llPlay(x.id, null, x)){ lldLog('story could not start'); llFxClose(x); }
   };
+  if(x.lg){ llgBreak(); llgRun(x, 1, 800, next); return; }   /* 26.11.61 */
   if(g) llFxAfter(x, g, 'transform', 700, next); else next();
 }
 /* ---- 6. return: glass and art ease home slowly; the face stays hidden ---- */
@@ -4778,6 +4921,7 @@ function llFxClose(x, done){
   if(art){ art.style.transition = 'none'; art.style.transform = m; }   /* freeze the breathing exactly where it is */
   cd.classList.remove('imm', 'dv'); cd.classList.add('ret', 'rt'); cd.style.transform = llFxFit(x);
   if(art){ void art.offsetWidth; art.style.transition = ''; art.style.transform = 'none'; }
+  if(x.lg){ llgForm(); llgRun(x, 0, 4000, function(){ llFxSnap(x); }); return; }   /* 26.11.61: the pieces drift home over 4 s */
   var layers = [cd.querySelector('.llx-g'), cd.querySelector('.llx-c')].filter(Boolean), left = layers.length;
   if(!left){ llFxSnap(x); return; }
   layers.forEach(function(l){ llFxAfter(x, l, 'transform', 2400, function(){ if(--left === 0) llFxSnap(x); }); });
@@ -4802,6 +4946,7 @@ function llFxFace(x){
 function llFxDone(x){
   if(!x) return;
   x.timers.forEach(clearTimeout); x.timers = [];
+  if(x.lg && x.lg.raf){ cancelAnimationFrame(x.lg.raf); x.lg.raf = 0; }
   if(x.real) x.real.style.visibility = x.realVis || '';
   if(x.root.parentNode) x.root.parentNode.removeChild(x.root);
   document.body.classList.remove('llfxhide');
@@ -4839,7 +4984,7 @@ function llTrackStart(id){
     if(!buf || LLTRK.tok !== tok) return;
     var g = a.createGain(), s = a.createBufferSource();
     s.buffer = buf; g.gain.value = 1; s.connect(g); g.connect(sfxOut || a.destination); s.start(0);
-    LLTRK.play = {s:s, g:g, a:a};
+    LLTRK.play = {s:s, g:g, a:a}; llgCarry(tok, buf, a, a.currentTime);
     s.onended = function(){ if(LLTRK.play && LLTRK.play.s === s) LLTRK.play = null; };
   }
   var have = LLTRK.bytes[key];
@@ -4853,12 +4998,13 @@ function llTrackStop(fade){
   try{ var t = p.a.currentTime; p.g.gain.cancelScheduledValues(t); p.g.gain.setValueAtTime(p.g.gain.value, t); p.g.gain.linearRampToValueAtTime(0, t + f); p.s.stop(t + f + .02); }catch(e){}
 }
 llTrackPrefetch();
+setTimeout(llgLoad, 1500);
 function llFly(id, el){
   var visual = el && el.closest ? el.closest('.tcg') : null;
   if(!visual || !visual.classList.contains('llx')) return llPlay(id, (visual && visual.querySelector('.tcg-art')) || el);
   if(LLP || LLFX) return false;
   var real = visual.closest('.dflip') || visual.closest('.flip') || visual.closest('.tcgbox') || visual;
-  lldStart(); lldLog('tap ' + id); llTrackStart(id);
+  lldStart(); lldLog('tap ' + id); llTrackStart(id); llgLoad();
   HL.hold = 1; stopSpeak(); llDuck(true);
   if(!llFxOpen(id, visual, real)){ HL.hold = 0; llDuck(false); lldEnd(); return false; }
   return true;
@@ -10520,7 +10666,11 @@ function kotoCardsFor(i){ var w = KOTO[i][0], out = []; CARD_QUOTES.forEach(func
 function cqKoto(q){ if(!q[7]) return -1; for(var i = 0; i < KOTO.length; i++) if(KOTO[i][0] === q[7]) return i; return -1; }
 function speakCQ(txt, lang, el){
   if(lang !== 'zh-HK'){ speakText(txt, lang, el); return; }
-  var hint = '🔊 To hear Cantonese, install the iPad voice called Chinese (Hong Kong) or Cantonese (Hong Kong), then reload StarQuest.';
+  /* 26.11.60: Android keeps its original wording; only iPhone/iPad get the iOS wording. */
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var hint = isIOS
+    ? '🔊 To hear Cantonese, install the iPad voice called Chinese (Hong Kong) or Cantonese (Hong Kong), then reload StarQuest.'
+    : '🔊 To hear Cantonese, add the voice once: Android Settings → Text-to-speech → Google → Install voice data → Chinese (Hong Kong).';
   if(state.mute){ speakText(txt, lang, el); return; }
   var cap = nativeCap();
   if(cap){
