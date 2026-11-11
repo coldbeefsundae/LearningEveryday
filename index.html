@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.76', errs = [], shown = false;
+  var V = '26.11.77', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2562,6 +2562,14 @@ iframe.llstory{transition:opacity .45s ease}
   .pshell.open .pscrim{display:block;position:absolute;inset:0;z-index:5;background:rgba(10,8,30,.45)}
   .pmain{padding:0 14px 40px}
 }
+
+.ibars{display:flex;gap:6px;align-items:flex-end;margin:8px 0 4px}
+.ib{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.ibt{width:100%;height:84px;display:flex;align-items:flex-end;background:rgba(127,127,170,.14);border-radius:8px;overflow:hidden}
+.ibt i{display:block;width:100%;background:var(--accent);border-radius:8px 8px 0 0}
+.ibv{font-size:11px;font-weight:800;min-height:14px;opacity:.85}
+.ib small{font-size:11px;opacity:.7;font-weight:700}
+.ipct{font-weight:900;font-size:18px;padding:0 6px}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -2705,7 +2713,7 @@ function freshState(){
     cardZoom:'L', skin:'hybrid',
     points:0, history:{}, streakBest:0, streakPaid:{}, restUsed:{}, restToday:false, restNote:null,
     extraToday:0, screenToday:0, pointsLog:[], rewards:defaultRewards(), requests:[], goalId:null,
-    dlog:{}, dmark:[], dnames:{}, dsig:null, journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{bedOn:false, bedTime:'21:00', wakeTime:'07:00', daily:30, base:20, finish:10, latePct:50, screenEnd:'20:45', curfewOn:true, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
+    dlog:{}, dmark:[], wkSnapped:{}, wkExport:null, dnames:{}, dsig:null, journal:{}, badges:{}, badgesInit:false, seenHol:{}, bday:{y:0,m:0,d:0}, bdayCards:{}, recaps:{}, fam:[], cardDates:{}, stats:{bitesDays:0}, bdayConf:null, notified:null, notifyQ:null, eco:{bedOn:false, bedTime:'21:00', wakeTime:'07:00', daily:30, base:20, finish:10, latePct:50, screenEnd:'20:45', curfewOn:true, bonus:5, screenCap:60, extraCap:20, bankCap:600, restOn:true, autoRest:true, quizOn:true, quizPts:1, quizPerfect:2, musicOn:true, musicOff:'', bitesOn:true, bitesPts:1, holOn:true, holCA:true, holJP:true, holCN:true, bdayOn:true, journalOn:true, notify:{on:false, name:'', email:'', phone:'', push:false, topic:'', hook:''}},
     ui:{ts:'M', calm:false, sfx:100, music:false, mvol:50, track:'meadow', sleep:0, mascot:true, lang:'both'},
     news:[], bitesDate:null, dailyId:null,
     goals:{weeks:{}, col:{}, sparks:[], from:'Dad'},
@@ -2820,7 +2828,7 @@ function checkNewDay(){
     state.date = today;
     resetProgress(true);
     state.overrides = {};
-    save();
+    save(); setTimeout(wkMaintain, 1500);
     return true;
   }
   return false;
@@ -3659,8 +3667,8 @@ function dlClose(k){
     d.x = 1;
   }catch(e){}
 }
-function dlCSV(){
-  var ks = Object.keys(state.dlog || {}).sort(), rows = ['date,weekday,quests_active,quests_done,finished_at,on_time,order,morning_routine,evening_routine,points_earned,points_spent,app_opened'];
+function dlCSV(from, to){
+  var ks = Object.keys(state.dlog || {}).sort().filter(function(k){ return (!from || k >= from) && (!to || k <= to); }), rows = ['date,weekday,quests_active,quests_done,finished_at,on_time,order,morning_routine,evening_routine,points_earned,points_spent,app_opened'];
   var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], hm = function(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; };
   ks.forEach(function(k){
     var d = state.dlog[k], ord = Object.keys(d.q || {}).sort(function(a, b){ return d.q[a][1] - d.q[b][1]; }).map(function(i){ return ((state.dnames && state.dnames[i]) || i).replace(/[,"]/g, ' ') + '@' + hm(d.q[i][0]); }).join(' > ');
@@ -3668,8 +3676,188 @@ function dlCSV(){
     rows.push([k, wd[d.w], (d.a || []).length, Object.keys(d.q || {}).length, hm(d.f), d.f ? (d.e ? 'yes' : 'no') : '', '"' + ord + '"', rt('m'), rt('n'), d.p || 0, d.s || 0, d.g ? 'no' : 'yes'].join(','));
   });
   rows.push(''); rows.push('parent changes: date,time,what,before,after');
-  (state.dmark || []).forEach(function(m){ rows.push([m.d, hm(m.t), '"' + String(m.l).replace(/"/g, "'") + '"', '"' + String(m.a).replace(/"/g, "'") + '"', '"' + String(m.b).replace(/"/g, "'") + '"'].join(',')); });
+  (state.dmark || []).filter(function(m){ return (!from || m.d >= from) && (!to || m.d <= to); }).forEach(function(m){ rows.push([m.d, hm(m.t), '"' + String(m.l).replace(/"/g, "'") + '"', '"' + String(m.a).replace(/"/g, "'") + '"', '"' + String(m.b).replace(/"/g, "'") + '"'].join(',')); });
   return rows.join('\n');
+}
+
+/* ---------- 26.11.77: weekly snapshots (automatic, in the app's own IndexedDB) ----------
+   Every finished week is frozen into IndexedDB key 'wk:<Monday>'. If the log is ever lost (state reset, restore of an old backup),
+   missing days are put back from these copies. A real file needs a tap: Parent shows "Save last week's log". */
+function wkLast(){ return addDaysKey(weekKeyOf(dateKey()), -7); }
+function wkKvPut(key, val){ idbOpen(function(db){ if(!db) return; try{ db.transaction('kv', 'readwrite').objectStore('kv').put(val, key); }catch(e){} }); }
+function wkKvAll(cb){
+  idbOpen(function(db){
+    if(!db) return cb([]);
+    try{
+      var out = [], rq = db.transaction('kv').objectStore('kv').openCursor(IDBKeyRange.bound('wk:', 'wk:\uffff'));
+      rq.onsuccess = function(){ var c = rq.result; if(c){ out.push(c.value); c.continue(); } else cb(out); };
+      rq.onerror = function(){ cb(out); };
+    }catch(e){ cb([]); }
+  });
+}
+function wkSnapshot(wk){
+  var days = {}, any = false, end = addDaysKey(wk, 6);
+  for(var i = 0; i < 7; i++){ var k = addDaysKey(wk, i); if(state.dlog && state.dlog[k]){ days[k] = state.dlog[k]; any = true; } }
+  if(!any) return false;
+  var names = {}; Object.keys(days).forEach(function(k){ Object.keys(days[k].q || {}).concat(days[k].a || []).forEach(function(id){ if(state.dnames && state.dnames[id]) names[id] = state.dnames[id]; }); });
+  var marks = (state.dmark || []).filter(function(m){ return m.d >= wk && m.d <= end; });
+  wkKvPut('wk:' + wk, JSON.stringify({wk:wk, days:days, marks:marks, names:names, hist:(function(){ var h = {}; for(var i = 0; i < 7; i++){ var k = addDaysKey(wk, i); if(state.history[k]) h[k] = state.history[k]; } return h; })()}));
+  return true;
+}
+function wkMaintain(){
+  try{
+    if(!state.wkSnapped) state.wkSnapped = {};
+    var cur = weekKeyOf(dateKey()), ks = Object.keys(state.dlog || {}).sort(), changed = false;
+    if(ks.length){
+      for(var w = weekKeyOf(ks[0]); w < cur; w = addDaysKey(w, 7)){
+        if(!state.wkSnapped[w]){ wkSnapshot(w); state.wkSnapped[w] = 1; changed = true; }
+      }
+    }
+    if(changed) save();
+    wkKvAll(function(list){
+      var back = 0;
+      list.forEach(function(raw){
+        try{
+          var o = JSON.parse(raw); if(!o || !o.days) return;
+          Object.keys(o.days).forEach(function(k){ if(!state.dlog[k]){ state.dlog[k] = o.days[k]; back++; } });
+          (o.marks || []).forEach(function(m){ if(!state.dmark.some(function(x){ return x.d === m.d && x.t === m.t && x.l === m.l; })){ state.dmark.push(m); back++; } });
+          Object.keys(o.names || {}).forEach(function(id){ if(!state.dnames[id]) state.dnames[id] = o.names[id]; });
+          if(o.wk) state.wkSnapped[o.wk] = 1;
+        }catch(e){}
+      });
+      if(back){ state.dmark.sort(function(a, b){ return a.d < b.d ? -1 : a.d > b.d ? 1 : a.t - b.t; }); dlPrune(); save(); }
+    });
+  }catch(e){}
+}
+function wkDownload(){
+  var wk = wkLast(), end = addDaysKey(wk, 6);
+  try{
+    var bl = new Blob([dlCSV(wk, end)], {type:'text/csv'}), al = document.createElement('a');
+    al.href = URL.createObjectURL(bl); al.download = 'starquest-log-week-'+wk+'.csv';
+    document.body.appendChild(al); al.click(); al.remove();
+    state.wkExport = wk; save(); toast('⬇️ Last week\u2019s log saved to Downloads');
+  }catch(err){ toast('Could not save the file'); }
+}
+function wkReady(){
+  var wk = wkLast(); if(state.wkExport === wk) return false;
+  for(var i = 0; i < 7; i++){ if(state.dlog && state.dlog[addDaysKey(wk, i)]) return true; }
+  return false;
+}
+
+/* ---------- 26.11.77: Insights (reads the daily log; whole-day history also comes from the streak calendar) ---------- */
+var INS = {w:4};
+function insDays(n){
+  var today = dateKey(), from = addDaysKey(today, -n*7), out = [];
+  for(var k = from; k < today; k = addDaysKey(k, 1)){
+    var d = state.dlog && state.dlog[k], h = state.history && state.history[k];
+    if(h === 'rest' || h === 'bday') continue;
+    var rec = {k:k, wd:parseKey(k).getDay(), wk:weekKeyOf(k), d:null, full:null};
+    if(d && d.x && !d.g && d.a && d.a.length){ rec.d = d; rec.full = d.f ? 1 : 0; }
+    else if(h === 'done') rec.full = 1;
+    else if(h === 'miss') rec.full = 0;
+    else if(d && d.g) rec.full = 0;
+    if(rec.full === null) continue;
+    out.push(rec);
+  }
+  return out;
+}
+function insPct(a, b){ return b ? Math.round(a/b*100) : null; }
+function insTime(m){ if(m == null || isNaN(m)) return '-'; m = Math.round(m); var h = Math.floor(m/60), mm = m%60; return fmt12(pad(h)+':'+pad(mm)); }
+function insName(id){ return (state.dnames && state.dnames[id]) || id; }
+function insMedian(a){ if(!a.length) return null; a = a.slice().sort(function(x, y){ return x - y; }); var m = Math.floor(a.length/2); return a.length % 2 ? a[m] : (a[m-1] + a[m])/2; }
+function insBars(vals, labels, fmt, hi){
+  var mx = hi || 100, h = '<div class="ibars">';
+  vals.forEach(function(v, i){ h += '<div class="ib"><div class="ibv">'+(v == null ? '' : fmt(v))+'</div><div class="ibt"><i style="height:'+(v == null ? 0 : Math.max(3, Math.round(v/mx*100)))+'%"></i></div><small>'+labels[i]+'</small></div>'; });
+  return h + '</div>';
+}
+function insWeeks(n){ var out = [], w = weekKeyOf(dateKey()); for(var i = n - 1; i >= 0; i--) out.push(addDaysKey(w, -7*i)); return out; }
+function insWkLabel(w){ var p = w.split('-'); return +p[1] + '/' + +p[2]; }
+function insAvg(days, f){ var n = 0, t = 0; days.forEach(function(r){ var v = f(r); if(v != null){ n++; t += v; } }); return n ? t/n : null; }
+function insMarks(){
+  var seen = {}, out = [];
+  (state.dmark || []).forEach(function(m){ if(String(m.l).indexOf('Points by parent') === 0) return; var key = m.d + '|' + m.l; if(seen[key]) return; seen[key] = 1; out.push(m); });
+  return out;
+}
+function parInsights(){
+  var N = INS.w, days = insDays(N), logged = days.filter(function(r){ return r.d; });
+  var h = '<div class="row" style="margin-bottom:6px"><button class="btn small'+(N === 4 ? ' primary' : '')+'" data-act="pinsr" data-w="4">4 weeks</button><button class="btn small'+(N === 12 ? ' primary' : '')+'" data-act="pinsr" data-w="12">12 weeks</button></div>';
+  if(!days.length) return h + '<div class="hint">Nothing to show yet. Insights fill in as days finish.</div>';
+  h += '<div class="hint">'+days.length+' day'+(days.length === 1 ? '' : 's')+' counted ('+logged.length+' with full detail). Rest days and days the app was not opened with no record are left out. '+(logged.length < 7 ? 'Quest times, order and routines need about a week of detail to be useful; they start from the day the log was installed.' : '')+'</div>';
+  /* whole-day trend */
+  var wks = insWeeks(N), wv = wks.map(function(w){ var ds = days.filter(function(r){ return r.wk === w; }); return ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null; });
+  var tot = insPct(days.filter(function(r){ return r.full; }).length, days.length);
+  h += '<h3>All quests finished, by week</h3><div class="hint">Overall: '+tot+'% of days.</div>' + insBars(wv, wks.map(insWkLabel), function(v){ return v + '%'; }, 100);
+  var mk = insMarks().filter(function(m){ return m.d >= wks[0]; });
+  if(mk.length){ h += '<div class="hint">🔧 Changes you made in this period: '+mk.slice(-6).map(function(m){ return esc(insWkLabel(weekKeyOf(m.d)))+' '+esc(m.l); }).join(' · ')+'</div>'; }
+  /* weekdays */
+  var wd = [0,1,2,3,4,5,6].map(function(i){ var ds = days.filter(function(r){ return r.wd === i; }); return {i:i, n:ds.length, p:ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null}; });
+  var order = [1,2,3,4,5,6,0];
+  h += '<h3>Weekdays</h3>' + insBars(order.map(function(i){ return wd[i].p; }), order.map(function(i){ return DAY_NAMES[i]; }), function(v){ return v + '%'; }, 100);
+  var worst = wd.filter(function(x){ return x.n >= 2 && x.p != null; }).sort(function(a, b){ return a.p - b.p; })[0];
+  if(worst) h += '<div class="hint">Weakest day: <b>'+DAY_NAMES[worst.i]+'</b> ('+worst.p+'% of those days finished, out of '+worst.n+').</div>';
+  if(!logged.length) return h + '<div class="hint" style="margin-top:14px">Per-quest details (missed chores, order, time of day, routines) appear after the first full days are logged.</div>' + insBefore(days);
+  /* per quest */
+  var Q = {};
+  logged.forEach(function(r){
+    var d = r.d, nd = Object.keys(d.q).length;
+    d.a.forEach(function(id){
+      var q = Q[id] || (Q[id] = {id:id, act:0, done:0, times:[], pos:[], first:0, multi:0, wd:{}});
+      q.act++; q.wd[r.wd] = q.wd[r.wd] || {a:0, m:0}; q.wd[r.wd].a++;
+      if(d.q[id]){ q.done++; q.times.push(d.q[id][0]); if(nd >= 2){ q.multi++; q.pos.push((d.q[id][1] - 1)/(nd - 1)); if(d.q[id][1] === 1) q.first++; } }
+      else q.wd[r.wd].m++;
+    });
+  });
+  var qs = Object.keys(Q).map(function(k){ return Q[k]; });
+  /* missed chores */
+  var ms = qs.filter(function(q){ return q.act - q.done > 0; }).sort(function(a, b){ return (b.act - b.done) - (a.act - a.done); });
+  h += '<h3>Missed chores</h3>';
+  if(!ms.length) h += '<div class="hint">No missed quests in this period. 🎉</div>';
+  else ms.slice(0, 6).forEach(function(q){
+    var wm = Object.keys(q.wd).map(function(k){ return {k:+k, m:q.wd[k].m}; }).sort(function(a, b){ return b.m - a.m; })[0];
+    h += '<div class="prow"><div class="pn">'+esc(insName(q.id))+'<small>missed '+(q.act - q.done)+' of '+q.act+' days'+(wm && wm.m > 1 ? ' · most on '+DAY_NAMES[wm.k] : '')+'</small></div><div class="ipct">'+insPct(q.done, q.act)+'%</div></div>';
+  });
+  /* order habits */
+  var os = qs.filter(function(q){ return q.multi >= 3; }).sort(function(a, b){ return insAvg(a.pos, function(x){ return x; }) - insAvg(b.pos, function(x){ return x; }); });
+  h += '<h3>Order habits</h3>';
+  if(os.length < 2) h += '<div class="hint">Needs a few more days with two or more quests done.</div>';
+  else{
+    h += '<div class="hint">From usually first to usually last:</div>';
+    os.forEach(function(q, i){ var f = insPct(q.first, q.multi); h += '<div class="prow"><div class="pe">'+(i+1)+'</div><div class="pn">'+esc(insName(q.id))+'<small>first on '+f+'% of days</small></div></div>'; });
+    var lastQ = os[os.length - 1], never = qs.filter(function(q){ return q.multi >= 3 && q.first === 0; });
+    if(never.length) h += '<div class="hint">Never done first: '+never.map(function(q){ return esc(insName(q.id)); }).join(', ')+'.</div>';
+  }
+  /* time of day */
+  h += '<h3>Time of day</h3>';
+  var ft = wks.map(function(w){ return insAvg(logged.filter(function(r){ return r.wk === w && r.d.f; }), function(r){ return r.d.f; }); });
+  var ftv = ft.filter(function(v){ return v != null; });
+  if(ftv.length){
+    var lo = Math.min.apply(null, ftv), hi = Math.max.apply(null, ftv), span = Math.max(30, hi - lo);
+    h += '<div class="hint">When all quests are finished, on average:</div>' + insBars(ft.map(function(v){ return v == null ? null : 30 + 70*(v - lo)/span; }), wks.map(insWkLabel), function(v){ return ''; }, 100);
+    h += '<div class="hint">'+wks.map(function(w, i){ return ft[i] == null ? '' : insWkLabel(w)+' '+insTime(ft[i]); }).filter(Boolean).join(' · ')+'</div>';
+    if(ftv.length >= 3){ var diff = ftv[ftv.length - 1] - ftv[0]; if(Math.abs(diff) >= 10) h += '<div class="hint"><b>'+(diff > 0 ? 'Drifting later' : 'Drifting earlier')+'</b> by about '+Math.round(Math.abs(diff))+' min over this period.</div>'; }
+  } else h += '<div class="hint">No fully finished days with times yet.</div>';
+  var tq = qs.filter(function(q){ return q.times.length >= 3; });
+  tq.forEach(function(q){ h += '<div class="prow"><div class="pn">'+esc(insName(q.id))+'<small>usually done around '+insTime(insMedian(q.times))+'</small></div></div>'; });
+  /* routines */
+  var R = {m:{n:0, ok:0, late:0, miss:0}, n:{n:0, ok:0, late:0, miss:0}};
+  logged.forEach(function(r){ ['m','n'].forEach(function(w){ if((r.d.rs || []).indexOf(w) < 0) return; var o = r.d.r[w], x = R[w]; x.n++; if(o && o.c){ if(o.ok) x.ok++; else x.late++; } else x.miss++; }); });
+  var rh = '';
+  [['m', '☀️ Morning'], ['n', '🌙 Evening']].forEach(function(a){ var x = R[a[0]]; if(x.n) rh += '<div class="prow"><div class="pn">'+a[1]+' routine<small>on time '+x.ok+' · late '+x.late+' · not finished '+x.miss+' (of '+x.n+' days)</small></div><div class="ipct">'+insPct(x.ok, x.n)+'%</div></div>'; });
+  if(rh) h += '<h3>Routines</h3>' + rh;
+  return h + insBefore(days);
+}
+function insBefore(days){
+  var h = '<h3>Before and after your changes</h3>', ms = insMarks().slice(-8).reverse(), shown = 0, hs = '';
+  ms.forEach(function(m){
+    var b = days.filter(function(r){ return r.k >= addDaysKey(m.d, -14) && r.k < m.d; }), a = days.filter(function(r){ return r.k > m.d && r.k <= addDaysKey(m.d, 14); });
+    if(b.length < 3 || a.length < 3) return;
+    var pb = insPct(b.filter(function(r){ return r.full; }).length, b.length), pa = insPct(a.filter(function(r){ return r.full; }).length, a.length);
+    var tb = insAvg(b.filter(function(r){ return r.d && r.d.f; }), function(r){ return r.d.f; }), ta = insAvg(a.filter(function(r){ return r.d && r.d.f; }), function(r){ return r.d.f; });
+    shown++;
+    hs += '<div class="prow"><div class="pn">'+esc(m.l)+(m.a !== '' && m.b !== '' && m.b !== 'edited' && String(m.l).indexOf('Quest') !== 0 ? ': '+esc(m.a)+' → '+esc(m.b) : '')+'<small>'+esc(m.d)+' · finished all quests '+pb+'% → '+pa+'%'+(tb != null && ta != null ? ' · finish time '+insTime(tb)+' → '+insTime(ta) : '')+' ('+b.length+' days before, '+a.length+' after)</small></div><div class="ipct">'+(pa - pb >= 0 ? '+' : '')+(pa - pb)+'</div></div>';
+  });
+  if(!shown) return h + '<div class="hint">After you change something (deadline, points, routines, quests), compare two weeks before and after here. Needs at least 3 days on each side.</div>';
+  return h + '<div class="hint">Two weeks before vs two weeks after. Other things change too, so treat this as a hint, not proof.</div>' + hs;
 }
 function toggleTask(id, cardEl){
   if(state.done[id]){
@@ -5358,6 +5546,7 @@ window.addEventListener('popstate', function(){
 document.addEventListener('pointerdown', function(){ if(!BACK.t) backArm(); }, true);
 backArm();
 setTimeout(llgLoad, 1500);
+setTimeout(wkMaintain, 3000);
 function llFly(id, el){
   var visual = el && el.closest ? el.closest('.tcg') : null;
   if(!visual || !visual.classList.contains('llx')) return llPlay(id, (visual && visual.querySelector('.tcg-art')) || el);
@@ -6388,7 +6577,7 @@ function parentOnChange(e){
 function showParentHome(scrollTop){ window.__parSec = null; showParent(scrollTop); }
 /* ---- 26.11.76: Parent mode is a full screen with a side menu (drawer in portrait) ---- */
 window.__parView = 'today';
-var PAR_VIEWS = {today:'🏠 Today', quests:'📋 Quests', points:'⭐ Points &amp; packs', rewards:'🎁 Rewards to give', more:'🧰 Tools'};
+var PAR_VIEWS = {today:'🏠 Today', quests:'📋 Quests', points:'⭐ Points &amp; packs', rewards:'🎁 Rewards to give', insights:'📈 Insights', more:'🧰 Tools'};
 function parNavBtn(ico, label, attr, on, badge){
   return '<button class="pnavb'+(on ? ' on' : '')+'" '+attr+'><span class="pni">'+ico+'</span><span class="pnl">'+label+'</span>'+(badge ? '<span class="pnbd">'+badge+'</span>' : '')+'</button>';
 }
@@ -6397,7 +6586,7 @@ function parNav(active){
   var v = function(k, ico, label, badge){ return parNavBtn(ico, label, 'data-act="pview" data-v="'+k+'"', active === k, badge); };
   var sc = function(k, ico, label){ return parNavBtn(ico, label, 'data-act="psec" data-sec="'+k+'"', active === 's:'+k); };
   var h = '<nav class="pnav" id="pnav"><div class="pnt">👪 Parent</div>';
-  h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '');
+  h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '') + v('insights', '📈', 'Insights');
   h += '<div class="pngrp">Settings</div>';
   h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', false);
   h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news');
@@ -6419,6 +6608,7 @@ function parHm(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; }
 function parToday(){
   var k = dateKey(), d = (state.dlog && state.dlog[k]) || {q:{}, r:{}, p:0, s:0}, act = activeTasks(), done = act.filter(function(t){ return state.done[t.id]; }).length;
   var h = '<div class="ptd"><div class="ptdh"><div><b style="font-size:20px">'+esc(DAY_NAMES[new Date().getDay()])+' '+esc(k)+'</b><div class="hint">'+(act.length ? done+' of '+act.length+' quests done' : 'No quests assigned today')+(state.restToday ? ' · rest day' : '')+'</div></div><div class="ptds"><span>🔥 '+streakNow()+'</span><span>⭐ '+state.points+'</span><span>🎴 '+state.packs+'</span></div></div>';
+  if(wkReady()) h += '<div class="prow" style="margin-top:8px"><div class="pe">🗂️</div><div class="pn">Last week\'s log is ready<small>A copy is already kept safely inside the app. Save a file too?</small></div><button class="btn small primary" data-act="pwkdl">⬇️ Save</button></div>';
   h += '<div class="pbarw"><i style="width:'+(act.length ? Math.round(done/act.length*100) : 0)+'%"></i></div>';
   h += '<h3>Quests</h3>';
   if(!act.length) h += '<div class="hint">Nothing assigned. Use Quests to assign some.</div>';
@@ -6473,6 +6663,7 @@ function showParent(scrollTop){
 
     h += '<div class="row" style="margin-top:12px"><button class="btn" data-act="rweditor">🎁 Rewards &amp; prices</button></div>';
   }
+  else if(v === 'insights'){ h = parInsights(); }
   else if(v === 'more'){
   h += '<h3>❓ Help</h3><div class="row"><button class="btn" data-act="phelp">❓ Parent guide &amp; FAQ</button></div>';
   h += '<h3>📅 Day tools</h3><div class="row"><button class="btn" data-act="pcalendar">📅 Streak calendar</button><button class="btn" data-act="preset">🔄 Reset today\'s board</button></div><div class="hint" style="margin-top:6px">Reset unchecks everything. The board also resets at midnight.</div>';
@@ -6595,7 +6786,7 @@ function showParentSection(key, scrollTop){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
     h += '<h3>Backup</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
     var dkn = Object.keys(state.dlog || {}).length;
-    h += '<h3>📊 Daily log</h3><div class="hint">Kept on this device only and included in backups. It records quest times and order, routines, points and your settings changes. Journal text is never stored. '+dkn+' day'+(dkn === 1 ? '' : 's')+' so far.</div><div class="row"><button class="btn small" data-act="pdlog">⬇️ Download log (CSV)</button></div>';
+    h += '<h3>📊 Daily log</h3><div class="hint">Kept on this device only and included in backups. It records quest times and order, routines, points and your settings changes. Journal text is never stored. '+dkn+' day'+(dkn === 1 ? '' : 's')+' so far.</div><div class="row"><button class="btn small" data-act="pdlog">⬇️ Download whole log (CSV)</button><button class="btn small" data-act="pwkdl">⬇️ Last week (CSV)</button></div><div class="hint" style="margin-top:6px">Every finished week is also copied automatically into a separate safe store inside the app, and put back if the log is ever lost. Clearing the app\'s data or uninstalling it removes those copies too, so save a file now and then.</div>';
     h += '<h3>Parent PIN</h3><div class="fld"><label>Change parent PIN (4 digits)</label><input type="password" inputmode="numeric" maxlength="4" id="sPin" placeholder="Leave blank to keep current"></div>';
   }
   h += '<div class="row" style="justify-content:space-between;margin-top:24px"><button class="btn" data-act="pbackhome">← Back</button><button class="btn primary" data-act="psave">💾 Save</button></div>';
@@ -6726,6 +6917,8 @@ function parentClick(e){
       save(); render(); Sound.fanfare();
       toast('🎁 Free break started: '+bm+' minutes.'+(curfewOn() && state.screenEndsAt > curfewDate().getTime() ? ' Note: that runs past '+fmt12(state.eco.screenEnd || '20:45')+'.' : ''), 4200);
       showParent(st); break;
+    case 'pinsr': INS.w = parseInt(b.getAttribute('data-w'), 10) === 12 ? 12 : 4; showParent(st); break;
+    case 'pwkdl': wkDownload(); showParent(st); break;
     case 'pview': window.__parSec = null; window.__parView = b.getAttribute('data-v') || 'today'; showParent(); break;
     case 'pdrawer': { var ps = $('pshell'); if(ps) ps.classList.toggle('open'); break; }
     case 'ptask': { var tk = findTask(id); if(tk){ toggleTask(id); } showParent(st); break; }
