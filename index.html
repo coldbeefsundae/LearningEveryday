@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.68', errs = [], shown = false;
+  var V = '26.11.69', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -4923,7 +4923,7 @@ function llFxOpen(id, visual, real){
   cp.classList.remove('llx-out');
   [cp].concat([].slice.call(cp.querySelectorAll('[id]'))).forEach(function(n){ n.removeAttribute('id'); });
   box.appendChild(cp); cd.appendChild(box); root.appendChild(bg); root.appendChild(cd);
-  var x = {id:id, root:root, bg:bg, cd:cd, real:real, realVis:real.style.visibility, w:r.width, h:r.height, home:r, phase:'prep', abort:false, after:null, timers:[], lg:null};
+  var x = {id:id, root:root, bg:bg, cd:cd, real:real, realVis:real.style.visibility, vis:visual, visVis:visual.style.visibility, w:r.width, h:r.height, home:r, phase:'prep', abort:false, after:null, timers:[], lg:null};
   cd.style.width = r.width + 'px'; cd.style.height = r.height + 'px';
   cd.style.transform = llFxPlace(x, r);
   LLFX = x; lldPhase('prep');
@@ -4935,6 +4935,7 @@ function llFxOpen(id, visual, real){
     lldLog('copy ready in ' + Math.round(performance.now() - t0) + 'ms');
     llgOn(x);                                    /* 26.11.63: canvas for the 22 pieces (empty until the dive) */
     real.style.visibility = 'hidden';            /* the copy is already painted on top, so nothing changes on screen */
+    visual.style.visibility = 'hidden';          /* 26.11.65: in the pack reveal the card face forces itself visible (.flip.on .flip-front), so hide the card itself too */
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ llFxFly(x); }); });
   }
   Promise.all(imgs).then(go); x.timers.push(setTimeout(go, 400));
@@ -4991,7 +4992,9 @@ function llFxSnap(x){
   if(LLFX !== x || x.phase === 'snap' || x.phase === 'face') return;
   x.phase = 'snap'; lldPhase('snap');
   document.body.classList.remove('llfxhide');
-  var h = (x.real.isConnected && llFxRect(x.real.querySelector('.tcg') || x.real)) || x.home;
+  /* 26.11.65: aim at the very card face the copy was made from (in the pack reveal .flip holds the back too) */
+  var h = (x.vis && x.vis.isConnected && llFxRect(x.vis)) || (x.real.isConnected && llFxRect(x.real.querySelector('.flip-front .tcg, .dfront .tcg') || x.real.querySelector('.tcg') || x.real)) || x.home;
+  lldLog('snap to ' + Math.round(h.left) + ',' + Math.round(h.top) + ' ' + Math.round(h.width) + 'w (opened at ' + Math.round(x.home.left) + ',' + Math.round(x.home.top) + ' ' + Math.round(x.home.width) + 'w)');
   x.cd.classList.remove('go', 'dv', 'rt'); x.cd.classList.add('snap'); x.root.classList.remove('dark');
   llFxAfter(x, x.cd, 'transform', 430, function(){ llFxFace(x); });
   x.cd.style.transform = llFxPlace(x, h);
@@ -5008,6 +5011,7 @@ function llFxDone(x){
   x.timers.forEach(clearTimeout); x.timers = [];
   if(x.lg && x.lg.raf){ cancelAnimationFrame(x.lg.raf); x.lg.raf = 0; }
   if(x.real) x.real.style.visibility = x.realVis || '';
+  if(x.vis) x.vis.style.visibility = x.visVis || '';
   if(x.root.parentNode) x.root.parentNode.removeChild(x.root);
   document.body.classList.remove('llfxhide');
   if(LLFX === x){ LLFX = null; HL.hold = 0; hlStart(); if(!LLP) llDuck(false); lldEnd(); }
