@@ -1,0 +1,121 @@
+STARQUEST - GENERAL ART STYLE GUIDE
+Version 1 (Nov 11, 2026). Applies to all card art, story pictures and
+LL scenes. Based on the existing SSR cards and the LL card pictures.
+(Lower-rarity cards C/B/A/S were not reviewed for this version; check
+a few and note any differences before relying on this for them.)
+
+==================================================================
+1. THE LOOK IN ONE SENTENCE
+==================================================================
+A warm, glowing storybook painting: gouache-and-watercolor look with
+fine ink outlines, soft painted texture, golden light, rich but
+gentle colors, and lots of small charming details. Friendly, calm
+and curious, never scary.
+
+==================================================================
+2. CORE STYLE RULES
+==================================================================
+Medium
+  - Hand-painted storybook feel: gouache and watercolor, soft
+    dappled brushwork, visible paper texture.
+  - Fine, clean ink outlines around main shapes.
+  - Never photoreal, never 3D-render, never flat vector or anime.
+
+Light
+  - Golden hour, sunset, lantern, lamp or soft daylight glow.
+  - Warm highlights on faces and edges; soft shadows.
+  - Night scenes are deep blue with warm points of light, not black.
+
+Color
+  - Rich, saturated but gentle. Warm skies (peach, gold, rose) with
+    blue/green balance.
+  - No muddy, grey or gloomy palettes.
+
+Composition
+  - One clear main subject, easy to read at thumbnail size.
+  - Subject centered and large on cards; people usually waist-up to
+    knee-up.
+  - Background tells the story at a glance with 1-3 recognizable
+    clues (landmark, object, symbol of the achievement).
+  - Leave calm space at the edges (frames, borders and UI sit there).
+
+People
+  - Kind, friendly faces and calm, confident poses.
+  - Real historical or living people painted friendly and
+    recognizable.
+  - Optional small cheerful children of many backgrounds as
+    onlookers or learners.
+  - In story scenes and LL pictures, other people appear as small,
+    softly painted figures (no close-up faces of strangers).
+
+Detail
+  - Charming small touches (lanterns, birds, blossoms, tools, books)
+    that reward a second look, without clutter around the subject.
+
+==================================================================
+3. BY USE
+==================================================================
+Card art (all rarities)
+  - Square. Subject + story background as above.
+  - Rarity effects (borders, foil, holo, sparkles, SSR regional
+    frames) are added by the app, NOT painted into the art.
+
+SSR cards
+  - Same style, the most "hero moment" composition and glow.
+  - See SSR-Card-Style.txt for the prompts and frame notes.
+
+LL (Living Legendary) story pictures
+  - Use the card art as the style reference for every shot.
+  - Stills with camera pans/zooms/glows, not AI video (style drift).
+  - See LL-Card-Playbook.md for the full build guide.
+
+Story and scene pictures
+  - Same style; wider scenes are fine; people small and soft.
+
+==================================================================
+4. BASE PROMPT (paste at the start of any StarQuest image prompt)
+==================================================================
+Storybook illustration in exactly the same art style as the reference
+pictures: warm gouache-and-watercolor look with fine ink outlines,
+soft dappled brushwork and visible paper texture, golden glowing
+light, rich but gentle saturated colors, charming small details.
+Friendly, calm, curious tone for an 8-year-old. One clear main
+subject that reads well when small, with a background that tells the
+story at a glance. No text, no letters, no logos, no UI, no
+violence, no scary elements. Copy the reference style only, never
+its composition.
+
+Add for card art:
+Square format. Main subject centered and large with a friendly calm
+expression. Leave a little calm space at the edges so a border or
+frame can sit on top without covering the subject.
+
+Add for story/LL scenes:
+Other people appear only as small, softly painted figures. Match the
+card art's palette and light exactly so the shots feel continuous.
+
+Reference: always attach 2-4 existing StarQuest pictures as the
+style reference (card art for cards, the card itself for its story).
+
+==================================================================
+5. NEVER
+==================================================================
+- Text, letters, captions, logos, watermarks, UI.
+- Weapons in use, blood, injury, death, fear, horror, dark mood.
+- Sacred or cultural symbols used as decoration; culture is shown
+  through respectful everyday scenes and named in the card text.
+- Copying a real artist's or photographer's work or a famous
+  painting's composition.
+- Flags or emblems as the main focus.
+- Anything personal about the family (the repo is public).
+
+==================================================================
+6. QUICK CHECK BEFORE APPROVING A PICTURE
+==================================================================
+[ ] Looks like it belongs next to the existing cards
+[ ] Main subject readable at thumbnail size
+[ ] Warm light, gentle colors, kind faces
+[ ] Story clue visible in the background
+[ ] No text or hidden letters
+[ ] Edges calm enough for borders/frames
+[ ] Nothing an 8-year-old would find scary or confusing

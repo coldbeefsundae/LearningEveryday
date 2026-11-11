@@ -1,0 +1,143 @@
+STARQUEST - SSR CARD STYLE GUIDE AND PROMPTS
+Version 1 (Nov 11, 2026). Based on the 12 existing SSR cards.
+
+==================================================================
+1. WHAT AN SSR CARD IS
+==================================================================
+SSR is the top normal rarity. Each card is a big moment in history
+(a person, legend, event, place or creature) told for an 8-year-old.
+Every SSR card gets:
+  - Square painted art in the house style below.
+  - The rainbow SSR border, holo foil and SPARKLES (unchanged; the
+    sparkles stay on every SSR card).
+  - Its region's painted holographic frame on top (26.11.78+).
+    The frame adds to the sparkles; it never replaces them.
+    Frames: CN sumi ink arc, JP cherry branches, KR mother-of-pearl
+    lattice, CA aurora (colour holo), EU Gothic/Gaudi/ivy,
+    AM Art Deco/monarch/skyline, SA step-fret/vines/sun,
+    AF woven filigree, AU ripples/shells/waves, AS multifoil
+    arches/lotus, GL golden orbits.
+  - SSSR cards later use the same regional frame.
+
+==================================================================
+2. THE ART STYLE (what the existing cards look like)
+==================================================================
+Medium:      Warm storybook illustration; gouache-and-watercolor look,
+             fine ink outlines, soft painted texture.
+Format:      Square. Art fills the card window.
+Subject:     One clear main subject, centered and large. People are
+             usually waist-up to knee-up, friendly and calm, kind
+             faces, never fierce (even warriors look gentle).
+Background:  A recognizable scene that tells the story at a glance
+             (Qin: Great Wall + terracotta army; Newton: apple tree,
+             prism rainbow, planets; Sejong: children reading).
+Light:       Golden-hour glow, warm skies, sunset or lantern light.
+Colour:      Rich, saturated but gentle. Lots of small charming
+             details.
+Extras:      Optional small cheerful children of many backgrounds
+             (MLK, Sejong style).
+Real people: Painted friendly and recognizable (as with MLK, Biles).
+Never:       Text, letters, logos, flags as the focus, weapons in use,
+             blood, injury, scary faces, horror, dark mood.
+
+==================================================================
+3. BASE PROMPT (paste at the start of every SSR image prompt)
+==================================================================
+Square storybook illustration in exactly the same style as the
+reference cards: warm gouache-and-watercolor look with fine ink
+outlines, soft painted texture, golden-hour glow, rich but gentle
+saturated colors, charming small details. One clear main subject,
+centered and large, friendly calm expression. Background is a
+recognizable scene that tells the story at a glance. Child-friendly
+for an 8-year-old: no text, no letters, no logos, no violence, no
+scary elements. Leave a little calm space at the edges so a thin
+decorative frame can sit on top without covering the subject.
+
+Reference: always attach 2-4 existing SSR card images (or the
+collection screenshot) as the style reference. Copy the style only,
+never the composition.
+
+==================================================================
+4. CARD PROMPTS (base prompt + one of these)
+==================================================================
+
+--- CANADA: Chris Hadfield (Person, 1959-) ---
+Tagline: "The astronaut who sang in space"
+Prompt:
+A smiling Canadian astronaut with a friendly moustache, floating
+waist-up inside the round cupola window of the International Space
+Station, wearing a simple blue flight shirt, holding an acoustic
+guitar that floats gently beside him. Through the window: the curve
+of planet Earth glowing blue and white, and a soft green and violet
+aurora ribbon over the dark side. A few tiny floating water droplets
+catch the light. Warm cabin light on his face.
+
+--- ASIA & MIDEAST: Scheherazade and the Thousand and One Nights
+    (Legend) ---
+Tagline: "The storyteller who told a story every night"
+Prompt:
+A kind young storyteller woman in flowing jewel-toned robes and a
+light head scarf, sitting on embroidered cushions, telling a story
+with one hand raised, lit by a glowing brass oil lamp. Above her,
+her stories swirl up like painted dream bubbles: a flying carpet,
+a golden lamp with a friendly blue genie, a sailing ship, and a giant
+roc bird with wide wings. Behind her, an arched window opens onto
+domes and minarets of old Baghdad at dusk under the first stars.
+No king, no palace guards, no weapons.
+
+--- GLOBAL: The Moon Landing (Event, 1969) ---
+Tagline: "One giant leap for all of us"
+Prompt:
+An astronaut in a white space suit with a golden visor (no face
+visible) standing on the grey Moon surface beside a lunar lander,
+waving. In the foreground, one clear boot print in the moon dust.
+The Earth rises large, blue and white over the horizon against a
+starry sky. Soft golden light on the suit and dust. No visible flag
+text or words.
+
+--- SOUTH AMERICA: The First Chocolate (Event, c. 3300 BC,
+    Ecuador) ---
+Tagline: "Chocolate began in the Amazon"
+Prompt:
+In a misty golden Amazon rainforest, a large glowing cacao pod split
+open in the center showing its creamy seeds, resting beside simple
+ancient decorated clay pots. A friendly person from long ago
+(softly painted, kind face, simple clothing) gently stirs a frothy
+cacao drink in a clay bowl. Colorful parrots and a blue morpho
+butterfly nearby, big leaves, sun rays through the canopy.
+
+--- AUSTRALIA & OCEANIA: The Platypus (Creature/Place, Australia)
+    ---
+Tagline: "Scientists thought it was a fake!"
+Prompt:
+A cheerful platypus swimming through sunlit river ripples, duck
+bill forward, webbed feet paddling, a trail of bubbles behind it and
+a faint soft shimmer of light around its bill (its sense for
+electricity). Gum trees and a grassy riverbank at golden hour, a
+kookaburra on a branch, and two small cheerful children peeking from
+the bank in wonder.
+
+==================================================================
+5. SAFETY RULES (for an 8-year-old)
+==================================================================
+- Gentle tone only. Hard history is told softly and ends hopefully.
+- No weapons in use, no injury, no frightening creatures or faces.
+- Sacred or cultural symbols are not used as decoration; culture is
+  shown through respectful everyday scenes and named in the text.
+- No text inside images (the card adds its own name and tag).
+- Original generations only; never copy an artist's or
+  photographer's work.
+- Nothing personal about the family in any prompt, file name or
+  image (the repo is public).
+
+==================================================================
+6. WORKFLOW
+==================================================================
+1. Scope the card (name, local name, year, type, emoji, tagline,
+   story idea) and get approval.
+2. Generate art with: base prompt + card prompt + style reference.
+3. Review drafts with Victor before anything goes into the app.
+4. Write card text and the 8-year-old story with read-aloud lines.
+5. Add to the app as a hashed asset (assets/cards/), update
+   assets.json, keep the overall SSR pull rate the same.
+6. The regional frame and sparkles appear automatically.
