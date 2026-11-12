@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.104', errs = [], shown = false;
+  var V = '26.11.107', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -719,6 +719,42 @@ body[data-calm=off] .hero .kit{animation:kitbob 3.2s ease-in-out infinite}
 .sssrflash{position:fixed;inset:0;z-index:99;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(255,244,190,.95),rgba(255,214,90,.55) 45%,rgba(255,214,90,0) 75%);animation:sssrfade 2.4s ease-out forwards}
 @keyframes sssrfade{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
 .rc.r-SSSR{color:#5a3a00}
+/* 26.11.105: SSSR front, light, back and pull */
+/* 26.11.106: wide drawn frame, content sits inside it */
+.tcg.sssr .tcg-in{background:linear-gradient(165deg,#fffaf0,#fff1cf);box-shadow:none}
+/* 26.11.107: painted SSSR frame */
+.ssx-frm .fimg{background-image:url("assets/frames/sssr-s.1dd7a9c7.webp");opacity:1}
+.ssx-frm.big .fimg{background-image:url("assets/frames/sssr.7a6a03ec.webp")}
+.tcg.sssr .tcg-top{justify-content:flex-start}
+.tcg.sssr .ssx-rib{margin-right:26%}
+.tcg.sssr .tcg-name::after{content:none}
+.ssx-rib{min-width:0;padding:.16em .9em .18em .7em;background:linear-gradient(180deg,#fbe08a,#e0aa2e);color:#4a2c00;clip-path:polygon(0 0,100% 0,94% 50%,100% 100%,0 100%,5% 50%);box-shadow:inset 0 -.08em 0 rgba(120,70,0,.35)}
+.ssx-rib .tcg-name{color:#4a2c00}.ssx-rib .tcg-nat{color:#6a4500}
+.ssx-grow{display:flex;justify-content:space-around;gap:.2em;font-size:.6em;font-weight:900;color:#6a4500;background:linear-gradient(90deg,rgba(255,216,77,.28),rgba(255,154,213,.22),rgba(139,233,255,.22),rgba(255,216,77,.28));border-radius:.7em;padding:.18em .3em;flex:none}
+.ssx-grow b{margin-left:.15em}
+.z-M .ssx-grow,.z-S .ssx-grow,.z-O .ssx-grow{display:none}
+.ssx-rain{z-index:0;background:linear-gradient(115deg,rgba(255,120,180,0) 5%,rgba(255,120,180,.32) 20%,rgba(255,226,110,.34) 34%,rgba(120,255,190,.3) 48%,rgba(110,210,255,.32) 62%,rgba(190,140,255,.32) 76%,rgba(255,120,180,0) 92%);background-size:260% 260%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%)}
+.ssx-rain::after{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 .05em,transparent .08em),radial-gradient(circle,rgba(255,230,140,.9) 0 .04em,transparent .07em);background-size:1.5em 1.7em,2.3em 2.1em;background-position:0 0,.7em .9em;animation:ssxTw 2.8s ease-in-out infinite alternate}
+@keyframes ssxTw{from{opacity:.35}to{opacity:1}}
+.ssx-glint{z-index:3;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.42) 50%,transparent 62%);background-size:300% 300%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%)}
+.tcgbox .ssrb{position:absolute;inset:0;font-size:6.4cqw;border-radius:1.2em;overflow:hidden;background:linear-gradient(135deg,#7a5a10,#e9be45 22%,#b8860b 45%,#f6d977 62%,#a07418 82%,#6b4c0e);box-shadow:0 .3em .9em -.25em rgba(20,20,60,.5),inset 0 0 0 .1em #fff0b8}
+.tcgbox .ssrb .in{position:absolute;inset:5%;border-radius:.9em;overflow:hidden;background:linear-gradient(160deg,#c9971f,#e9be45 50%,#b8860b);box-shadow:inset 0 0 0 .1em #ffe9a3,inset 0 0 0 .2em #a07418}
+.tcgbox .ssrb svg{width:100%;height:100%;display:block}
+.ssrb-sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,250,220,.55) 50%,transparent 65%);background-size:300% 100%;animation:ssxSheen 4.5s ease-in-out infinite}
+@keyframes ssxSheen{0%{background-position:100% 0}60%,100%{background-position:-50% 0}}
+.flip.hint-SSSR .flip-back .ssrb{animation:sssrglow .9s ease-in-out infinite}
+.tcg.sssr .tcg-art::after{content:none}
+.ssxdim{position:fixed;inset:0;z-index:97;pointer-events:none;background:rgba(10,6,30,.62);animation:ssxDim 3.6s ease-in-out forwards}
+.ssxdim.short{animation-duration:2.2s}
+@keyframes ssxDim{0%{opacity:0}15%,75%{opacity:1}100%{opacity:0}}
+.ssxburst{position:fixed;left:50%;top:45%;width:10px;height:10px;z-index:98;pointer-events:none;border-radius:50%;background:conic-gradient(#ff5fae,#ffd84d,#7dffb0,#6fd8ff,#b98cff,#ff5fae);transform:translate(-50%,-50%);animation:ssxBurst 1.6s ease-out forwards}
+@keyframes ssxBurst{0%{opacity:.95;width:10px;height:10px}100%{opacity:0;width:190vmax;height:190vmax}}
+.flip.ssx-up{position:relative;z-index:99}
+.ssxkit{position:fixed;left:50%;bottom:-40%;width:min(30vw,190px);z-index:100;pointer-events:none;transform:translateX(-50%);animation:ssxKit 3.6s ease-in-out forwards}
+.ssxkit.short{animation-duration:2.2s}
+.ssxkit svg{width:100%;height:auto;display:block}
+@keyframes ssxKit{0%{bottom:-40%}18%{bottom:2%}28%{bottom:7%}36%{bottom:2%}46%{bottom:7%}54%{bottom:2%}82%{bottom:2%}100%{bottom:-40%}}
+@media (prefers-reduced-motion:reduce){.ssxburst{display:none}.ssxkit{animation:none;bottom:2%}.ssrb-sheen{animation:none}}
 
 /* ---- v10: Kit animations ---- */
 .kit .k-all{transform-box:fill-box;transform-origin:50% 100%}
@@ -4908,6 +4944,7 @@ function frameHTML(c, big){
 function faceHTML(c, o){
   o = o || {};
   if(c.k === 'LL' && window.LLX && LLX.art && LLX.art[c.id]) return llxFaceHTML(c, o);
+  if(c.k === 'SSSR') return sssrFaceHTML(c, o);   /* 26.11.105 */
   var rg = REGIONS[c.r];
   var ht = o.holo ? hlTier(c.k) : '', hf = ht && ht !== 'matte';
   var fr = frameHTML(c, !!o.holo);
@@ -4921,6 +4958,61 @@ function faceHTML(c, o){
   if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
   if(o.count > 1) h += '<span class="tbadge ct">×'+o.count+'</span>';
   return h + '</div>';
+}
+/* 26.11.105: SSSR cards get their own front (gold frame, gem corners, name ribbon, star badge, rainbow edge kept), their own light, a gold-on-gold back, a special pull, and live numbers that grow with her. */
+var SSX_STAR = '<svg viewBox="-20 -20 40 40" aria-hidden="true"><defs><linearGradient id="ssxSG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#ffd84d"/><stop offset="1" stop-color="#c98a00"/></linearGradient></defs><path d="M0-18l5.3 10.8 11.8 1.7-8.6 8.4 2 11.8L0 9.1l-10.5 5.6 2-11.8-8.6-8.4 11.8-1.7z" fill="url(#ssxSG)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M-4-6l3-6" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>';
+var SSX_N = {t:0, v:null};
+function ssxNums(){
+  var now = Date.now(); if(SSX_N.v && now - SSX_N.t < 5000) return SSX_N.v;
+  var v = {p:0, s:0, k:0, o:0};
+  try{ v.p = state.daysCompleted || 0; }catch(_){}
+  try{ v.s = bestStreak(); }catch(_){}
+  try{ v.k = kjMetCount(); }catch(_){}
+  try{ v.o = Object.keys((state.dress && state.dress.own) || {}).length; }catch(_){}
+  SSX_N = {t:now, v:v}; return v;
+}
+function sssrFaceHTML(c, o){
+  var rg = REGIONS[c.r] || {flag:''}, live = !!o.holo, u = imgURL(c.id), n = ssxNums();
+  var h = '<div class="tcgbox'+(live ? ' hf-sssr' : '')+'"><div class="tcg r-SSSR sssr hasfrm reg-'+c.r+(live ? ' hlf' : '')+'" aria-label="SSSR"><div class="tcg-in">'+(live ? '<div class="hlx ssx-rain"></div>' : '');   /* 26.11.107: painted frame image replaces the drawn frame; its big corner star is the badge */
+  h += '<div class="tcg-top"><div class="ssx-rib"><div class="tcg-name" data-say="name:'+c.id+'">'+esc(c.n)+'</div>'+(c.nat ? '<div class="tcg-nat" data-say="nat:'+c.id+'">'+esc(c.nat)+'</div>' : '')+'</div></div>';
+  h += '<div class="tcg-art'+(u ? ' has-img' : '')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')+'</div>';
+  h += '<div class="tcg-tag" data-say="tag:'+c.id+'">'+esc(c.s)+'</div>';
+  h += '<div class="ssx-grow" aria-label="'+n.p+' perfect days, best streak '+n.s+', '+n.k+' kanji, '+n.o+' outfit pieces"><span>\u2600\ufe0f<b>'+n.p+'</b></span><span>\ud83d\udd25<b>'+n.s+'</b></span><span>\ud83c\ude34<b>'+n.k+'</b></span><span>\ud83d\udc57<b>'+n.o+'</b></span></div>';
+  h += '<div class="tcg-foot"><span data-say="place:'+c.id+'">'+rg.flag+' '+(TYPE_LABEL[c.t] || '')+'</span><span class="tcg-year" data-say="year:'+c.id+'">'+esc(c.y)+'</span></div>';
+  h += '</div><div class="frm ssx-frm'+(live ? ' big' : '')+'" aria-hidden="true"><i class="fimg"></i></div>'+(live ? hlDeco('SSSR')+'<div class="hlx ssx-glint"></div>' : '')+'<i class="tcg-shine"></i></div>';
+  if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
+  if(o.count > 1) h += '<span class="tbadge ct">\u00d7'+o.count+'</span>';
+  return h + '</div>';
+}
+var SSX_UID = 0;
+function sssrBackHTML(){
+  var u = 'ssxb' + (++SSX_UID) + '-';
+  var star = function(r){ var p = [], i, a; for(i = 0; i < 10; i++){ a = Math.PI/5*i - Math.PI/2; p.push(((i%2 ? r*.45 : r)*Math.cos(a)).toFixed(2)+','+((i%2 ? r*.45 : r)*Math.sin(a)).toFixed(2)); } return p.join(' '); };
+  var s = '<svg viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>';
+  s += '<pattern id="'+u+'p" width="20" height="20" patternUnits="userSpaceOnUse"><polygon points="'+star(3.2)+'" transform="translate(5 5)" fill="#ffe9a3" opacity=".42"/><polygon points="'+star(2)+'" transform="translate(15 15)" fill="#ffe9a3" opacity=".3"/></pattern>';
+  s += '<linearGradient id="'+u+'g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cc"/><stop offset=".5" stop-color="#f2c94c"/><stop offset="1" stop-color="#b8860b"/></linearGradient></defs>';
+  s += '<rect width="100" height="140" fill="url(#'+u+'p)"/>';
+  s += '<circle cx="50" cy="70" r="30" fill="none" stroke="url(#'+u+'g)" stroke-width="2.2"/><circle cx="50" cy="70" r="25" fill="none" stroke="#ffe9a3" stroke-width=".8" opacity=".7"/>';
+  s += '<polygon points="'+star(21)+'" transform="translate(50 71)" fill="url(#'+u+'g)" stroke="#fff6cc" stroke-width="1"/>';
+  s += '<g fill="#fff6cc" opacity=".85"><polygon points="'+star(3)+'" transform="translate(50 33)"/><polygon points="'+star(3)+'" transform="translate(50 107)"/><polygon points="'+star(2.4)+'" transform="translate(16 70)"/><polygon points="'+star(2.4)+'" transform="translate(84 70)"/></g>';
+  s += '</svg>';
+  return '<div class="tcgbox hb-sssr"><div class="ssrb"><div class="in">'+s+'</div><i class="ssrb-sheen"></i></div></div>';
+}
+/* special pull: dim, rainbow burst, its own sound, Kit cheers (in her outfit). Shorter for a copy she already has. */
+function sssrMoment(f, isNew){
+  try{
+    var host = (f && f.closest && f.closest('.stage')) || document.body;
+    var d = document.createElement('div'); d.className = 'ssxdim' + (isNew ? '' : ' short'); host.appendChild(d);
+    var rb = document.createElement('div'); rb.className = 'ssxburst'; host.appendChild(rb);
+    var k = document.createElement('div'); k.className = 'ssxkit' + (isNew ? '' : ' short');
+    var w = {}; try{ w = drState().wear || {}; }catch(_){}
+    try{ k.innerHTML = drKitSVG(w, ''); }catch(_){ try{ k.innerHTML = kitSVG('happy'); }catch(__){} }
+    host.appendChild(k);
+    if(f) f.classList.add('ssx-up');
+    var t = isNew ? 3600 : 2200;
+    setTimeout(function(){ try{ Sound.fanfare(); }catch(_){} }, isNew ? 900 : 600);
+    setTimeout(function(){ [d, rb, k].forEach(function(x){ if(x.parentNode) x.parentNode.removeChild(x); }); if(f) f.classList.remove('ssx-up'); }, t);
+  }catch(e){}
 }
 /* 26.11.37: Living Legendary front. Pictures are turned into short blob: links once, so each card does not copy big data into the page. */
 var LLXU = null;
@@ -5076,6 +5168,7 @@ function llBackHTML(){
 }
 function backHTML(k){
   if(k === 'LL') return llBackHTML();
+  if(k === 'SSSR') return sssrBackHTML();   /* 26.11.105 */
   if(!k) return '<div class="tcgbox"><div class="tcg back"><div class="tcg-in">'+backArtSVG()+'</div></div></div>';
   var t = hlTier(k);
   return '<div class="tcgbox hb-'+t+'"><div class="tcg back hlf">'+(t !== 'matte' ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+backArtSVG()+hlLayers(t, true)+'</div></div></div>';
@@ -7298,7 +7391,7 @@ function flipCard(f){
   f.classList.add('on'); stg.flipped++;
   Sound.flip();
   setTimeout(function(){
-    if(c.k === 'SSSR'){ Sound.sssr(); sssrFlash(); confetti(); starBurst(); sparkles(f); setTimeout(function(){ confetti(); starBurst(); }, 700); f.classList.add('fx-SSSR'); }
+    if(c.k === 'SSSR'){ Sound.sssr(); sssrFlash(); confetti(); starBurst(); sparkles(f); setTimeout(function(){ confetti(); starBurst(); }, 700); f.classList.add('fx-SSSR'); sssrMoment(f, !!stg.news[i]); }   /* 26.11.105: special pull */
     else if(c.k === 'LL'){ llTune(); confetti(); starBurst(); sparkles(f); f.classList.add('fx-LL'); llWatchBtn(); }
     else if(c.k === 'SSR'){ Sound.ssr(); confetti(); starBurst(); f.classList.add('fx-SSR'); if(c.r === 'FAM'){ sparkles(f); toast('💛 A family card!'); } }
     else if(c.k === 'S'){ Sound.rareS(); sparkles(f); }
