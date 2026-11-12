@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.98', errs = [], shown = false;
+  var V = '26.11.101', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -913,6 +913,31 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 .kwmain{flex:1;min-height:0;display:flex;gap:14px;padding:12px}
 .kwboard{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
 /* 26.11.95: Kit's Writing Desk */
+/* 26.11.101: Kit's Dressing Room */
+.wdkit.wdbody{width:64px;height:98px}
+.drkit{display:block;width:100%;height:100%}
+.dr .drstage{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 60%,#fff6e6,#f3e4c8)}
+.drbig{height:min(78vh,560px);aspect-ratio:152/232;max-width:100%}
+.drgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px}
+.drsl h4{margin:12px 0 6px;font-size:14px;opacity:.75}
+.drpc{border:2px solid #e8dcc6;background:#fff;border-radius:14px;padding:6px 4px;cursor:pointer;color:#2b2b44}
+.drpc .drkit{height:96px}.drpc small{display:block;font-size:11px;line-height:1.2;margin-top:2px}
+.drpc.on{border-color:#ff8a3d;background:#fff1e0}
+.drpc.sp,.drnew.sp{background:linear-gradient(135deg,#fff,#f1ecff,#e9fbf8)}
+.drseason{margin:10px 0 2px;font-weight:800;font-size:14px;opacity:.75}
+.drgift{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;border:0;background:#fff6e6;border-radius:16px;padding:12px;cursor:pointer;font:800 16px system-ui;color:#3b2a4a}
+.drgsvg{width:110px;height:116px;animation:drbob 1.6s ease-in-out infinite}
+.drgift.opening .drgsvg{animation:drpop .65s ease-in forwards}
+@keyframes drbob{50%{transform:translateY(-6px) rotate(-3deg)}}
+@keyframes drpop{30%{transform:scale(1.15) rotate(6deg)}100%{transform:scale(1.6);opacity:0}}
+.drnew{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;background:#fff6e6;border-radius:16px;padding:12px;animation:drin .4s ease-out}
+.drnewk{width:96px;height:146px}
+@keyframes drin{from{transform:scale(.85);opacity:0}}
+.drtw{animation:drtw 1.8s ease-in-out infinite}@keyframes drtw{50%{opacity:.15}}
+.drpaws{display:inline-flex;gap:4px;vertical-align:middle;margin-left:4px}.drpaws svg{width:20px;height:24px;fill:#e3d6bf}.drpaws svg.on{fill:#ff8a3d}
+.drentry{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;cursor:pointer;font:600 16px system-ui;color:inherit}
+.drmini{width:58px;height:88px;flex:none}.drready{color:#c2410c;font-weight:800}
+@media (prefers-reduced-motion:reduce){.drgsvg,.drtw{animation:none}}
 /* 26.11.98 */.wdsent{font:800 22px/1.35 system-ui;color:#2b2b44;margin:8px 0 2px}.wdfrom{font-size:13px;opacity:.7;margin-bottom:6px}
 .kwside .wdsent{font-size:20px;background:#fff;border-radius:12px;padding:8px 10px;margin:8px 0}
 /* 26.11.97 */.wdsrc{display:flex;gap:6px;flex-wrap:wrap}.wdsrc .wdpk{font-size:15px;padding:0 14px}
@@ -6403,6 +6428,7 @@ function render(){
   updateBed(true);
 }
 function setTab(t){
+  if(DR) drClose(true);   /* 26.11.101 */
   if(t === 'money' && !bankOn()) t = 'home';
   tab = t;
   ['home','kanji','write','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
@@ -6571,13 +6597,14 @@ function nudgeExempt(){
 }
 function nudgeKanjiBusy(){
   if(tab === 'kanji') return true;
+  if(DR) return false;   /* 26.11.101: the Dressing Room counts as browsing */
   if(tab === 'write' || WD) return true;   /* 26.11.95: writing counts as learning, like Kanji */
   var p = $('ksay'); if(p && p.classList.contains('show')) return true;
   if(!$('overlay').classList.contains('show')) return false;
   return !!$('modal').querySelector('.kjmodal,.kotoqz,[class*="kfc"],[class*="kw"],[class*="kcb"],[class*="kbk"],[class*="kjw"]');
 }
 function nudgeTick(){
-  var browsing = ['cards','shop','money','profile'].indexOf(tab) > -1, inOv = $('overlay').classList.contains('show');
+  var browsing = ['cards','shop','money','profile'].indexOf(tab) > -1 || !!DR, inOv = $('overlay').classList.contains('show');
   if(inOv && KN2.learn){ KN2.sec = 0; KN2.t = Date.now(); return; }
   if(nudgeKanjiBusy()){ KN2.sec = 0; KN2.t = Date.now(); return; }                            /* Kanji tab, kanji screens and saying pop-ups are learning: no quest reminder, and the timer starts over */                          /* doing a quiz, kanji, story: that counts as practice */
   var now = Date.now(), dt = KN2.t ? Math.min(2000, now - KN2.t) : 0; KN2.t = now;
@@ -6701,7 +6728,7 @@ function parNav(active){
   h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '') + v('insights', '📈', 'Insights');
   h += '<div class="pngrp">Settings</div>';
   h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', false);
-  h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news');
+  h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news') + sc('kanji', '🈴', 'Kanji') + sc('write', '\u270f\ufe0f', 'Writing desk');   /* 26.11.99: Kanji and Writing get their own windows */
   h += parNavBtn('🎉', 'Celebrations &amp; alerts', 'data-act="pp4"', false);
   h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', false);
   h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', false);
@@ -6787,7 +6814,7 @@ function showParent(scrollTop){
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
 }
-var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log'};
+var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log', kanji:'🈴 Kanji', write:'\u270f\ufe0f Writing desk'};
 function showParentSection(key, scrollTop){
   window.__parSec = key;
   var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Back</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
@@ -6889,18 +6916,17 @@ function showParentSection(key, scrollTop){
     h += '<div class="hint" style="margin:10px 0 6px"><b>Add news bites.</b> Ask Dust for a “news pack”, then paste it here. Each bite is a short English and Japanese summary of kid-safe news, with no links.</div>';
     h += '<textarea id="pNews" rows="3" placeholder="Paste a news pack here" style="width:100%"></textarea><div class="row" style="margin-top:6px"><button class="btn small" data-act="pnews">➕ Add to Today’s Bites</button><span class="hint">'+((state.news||[]).length)+' added so far</span></div>';
     h += '<div class="row" style="margin-top:6px"><button class="btn small" data-act="pnewslist">🗞️ See or remove bites</button></div>';
-    h += '<h3>Kanji</h3>';
+  } else if(key === 'kanji'){   /* 26.11.99 */
     h += pTog('Show “Kanji of the Day” and the English Word of the Day', 'eKanji', e.kanjiOn !== false);
     h += pNum('Points for learning the kanji (once a day, counts toward the extra limit)', 'eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
     h += pNum('Points for using the Japanese saying of the day (once a day, counts toward the extra limit)', 'eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
-    h += '<h3>\u270f\ufe0f Kit\u2019s Writing Desk</h3>';   /* 26.11.95 */
+    h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
+  } else if(key === 'write'){   /* 26.11.99 */
     h += pTog('Show the Writing tab', 'eWrite', e.writeOn !== false);
     h += pTog('Allow \u201cPeek with Kit\u201d', 'eWPeek', e.writePeek !== false);
     h += '<div class="fld"><label for="eWGrade">Kit\u2019s spelling words</label><select id="eWGrade"><option value="g3"'+(e.writeGrade !== 'g4' ? ' selected' : '')+'>Grade 3</option><option value="g4"'+(e.writeGrade === 'g4' ? ' selected' : '')+'>Grade 4</option></select></div>';   /* 26.11.97 */
     h += '<div class="fld"><label for="eWSize">Line size</label><select id="eWSize"><option value="s"'+(e.writeSize === 's' ? ' selected' : '')+'>Small</option><option value="m"'+(!e.writeSize || e.writeSize === 'm' ? ' selected' : '')+'>Medium</option><option value="l"'+(e.writeSize === 'l' ? ' selected' : '')+'>Large</option></select></div>';
-    h += '<div class="row" style="margin-top:6px">'+(state.tasks.some(function(t){ return t.wd; }) ? '<span class="hint">\u2705 Writing desk quest is set up (edit it in Quests).</span>' : '<button class="btn small" data-wdo="addquest">\u2795 Add a daily \u201cWriting desk\u201d quest (Mon to Fri)</button>')+'</div>';   /* 26.11.98 */
     h += '<div class="row" style="margin-top:6px"><button class="btn small" data-wdpar="del">\ud83d\uddd1\ufe0f Delete saved writing pages</button></div>';
-    h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
   } else if(key === 'safe'){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
     h += '<h3>Backup</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
@@ -8170,6 +8196,7 @@ function parentSaveLock(){
    big card 460, Kit bubble 125, window 50). Press Escape again for the next one.
    To add a new pop-up layer, add it here in its stacking order. */
 var LAYERS = [
+  {name:'dressing room',  open:function(){ return !!DR; }, close:function(){ drClose(); }},   /* 26.11.101 */
   {name:'writing desk',   open:function(){ return !!WD; }, close:function(){ wdClose(); }},   /* 26.11.95 */
   {name:'LL story',       open:function(){ return !!LLP || !!LLFX; }, close:function(){ if(LLP) llClose(); else llFxEsc(); }},
   {name:'say pop-up',     open:function(){ var p = $('ksay'); return !!(p && p.classList.contains('show')); }, close:function(){ hideSayPop(); }},
@@ -11828,7 +11855,7 @@ function wdBind(){
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
   WD.el.addEventListener('click', wdClick);
 }
-function wdKit(mood, msg){ return '<div class="kwkit"><span class="wdkit">'+kitSVG(mood, 'face')+'</span><p>'+msg+'</p></div>'; }
+function wdKit(mood, msg){ return '<div class="kwkit"><span class="wdkit wdbody">'+drKitSVG(drState().wear, 'drkit')+'</span><p>'+msg+'</p></div>'; }   /* 26.11.101: full-body Kit in her outfit */
 function wdSide(){
   if(!WD) return;
   var s = WD.el.querySelector('#wdSide'), h = '', its = WD.items.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ');
@@ -11849,7 +11876,7 @@ function wdSide(){
       h += wdKit('happy', 'Let\u2019s look together! The sentence is behind your writing.'+sent+'How do you feel about your page?');
       h += '<div class="kwchecks"><button class="kwb big go" data-wd="j:neat">\ud83c\udf1f Neat</button><button class="kwb big" data-wd="j:there">\ud83c\udf31 Getting there</button><button class="kwb" data-wd="again">\ud83d\udd04 Try again</button></div>';
     } else {
-      h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.');
+      h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.'+(WD.gift ? '<br><b>I found something! \ud83c\udf81 A present is waiting in my Dressing Room.</b>' : ''));
       h += '<div class="kwbtns"><button class="kwb big" data-wd="close">\ud83d\udc4d All done</button></div>';
     }
     s.innerHTML = h; return;
@@ -11881,7 +11908,7 @@ function wdSide(){
     h += wdKit('happy', 'Let\u2019s look together! The purple letters show how each one is made.<br>How do you feel about your page?');
     h += '<div class="kwchecks"><button class="kwb big go" data-wd="j:neat">\ud83c\udf1f Neat</button><button class="kwb big" data-wd="j:there">\ud83c\udf31 Getting there</button><button class="kwb" data-wd="again">\ud83d\udd04 Try again</button></div>';
   } else if(WD.phase === 'saved'){
-    h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.');
+    h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.'+(WD.gift ? '<br><b>I found something! \ud83c\udf81 A present is waiting in my Dressing Room.</b>' : ''));
     h += '<div class="kwbtns"><button class="kwb big" data-wd="close">\ud83d\udc4d All done</button></div>';
   } else {
     var pg = WD.view || {};
@@ -11908,11 +11935,11 @@ function wdClick(e){
     pages.unshift(pg0);
     if(!wdPagesSave(pages)) toast('This page could not be saved (storage is full).', 2600);
     ws.done = (ws.done || 0) + 1;
+    WD.gift = drCountPractice();   /* 26.11.101 */
     if(WD.today && WD.kind === 'l') ws.i = (ws.i + 4) % WD_SEQ.length;
     if(WD.today && WD.kind === 'w'){ if(WD.src === 'school') ws.si = (ws.si || 0) + WD.items.length; else ws.wi = (ws.wi || 0) + WD.items.length; }   /* 26.11.97 */
     save();
     WD.phase = 'saved'; wdKick(); wdSide();
-    try{ var wq = activeTasks().filter(function(t){ return t.wd && !state.done[t.id]; })[0]; if(wq){ toggleTask(wq.id); toast('\u270f\ufe0f Writing desk quest done!', 2600); } }catch(_){}   /* 26.11.98: optional daily quest */
     try{ Sound.tap(); }catch(_){}
     return;
   }
@@ -11924,6 +11951,8 @@ function renderWriteTab(){
   var monday = new Date().getDay() === 1 && (!sch || sch.wk !== wdWeekKey());   /* 26.11.97 */
   h += '<div class="panel kjhead"><span class="kjkit">'+kitSVG('happy', 'hero')+'</span><div class="kjsay"><div class="kjbub">'
     + (monday ? 'It\u2019s Monday! Did you get a new spelling list at school? You can type it in below. \ud83d\udcdd' : 'Time for 4 spelling words! Shall we practise together?')+'</div></div></div>';
+  var dsx = drState();   /* 26.11.101: Kit's Dressing Room */
+  h += '<div class="panel drpanel"><button class="drentry" data-wdo="dress"><span class="drmini">'+drKitSVG(dsx.wear, 'drkit')+'</span><span><b>\ud83d\udc57 Kit\u2019s Dressing Room</b><br>'+(dsx.pend > 0 ? '<span class="drready">\ud83c\udf81 A present is waiting!</span>' : drPaws(dsx.cnt % 4))+'</span></button></div>';
   h += '<div class="panel"><h3>\ud83d\udcdd Spelling words</h3>';
   if(sch) h += '<div class="wdsrc"><button class="wdpk'+(wdSrc() === 'school' ? ' on' : '')+'" data-wdo="src:school">My school list</button><button class="wdpk'+(wdSrc() === 'kit' ? ' on' : '')+'" data-wdo="src:kit">Kit\u2019s words</button></div>';
   h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-wdo="words">\u270f\ufe0f Practise today\u2019s 4 words</button></div></div>';
@@ -11953,13 +11982,11 @@ document.addEventListener('click', function(e){
   if(t.hasAttribute('data-wdo')){
     var o = t.getAttribute('data-wdo');
     if(o === 'today') wdOpen(wdToday());
+    else if(o === 'dress'){ drOpen(); }   /* 26.11.101 */
     else if(o === 'words'){ var tw = wdTodayWords(); if(tw.length) wdOpen(tw); }   /* 26.11.97 */
     else if(o === 'sent'){ var sn = wdTodaySentence(); if(sn) wdOpen([], null, {kind:'s', text:sn.t, card:sn.id}); }   /* 26.11.98 */
     else if(o === 'sentnext'){ var w4 = wdState(); w4.ti = (w4.ti || 0) + 1; save(); render(); }
-    else if(o === 'addquest'){
-      if(!state.tasks.some(function(t){ return t.wd; })){ state.tasks.push({id:uid(), emoji:'\u270f\ufe0f', name:'Writing desk', minutes:0, days:[1,2,3,4,5], calm:false, fs:false, wd:true}); save(); toast('\u2705 Added the Writing desk quest (Mon to Fri). Edit it in Quests.', 3600); }
-      t.textContent = 'Added'; t.disabled = true;
-    }
+    /* 26.11.100: Writing desk quest button removed (she already has a Printing practice quest) */
     else if(o.indexOf('src:') === 0){ wdState().src = o.slice(4); save(); render(); }
     else if(o === 'school'){
       var tx = $('wdSchoolTx'), seen = {}, words = ((tx && tx.value) || '').split(/[\s,;]+/).filter(function(w){ var k = w.toLowerCase(); if(!/^[A-Za-z'-]{1,16}$/.test(w) || seen[k]) return false; seen[k] = 1; return true; }).slice(0, 25);
@@ -11981,6 +12008,126 @@ document.addEventListener('click', function(e){
     t.removeAttribute('data-arm'); t.textContent = 'Deleted'; t.disabled = true; return;
   }
 });
+
+/* ==== 26.11.101: Kit's Dressing Room (full-body Kit, seasonal pieces earned by writing practice) ==== */
+var DR_O = '#ff8a3d', DR_C = '#fff6ea', DR_D = '#5a3a2e';
+var DR_SLOTS = [['hat','Hats'],['top','Tops'],['bottom','Bottoms'],['hands','Mittens'],['shoes','Shoes'],['neck','Neck'],['bag','Bags']];
+/* each piece: season, slot, name, sparkle?, layer drawers (back = behind the body, mid = on the body, front = on top, head = in head coordinates) */
+var DR_PIECES = {
+  w_toque:   {se:'w', sl:'hat', n:'Snow toque', head:'<path d="M36 44Q38 14 60 14Q82 14 84 44Z" fill="#e85d75"/><rect x="32" y="38" width="56" height="11" rx="5.5" fill="#fff"/><circle cx="60" cy="14" r="8" fill="#fff"/>'},
+  w_muffs:   {se:'w', sl:'hat', n:'Fluffy earmuffs', head:'<path d="M27 36Q60 0 93 36" fill="none" stroke="#8a7bf0" stroke-width="5" stroke-linecap="round"/><circle cx="27" cy="40" r="11" fill="#d9d2f2"/><circle cx="93" cy="40" r="11" fill="#d9d2f2"/><circle cx="27" cy="40" r="6" fill="#fff"/><circle cx="93" cy="40" r="6" fill="#fff"/>'},
+  w_sweater: {se:'w', sl:'top', n:'Zigzag sweater', mid:function(){ var s = '<path d="M74 106Q100 94 126 106Q133 166 124 174Q100 182 76 174Q67 166 74 106Z" fill="#5b8def"/><path d="M72 164Q100 176 128 164L124 174Q100 182 76 174Z" fill="#3f6fcf"/>';
+      for(var k = 0; k < 3; k++) s += '<path d="M'+(81+13*k)+' 130l6 7l6 -7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+      return s + '<path d="M76 116Q62 138 66 154M124 116Q138 138 134 154" fill="none" stroke="#5b8def" stroke-width="16" stroke-linecap="round"/>'; }},
+  w_pants:   {se:'w', sl:'bottom', n:'Snow pants', low:'<rect x="76" y="166" width="22" height="40" rx="10" fill="#e85d75"/><rect x="102" y="166" width="22" height="40" rx="10" fill="#e85d75"/><rect x="74" y="164" width="52" height="14" rx="6" fill="#e85d75"/>'},
+  w_boots:   {se:'w', sl:'shoes', n:'Cozy boots', low:'<rect x="75" y="200" width="24" height="18" rx="5" fill="#8a5a3c"/><ellipse cx="82" cy="216" rx="14" ry="6" fill="#8a5a3c"/><rect x="75" y="194" width="24" height="8" rx="4" fill="#f4ead9"/><rect x="101" y="200" width="24" height="18" rx="5" fill="#8a5a3c"/><ellipse cx="118" cy="216" rx="14" ry="6" fill="#8a5a3c"/><rect x="101" y="194" width="24" height="8" rx="4" fill="#f4ead9"/>'},
+  w_mitts:   {se:'w', sl:'hands', n:'Sunny mittens', front:'<circle cx="66" cy="164" r="10" fill="#ffcc4d"/><rect x="56" y="150" width="20" height="6" rx="3" fill="#fff"/><circle cx="134" cy="164" r="10" fill="#ffcc4d"/><rect x="124" y="150" width="20" height="6" rx="3" fill="#fff"/>'},
+  w_pack:    {se:'w', sl:'bag', n:'Blue backpack', back:'<rect x="60" y="112" width="80" height="56" rx="14" fill="#5aa9e6"/>', front:'<path d="M84 106V150M116 106V150" stroke="#3f86c2" stroke-width="7" stroke-linecap="round"/>'},
+  w_aurora:  {se:'w', sl:'neck', n:'Aurora scarf', sp:1, front:'<path d="M74 102Q100 113 126 102" stroke="#8a7bf0" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M80 104.5Q100 112 120 104.5" stroke="#5fd4c4" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="108" y="106" width="11" height="30" rx="4" fill="#8a7bf0"/><rect x="108" y="116" width="11" height="5" fill="#5fd4c4"/><rect x="108" y="125" width="11" height="5" fill="#e46a8a"/><g fill="#fff"><circle class="drtw" cx="88" cy="106" r="1.8"/><circle class="drtw" cx="113" cy="112" r="1.6" style="animation-delay:.7s"/><circle class="drtw" cx="104" cy="108" r="1.4" style="animation-delay:1.3s"/></g>'}
+};
+var DR_SEASON_N = 30;   /* planned pieces per season (only some are drawn so far) */
+function drSeason(d){ var m = (d || new Date()).getMonth(); return m === 10 || m === 11 || m === 0 ? 'w' : m <= 3 ? 'sp' : m <= 6 ? 'su' : 'au'; }   /* winter Nov-Jan, spring Feb-Apr, summer May-Jul, autumn Aug-Oct */
+var DR_SEASON_NAME = {w:'Winter', sp:'Spring', su:'Summer', au:'Autumn'};
+function drState(){
+  if(!state.dress){
+    /* first time: practices already saved count too (up to 2 a day) */
+    var by = {}, cnt = 0; try{ wdPages().forEach(function(p){ by[p.d] = Math.min(2, (by[p.d] || 0) + 1); }); }catch(_){}
+    for(var k in by) cnt += by[k];
+    state.dress = {own:{}, wear:{}, cnt:cnt, day:'', dn:0, pend:Math.floor(cnt/4)};
+  }
+  return state.dress;
+}
+/* called once per saved writing page; returns true when a present was earned */
+function drCountPractice(){
+  var ds = drState(), t = dateKey();
+  if(ds.day !== t){ ds.day = t; ds.dn = 0; }
+  if(ds.dn >= 2) return false;
+  ds.dn++; ds.cnt++;
+  if(ds.cnt % 4 === 0){ ds.pend = (ds.pend || 0) + 1; return true; }
+  return false;
+}
+var DR_HEAD = null;
+function drHead(){
+  if(DR_HEAD) return DR_HEAD;
+  var svg = kitSVG('happy', 'face', {slots:{}}), m = /<g class="k-all">([\s\S]*)<\/g><\/svg>\s*$/.exec(svg);
+  DR_HEAD = m ? m[1].replace(/<path d="M32 100q28 12 56 0[\s\S]*$/, '') : '';
+  return DR_HEAD;
+}
+function drKitSVG(wear, cls){
+  wear = wear || {}; var P = [], k;
+  for(k in wear){ if(DR_PIECES[wear[k]]) P.push(DR_PIECES[wear[k]]); }
+  function lay(n){ return P.map(function(p){ var v = p[n]; return typeof v === 'function' ? v() : (v || ''); }).join(''); }
+  var s = '<svg viewBox="36 0 152 232" class="'+(cls || 'drkit')+'" aria-hidden="true">';
+  s += '<path d="M124 166C170 174 192 120 170 84C164 110 152 134 122 146Z" fill="'+DR_O+'"/><path d="M170 84C184 100 184 114 180 122C174 110 170 100 162 94Z" fill="'+DR_C+'"/>';
+  s += lay('back');
+  s += '<rect x="77.5" y="170" width="19" height="50" rx="9.5" fill="'+DR_D+'"/><rect x="103.5" y="170" width="19" height="50" rx="9.5" fill="'+DR_D+'"/><ellipse cx="84" cy="218" rx="13" ry="8" fill="'+DR_D+'"/><ellipse cx="116" cy="218" rx="13" ry="8" fill="'+DR_D+'"/>';
+  s += lay('low');
+  s += '<path d="M76 116Q62 138 66 162M124 116Q138 138 134 162" fill="none" stroke="'+DR_O+'" stroke-width="14" stroke-linecap="round"/>';
+  s += '<path d="M76 108Q100 94 124 108Q131 170 124 178Q100 188 78 178Q69 170 76 108Z" fill="'+DR_O+'"/><ellipse cx="100" cy="144.8" rx="14.4" ry="28.8" fill="'+DR_C+'"/>';
+  s += '<circle cx="66" cy="164" r="8.5" fill="'+DR_D+'"/><circle cx="134" cy="164" r="8.5" fill="'+DR_D+'"/>';
+  s += lay('mid') + lay('front');
+  s += '<g transform="translate(40 10)">'+drHead()+lay('head')+'</g>';
+  return s + '</svg>';
+}
+function drPaws(n){ var h = '<span class="drpaws" aria-hidden="true">'; for(var i = 0; i < 4; i++) h += '<svg viewBox="-10 -13 20 24" class="'+(i < n ? 'on' : '')+'"><ellipse cx="0" cy="4" rx="7" ry="6"/><circle cx="-7" cy="-5" r="2.8"/><circle cx="-2.5" cy="-9" r="2.8"/><circle cx="2.5" cy="-9" r="2.8"/><circle cx="7" cy="-5" r="2.8"/></svg>'; return h + '</span>'; }
+var DR = null;
+function drOpen(){
+  if(DR) drClose(true);
+  var el = document.createElement('div'); el.className = 'kw dr'; el.id = 'dr';
+  el.innerHTML = '<div class="kwtop"><button class="kwx" data-dr="close" aria-label="Close">\u2715</button><div class="kwtitle"><span class="kwtm">\ud83d\udc57 Kit\u2019s Dressing Room</span></div></div><div class="kwmain"><div class="kwboard drstage" id="drStage"></div><div class="kwside" id="drSide"></div></div>';
+  document.body.appendChild(el);
+  DR = {el:el, open:null};
+  el.addEventListener('click', drClick);
+  drDraw(); try{ Sound.tap(); }catch(_){}
+}
+function drClose(quiet){ if(!DR) return; if(DR.el.parentNode) DR.el.parentNode.removeChild(DR.el); DR = null; if(!quiet && tab === 'write') render(); }
+function drDraw(){
+  if(!DR) return;
+  var ds = drState(), se = drSeason(), mine = Object.keys(ds.own).filter(function(id){ return DR_PIECES[id]; });
+  DR.el.querySelector('#drStage').innerHTML = '<div class="drbig">'+drKitSVG(ds.wear, 'drkit big')+'</div>';
+  var h = '';
+  if(DR.open){
+    var p = DR_PIECES[DR.open];
+    h += '<div class="drnew'+(p.sp ? ' sp' : '')+'"><div class="drnewk">'+drKitSVG(drOnly(DR.open), 'drkit')+'</div><b>'+(p.sp ? '\u2728 ' : '')+esc(p.n)+'</b><span>'+(p.sp ? 'A sparkle piece! So lucky!' : 'You found something new!')+'</span>'
+      + '<div class="kwbtns"><button class="kwb big go" data-dr="puton">\ud83d\udc57 Put it on</button><button class="kwb" data-dr="later">Later</button></div></div>';
+  } else if(ds.pend > 0){
+    var left = Object.keys(DR_PIECES).filter(function(id){ return DR_PIECES[id].se === se && !ds.own[id]; }).length;
+    h += '<button class="drgift" data-dr="gift"'+(left ? '' : ' disabled')+'>'+drGiftSVG()+'<span>'+(left ? (ds.pend > 1 ? ds.pend+' presents! ' : '')+'Tap to open' : 'Kit is still sewing the next pieces\u2026 this present will open soon!')+'</span></button>';
+  } else {
+    h += '<div class="kwkit"><span class="wdkit">'+kitSVG('happy', 'face')+'</span><p>Every 4 writing pages, I find a present! '+drPaws(ds.cnt % 4)+'</p></div>';
+  }
+  h += '<div class="drseason">'+DR_SEASON_NAME[se]+' collection \u00b7 '+mine.filter(function(id){ return DR_PIECES[id].se === se; }).length+' of '+DR_SEASON_N+' found</div>';
+  DR_SLOTS.forEach(function(sl){
+    var have = mine.filter(function(id){ return DR_PIECES[id].sl === sl[0]; });
+    if(!have.length) return;
+    h += '<div class="drsl"><h4>'+sl[1]+'</h4><div class="drgrid">';
+    have.forEach(function(id){ var on = ds.wear[sl[0]] === id; h += '<button class="drpc'+(on ? ' on' : '')+(DR_PIECES[id].sp ? ' sp' : '')+'" data-drp="'+id+'" aria-pressed="'+on+'">'+drKitSVG(drOnly(id), 'drkit')+'<small>'+esc(DR_PIECES[id].n)+'</small></button>'; });
+    h += '</div></div>';
+  });
+  if(!mine.length && !ds.pend && !DR.open) h += '<div class="hint">Finish writing pages on the Writing desk to find pieces for Kit!</div>';
+  DR.el.querySelector('#drSide').innerHTML = h;
+}
+function drOnly(id){ var o = {}; o[DR_PIECES[id].sl] = id; return o; }
+function drGiftSVG(){ return '<svg viewBox="-40 -56 80 84" class="drgsvg"><rect x="-30" y="-20" width="60" height="44" rx="6" fill="#8a7bf0"/><rect x="-34" y="-30" width="68" height="14" rx="5" fill="#a99ef5"/><rect x="-6" y="-30" width="12" height="54" fill="#ffcc4d"/><path d="M0 -30C-22 -52 -30 -30 0 -30C30 -30 22 -52 0 -30" fill="none" stroke="#ffcc4d" stroke-width="6"/></svg>'; }
+function drClick(e){
+  var t = e.target.closest && e.target.closest('[data-dr],[data-drp]'); if(!t || !DR) return;
+  var ds = drState();
+  if(t.hasAttribute('data-drp')){ var id = t.getAttribute('data-drp'), sl = DR_PIECES[id].sl; if(ds.wear[sl] === id) delete ds.wear[sl]; else ds.wear[sl] = id; save(); drDraw(); try{ Sound.tap(); }catch(_){} return; }
+  var a = t.getAttribute('data-dr');
+  if(a === 'close'){ drClose(); return; }
+  if(a === 'gift'){
+    var se = drSeason(), left = Object.keys(DR_PIECES).filter(function(id){ return DR_PIECES[id].se === se && !ds.own[id]; });
+    if(!left.length || ds.pend < 1) return;
+    var pick = left[Math.floor(Math.random()*left.length)];
+    ds.own[pick] = dateKey(); ds.pend--; save();
+    t.classList.add('opening');
+    setTimeout(function(){ if(!DR) return; DR.open = pick; drDraw(); }, 650);
+    try{ Sound.tap(); }catch(_){}
+    return;
+  }
+  if(a === 'puton'){ var p = DR_PIECES[DR.open]; ds.wear[p.sl] = DR.open; DR.open = null; save(); drDraw(); return; }
+  if(a === 'later'){ DR.open = null; drDraw(); return; }
+}
 
 function renderKanjiTab(){
   var v = $('view-kanji'); if(!v) return;
