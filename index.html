@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.91', errs = [], shown = false;
+  var V = '26.11.92', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2355,7 +2355,7 @@ body[data-skin=comic] :focus-visible{outline:3px solid #111;outline-offset:2px}
 .cbig .dflip .dback{display:none!important}   /* 26.11.87: big view is front only, so the back is not drawn (saves tablet memory) */
 /* 26.11.88: big view stops the things that run on their own. Everything that follows her finger stays the same. */
 .cbig .llx-cmh{animation:none!important}   /* 26.11.91: charms bob again in the big view; the charm color cycle stays off */
-.cbig .llx-bs,.cbig .llx-cg{display:none!important}   /* 26.11.89: big view drops the glass streak and crack glint (2 of the 5 stencil layers); the 3 rainbows stay */
+/* 26.11.92: glass streak and crack glint are back in the big view (was hidden in 26.11.89) */ /* 26.11.89: big view drops the glass streak and crack glint (2 of the 5 stencil layers); the 3 rainbows stay */
 /* 26.11.91: SSSR frame cycles on its own again in the big view */
 /* 26.11.84: zoom instead of transform:scale so the card is drawn at its real size (huge scaled 3D layers dropped tiles = flickering black boxes on big tablets) */
 .cbig-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;color:#fff;font-weight:800;font-size:15px;text-align:center}
