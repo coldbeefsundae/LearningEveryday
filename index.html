@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.82', errs = [], shown = false;
+  var V = '26.11.83', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -314,14 +314,14 @@ h1,h2,h3,p{margin:0}
 /* 26.11.80: card text sits above the frame (frame stays above the picture) */
 /* 26.11.81: stronger selectors so the holo card rules (.tcg.hlf ...) further down cannot push the text back under the frame */
 .tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-top,.tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-tag,.tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-foot{position:relative;z-index:5}
-.frm{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden}
+/* 26.11.83: no blend modes or filters (they flickered as black boxes on large screens like the OnePlus Pad 2); shadow is baked into the frame images */
+.frm{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden;isolation:isolate;contain:paint}
 .frm>i{position:absolute;inset:0;display:block}
 .fimg{background-position:center;background-size:100% 100%;background-repeat:no-repeat;opacity:.85}
-.frm.big .fimg{filter:drop-shadow(0 0 .7px rgba(55,35,90,.6)) drop-shadow(0 .6px .8px rgba(55,35,90,.32))}
 .fsheen,.fglint{-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.fsheen{background-size:320% 320%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,#ffd1ea 0%,#d7c8ff 14%,#bfeaff 28%,#fff1c4 42%,#ffd1ea 56%,#c9ffe6 70%,#d7c8ff 84%,#ffd1ea 100%);mix-blend-mode:multiply;opacity:.4675}
-.fsheen.holo{background-image:linear-gradient(110deg,#7dffc4,#9fe8ff 18%,#c9a6ff 36%,#ff9fe0 54%,#7dffc4 72%,#a8f0ff 90%);opacity:.561}
-.fglint{background-size:250% 250%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 48%,transparent 58%);mix-blend-mode:screen;opacity:.595}
+.fsheen{background-size:320% 320%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,#ffd1ea 0%,#d7c8ff 14%,#bfeaff 28%,#fff1c4 42%,#ffd1ea 56%,#c9ffe6 70%,#d7c8ff 84%,#ffd1ea 100%);opacity:.30}
+.fsheen.holo{background-image:linear-gradient(110deg,#7dffc4,#9fe8ff 18%,#c9a6ff 36%,#ff9fe0 54%,#7dffc4 72%,#a8f0ff 90%);opacity:.42}
+.fglint{background-size:250% 250%;background-position:calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%);background-image:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 48%,transparent 58%);opacity:.42}
 .reg-CN{--art:linear-gradient(160deg,#ffdcd2,#ff8a76);--paper:#fff7ef}
 .reg-JP{--art:linear-gradient(160deg,#ffe4ef,#ff9dbd);--paper:#fffafc}
 .reg-KR{--art:linear-gradient(160deg,#d9edff,#7cb3ff);--paper:#f7fbff}
@@ -4811,7 +4811,7 @@ function rollPack(){
 
 /* ---------- card visuals ---------- */
 /* 26.11.78: regional SSR frames. One painted frame per region; SSSR uses the same frame. A region with no frame simply shows none. */
-var FRM = {"AF":{"f":"assets/frames/af.6ac0c6c5.webp","s":"assets/frames/af-s.902ebf4c.webp"},"AM":{"f":"assets/frames/am.e1ba09d9.webp","s":"assets/frames/am-s.62b174db.webp"},"AS":{"f":"assets/frames/as.27f432a6.webp","s":"assets/frames/as-s.e63a222f.webp"},"AU":{"f":"assets/frames/au.d0d8a984.webp","s":"assets/frames/au-s.f9179247.webp"},"CA":{"f":"assets/frames/ca.ed5fa541.webp","s":"assets/frames/ca-s.3aaa2104.webp"},"CN":{"f":"assets/frames/cn.ad847d09.webp","s":"assets/frames/cn-s.afcb89a0.webp"},"EU":{"f":"assets/frames/eu.b751a737.webp","s":"assets/frames/eu-s.c4a5b032.webp"},"GL":{"f":"assets/frames/gl.3699395a.webp","s":"assets/frames/gl-s.39a58eaa.webp"},"JP":{"f":"assets/frames/jp.71df7220.webp","s":"assets/frames/jp-s.f3597f32.webp"},"KR":{"f":"assets/frames/kr.7677bd93.webp","s":"assets/frames/kr-s.a46e3f99.webp"},"SA":{"f":"assets/frames/sa.0c73b977.webp","s":"assets/frames/sa-s.91919f3a.webp"}}, FRM_HOLO = {CA: 1}, FRM_CSS = false;
+var FRM = {"AF":{"f":"assets/frames/af.f5e739f9.webp","s":"assets/frames/af-s.7b9a4570.webp"},"AM":{"f":"assets/frames/am.0d4d4e70.webp","s":"assets/frames/am-s.98c94392.webp"},"AS":{"f":"assets/frames/as.3fec5752.webp","s":"assets/frames/as-s.0c642db2.webp"},"AU":{"f":"assets/frames/au.b98d4d24.webp","s":"assets/frames/au-s.3989b4cc.webp"},"CA":{"f":"assets/frames/ca.43c48fd1.webp","s":"assets/frames/ca-s.6f85aa69.webp"},"CN":{"f":"assets/frames/cn.68494389.webp","s":"assets/frames/cn-s.52ff887e.webp"},"EU":{"f":"assets/frames/eu.7ef567f2.webp","s":"assets/frames/eu-s.8007ff11.webp"},"GL":{"f":"assets/frames/gl.370ecdfc.webp","s":"assets/frames/gl-s.9fd51dee.webp"},"JP":{"f":"assets/frames/jp.49fa1888.webp","s":"assets/frames/jp-s.05129c24.webp"},"KR":{"f":"assets/frames/kr.79fe5cfd.webp","s":"assets/frames/kr-s.783cd0a3.webp"},"SA":{"f":"assets/frames/sa.60183c47.webp","s":"assets/frames/sa-s.b8929b6c.webp"}}, FRM_HOLO = {CA: 1}, FRM_CSS = false;
 function frmCSS(){
   if(FRM_CSS) return; FRM_CSS = true;
   try{
@@ -4819,7 +4819,7 @@ function frmCSS(){
     Object.keys(FRM).forEach(function(r){
       t += '.frm-' + r + ' .fimg{background-image:url("' + FRM[r].s + '")}';
       t += '.frm-' + r + '.big .fimg{background-image:url("' + FRM[r].f + '")}';
-      t += '.frm-' + r + ' .fm{-webkit-mask-image:url("' + FRM[r].f + '");mask-image:url("' + FRM[r].f + '")}';
+      t += '.frm-' + r + ' .fm{-webkit-mask-image:url("' + FRM[r].s + '");mask-image:url("' + FRM[r].s + '")}';
     });
     var st = document.createElement('style'); st.textContent = t; document.head.appendChild(st);
   }catch(e){}
