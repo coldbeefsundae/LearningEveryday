@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.95', errs = [], shown = false;
+  var V = '26.11.97', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -913,6 +913,9 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 .kwmain{flex:1;min-height:0;display:flex;gap:14px;padding:12px}
 .kwboard{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
 /* 26.11.95: Kit's Writing Desk */
+/* 26.11.97 */.wdsrc{display:flex;gap:6px;flex-wrap:wrap}.wdsrc .wdpk{font-size:15px;padding:0 14px}
+.wdtx{width:100%;box-sizing:border-box;font:600 20px system-ui;padding:10px 12px;border-radius:12px;border:2px solid #e3d6bf;margin:8px 0;resize:vertical}
+.wdwl{margin:8px 0}.wdwl div{font-size:1.25em;line-height:1.5}.wdwl small{opacity:.55;font-weight:800;margin-right:4px}
 #wdCv{border-radius:14px;box-shadow:0 6px 22px rgba(60,50,20,.22);background:#fffdf6;touch-action:none;display:block}
 .wd .kwboard{overflow:auto}
 .wdkit{display:inline-block;width:58px;height:60px;flex:none}.wdkit svg{width:100%;height:100%}
@@ -6891,6 +6894,7 @@ function showParentSection(key, scrollTop){
     h += '<h3>\u270f\ufe0f Kit\u2019s Writing Desk</h3>';   /* 26.11.95 */
     h += pTog('Show the Writing tab', 'eWrite', e.writeOn !== false);
     h += pTog('Allow \u201cPeek with Kit\u201d', 'eWPeek', e.writePeek !== false);
+    h += '<div class="fld"><label for="eWGrade">Kit\u2019s spelling words</label><select id="eWGrade"><option value="g3"'+(e.writeGrade !== 'g4' ? ' selected' : '')+'>Grade 3</option><option value="g4"'+(e.writeGrade === 'g4' ? ' selected' : '')+'>Grade 4</option></select></div>';   /* 26.11.97 */
     h += '<div class="fld"><label for="eWSize">Line size</label><select id="eWSize"><option value="s"'+(e.writeSize === 's' ? ' selected' : '')+'>Small</option><option value="m"'+(!e.writeSize || e.writeSize === 'm' ? ' selected' : '')+'>Medium</option><option value="l"'+(e.writeSize === 'l' ? ' selected' : '')+'>Large</option></select></div>';
     h += '<div class="row" style="margin-top:6px"><button class="btn small" data-wdpar="del">\ud83d\uddd1\ufe0f Delete saved writing pages</button></div>';
     h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
@@ -6961,7 +6965,7 @@ function applyParentSettings(){
   e.quizPts = num('eQPts', 0, 5, e.quizPts);
   e.quizPerfect = num('eQPerf', 0, 10, e.quizPerfect);
   e.bitesOn = ck('eBites', e.bitesOn); e.bitesPts = num('eBitesPts', 0, 5, e.bitesPts);
-  if($('eWrite')){ e.writeOn = ck('eWrite', e.writeOn); e.writePeek = ck('eWPeek', e.writePeek); e.writeSize = $('eWSize').value; }   /* 26.11.95 */
+  if($('eWrite')){ e.writeOn = ck('eWrite', e.writeOn); e.writePeek = ck('eWPeek', e.writePeek); e.writeSize = $('eWSize').value; if($('eWGrade')){ if(e.writeGrade !== $('eWGrade').value) wdState().wi = 0; e.writeGrade = $('eWGrade').value; } }   /* 26.11.95 */
   e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts); if($('eKotoPts')) e.kotoPts = num('eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
   e.quizOn = ck('eQuiz', e.quizOn); e.musicOn = ck('eMusic', e.musicOn);
   if($('eMusicOff')){ var mo = $('eMusicOff').value; e.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : ''; }
@@ -11612,8 +11616,52 @@ var WD_G = {
   '6':[1,'M.85 .1Q.05 .4 .02 1.45M0 1.5A.5 .5 0 1 0 1 1.5A.5 .5 0 1 0 0 1.5'],
   '7':[1,'M0 0H1L.35 2'],
   '8':[1,'M.5 1A.42 .5 0 1 1 .5 0A.42 .5 0 1 1 .5 1A.5 .5 0 1 0 .5 2A.5 .5 0 1 0 .5 1'],
-  '9':[1,'M.96 .5A.48 .5 0 1 0 0 .5A.48 .5 0 1 0 .96 .5V2']
+  '9':[1,'M.96 .5A.48 .5 0 1 0 0 .5A.48 .5 0 1 0 .96 .5V2'],
+  "'":[0,'M0 0V.45'], '-':[.6,'M0 1.3H.6']   /* 26.11.97 */
 };
+/* 26.11.97: built-in practice words, grouped by spelling pattern (Ontario Language 2023, strand B2: phonics, spelling patterns,
+   prefixes and suffixes, high-frequency words). Our own lists, not an official TDSB list. Canadian spelling. */
+var WD_WORDS = {
+  g3:[
+    ['Silent e', 'cake shape smile prize stone phone flute huge'],
+    ['ai and ay', 'rain paint train chain play stay today away'],
+    ['ee and ea', 'sleep green street cheese teach dream beach leaf'],
+    ['Long o: oa and ow', 'boat coat road toast snow grow yellow window'],
+    ['ou and ow', 'cloud house mouth round shout brown crown flower'],
+    ['ar and or', 'star park garden sharp storm horse morning short'],
+    ['er, ir and ur', 'her winter bird girl first turn nurse hurt'],
+    ['sh, ch, th and wh', 'shell fish chair lunch think mother whale which'],
+    ['Silent letters', 'knee know knock write wrong wrap lamb climb'],
+    ['Adding s and es', 'apples friends boxes dishes foxes buses lunches wishes'],
+    ['Adding ing and ed', 'jumping playing looked running stopped hopped smiled baking'],
+    ['Tricky words', 'because friend people again could would should said their there were does']
+  ],
+  g4:[
+    ['Prefixes: un, re, dis, pre', 'unhappy unlock unfair redo reread disagree dislike preview'],
+    ['Suffixes: ful, less, ly, ness', 'helpful thankful hopeful careless slowly quietly kindness darkness'],
+    ['tion and sion', 'action station motion nation question vision mission television'],
+    ['y to i', 'cities babies families ponies tried cried happier funnier'],
+    ['ough and augh', 'though thought through enough rough bought caught daughter'],
+    ['Compound words', 'something everyone outside sunflower homework afternoon snowball birthday'],
+    ['Sound-alike words', 'their there hear here wear where right write'],
+    ['Tricky words', 'believe different beautiful library favourite neighbour colour Wednesday February']
+  ]
+};
+function wdWordList(){ var g = state.eco.writeGrade === 'g4' ? 'g4' : 'g3', o = []; WD_WORDS[g].forEach(function(x){ x[1].split(' ').forEach(function(w){ o.push(w); }); }); return o; }
+function wdWeekKey(){ var d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return dateKey(d); }
+function wdSchool(){ var ws = wdState(); return ws.school && ws.school.words && ws.school.words.length ? ws.school : null; }
+function wdSrc(){ var ws = wdState(); return wdSchool() && ws.src !== 'kit' ? 'school' : 'kit'; }
+function wdTodayWords(){
+  var ws = wdState(), src = wdSrc(), list = src === 'school' ? wdSchool().words : wdWordList(), k = src === 'school' ? (ws.si || 0) : (ws.wi || 0), o = [];
+  for(var n = 0; n < Math.min(4, list.length); n++) o.push(list[(k + n) % list.length]);
+  return o;
+}
+function wdWordW(w){ var t = 0; for(var i = 0; i < w.length; i++){ var g = WD_G[w[i]]; t += (g ? g[0] : .8) + (i ? .35 : 0); } return t; }
+function wdDrawWord(c, w, x, y, sc){
+  c.save(); c.translate(x, y); c.scale(sc, sc); var cx = 0;
+  for(var i = 0; i < w.length; i++){ var g = WD_G[w[i]], p = wdPath(w[i]); if(i) cx += .35; if(p){ c.save(); c.translate(cx, 0); c.stroke(p); c.restore(); } cx += g ? g[0] : .8; }
+  c.restore();
+}
 var WD_SEQ = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
 var WD_P2D = {};
 function wdPath(ch){ if(!WD_G[ch]) return null; if(!WD_P2D[ch]){ try{ WD_P2D[ch] = new Path2D(WD_G[ch][1]); }catch(e){ return null; } } return WD_P2D[ch]; }
@@ -11654,8 +11702,11 @@ function wdOpen(items, view){
   el.innerHTML = '<div class="kwtop"><button class="kwx" data-wd="close" aria-label="Close">\u2715</button><div class="kwtitle"><span class="kwtm">\u270f\ufe0f Kit\u2019s Writing Desk</span></div></div>'
     + '<div class="kwmain"><div class="kwboard" id="wdBoard"><canvas id="wdCv"></canvas></div><div class="kwside" id="wdSide"></div></div>';
   document.body.appendChild(el);
-  WD = {el:el, cv:el.querySelector('#wdCv'), items:items, strokes:view ? wdUnpack(view.s) : [], cur:null, phase:view ? 'view' : 'write', view:view || null,
-        peekT:0, u:38, W:0, penSeen:false, dirty:true, raf:0, today:!view && items.join('') === wdToday().join('')};
+  WD = {el:el, cv:el.querySelector('#wdCv'), items:items, strokes:view ? wdUnpack(view.s) : [], cur:null, phase:view ? 'view' : 'look', view:view || null, fadeT:0,   /* 26.11.96: every page starts in look (peek) mode */
+        peekT:0, u:38, W:0, penSeen:false, dirty:true, raf:0,
+        kind:view ? (view.k || 'l') : (items.some(function(x){ return x.length > 1; }) ? 'w' : 'l'),   /* 26.11.97: 'l' letter rows, 'w' spelling words */
+        today:!view && (items.join(',') === wdToday().join(',') || items.join(',') === wdTodayWords().join(','))};
+  if(WD.kind === 'w' && !view) WD.src = wdSrc();
   WD.onResize = function(){ wdLayout(); };
   window.addEventListener('resize', WD.onResize);
   wdBind(); wdSide(); wdLayout();
@@ -11688,8 +11739,10 @@ function wdDraw(){
   var c = WD.cv.getContext('2d'), u = WD.u, W = WD.W, now = Date.now();
   c.setTransform(WD.dpr*u, 0, 0, WD.dpr*u, 0, 0);
   c.fillStyle = '#fffdf6'; c.fillRect(0, 0, W, wdPageH());
-  var showModel = WD.phase !== 'write', peekA = 0;
+  var showModel = WD.phase === 'check' || WD.phase === 'saved' || WD.phase === 'view', peekA = 0;
   if(WD.peekT){ var t = (now - WD.peekT)/2600; peekA = t < .15 ? t/.15 : t < .7 ? 1 : t < 1 ? (1-t)/.3 : 0; if(t >= 1) WD.peekT = 0; }
+  if(WD.phase === 'look') peekA = 1;   /* 26.11.96: model stays until she taps I'm ready */
+  if(WD.fadeT){ var ft = (now - WD.fadeT)/700; if(ft >= 1) WD.fadeT = 0; else { peekA = Math.max(peekA, 1 - ft); } }
   for(var r = 0; r < 4; r++){
     var y = wdRowTop(r), ch = WD.items[r];
     c.lineCap = 'round';
@@ -11699,6 +11752,14 @@ function wdDraw(){
     c.setLineDash([2/u, 6/u]); c.beginPath(); c.moveTo(0, y+3); c.lineTo(W, y+3); c.stroke();
     c.setLineDash([]); c.strokeStyle = '#a99ee8'; c.lineWidth = 2.6/u; c.beginPath(); c.moveTo(0, y+2); c.lineTo(W, y+2); c.stroke();
     c.strokeStyle = '#efe7d4'; c.lineWidth = 1.5/u; c.beginPath(); c.moveTo(WD_M, y - .2); c.lineTo(WD_M, y + 3.2); c.stroke();
+    if(WD.kind === 'w'){   /* 26.11.97: spelling rows */
+      if(ch){ c.save(); c.setTransform(WD.dpr, 0, 0, WD.dpr, 0, 0); c.fillStyle = '#c9c1e6'; c.font = '800 '+Math.round(.7*u)+'px system-ui'; c.textAlign = 'center'; c.fillText(String(r+1), WD_M/2*u, (y + 1.75)*u); c.restore(); }
+      var x0 = WD_M + .7, ww = ch ? wdWordW(ch) : 0, sc = ww ? Math.min(1, (W - x0 - .4)/ww) : 1;
+      c.lineJoin = 'round'; c.lineCap = 'round';
+      if(ch && showModel){ c.save(); c.globalAlpha = .4; c.strokeStyle = '#4b3fb5'; c.lineWidth = .14/sc; wdDrawWord(c, ch, x0, y + (1-sc)*2, sc); c.restore(); }
+      if(ch && peekA > 0){ c.save(); c.globalAlpha = .55*peekA; c.strokeStyle = '#8a7bf0'; c.lineWidth = .14/sc; wdDrawWord(c, ch, x0, y + (1-sc)*2, sc); c.restore(); }
+      continue;
+    }
     var p = ch ? wdPath(ch) : null, gw = ch && WD_G[ch] ? WD_G[ch][0] : 0;
     if(p && showModel){ c.save(); c.translate((WD_M - gw)/2, y); c.strokeStyle = '#4b3fb5'; c.lineWidth = .16; c.lineJoin = 'round'; c.stroke(p); c.restore(); }
     else if(ch){ c.save(); c.setTransform(WD.dpr, 0, 0, WD.dpr, 0, 0); c.fillStyle = '#c9c1e6'; c.font = '800 '+Math.round(.7*u)+'px system-ui'; c.textAlign = 'center'; c.fillText(String(r+1), WD_M/2*u, (y + 1.75)*u); c.restore(); }
@@ -11714,7 +11775,7 @@ function wdDraw(){
     if(s.length === 1){ c.lineWidth = .1 + .07*s[0][2]; c.beginPath(); c.moveTo(s[0][0], s[0][1]); c.lineTo(s[0][0]+.01, s[0][1]); c.stroke(); return; }
     for(var i = 1; i < s.length; i++){ c.lineWidth = .09 + .08*s[i][2]; c.beginPath(); c.moveTo(s[i-1][0], s[i-1][1]); c.lineTo(s[i][0], s[i][1]); c.stroke(); }
   });
-  if(WD.peekT) wdKick();
+  if(WD.peekT || WD.fadeT) wdKick();
 }
 function wdBind(){
   var cv = WD.cv;
@@ -11743,7 +11804,24 @@ function wdKit(mood, msg){ return '<div class="kwkit"><span class="wdkit">'+kitS
 function wdSide(){
   if(!WD) return;
   var s = WD.el.querySelector('#wdSide'), h = '', its = WD.items.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ');
-  if(WD.phase === 'write'){
+  var isW = WD.kind === 'w';
+  if(WD.phase === 'look' && isW){   /* 26.11.97 */
+    h += wdKit('happy', 'Today\u2019s words: '+its+'<br>Look at each word. Say it out loud, then spell it in your head. Tap <b>I\u2019m ready</b> and I\u2019ll hide them.');
+    h += '<button class="kwb big go" data-wd="ready">\ud83d\udc4d I\u2019m ready</button>';
+  } else if(WD.phase === 'write' && isW){
+    h += wdKit('happy', 'Write each word on its own row, from memory. Take your time. \ud83e\udd8a');
+    h += '<div class="kwbtns">';
+    if(state.eco.writePeek !== false) h += '<button class="kwb" data-wd="peek">\ud83d\udc40 Peek with Kit</button>';
+    h += '<button class="kwb" data-wd="undo"'+(WD.strokes.length ? '' : ' disabled')+'>\u21a9\ufe0f Undo</button><button class="kwb" data-wd="clear"'+(WD.strokes.length ? '' : ' disabled')+'>\ud83e\uddfd Clear</button></div>';
+    h += '<button class="kwb big" data-wd="done"'+(WD.strokes.length ? '' : ' disabled')+'>\u2705 I\u2019m done</button>';
+    h += '<div class="kwfoot"><button class="kwb sm'+(kanjiState().penOnly ? ' on' : '')+'" data-wd="palm">\u270b Palm guard: '+(kanjiState().penOnly ? 'on' : 'off')+'</button></div>';
+  } else if(WD.phase === 'check' && isW){
+    h += wdKit('happy', 'Let\u2019s check together! Look at each word letter by letter:<div class="wdwl">'+WD.items.map(function(x, i){ return '<div><small>'+(i+1)+'</small> <b class="wdch">'+x+'</b></div>'; }).join('')+'</div>How do you feel about your page?');
+    h += '<div class="kwchecks"><button class="kwb big go" data-wd="j:neat">\ud83c\udf1f Neat</button><button class="kwb big" data-wd="j:there">\ud83c\udf31 Getting there</button><button class="kwb" data-wd="again">\ud83d\udd04 Try again</button></div>';
+  } else if(WD.phase === 'look'){   /* 26.11.96 */
+    h += wdKit('happy', 'Today\u2019s letters: '+its+'<br>Look at how each letter sits on the lines. Tap <b>I\u2019m ready</b> when you are, and I\u2019ll hide them.');
+    h += '<button class="kwb big go" data-wd="ready">\ud83d\udc4d I\u2019m ready</button>';
+  } else if(WD.phase === 'write'){
     h += wdKit('happy', 'Today\u2019s letters: '+its+'<br>Write each letter along its row. Take your time.');
     h += '<div class="kwbtns">';
     if(state.eco.writePeek !== false) h += '<button class="kwb" data-wd="peek">\ud83d\udc40 Peek with Kit</button>';
@@ -11767,17 +11845,20 @@ function wdClick(e){
   var t = e.target.closest && e.target.closest('[data-wd]'); if(!t || !WD) return;
   var a = t.getAttribute('data-wd');
   if(a === 'close'){ wdClose(); return; }
+  if(a === 'ready'){ WD.phase = 'write'; WD.fadeT = Date.now(); wdKick(); wdSide(); try{ Sound.tap(); }catch(_){} return; }   /* 26.11.96 */
   if(a === 'peek'){ WD.peekT = Date.now(); wdKick(); try{ Sound.tap(); }catch(_){} return; }
   if(a === 'undo'){ WD.strokes.pop(); wdKick(); wdSide(); return; }
-  if(a === 'clear' || a === 'again'){ WD.strokes = []; WD.phase = 'write'; wdKick(); wdSide(); return; }
+  if(a === 'clear'){ WD.strokes = []; wdKick(); wdSide(); return; }
+  if(a === 'again'){ WD.strokes = []; WD.phase = 'look'; wdKick(); wdSide(); return; }   /* 26.11.96: Try again starts with a fresh look */
   if(a === 'palm'){ var ks = kanjiState(); ks.penOnly = !ks.penOnly; save(); wdSide(); return; }
   if(a === 'done'){ if(!WD.strokes.length) return; WD.peekT = 0; WD.phase = 'check'; wdKick(); wdSide(); return; }
   if(a.indexOf('j:') === 0){
     var ws = wdState(), pages = wdPages();
-    pages.unshift({d:dateKey(), it:WD.items, w:Math.round(WD.W*10)/10, j:a.slice(2), s:wdPack(WD.strokes)});
+    pages.unshift({d:dateKey(), k:WD.kind, it:WD.items, w:Math.round(WD.W*10)/10, j:a.slice(2), s:wdPack(WD.strokes)});
     if(!wdPagesSave(pages)) toast('This page could not be saved (storage is full).', 2600);
     ws.done = (ws.done || 0) + 1;
-    if(WD.today) ws.i = (ws.i + 4) % WD_SEQ.length;
+    if(WD.today && WD.kind === 'l') ws.i = (ws.i + 4) % WD_SEQ.length;
+    if(WD.today && WD.kind === 'w'){ if(WD.src === 'school') ws.si = (ws.si || 0) + WD.items.length; else ws.wi = (ws.wi || 0) + WD.items.length; }   /* 26.11.97 */
     save();
     WD.phase = 'saved'; wdKick(); wdSide();
     try{ Sound.tap(); }catch(_){}
@@ -11787,9 +11868,17 @@ function wdClick(e){
 function renderWriteTab(){
   var v = $('view-write'); if(!v) return;
   if(state.eco.writeOn === false){ v.innerHTML = ''; return; }
-  var today = wdToday(), pages = wdPages(), h = '<div class="wdtab">';
-  h += '<div class="panel kjhead"><span class="kjkit">'+kitSVG('happy', 'hero')+'</span><div class="kjsay"><div class="kjbub">Today\u2019s letters are '+today.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ')+'. Shall we write them together?</div></div></div>';
-  h += '<div class="panel"><div class="row"><button class="btn primary" data-wdo="today">\u270f\ufe0f Write today\u2019s page</button><button class="btn" data-wdo="pick">'+(WDPICK ? 'Hide letters' : '\ud83d\udd24 Pick my own letters')+'</button></div>';
+  var today = wdToday(), pages = wdPages(), h = '<div class="wdtab">', ws = wdState(), sch = wdSchool();
+  var monday = new Date().getDay() === 1 && (!sch || sch.wk !== wdWeekKey());   /* 26.11.97 */
+  h += '<div class="panel kjhead"><span class="kjkit">'+kitSVG('happy', 'hero')+'</span><div class="kjsay"><div class="kjbub">'
+    + (monday ? 'It\u2019s Monday! Did you get a new spelling list at school? You can type it in below. \ud83d\udcdd' : 'Time for 4 spelling words! Shall we practise together?')+'</div></div></div>';
+  h += '<div class="panel"><h3>\ud83d\udcdd Spelling words</h3>';
+  if(sch) h += '<div class="wdsrc"><button class="wdpk'+(wdSrc() === 'school' ? ' on' : '')+'" data-wdo="src:school">My school list</button><button class="wdpk'+(wdSrc() === 'kit' ? ' on' : '')+'" data-wdo="src:kit">Kit\u2019s words</button></div>';
+  h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-wdo="words">\u270f\ufe0f Practise today\u2019s 4 words</button></div></div>';
+  h += '<div class="panel"><h3>\ud83c\udfeb My school spelling list</h3><div class="hint">Type your words with spaces or one per line. They stay on this tablet.</div>'
+    + '<textarea id="wdSchoolTx" class="wdtx" rows="3" autocapitalize="off" autocorrect="off" spellcheck="false">'+(sch ? sch.words.join(' ') : '')+'</textarea>'
+    + '<div class="row"><button class="btn" data-wdo="school">\ud83d\udcbe Save my list</button>'+(sch ? '<button class="btn small" data-wdo="schoolclear">Clear list</button>' : '')+'</div></div>';
+  h += '<div class="panel"><h3>\ud83d\udd24 Letter rows</h3><div class="hint" style="margin-bottom:8px">Today\u2019s letters: '+today.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ')+'</div><div class="row"><button class="btn" data-wdo="today">\u270f\ufe0f Write letter rows</button><button class="btn" data-wdo="pick">'+(WDPICK ? 'Hide letters' : 'Pick my own letters')+'</button></div>';
   if(WDPICK){
     h += '<div class="hint" style="margin:10px 0 6px">Pick up to 4 letters or numbers.</div><div class="wdpick">';
     WD_SEQ.forEach(function(x){ h += '<button class="wdpk'+(WDPICK.indexOf(x) > -1 ? ' on' : '')+'" data-wdk="'+x+'">'+x+'</button>'; });
@@ -11798,7 +11887,7 @@ function renderWriteTab(){
   h += '</div>';
   h += '<div class="panel"><h3>\ud83d\udcd3 My writing</h3>';
   if(!pages.length) h += '<div class="hint">Your finished pages will be kept here.</div>';
-  else { h += '<div class="wdpages">'; pages.forEach(function(p, i){ h += '<button class="wdpg" data-wdv="'+i+'">'+wdThumb(p, 220)+'<small>'+p.d+' \u00b7 '+(p.it || []).join(' ')+'</small></button>'; }); h += '</div>'; }
+  else { h += '<div class="wdpages">'; pages.forEach(function(p, i){ h += '<button class="wdpg" data-wdv="'+i+'">'+wdThumb(p, 220)+'<small>'+p.d+' \u00b7 '+(p.it || []).join(', ')+'</small></button>'; }); h += '</div>'; }
   h += '<div class="hint" style="margin-top:8px">Only the newest 30 pages are kept, on this tablet.</div></div>';
   v.innerHTML = h + '</div>';
 }
@@ -11807,6 +11896,16 @@ document.addEventListener('click', function(e){
   if(t.hasAttribute('data-wdo')){
     var o = t.getAttribute('data-wdo');
     if(o === 'today') wdOpen(wdToday());
+    else if(o === 'words'){ var tw = wdTodayWords(); if(tw.length) wdOpen(tw); }   /* 26.11.97 */
+    else if(o.indexOf('src:') === 0){ wdState().src = o.slice(4); save(); render(); }
+    else if(o === 'school'){
+      var tx = $('wdSchoolTx'), seen = {}, words = ((tx && tx.value) || '').split(/[\s,;]+/).filter(function(w){ var k = w.toLowerCase(); if(!/^[A-Za-z'-]{1,16}$/.test(w) || seen[k]) return false; seen[k] = 1; return true; }).slice(0, 25);
+      var ws2 = wdState();
+      if(!words.length){ toast('Type at least one word first.', 2200); return; }
+      ws2.school = {words:words, wk:wdWeekKey()}; ws2.si = 0; ws2.src = 'school'; save(); render();
+      toast('Saved '+words.length+' word'+(words.length === 1 ? '' : 's')+'! \ud83e\udd8a', 2200);
+    }
+    else if(o === 'schoolclear'){ var ws3 = wdState(); delete ws3.school; ws3.si = 0; ws3.src = 'kit'; save(); render(); }
     else if(o === 'pick'){ WDPICK = WDPICK ? null : []; render(); }
     else if(o === 'mine' && WDPICK && WDPICK.length){ var it = WDPICK.slice(); WDPICK = null; wdOpen(it); }
     return;
