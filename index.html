@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.102', errs = [], shown = false;
+  var V = '26.11.104', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -935,6 +935,18 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 @keyframes drin{from{transform:scale(.85);opacity:0}}
 .drtw{animation:drtw 1.8s ease-in-out infinite}@keyframes drtw{50%{opacity:.15}}
 .drpaws{display:inline-flex;gap:4px;vertical-align:middle;margin-left:4px}.drpaws svg{width:20px;height:24px;fill:#e3d6bf}.drpaws svg.on{fill:#ff8a3d}
+/* 26.11.103: Holiday Hunt */
+.hhrel{position:relative}
+.hhit{display:inline-block;width:34px;height:34px;cursor:pointer;vertical-align:middle;z-index:3;-webkit-tap-highlight-color:transparent;animation:hhWig 7s ease-in-out infinite;line-height:0}
+.hhit svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.hhit.hh-in{margin-left:8px;width:30px;height:30px}
+.hhit.hh-tr{position:absolute;top:-12px;right:-8px}
+.hhit.hh-bo{position:absolute;bottom:-32px;right:6px}
+.hhit.hh-kit{position:absolute;right:-20px;bottom:-4px;width:30px;height:30px}
+.hhit.pop{animation:hhPop .45s ease-out forwards;pointer-events:none}
+@keyframes hhWig{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-12deg)}94%{transform:rotate(10deg)}97%{transform:rotate(-6deg)}}
+@keyframes hhPop{0%{transform:scale(1)}40%{transform:scale(1.5)}100%{transform:scale(.2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hhit{animation:none}}
 .drentry{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;cursor:pointer;font:600 16px system-ui;color:inherit}
 .drmini{width:58px;height:88px;flex:none}.drready{color:#c2410c;font-weight:800}
 @media (prefers-reduced-motion:reduce){.drgsvg,.drtw{animation:none}}
@@ -4368,7 +4380,7 @@ var RAW_CARDS = [
   ["jp05", "Sei Shōnagon", "清少納言", "JP", "c. 966–1017 AD", "P", "🖌️", "C", "Wrote The Pillow Book", "Sei Shōnagon wrote down things she noticed and loved, like “Things that make the heart beat faster.” Her book feels like a diary full of lists and funny thoughts.", "She wrote about things that were elegant, cute and annoying."],
   ["jp06", "Minamoto no Yoritomo", "源頼朝", "JP", "1147–1199 AD", "P", "🏞️", "C", "Japan's first shogun", "Yoritomo set up a new kind of government in Kamakura. He became the first shogun, a leader who ran the country while the emperor stayed in Kyoto. Samurai helped him keep order.", "Kamakura is now a seaside town famous for a giant Buddha statue."],
   ["jp07", "Tomoe Gozen", "巴御前", "JP", "1100s AD", "P", "🏹", "S", "Female samurai warrior", "Tomoe Gozen is remembered in old stories as a brave and skilled samurai who could ride horses and shoot a bow better than many. She is one of Japan's most famous women warriors.", "Stories say she was as strong as a thousand fighters."],
-  ["jp08", "Oda Nobunaga", "織田信長", "JP", "1534–1582 AD", "P", "🔥", "S", "Bold unifier of Japan", "Nobunaga was a daring leader who began uniting Japan after a long time of fighting. He liked new ideas and used new tools like muskets and market reforms.", "A famous poem says: if the cuckoo doesn't sing, Nobunaga will make it sing."],
+  ["jp08", "Oda Nobunaga", "織田信長", "JP", "1534–1582 AD", "P", "🔥", "SSR", "Bold unifier of Japan", "Nobunaga was a daring leader who began uniting Japan after a long time of fighting. He liked new ideas and used new tools like muskets and market reforms.", "A famous poem says: if the cuckoo doesn't sing, Nobunaga will make it sing."],   /* 26.11.104: Nobunaga promoted from S to SSR */
   ["jp09", "Toyotomi Hideyoshi", "豊臣秀吉", "JP", "1537–1598 AD", "P", "🏯", "A", "From farm boy to ruler", "Hideyoshi began as a poor farmer's son but worked hard and became the leader of Japan. He built the great Osaka Castle. Stories say he was clever and funny.", "In the cuckoo poem, Hideyoshi finds a way to make it want to sing."],
   ["jp10", "Tokugawa Ieyasu", "徳川家康", "JP", "1543–1616 AD", "P", "🛡️", "SSR", "Founder of a 260-year peace", "Ieyasu was patient and careful. In 1603 he became shogun and began the Edo period, a long time of peace that lasted over 260 years. Edo grew into Tokyo.", "In the cuckoo poem, Ieyasu waits patiently until the bird sings."],
   ["jp11", "Miyamoto Musashi", "宮本武蔵", "JP", "c. 1584–1645 AD", "P", "⚔️", "SSR", "The two-sword master", "Musashi was a famous swordsman who fought with two swords at once. Later he became a painter and wrote The Book of Five Rings about training, focus and practice.", "He drew ink paintings of birds and branches that are in museums."],
@@ -6425,6 +6437,7 @@ function render(){
     if(v) v.innerHTML = errPanel('This screen', e);
   }
   try{ p4After(); }catch(e){ try{ console.error('after', e); }catch(_){} }
+  try{ hhWatch(); hhPlace(); }catch(e){}   /* 26.11.103 */
   updateBed(true);
 }
 function setTab(t){
@@ -6728,7 +6741,7 @@ function parNav(active){
   h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '') + v('insights', '📈', 'Insights');
   h += '<div class="pngrp">Settings</div>';
   h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', false);
-  h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news') + sc('kanji', '🈴', 'Kanji') + sc('write', '\u270f\ufe0f', 'Writing desk');   /* 26.11.99: Kanji and Writing get their own windows */
+  h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news') + sc('kanji', '🈴', 'Kanji') + sc('write', '\u270f\ufe0f', 'Writing desk') + sc('hunt', '\ud83c\udf81', 'Holiday Hunt');   /* 26.11.103 */   /* 26.11.99: Kanji and Writing get their own windows */
   h += parNavBtn('🎉', 'Celebrations &amp; alerts', 'data-act="pp4"', false);
   h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', false);
   h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', false);
@@ -6814,7 +6827,7 @@ function showParent(scrollTop){
   $('modal').onclick = parentClick;
   $('modal').onchange = parentOnChange;
 }
-var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log', kanji:'🈴 Kanji', write:'\u270f\ufe0f Writing desk'};
+var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log', kanji:'🈴 Kanji', write:'\u270f\ufe0f Writing desk', hunt:'\ud83c\udf81 Holiday Hunt'};   /* 26.11.103: hunt */
 function showParentSection(key, scrollTop){
   window.__parSec = key;
   var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Back</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
@@ -6927,6 +6940,8 @@ function showParentSection(key, scrollTop){
     h += '<div class="fld"><label for="eWGrade">Kit\u2019s spelling words</label><select id="eWGrade"><option value="g3"'+(e.writeGrade !== 'g4' ? ' selected' : '')+'>Grade 3</option><option value="g4"'+(e.writeGrade === 'g4' ? ' selected' : '')+'>Grade 4</option></select></div>';   /* 26.11.97 */
     h += '<div class="fld"><label for="eWSize">Line size</label><select id="eWSize"><option value="s"'+(e.writeSize === 's' ? ' selected' : '')+'>Small</option><option value="m"'+(!e.writeSize || e.writeSize === 'm' ? ' selected' : '')+'>Medium</option><option value="l"'+(e.writeSize === 'l' ? ' selected' : '')+'>Large</option></select></div>';
     h += '<div class="row" style="margin-top:6px"><button class="btn small" data-wdpar="del">\ud83d\uddd1\ufe0f Delete saved writing pages</button></div>';
+  } else if(key === 'hunt'){   /* 26.11.103 */
+    h += hhParentHTML(e);
   } else if(key === 'safe'){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
     h += '<h3>Backup</h3><div class="okline" id="pstore">Checking storage...</div><div class="row"><button class="btn small" data-act="pbackup">📋 Backup code</button><button class="btn small" data-act="prestore">♻️ Restore</button></div><div class="hint" style="margin-top:6px">Progress is saved on this device automatically, even if the app is force closed. Make a backup code before changing devices or clearing browser data.</div>';
@@ -6995,6 +7010,7 @@ function applyParentSettings(){
   e.quizPerfect = num('eQPerf', 0, 10, e.quizPerfect);
   e.bitesOn = ck('eBites', e.bitesOn); e.bitesPts = num('eBitesPts', 0, 5, e.bitesPts);
   if($('eWrite')){ e.writeOn = ck('eWrite', e.writeOn); e.writePeek = ck('eWPeek', e.writePeek); e.writeSize = $('eWSize').value; if($('eWGrade')){ if(e.writeGrade !== $('eWGrade').value) wdState().wi = 0; e.writeGrade = $('eWGrade').value; } }   /* 26.11.95 */
+  if($('eHH')){ e.hhOn = ck('eHH', e.hhOn !== false); e.hhG = {w:ck('eHHw', true), c:ck('eHHc', true), j:ck('eHHj', true)}; }   /* 26.11.103 */
   e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts); if($('eKotoPts')) e.kotoPts = num('eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
   e.quizOn = ck('eQuiz', e.quizOn); e.musicOn = ck('eMusic', e.musicOn);
   if($('eMusicOff')){ var mo = $('eMusicOff').value; e.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : ''; }
@@ -12329,6 +12345,7 @@ function drDraw(){
   });
   if(!mine.length && !ds.pend && !DR.open) h += '<div class="hint">Finish writing pages on the Writing desk to find pieces for Kit!</div>';
   DR.el.querySelector('#drSide').innerHTML = h;
+  try{ hhPlace(); }catch(_){}   /* 26.11.103 */
 }
 function drOnly(id){ var o = {}; o[DR_PIECES[id].sl] = id; return o; }
 function drGiftSVG(){ return '<svg viewBox="-40 -56 80 84" class="drgsvg"><rect x="-30" y="-20" width="60" height="44" rx="6" fill="#8a7bf0"/><rect x="-34" y="-30" width="68" height="14" rx="5" fill="#a99ef5"/><rect x="-6" y="-30" width="12" height="54" fill="#ffcc4d"/><path d="M0 -30C-22 -52 -30 -30 0 -30C30 -30 22 -52 0 -30" fill="none" stroke="#ffcc4d" stroke-width="6"/></svg>'; }
@@ -12350,6 +12367,261 @@ function drClick(e){
   }
   if(a === 'puton'){ var p = DR_PIECES[DR.open]; ds.wear[p.sl] = DR.open; DR.open = null; save(); drDraw(); return; }
   if(a === 'later'){ DR.open = null; drDraw(); return; }
+}
+
+/* 26.11.103: Holiday Hunt art, viewBox -20 -20 40 40 */
+var HH_ART = {
+ cane:'<path d="M4 18V-8a7 7 0 0 0-14 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path d="M4 18V-8a7 7 0 0 0-14 0" fill="none" stroke="#e23b3b" stroke-width="6" stroke-linecap="round" stroke-dasharray="4 4"/>',
+ gift:'<rect x="-14" y="-6" width="28" height="22" rx="3" fill="#e23b3b"/><rect x="-16" y="-12" width="32" height="8" rx="2" fill="#ff5a5a"/><rect x="-3" y="-12" width="6" height="28" fill="#ffd23f"/><path d="M0-12C-10-22-16-12 0-12C16-12 10-22 0-12" fill="none" stroke="#ffd23f" stroke-width="3"/>',
+ ornament:'<rect x="-4" y="-17" width="8" height="5" rx="1" fill="#c9a227"/><circle cx="0" cy="2" r="14" fill="#3e8ef7"/><path d="M-13-2h26M-13 6h26" stroke="#ffd23f" stroke-width="3"/><circle cx="-5" cy="-4" r="3" fill="#fff" opacity=".6"/>',
+ stocking:'<path d="M-6-16h12v18l8 6a6 6 0 0 1-6 10L-6 8z" fill="#e23b3b"/><rect x="-8" y="-18" width="16" height="7" rx="2" fill="#fff"/>',
+ phat:'<path d="M0-18L12 14H-12z" fill="#7c5cff"/><path d="M-6-2l12 4M-9 6l18 4" stroke="#ffd23f" stroke-width="3"/><circle cx="0" cy="-17" r="4" fill="#ff6fae"/>',
+ balloon:'<ellipse cx="0" cy="-5" rx="11" ry="13" fill="#ff6fae"/><path d="M-2 8h4l-2 3zM0 11q-4 4 0 8" fill="none" stroke="#aa4a7a" stroke-width="1.6"/><ellipse cx="-4" cy="-10" rx="3" ry="4" fill="#fff" opacity=".5"/>',
+ firework:'<g stroke-width="3" stroke-linecap="round"><path d="M0-16V-7M0 7v9M-16 0h9M7 0h9M-11-11l6 6M5 5l6 6M11-11l-6 6M-5 5l-6 6" stroke="#ffd23f"/></g><circle r="4" fill="#ff6fae"/>',
+ heart:'<path d="M0 15C-22 0-14-18 0-8C14-18 22 0 0 15z" fill="#ff4f86"/><circle cx="-7" cy="-6" r="3" fill="#fff" opacity=".5"/>',
+ letter:'<rect x="-16" y="-11" width="32" height="22" rx="2" fill="#fff" stroke="#e0b5c4" stroke-width="1.5"/><path d="M-16-11L0 2L16-11" fill="none" stroke="#e0b5c4" stroke-width="1.5"/><path d="M0 9C-8 3-5-3 0 0C5-3 8 3 0 9z" fill="#ff4f86"/>',
+ candyheart:'<path d="M0 15C-22 0-14-18 0-8C14-18 22 0 0 15z" fill="#ffc2d6"/><text y="4" text-anchor="middle" font-size="7" font-weight="900" fill="#d6336c" font-family="sans-serif">BFF</text>',
+ shamrock:'<g fill="#2ecc71"><circle cx="0" cy="-8" r="7"/><circle cx="-7" cy="1" r="7"/><circle cx="7" cy="1" r="7"/></g><path d="M0 2q2 9 6 15" stroke="#1e9e55" stroke-width="3" fill="none"/>',
+ goldcoin:'<circle r="14" fill="#ffd23f" stroke="#c9a227" stroke-width="2.5"/><circle r="9" fill="none" stroke="#c9a227" stroke-width="1.5"/><path d="M-3-5l6 10" stroke="#fff" stroke-width="2" opacity=".7"/>',
+ potgold:'<circle cx="-6" cy="-8" r="5" fill="#ffd23f"/><circle cx="4" cy="-9" r="5" fill="#ffd23f"/><circle cx="-1" cy="-13" r="5" fill="#ffe680"/><path d="M-15-4h30l-3 18h-24z" fill="#333"/><rect x="-16" y="-6" width="32" height="5" rx="2" fill="#555"/>',
+ eggs:'<ellipse cy="2" rx="12" ry="15" fill="#9fd8ff"/><path d="M-12 0q6-4 12 0t12 0M-11 7q5-4 11 0t11 0" stroke="#ff6fae" stroke-width="2.5" fill="none"/>',
+ eggd:'<ellipse cy="2" rx="12" ry="15" fill="#ffe680"/><g fill="#7c5cff"><circle cx="-5" cy="-5" r="2.5"/><circle cx="5" cy="-2" r="2.5"/><circle cx="-3" cy="6" r="2.5"/><circle cx="5" cy="9" r="2.5"/></g>',
+ chick:'<circle cy="3" r="13" fill="#ffd23f"/><circle cx="-4" cy="0" r="2" fill="#333"/><circle cx="4" cy="0" r="2" fill="#333"/><path d="M-3 5h6l-3 4z" fill="#ff9f43"/><path d="M-3-10l3-6 3 6" fill="#ffd23f"/>',
+ bunny:'<ellipse cx="-5" cy="-11" rx="4" ry="9" fill="#fff" stroke="#ddd"/><ellipse cx="5" cy="-11" rx="4" ry="9" fill="#fff" stroke="#ddd"/><circle cy="5" r="11" fill="#fff" stroke="#ddd"/><circle cx="-4" cy="3" r="1.8" fill="#333"/><circle cx="4" cy="3" r="1.8" fill="#333"/><circle cy="7" r="1.8" fill="#ff8fb1"/>',
+ maple:'<path d="M0-18l3 7 5-3-1 9 7-2-3 6 6 3-10 3 1 5-8-3-8 3 1-5-10-3 6-3-3-6 7 2-1-9 5 3z" fill="#e23b3b"/><path d="M0 4v14" stroke="#b02020" stroke-width="2.5"/>',
+ cflag:'<rect x="-17" y="-11" width="34" height="22" fill="#fff" stroke="#ddd"/><rect x="-17" y="-11" width="9" height="22" fill="#e23b3b"/><rect x="8" y="-11" width="9" height="22" fill="#e23b3b"/><path d="M0-7l2 4 3-1-1 4 3 1-7 4-7-4 3-1-1-4 3 1z" fill="#e23b3b"/>',
+ pumpkin:'<ellipse cx="-6" cy="3" rx="8" ry="12" fill="#ff8a1f"/><ellipse cx="6" cy="3" rx="8" ry="12" fill="#ff8a1f"/><ellipse cy="3" rx="7" ry="13" fill="#ffa040"/><path d="M0-9q1-6 5-8" stroke="#4a7a2a" stroke-width="3" fill="none"/>',
+ apple:'<path d="M0-6C-16-14-18 10-6 15C-3 16 3 16 6 15C18 10 16-14 0-6z" fill="#e23b3b"/><path d="M0-6q0-7 3-10" stroke="#6b4a2a" stroke-width="2.5" fill="none"/><path d="M2-11q7-5 10 0q-6 3-10 0z" fill="#2ecc71"/>',
+ leaf:'<path d="M0 16C-16 6-14-10 0-17C14-10 16 6 0 16z" fill="#ff9f43"/><path d="M0 16V-12M0 2l-6-5M0 6l6-5" stroke="#c9671a" stroke-width="2" fill="none"/>',
+ corn:'<ellipse cy="-2" rx="7" ry="14" fill="#ffd23f"/><path d="M-5-8h10M-6-2h12M-5 4h10" stroke="#e0a800" stroke-width="1.5"/><path d="M0 16C-12 8-12-2-8-8C-6 2-3 8 0 16zM0 16C12 8 12-2 8-8C6 2 3 8 0 16z" fill="#7cc464"/>',
+ jack:'<ellipse cx="-6" cy="3" rx="8" ry="12" fill="#ff8a1f"/><ellipse cx="6" cy="3" rx="8" ry="12" fill="#ff8a1f"/><ellipse cy="3" rx="7" ry="13" fill="#ffa040"/><path d="M-8-1l3-4 3 4zM2-1l3-4 3 4z" fill="#3a2200"/><path d="M-8 6q8 7 16 0q-8 3-16 0z" fill="#3a2200"/><path d="M0-9q1-6 5-8" stroke="#4a7a2a" stroke-width="3" fill="none"/>',
+ candy:'<path d="M-10 0l-8-7v14zM10 0l8-7v14z" fill="#ff6fae"/><circle r="9" fill="#ff6fae"/><path d="M-6-6l12 12M-2-9l11 11M-9-2l11 11" stroke="#fff" stroke-width="2"/>',
+ ghost:'<path d="M-12 16V-4a12 12 0 0 1 24 0v20l-4-4-4 4-4-4-4 4-4-4z" fill="#fff" stroke="#ccc" stroke-width="1.5"/><circle cx="-4" cy="-3" r="2.2" fill="#333"/><circle cx="4" cy="-3" r="2.2" fill="#333"/><ellipse cy="4" rx="2.5" ry="3" fill="#333"/>',
+ bat:'<path d="M0-4C-6-12-14-10-18-4C-14-4-12 0-12 4C-8 0-4 2 0 6C4 2 8 0 12 4C12 0 14-4 18-4C14-10 6-12 0-4z" fill="#4a3a6a"/><circle cx="-2" cy="-2" r="1.3" fill="#ffd23f"/><circle cx="2" cy="-2" r="1.3" fill="#ffd23f"/>',
+ redenv:'<rect x="-12" y="-17" width="24" height="34" rx="3" fill="#e0262b"/><path d="M-12-17h24v9L0-2-12-8z" fill="#c41a20"/><circle cx="0" cy="-2" r="5" fill="#ffd23f"/><text x="0" y="12" text-anchor="middle" font-size="9" font-weight="900" fill="#ffd23f" font-family="sans-serif">福</text>',
+ orange:'<circle cy="3" r="13" fill="#ff9f1a"/><path d="M0-10q-1-6 3-8" stroke="#6b4a2a" stroke-width="2.5" fill="none"/><path d="M2-11q8-6 12 0q-7 3-12 0z" fill="#2ecc71"/><circle cx="-5" cy="-1" r="3" fill="#fff" opacity=".35"/>',
+ lantern:'<rect x="-3" y="-19" width="6" height="4" fill="#c9a227"/><ellipse cy="0" rx="13" ry="14" fill="#e0262b"/><path d="M-6-13q-3 13 0 26M6-13q3 13 0 26" stroke="#ffd23f" stroke-width="1.5" fill="none"/><rect x="-6" y="13" width="12" height="3" fill="#c9a227"/><path d="M0 16v4" stroke="#ffd23f" stroke-width="2"/>',
+ tangyuan:'<path d="M-16 0h32a16 14 0 0 1-32 0z" fill="#5ab0e8"/><circle cx="-6" cy="-3" r="5" fill="#fff"/><circle cx="4" cy="-4" r="5" fill="#ffd0e0"/><circle cx="0" cy="1" r="5" fill="#fff"/>',
+ zongzi:'<path d="M0-16L15 12H-15z" fill="#4caf50"/><path d="M-8-1h16M-12 6h24" stroke="#c9a227" stroke-width="2.5"/><path d="M0-16L5 12" stroke="#2e7d32" stroke-width="1.5"/>',
+ dboat:'<path d="M-18 4h30l6-8-2 10q-2 8-12 8h-16q-6 0-6-10z" fill="#e0262b"/><path d="M14-4q4-6 0-10l-2 4" fill="#2ecc71" stroke="#1e9e55" stroke-width="1.5"/><path d="M-12 4v-6M-4 4v-6M4 4v-6" stroke="#ffd23f" stroke-width="2"/><path d="M-18 8h34" stroke="#ffd23f" stroke-width="2"/>',
+ mooncake:'<circle r="15" fill="#d9a05b"/><circle r="11" fill="#e8b46e" stroke="#b07a3a" stroke-width="1.5"/><path d="M-5-5l10 10M5-5l-10 10M0-7v14M-7 0h14" stroke="#b07a3a" stroke-width="1.6"/>',
+ rabbit:'<circle cx="8" cy="-10" r="9" fill="#ffe680" opacity=".8"/><ellipse cx="-6" cy="4" rx="9" ry="8" fill="#fff" stroke="#ddd"/><circle cx="-1" cy="-4" r="5" fill="#fff" stroke="#ddd"/><ellipse cx="-2" cy="-12" rx="2" ry="5" fill="#fff" stroke="#ddd"/><ellipse cx="2" cy="-11" rx="2" ry="5" fill="#fff" stroke="#ddd"/><circle cx="1" cy="-4" r="1" fill="#e23b3b"/>',
+ kagami:'<rect x="-15" y="8" width="30" height="8" rx="2" fill="#c9a227"/><ellipse cy="6" rx="14" ry="6" fill="#fff" stroke="#ddd"/><ellipse cy="-2" rx="10" ry="5" fill="#fff" stroke="#ddd"/><circle cy="-9" r="5" fill="#ff9f1a"/><path d="M0-13l3-4" stroke="#2ecc71" stroke-width="2.5"/>',
+ kadomatsu:'<path d="M-9 16V-10l5-6v32zM-3 16V-14l5-5v35zM3 16V-8l5-6v30z" fill="#4caf50" stroke="#2e7d32" stroke-width="1"/><path d="M-13 6h26v10h-26z" fill="#c9a227"/><path d="M-13 10h26" stroke="#8a6a1a" stroke-width="1.5"/>',
+ daruma:'<ellipse cy="2" rx="14" ry="16" fill="#e0262b"/><ellipse cy="-3" rx="9" ry="8" fill="#ffe6cc"/><circle cx="-3" cy="-4" r="2" fill="#333"/><circle cx="3" cy="-4" r="2" fill="none" stroke="#333" stroke-width="1"/><path d="M-6 9h12" stroke="#ffd23f" stroke-width="2.5"/>',
+ masu:'<path d="M-14-4h28l-3 20h-22z" fill="#d9b27a" stroke="#a07a44" stroke-width="1.5"/><g fill="#f2dfb0"><circle cx="-7" cy="-6" r="3.5"/><circle cx="0" cy="-8" r="3.5"/><circle cx="7" cy="-6" r="3.5"/><circle cx="-3" cy="-4" r="3.5"/><circle cx="4" cy="-4" r="3.5"/></g>',
+ oni:'<path d="M-12-6l-4-10 9 6M12-6l4-10-9 6" fill="#ffd23f"/><circle cy="3" r="14" fill="#e0262b"/><path d="M-8 1q3-3 6 0M2 1q3-3 6 0" stroke="#333" stroke-width="2" fill="none"/><path d="M-6 7q6 6 12 0z" fill="#fff" stroke="#333" stroke-width="1.5"/><circle cx="-9" cy="6" r="2.5" fill="#ff8fb1"/><circle cx="9" cy="6" r="2.5" fill="#ff8fb1"/>',
+ hina:'<path d="M-12 16L-6-2h12l6 18z" fill="#e0262b"/><path d="M-6-2L0 16 6-2" fill="#ffd23f"/><circle cy="-8" r="7" fill="#fff" stroke="#ddd"/><path d="M-7-10q7-9 14 0" fill="#222"/><path d="M-5-15h10l-1-3h-8z" fill="#ffd23f"/>',
+ peach:'<g fill="#ffb3cf"><circle cy="-8" r="6"/><circle cx="8" cy="-2" r="6"/><circle cx="5" cy="8" r="6"/><circle cx="-5" cy="8" r="6"/><circle cx="-8" cy="-2" r="6"/></g><circle r="4" fill="#ffd23f"/>',
+ hishi:'<path d="M0-16l16 6-16 6-16-6z" fill="#ff8fb1"/><path d="M-16-10v5l16 6 16-6v-5L0-4z" fill="#fff"/><path d="M-16-5v5l16 6 16-6v-5L0 1z" fill="#6cc46c"/>',
+ koi:'<path d="M-18-12V18" stroke="#8a6a1a" stroke-width="2.5"/><path d="M-16-12h26l8 6-8 6h-26z" fill="#3e8ef7"/><path d="M-16-12l4 6-4 6" fill="#fff"/><circle cx="12" cy="-7" r="2" fill="#fff"/><path d="M-16 2h22l7 5-7 5h-22z" fill="#e0262b"/><circle cx="8" cy="6" r="1.8" fill="#fff"/>',
+ kabuto:'<path d="M-16 8q0-20 16-20t16 20z" fill="#3a5a9a"/><path d="M-10-10l-6-8 10 6M10-10l6-8-10 6" fill="#ffd23f"/><rect x="-18" y="6" width="36" height="6" rx="2" fill="#2a3a6a"/><circle cy="0" r="4" fill="#ffd23f"/>',
+ tanzaku:'<path d="M0-18V-12" stroke="#4caf50" stroke-width="2"/><rect x="-6" y="-12" width="12" height="30" rx="1" fill="#ff8fb1"/><path d="M-3-6h6M-3-1h6M-3 4h6M-3 9h4" stroke="#fff" stroke-width="1.5"/>',
+ star:'<path d="M0-17l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#ffd23f" stroke="#e0a800" stroke-width="1.5"/>',
+ chochin:'<rect x="-8" y="-18" width="16" height="4" fill="#333"/><rect x="-8" y="14" width="16" height="4" fill="#333"/><ellipse cy="0" rx="12" ry="15" fill="#fff6dd" stroke="#e0c080" stroke-width="1"/><path d="M-12-6h24M-12 0h24M-12 6h24" stroke="#e0c080" stroke-width="1"/><circle cy="0" r="4" fill="#e0262b" opacity=".75"/>',
+ tourou:'<path d="M-16 14q16 6 32 0" stroke="#5ab0e8" stroke-width="3" fill="none"/><rect x="-10" y="-4" width="20" height="14" fill="#fff6dd" stroke="#c9a227" stroke-width="1.5"/><path d="M-12-4h24l-3-5h-18z" fill="#c9a227"/><circle cy="3" r="3" fill="#ff9f1a"/>',
+ dango:'<path d="M0-18V18" stroke="#c9a227" stroke-width="2.5"/><circle cy="-9" r="7" fill="#ffb3cf"/><circle cy="2" r="7" fill="#fff" stroke="#ddd"/><circle cy="13" r="6" fill="#9ad27a"/>',
+ moon:'<circle r="15" fill="#ffe680"/><circle cx="-5" cy="-4" r="3" fill="#f0d050"/><circle cx="5" cy="5" r="2.5" fill="#f0d050"/><circle cx="4" cy="-7" r="1.6" fill="#f0d050"/>',
+ chitose:'<path d="M-6 18V-6l6 4 6-4V18z" fill="#fff" stroke="#e0262b" stroke-width="2"/><path d="M-2-14q-3-3 0-6h4q3 3 0 6z" fill="#e0262b"/><path d="M-2-14l2 8 2-8z" fill="#e0262b"/><circle cx="0" cy="6" r="3" fill="#ffd23f"/><path d="M-6 12h12" stroke="#4caf50" stroke-width="1.5"/>',
+ ameStick:'<path d="M-10 18L8-14" stroke="#e0262b" stroke-width="6" stroke-linecap="round"/><path d="M-10 18L8-14" stroke="#fff" stroke-width="6" stroke-dasharray="4 4"/>'
+};
+/* 26.11.103: Holiday Hunt. Holiday treats hide around the app from 2 days before to 2 days after each holiday. 3 a day, 1 point each (red envelopes 1 to 3). Saves only today's finds. */
+var HH_LUNAR = { /* Gregorian [month, day] for 2026-2032. Checked against published calendars. Add more years when this runs out. */
+  lny:{2026:[2,17],2027:[2,6],2028:[1,26],2029:[2,13],2030:[2,3],2031:[1,23],2032:[2,11]},
+  lantern:{2026:[3,3],2027:[2,20],2028:[2,9],2029:[2,27],2030:[2,17],2031:[2,6],2032:[2,25]},
+  dragon:{2026:[6,19],2027:[6,9],2028:[5,28],2029:[6,16],2030:[6,5],2031:[6,24],2032:[6,12]},
+  moon:{2026:[9,25],2027:[9,15],2028:[10,3],2029:[9,22],2030:[9,12],2031:[10,1],2032:[9,19]}
+};
+function hhEaster(y){ var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1; return [mo,da]; }
+function hhThanks(y){ var d = new Date(y, 9, 1), off = (8 - d.getDay()) % 7; return [10, 1 + off + 7]; }
+var HH_HOL = [
+  {k:'xmas', g:'w', n:'Christmas', d:[12,25], it:['cane','gift','ornament','stocking']},
+  {k:'ny', g:'w', n:'New Year', d:[1,1], it:['phat','balloon','firework']},
+  {k:'val', g:'w', n:'Valentine\u2019s Day', d:[2,14], it:['heart','letter','candyheart']},
+  {k:'pat', g:'w', n:'St. Patrick\u2019s Day', d:[3,17], it:['shamrock','goldcoin','potgold']},
+  {k:'easter', g:'w', n:'Easter', f:hhEaster, it:['eggs','eggd','chick','bunny']},
+  {k:'canada', g:'w', n:'Canada Day', d:[7,1], it:['maple','cflag']},
+  {k:'thanks', g:'w', n:'Thanksgiving', f:hhThanks, it:['pumpkin','apple','leaf','corn']},
+  {k:'hallo', g:'w', n:'Halloween', d:[10,31], it:['jack','candy','ghost','bat']},
+  {k:'lny', g:'c', n:'Lunar New Year', t:'lny', it:['redenv','orange','lantern']},
+  {k:'lantern', g:'c', n:'Lantern Festival', t:'lantern', it:['lantern','tangyuan']},
+  {k:'dragon', g:'c', n:'Dragon Boat Festival', t:'dragon', it:['zongzi','dboat']},
+  {k:'midaut', g:'c', n:'Mid-Autumn Festival', t:'moon', it:['mooncake','rabbit','lantern']},
+  {k:'shogatsu', g:'j', n:'Sh\u014dgatsu', d:[1,2], it:['kagami','kadomatsu','daruma']},
+  {k:'setsubun', g:'j', n:'Setsubun', d:[2,3], it:['masu','oni']},
+  {k:'hina', g:'j', n:'Hinamatsuri', d:[3,3], it:['hina','peach','hishi']},
+  {k:'kodomo', g:'j', n:'Kodomo no Hi', d:[5,5], it:['koi','kabuto']},
+  {k:'tanabata', g:'j', n:'Tanabata', d:[7,7], it:['tanzaku','star']},
+  {k:'obon', g:'j', n:'Obon', d:[8,15], it:['chochin','tourou']},
+  {k:'tsukimi', g:'j', n:'Tsukimi', t:'moon', it:['dango','moon','rabbit']},
+  {k:'shichi', g:'j', n:'Shichi-Go-San', d:[11,15], it:['chitose','ameStick']}
+];
+var HH_GROUPS = {w:'Western and Canadian', c:'Chinese', j:'Japanese'};
+/* spots: t = tab, s = selector, p = how it sits (in: inline after text, tr: peeks from top right corner, bo: just below bottom right, kit: beside Kit) */
+var HH_SPOTS = [
+  {id:'h_title', t:'home', s:'#view-home .hero h1', p:'in'},
+  {id:'h_list', t:'home', s:'#view-home .qgrid', p:'bo'},
+  {id:'h_sec', t:'home', s:'#view-home .sec h2', p:'in'},
+  {id:'h_kit', t:'home', s:'#view-home .hero .kitwrap', p:'kit'},
+  {id:'k_kit', t:'kanji', s:'#view-kanji .kjhead', p:'tr'},
+  {id:'k_bot', t:'kanji', s:'#view-kanji .kjacts', p:'bo'},
+  {id:'w_paws', t:'write', s:'#view-write .drpanel', p:'tr'},
+  {id:'w_dress', t:'write', s:'#drSide .drseason', p:'tr', dr:1},
+  {id:'c_tile', t:'cards', s:'#view-cards .cgrid .cardtile', p:'tr', many:1},
+  {id:'c_bar', t:'cards', s:'#view-cards .zoombar', p:'tr'},
+  {id:'s_coin', t:'shop', s:'#view-shop .shophead', p:'tr'},
+  {id:'s_bot', t:'shop', s:'#view-shop .rgrid', p:'bo', last:1},
+  {id:'m_tot', t:'money', s:'#view-money .panel', p:'tr'},
+  {id:'j_head', t:'journal', s:'#view-journal .ptitle', p:'in'},
+  {id:'j_end', t:'journal', s:'#view-journal .panel', p:'bo', last:1},
+  {id:'p_name', t:'profile', s:'#view-profile .profilecard', p:'tr'}
+];
+var HH = {prev:null, pf:{}, t:0};
+function hhDayDiff(a, b){ return Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()))/86400000); }
+function hhCenters(h, y){
+  var md = h.d || (h.f ? h.f(y) : (HH_LUNAR[h.t] || {})[y]);
+  return md ? new Date(y, md[0]-1, md[1]) : null;
+}
+function hhActive(now){
+  var e = state.eco || {}; if(e.hhOn === false) return [];
+  var g = e.hhG || {}, d = now || new Date(), y = d.getFullYear(), out = [];
+  HH_HOL.forEach(function(h){
+    if(g[h.g] === false) return;
+    for(var yy = y-1; yy <= y+1; yy++){ var c = hhCenters(h, yy); if(c && Math.abs(hhDayDiff(d, c)) <= 2){ out.push(h); return; } }
+  });
+  return out;
+}
+function hhTabOn(t){
+  if(t === 'kanji') return state.eco.kanjiOn !== false;
+  if(t === 'write') return state.eco.writeOn !== false;
+  if(t === 'money') { try{ return !!bankOn(); }catch(_){ return false; } }
+  return true;
+}
+function hhHash(s){ var h = 2166136261; for(var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function hhToday(){
+  var act = hhActive();
+  if(!act.length) return null;
+  var dk = dateKey(), sig = dk+'|'+act.map(function(h){ return h.k; }).join(',');
+  var s = state.hh;
+  if(!s || s.sig !== sig){
+    var r = rngFor(hhHash(sig)), tabs = [];
+    HH_SPOTS.forEach(function(p){ if(hhTabOn(p.t) && tabs.indexOf(p.t) < 0) tabs.push(p.t); });
+    for(var i = tabs.length - 1; i > 0; i--){ var j = Math.floor(r()*(i+1)), x = tabs[i]; tabs[i] = tabs[j]; tabs[j] = x; }
+    var sp = tabs.slice(0, 3).map(function(t, n){
+      var opts = HH_SPOTS.filter(function(p){ return p.t === t; }), p = opts[Math.floor(r()*opts.length)], h = act[n % act.length];
+      return {s:p.id, h:h.k, it:h.it[Math.floor(r()*h.it.length)], ci:Math.floor(r()*1000)};
+    });
+    s = state.hh = {sig:sig, sp:sp, f:{}, kt:3 + Math.floor(r()*5), kn:0, kr:0};
+    save();
+  }
+  return s;
+}
+function hhHol(k){ for(var i = 0; i < HH_HOL.length; i++) if(HH_HOL[i].k === k) return HH_HOL[i]; return null; }
+function hhSpot(id){ for(var i = 0; i < HH_SPOTS.length; i++) if(HH_SPOTS[i].id === id) return HH_SPOTS[i]; return null; }
+/* what should be hidden right now: [{s, h, it, ci}] */
+function hhWanted(){
+  if(HH.prev){
+    var h = hhHol(HH.prev); if(!h) return [];
+    return HH_SPOTS.filter(function(p){ return hhTabOn(p.t) && !HH.pf[p.id] && !(p.id === 'h_kit' && !HH.kr); }).map(function(p, n){ return {s:p.id, h:h.k, it:h.it[n % h.it.length], ci:n*37, pv:1}; });
+  }
+  var s = hhToday(); if(!s) return [];
+  return s.sp.filter(function(x){ return !s.f[x.s] && !(x.s === 'h_kit' && !s.kr); });
+}
+function hhItemHTML(w){
+  return '<span class="hhit hh-'+hhSpot(w.s).p+'" role="button" tabindex="0" aria-label="A hidden holiday treat" data-hh="'+w.s+'"><svg viewBox="-20 -20 40 40" aria-hidden="true">'+(HH_ART[w.it] || HH_ART.star)+'</svg></span>';
+}
+function hhPlace(){
+  try{
+    if(document.hidden) return;
+    var want = hhWanted();
+    [].forEach.call(document.querySelectorAll('.hhit'), function(el){
+      var id = el.getAttribute('data-hh'); if(!want.some(function(w){ return w.s === id; })) el.parentNode.removeChild(el);
+    });
+    want.forEach(function(w){
+      if(document.querySelector('.hhit[data-hh="'+w.s+'"]')) return;
+      var p = hhSpot(w.s); if(!p) return;
+      if(p.dr ? !DR : p.t !== tab) return;
+      var list = document.querySelectorAll(p.s); if(!list.length) return;
+      var a = p.many ? list[w.ci % list.length] : (p.last ? list[list.length-1] : list[0]);
+      if(!a || a.getBoundingClientRect().width === 0) return;
+      var tmp = document.createElement('div'); tmp.innerHTML = hhItemHTML(w); var el = tmp.firstChild;
+      if(p.p !== 'in') a.classList.add('hhrel');
+      a.appendChild(el);
+    });
+  }catch(e){ try{ console.error('holiday hunt', e); }catch(_){} }
+}
+function hhFind(el){
+  var id = el.getAttribute('data-hh'); if(!id || el.__got) return;
+  el.__got = true; el.classList.add('pop');
+  try{ Sound.chime(); }catch(_){}
+  if(HH.prev){ HH.pf[id] = 1; toast('\ud83d\udd0e Preview find (no points)', 1600); }
+  else {
+    var s = hhToday(); if(!s) return;
+    var w = null; s.sp.forEach(function(x){ if(x.s === id) w = x; });
+    if(!w || s.f[id]) return;
+    var n = w.it === 'redenv' ? 1 + Math.floor(Math.random()*3) : 1, h = hhHol(w.h);
+    s.f[id] = 1;
+    var g = addPoints(n, 'Holiday treat'+(h ? ': '+h.n : ''));
+    save();
+    toast(g ? (w.it === 'redenv' ? '\ud83e\udde7 Lucky red envelope! +'+g+' point'+(g === 1 ? '' : 's') : '\u2b50 +'+g+' point') : '\u2728 You found a holiday treat!', 1800);
+    try{ renderTop(); }catch(_){}
+  }
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 450);
+}
+document.addEventListener('click', function(e){
+  var el = e.target.closest && e.target.closest('.hhit'); if(!el) return;
+  e.preventDefault(); e.stopPropagation(); hhFind(el);
+}, true);
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  var el = e.target.closest && e.target.closest('.hhit'); if(!el) return;
+  e.preventDefault(); hhFind(el);
+}, true);
+/* Kit's surprise: on days this spot is picked, the 3rd to 7th tap on Kit (Quests page) makes the treat pop out */
+document.addEventListener('click', function(e){
+  try{
+    var w = e.target.closest && e.target.closest('#view-home .hero .kitwrap'); if(!w) return;
+    if(bedMode() === 'asleep') return;
+    var pv = HH.prev && !HH.pf.h_kit, s = pv ? null : hhToday();
+    if(!pv){ if(!s || s.kr || !s.sp.some(function(x){ return x.s === 'h_kit'; })) return; s.kn++; if(s.kn < s.kt){ save(); return; } s.kr = 1; save(); }
+    else { HH.kn = (HH.kn || 0) + 1; if(HH.kn < 3) return; }
+    setTimeout(function(){
+      try{ var sv = w.querySelector('.kit'); if(sv && kitAnimOK()){ sv.__kp = false; kitPlay(sv, ['hop','']); } }catch(_){}
+      if(pv) HH.kr = 1;
+      hhPlace();
+    }, 350);
+  }catch(_){}
+}, false);
+var HH_MO = null;
+function hhWatch(){
+  if(HH_MO || !window.MutationObserver) return;
+  HH_MO = new MutationObserver(function(){ if(HH.t) return; HH.t = setTimeout(function(){ HH.t = 0; hhPlace(); }, 300); });
+  try{ HH_MO.observe(document.body, {childList:true, subtree:true}); }catch(_){}
+}
+/* Parent screen: preview */
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-hhpar]'); if(!t) return;
+  var a = t.getAttribute('data-hhpar');
+  if(a === 'go'){ var sel = $('eHHPrev'); HH.prev = sel ? sel.value : 'xmas'; HH.pf = {}; HH.kn = 0; HH.kr = 0; toast('\ud83d\udd0e Preview on. Close the Parent screen and look around. Kit\u2019s surprise pops out on the 3rd tap.', 4200); }
+  else { HH.prev = null; HH.pf = {}; toast('Preview off', 1600); }
+  try{ var b = $('hhPrevState'); if(b) b.textContent = HH.prev ? 'Preview is on: '+hhHol(HH.prev).n : 'Preview is off'; }catch(_){}
+  hhPlace();
+});
+function hhNext(){
+  var d = new Date(), i, a;
+  for(i = 0; i < 400; i++){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i); a = hhActive(x); if(a.length) return {d:x, h:a}; }
+  return null;
+}
+function hhParentHTML(e){
+  var g = e.hhG || {}, h = pTog('Hide holiday treats around the app (3 a day, 2 days before to 2 days after each holiday)', 'eHH', e.hhOn !== false);
+  h += '<h3>Holidays</h3>';
+  Object.keys(HH_GROUPS).forEach(function(k){ h += pTog(HH_GROUPS[k]+' <span class="hint">('+HH_HOL.filter(function(x){ return x.g === k; }).map(function(x){ return x.n; }).join(', ')+')</span>', 'eHH'+k, g[k] !== false); });
+  var nx = null; try{ nx = hhNext(); }catch(_){}
+  h += '<div class="hint" style="margin:8px 0">'+(nx ? 'Next treats: '+nx.h.map(function(x){ return x.n; }).join(' + ')+(hhDayDiff(nx.d, new Date()) === 0 ? ' (hiding now)' : ', from '+nx.d.toLocaleDateString(undefined, {month:'short', day:'numeric'})) : 'No holidays turned on.')+'. Each find gives 1 point (red envelopes 1 to 3). Moon calendar dates go up to 2032.</div>';
+  h += '<h3>Test it</h3><div class="hint">Shows a holiday\u2019s treats in every hiding spot at once, so you can check how they look. Preview finds give no points. It turns off when the app restarts.</div>';
+  h += '<div class="fld"><label for="eHHPrev">Holiday</label><select id="eHHPrev">'+HH_HOL.map(function(x){ return '<option value="'+x.k+'"'+(HH.prev === x.k ? ' selected' : '')+'>'+x.n+'</option>'; }).join('')+'</select></div>';
+  h += '<div class="row" style="margin-top:6px"><button class="btn small" data-hhpar="go">\ud83d\udd0e Preview</button><button class="btn small" data-hhpar="off">Stop preview</button><span class="hint" id="hhPrevState">'+(HH.prev ? 'Preview is on: '+hhHol(HH.prev).n : 'Preview is off')+'</span></div>';
+  return h;
 }
 
 function renderKanjiTab(){
