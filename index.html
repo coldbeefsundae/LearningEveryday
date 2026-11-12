@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.86', errs = [], shown = false;
-  window.__SQV = V; window.__SQDATE = '2026-11-08';
+  var V = '26.11.88', errs = [], shown = false;
+  window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
     try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
@@ -2352,6 +2352,10 @@ body[data-skin=comic] :focus-visible{outline:3px solid #111;outline-offset:2px}
 .cbig{position:fixed;inset:0;z-index:460;background:rgba(10,8,30,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));overflow:hidden;cursor:zoom-out;-webkit-tap-highlight-color:transparent;animation:cbigIn .18s ease-out}
 .cbig-card{width:calc(250px * var(--bs,1.4));height:calc(350px * var(--bs,1.4));position:relative;flex:none}
 .cbig .dflip{position:absolute;left:0;top:0;width:250px;zoom:var(--bs,1.4);cursor:grab}
+.cbig .dflip .dback{display:none!important}
+/* 26.11.88: big view stops the things that run on their own. Everything that follows her finger stays the same. */
+.cbig .llx-bob,.cbig .llx-cmh{animation:none!important}
+.cbig .hf-ssr .tcg.r-SSSR{animation:none!important;background-position:calc(var(--mx)*100%) calc(var(--my)*100%)}   /* 26.11.87: big view is front only, so the back is not drawn (saves tablet memory) */
 /* 26.11.84: zoom instead of transform:scale so the card is drawn at its real size (huge scaled 3D layers dropped tiles = flickering black boxes on big tablets) */
 .cbig-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;color:#fff;font-weight:800;font-size:15px;text-align:center}
 .cbig-bar .btn{background:#fff;color:#1e1b3a;border:0;min-height:44px;padding:0 18px;font-size:16px}
@@ -5024,19 +5028,24 @@ function hlLoop(now){
   var sc = document.querySelectorAll('.hlsc');
   if(!sc.length){ HL.run = false; HLF.el = null; return; }
   if(!HL.t0) HL.t0 = now;
-  var tx = .5, ty = .5, live = Date.now() - HL.tilt < 1500;
+  var tx = .5, ty = .5, live = Date.now() - HL.tilt < 1500, cbigOn = !!document.getElementById('cbig');
   if(HL.hold){ tx = .5; ty = .5; }
   else if(HL.ptr){ tx = HL.ptr.x; ty = HL.ptr.y; }
   else if(live){ tx = HL.tx; ty = HL.ty; }
+  else if(cbigOn){ tx = .5; ty = .5; }     /* 26.11.88: big view, no finger: the light rests in the middle (no idle drift) */
   else if(!HL_RM){ var t = (now - HL.t0)/1000; tx = .5 + .32*Math.sin(t*.55); ty = .5 + .26*Math.sin(t*.37 + 1); }
   var dt_ = HL.last ? Math.min(100, now - HL.last) : 16.7; HL.last = now;   /* 26.11.41: smoothing by time, not by frame: same feel at 60 and 144 Hz and on a slow frame */
   var hk_ = 1 - Math.exp(-dt_/(HL.hold ? 38.7 : 110)); HL.x += (tx - HL.x)*hk_; HL.y += (ty - HL.y)*hk_;
-  for(var i = 0; i < sc.length; i++){
+  /* 26.11.88: once the light has settled in the big view, stop rewriting the shine every frame */
+  var still = cbigOn && !HL.ptr && !HL.hold && Math.abs(HL.x - tx) < .0005 && Math.abs(HL.y - ty) < .0005;
+  if(still){ HL.x = tx; HL.y = ty; }
+  for(var i = 0; i < sc.length && !(still && HL.stillDone); i++){
     var aiming = HL.ptr && !HL.hold;           // 26.11.41: finger or mouse on the card tilts the whole card like the LR preview, +30% (data-rotp)
     var st = sc[i].style, rot = +(sc[i].getAttribute(aiming ? 'data-rotp' : 'data-rot') || sc[i].getAttribute('data-rot') || 0) * (!aiming && live ? .4 : 1);
     st.setProperty('--mx', HL.x.toFixed(4)); st.setProperty('--my', HL.y.toFixed(4));
     if(rot){ st.setProperty('--ry', ((HL.x - .5)*rot).toFixed(2)+'deg'); st.setProperty('--rx', ((.5 - HL.y)*rot).toFixed(2)+'deg'); }
   }
+  HL.stillDone = still;   /* 26.11.88: one last exact write, then skip until she touches the card again */
   if(HLF.el){
     if(!document.body.contains(HLF.el)) HLF.el = null;
     else {
@@ -5119,13 +5128,14 @@ function cardBigOpen(){
   var f = $('dflip'); if(!f || $('cbig')) return;
   var ph = document.createElement('div'); ph.id = 'dflipPh'; ph.className = 'dflip-ph'; f.parentNode.insertBefore(ph, f);
   var o = document.createElement('div'); o.id = 'cbig'; o.className = 'cbig'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Big card view');
-  o.innerHTML = '<div class="cbig-card"></div><div class="cbig-bar"><button class="btn cbig-flip" type="button">↻ Flip</button><span>Slide your finger to tilt · tap anywhere to close</span></div>';
+  o.innerHTML = '<div class="cbig-card"></div><div class="cbig-bar"><span>Slide your finger to tilt · tap anywhere to close</span></div>';
   o.querySelector('.cbig-card').appendChild(f);
   document.body.appendChild(o); cardBigFit();
-  HLF.target = hlSnap(HLF.target);
+  /* 26.11.87: no flipping in the big view. Show the front right away (no spin). */
+  HLF.target = Math.round(HLF.target/360)*360; HLF.ang = HLF.target;
+  f.style.setProperty('--fa', HLF.ang.toFixed(2)+'deg'); f.classList.remove('bk');
   o.addEventListener('click', function(e){
     if(HLF.just){ return; }
-    if(e.target.closest('.cbig-flip')){ e.stopPropagation(); hlFlipNow(); return; }
     if(e.target.closest('[data-say]')) return;                    // 🔊 on the back still speaks
     cardBigClose();
   });
