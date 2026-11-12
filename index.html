@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.79', errs = [], shown = false;
+  var V = '26.11.80', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -310,6 +310,9 @@ h1,h2,h3,p{margin:0}
 @keyframes holo{to{background-position:300% 0}}
 .r-SSR .tcg-art::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,150,.2),rgba(0,200,255,.2),rgba(255,230,0,.2));mix-blend-mode:overlay}
 /* 26.11.78: regional SSR frames (painted overlay + pearl sheen that follows the tilt; Canada's aurora gets the colour holo) */
+.tcg.hasfrm .tcg-in{z-index:auto}
+/* 26.11.80: card text sits above the frame (frame stays above the picture) */
+.tcg.hasfrm .tcg-in>.tcg-top,.tcg.hasfrm .tcg-in>.tcg-tag,.tcg.hasfrm .tcg-in>.tcg-foot{position:relative;z-index:5}
 .frm{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden}
 .frm>i{position:absolute;inset:0;display:block}
 .fimg{background-position:center;background-size:100% 100%;background-repeat:no-repeat;opacity:.85}
@@ -4812,13 +4815,14 @@ function faceHTML(c, o){
   if(c.k === 'LL' && window.LLX && LLX.art && LLX.art[c.id]) return llxFaceHTML(c, o);
   var rg = REGIONS[c.r];
   var ht = o.holo ? hlTier(c.k) : '', hf = ht && ht !== 'matte';
-  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+(hf ? hlPaper(ht) : '');
+  var fr = frameHTML(c, !!o.holo);
+  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+(fr ? ' hasfrm' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+(hf ? hlPaper(ht) : '');
   var u = imgURL(c.id);
   h += '<div class="tcg-top"><div><div class="tcg-name" data-say="name:'+c.id+'">'+esc(c.n)+'</div>'+(c.nat ? '<div class="tcg-nat" data-say="nat:'+c.id+'">'+esc(c.nat)+'</div>' : '')+'</div><div class="tcg-rar">'+c.k+'</div></div>';
   h += '<div class="tcg-art'+(u?' has-img':'')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')+(c.k === 'LL' ? '<span class="ll-play" aria-hidden="true">▶</span>' : '')+'</div>';
   h += '<div class="tcg-tag" data-say="tag:'+c.id+'">'+esc(c.s)+'</div>';
   h += '<div class="tcg-foot"><span data-say="place:'+c.id+'">'+rg.flag+' '+TYPE_LABEL[c.t]+'</span><span class="tcg-year" data-say="year:'+c.id+'">'+esc(c.y)+'</span></div>';
-  h += '</div>'+(hf ? hlDeco(c.k) : '')+frameHTML(c, !!o.holo)+'<i class="tcg-shine"></i></div>';
+  h += '</div>'+(hf ? hlDeco(c.k) : '')+fr+'<i class="tcg-shine"></i></div>';
   if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
   if(o.count > 1) h += '<span class="tbadge ct">×'+o.count+'</span>';
   return h + '</div>';
