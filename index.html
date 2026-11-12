@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.85', errs = [], shown = false;
+  var V = '26.11.86', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -5563,7 +5563,7 @@ window.LL_HOST = {
 
 /* tap Watch the story / the card's play button */
 /* ---- the card's music: starts at the tap and runs through the zoom, the story and the return ---- */
-var TRACK_URLS = {"kowloon": "./assets/music/kowloon.f029d70b.mp3", "carp": "./assets/music/carp.dcdee5af.mp3", "wave": "./assets/music/wave.e713f0cb.mp3", "nian": "./assets/music/nian.dd4c9f31.mp3", "halley": "./assets/music/halley.020da985.mp3", "kaguya": "./assets/music/kaguya.5fe1462b.mp3"};
+var TRACK_URLS = {"kowloon": "./assets/music/kowloon.f029d70b.mp3", "carp": "./assets/music/carp.dcdee5af.mp3", "wave": "./assets/music/wave.e713f0cb.mp3", "nian": "./assets/music/nian.dd4c9f31.mp3", "halley": "./assets/music/halley.020da985.mp3", "kaguya": "./assets/music/kaguya.5fe1462b.mp3", "cpr": "./assets/music/cpr.14b1bfe7.mp3", "hangul": "./assets/music/hangul.faae859a.mp3", "insulin": "./assets/music/insulin.0bb3517c.mp3"};
 var LLTRK = {play:null, bytes:{}, tok:null};
 function llTrackPrefetch(){ Object.keys(TRACK_URLS).forEach(function(k){ if(LLTRK.bytes[k]) return; fetch(TRACK_URLS[k]).then(function(r){ return r.arrayBuffer(); }).then(function(b){ LLTRK.bytes[k] = b; }).catch(function(){}); }); }
 function llTrackStart(id){
