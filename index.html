@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.97', errs = [], shown = false;
+  var V = '26.11.98', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -913,6 +913,8 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 .kwmain{flex:1;min-height:0;display:flex;gap:14px;padding:12px}
 .kwboard{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
 /* 26.11.95: Kit's Writing Desk */
+/* 26.11.98 */.wdsent{font:800 22px/1.35 system-ui;color:#2b2b44;margin:8px 0 2px}.wdfrom{font-size:13px;opacity:.7;margin-bottom:6px}
+.kwside .wdsent{font-size:20px;background:#fff;border-radius:12px;padding:8px 10px;margin:8px 0}
 /* 26.11.97 */.wdsrc{display:flex;gap:6px;flex-wrap:wrap}.wdsrc .wdpk{font-size:15px;padding:0 14px}
 .wdtx{width:100%;box-sizing:border-box;font:600 20px system-ui;padding:10px 12px;border-radius:12px;border:2px solid #e3d6bf;margin:8px 0;resize:vertical}
 .wdwl{margin:8px 0}.wdwl div{font-size:1.25em;line-height:1.5}.wdwl small{opacity:.55;font-weight:800;margin-right:4px}
@@ -6896,6 +6898,7 @@ function showParentSection(key, scrollTop){
     h += pTog('Allow \u201cPeek with Kit\u201d', 'eWPeek', e.writePeek !== false);
     h += '<div class="fld"><label for="eWGrade">Kit\u2019s spelling words</label><select id="eWGrade"><option value="g3"'+(e.writeGrade !== 'g4' ? ' selected' : '')+'>Grade 3</option><option value="g4"'+(e.writeGrade === 'g4' ? ' selected' : '')+'>Grade 4</option></select></div>';   /* 26.11.97 */
     h += '<div class="fld"><label for="eWSize">Line size</label><select id="eWSize"><option value="s"'+(e.writeSize === 's' ? ' selected' : '')+'>Small</option><option value="m"'+(!e.writeSize || e.writeSize === 'm' ? ' selected' : '')+'>Medium</option><option value="l"'+(e.writeSize === 'l' ? ' selected' : '')+'>Large</option></select></div>';
+    h += '<div class="row" style="margin-top:6px">'+(state.tasks.some(function(t){ return t.wd; }) ? '<span class="hint">\u2705 Writing desk quest is set up (edit it in Quests).</span>' : '<button class="btn small" data-wdo="addquest">\u2795 Add a daily \u201cWriting desk\u201d quest (Mon to Fri)</button>')+'</div>';   /* 26.11.98 */
     h += '<div class="row" style="margin-top:6px"><button class="btn small" data-wdpar="del">\ud83d\uddd1\ufe0f Delete saved writing pages</button></div>';
     h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
   } else if(key === 'safe'){
@@ -11617,7 +11620,8 @@ var WD_G = {
   '7':[1,'M0 0H1L.35 2'],
   '8':[1,'M.5 1A.42 .5 0 1 1 .5 0A.42 .5 0 1 1 .5 1A.5 .5 0 1 0 .5 2A.5 .5 0 1 0 .5 1'],
   '9':[1,'M.96 .5A.48 .5 0 1 0 0 .5A.48 .5 0 1 0 .96 .5V2'],
-  "'":[0,'M0 0V.45'], '-':[.6,'M0 1.3H.6']   /* 26.11.97 */
+  "'":[0,'M0 0V.45'], '-':[.6,'M0 1.3H.6'],   /* 26.11.97 */
+  '.':[0,'M0 1.95h.001'], ',':[.15,'M.15 1.95L0 2.35'], '!':[0,'M0 0V1.4M0 1.95h.001'], '?':[1,'M0 .45A.5 .45 0 1 1 .5 1.05V1.4M.5 1.95h.001']   /* 26.11.98 */
 };
 /* 26.11.97: built-in practice words, grouped by spelling pattern (Ontario Language 2023, strand B2: phonics, spelling patterns,
    prefixes and suffixes, high-frequency words). Our own lists, not an official TDSB list. Canadian spelling. */
@@ -11655,6 +11659,24 @@ function wdTodayWords(){
   var ws = wdState(), src = wdSrc(), list = src === 'school' ? wdSchool().words : wdWordList(), k = src === 'school' ? (ws.si || 0) : (ws.wi || 0), o = [];
   for(var n = 0; n < Math.min(4, list.length); n++) o.push(list[(k + n) % list.length]);
   return o;
+}
+/* 26.11.98: copy a sentence from her own cards (tagline or first fun-fact sentence, short ones only) */
+function wdSentences(){
+  var o = [];
+  CARDS.forEach(function(c){
+    if(!state.cards[c.id]) return;
+    [c.s, String(c.f || '').split(/(?<=[.!?])\s/)[0]].forEach(function(t){
+      t = String(t || '').replace(/[\u2018\u2019]/g, "'").replace(/\s+/g, ' ').trim();
+      if(t.length >= 8 && t.length <= 50 && /^[A-Za-z0-9 '\-.,!?]+$/.test(t)) o.push({t:t, id:c.id});
+    });
+  });
+  return o;
+}
+function wdTodaySentence(){ var l = wdSentences(); if(!l.length) return null; return l[(wdState().ti || 0) % l.length]; }
+function wdWrap(text, maxW){
+  var words = text.split(' '), lines = [], cur = '';
+  words.forEach(function(w){ var t = cur ? cur + ' ' + w : w; if(cur && wdWordW(t) > maxW){ lines.push(cur); cur = w; } else cur = t; });
+  if(cur) lines.push(cur); return lines;
 }
 function wdWordW(w){ var t = 0; for(var i = 0; i < w.length; i++){ var g = WD_G[w[i]]; t += (g ? g[0] : .8) + (i ? .35 : 0); } return t; }
 function wdDrawWord(c, w, x, y, sc){
@@ -11696,7 +11718,7 @@ function wdThumb(pg, w){
 }
 
 var WD = null, WDPICK = null;
-function wdOpen(items, view){
+function wdOpen(items, view, opt){
   if(WD) wdClose(true);
   var el = document.createElement('div'); el.className = 'kw wd'; el.id = 'wd';
   el.innerHTML = '<div class="kwtop"><button class="kwx" data-wd="close" aria-label="Close">\u2715</button><div class="kwtitle"><span class="kwtm">\u270f\ufe0f Kit\u2019s Writing Desk</span></div></div>'
@@ -11704,7 +11726,8 @@ function wdOpen(items, view){
   document.body.appendChild(el);
   WD = {el:el, cv:el.querySelector('#wdCv'), items:items, strokes:view ? wdUnpack(view.s) : [], cur:null, phase:view ? 'view' : 'look', view:view || null, fadeT:0,   /* 26.11.96: every page starts in look (peek) mode */
         peekT:0, u:38, W:0, penSeen:false, dirty:true, raf:0,
-        kind:view ? (view.k || 'l') : (items.some(function(x){ return x.length > 1; }) ? 'w' : 'l'),   /* 26.11.97: 'l' letter rows, 'w' spelling words */
+        kind:view ? (view.k || 'l') : opt && opt.kind ? opt.kind : (items.some(function(x){ return x.length > 1; }) ? 'w' : 'l'),
+        text:view ? view.txt : opt && opt.text, card:view ? view.cid : opt && opt.card, sc:view && view.sc ? view.sc : 1,   /* 26.11.97: 'l' letter rows, 'w' spelling words */
         today:!view && (items.join(',') === wdToday().join(',') || items.join(',') === wdTodayWords().join(','))};
   if(WD.kind === 'w' && !view) WD.src = wdSrc();
   WD.onResize = function(){ wdLayout(); };
@@ -11728,6 +11751,11 @@ function wdLayout(){
   u = Math.max(14, u);
   var W = WD.view && WD.view.w ? WD.view.w * u : bw;
   WD.u = u; WD.W = W / u;
+  if(WD.kind === 's' && !WD.view && !WD.strokes.length){   /* 26.11.98: wrap the sentence into the 4 rows, shrinking if needed */
+    var mw = WD.W - WD_M - 1.1, sc = 1, ln = wdWrap(WD.text, mw);
+    while(ln.length > 4 && sc > .45){ sc -= .05; ln = wdWrap(WD.text, mw/sc); }
+    WD.items = ln.slice(0, 4); WD.sc = sc;
+  }
   var dpr = Math.min(2, window.devicePixelRatio || 1), cv = WD.cv;
   cv.style.width = W + 'px'; cv.style.height = (wdPageH()*u) + 'px';
   cv.width = Math.round(W*dpr); cv.height = Math.round(wdPageH()*u*dpr); WD.dpr = dpr;
@@ -11752,9 +11780,9 @@ function wdDraw(){
     c.setLineDash([2/u, 6/u]); c.beginPath(); c.moveTo(0, y+3); c.lineTo(W, y+3); c.stroke();
     c.setLineDash([]); c.strokeStyle = '#a99ee8'; c.lineWidth = 2.6/u; c.beginPath(); c.moveTo(0, y+2); c.lineTo(W, y+2); c.stroke();
     c.strokeStyle = '#efe7d4'; c.lineWidth = 1.5/u; c.beginPath(); c.moveTo(WD_M, y - .2); c.lineTo(WD_M, y + 3.2); c.stroke();
-    if(WD.kind === 'w'){   /* 26.11.97: spelling rows */
-      if(ch){ c.save(); c.setTransform(WD.dpr, 0, 0, WD.dpr, 0, 0); c.fillStyle = '#c9c1e6'; c.font = '800 '+Math.round(.7*u)+'px system-ui'; c.textAlign = 'center'; c.fillText(String(r+1), WD_M/2*u, (y + 1.75)*u); c.restore(); }
-      var x0 = WD_M + .7, ww = ch ? wdWordW(ch) : 0, sc = ww ? Math.min(1, (W - x0 - .4)/ww) : 1;
+    if(WD.kind === 'w' || WD.kind === 's'){   /* 26.11.97: spelling rows (26.11.98: and sentence rows) */
+      if(ch && WD.kind === 'w'){ c.save(); c.setTransform(WD.dpr, 0, 0, WD.dpr, 0, 0); c.fillStyle = '#c9c1e6'; c.font = '800 '+Math.round(.7*u)+'px system-ui'; c.textAlign = 'center'; c.fillText(String(r+1), WD_M/2*u, (y + 1.75)*u); c.restore(); }
+      var x0 = WD_M + .7, ww = ch ? wdWordW(ch) : 0, sc = WD.kind === 's' ? WD.sc : ww ? Math.min(1, (W - x0 - .4)/ww) : 1;
       c.lineJoin = 'round'; c.lineCap = 'round';
       if(ch && showModel){ c.save(); c.globalAlpha = .4; c.strokeStyle = '#4b3fb5'; c.lineWidth = .14/sc; wdDrawWord(c, ch, x0, y + (1-sc)*2, sc); c.restore(); }
       if(ch && peekA > 0){ c.save(); c.globalAlpha = .55*peekA; c.strokeStyle = '#8a7bf0'; c.lineWidth = .14/sc; wdDrawWord(c, ch, x0, y + (1-sc)*2, sc); c.restore(); }
@@ -11805,6 +11833,27 @@ function wdSide(){
   if(!WD) return;
   var s = WD.el.querySelector('#wdSide'), h = '', its = WD.items.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ');
   var isW = WD.kind === 'w';
+  if(WD.kind === 's' && WD.phase !== 'view'){   /* 26.11.98 */
+    var cc = BY_ID[WD.card], from = cc ? '<div class="wdfrom">From your card: '+esc(cc.e+' '+cc.n)+'</div>' : '', sent = '<div class="wdsent">'+esc(WD.text)+'</div>';
+    if(WD.phase === 'look'){
+      h += wdKit('happy', 'Let\u2019s copy a sentence!'+sent+from+'Look where each word goes on the rows. Tap <b>I\u2019m ready</b> and I\u2019ll hide the rows. The sentence stays here for you.');
+      h += '<button class="kwb big go" data-wd="ready">\ud83d\udc4d I\u2019m ready</button>';
+    } else if(WD.phase === 'write'){
+      h += wdKit('happy', 'Copy it neatly, one row at a time.'+sent+from);
+      h += '<div class="kwbtns">';
+      if(state.eco.writePeek !== false) h += '<button class="kwb" data-wd="peek">\ud83d\udc40 Peek with Kit</button>';
+      h += '<button class="kwb" data-wd="undo"'+(WD.strokes.length ? '' : ' disabled')+'>\u21a9\ufe0f Undo</button><button class="kwb" data-wd="clear"'+(WD.strokes.length ? '' : ' disabled')+'>\ud83e\uddfd Clear</button></div>';
+      h += '<button class="kwb big" data-wd="done"'+(WD.strokes.length ? '' : ' disabled')+'>\u2705 I\u2019m done</button>';
+      h += '<div class="kwfoot"><button class="kwb sm'+(kanjiState().penOnly ? ' on' : '')+'" data-wd="palm">\u270b Palm guard: '+(kanjiState().penOnly ? 'on' : 'off')+'</button></div>';
+    } else if(WD.phase === 'check'){
+      h += wdKit('happy', 'Let\u2019s look together! The sentence is behind your writing.'+sent+'How do you feel about your page?');
+      h += '<div class="kwchecks"><button class="kwb big go" data-wd="j:neat">\ud83c\udf1f Neat</button><button class="kwb big" data-wd="j:there">\ud83c\udf31 Getting there</button><button class="kwb" data-wd="again">\ud83d\udd04 Try again</button></div>';
+    } else {
+      h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.');
+      h += '<div class="kwbtns"><button class="kwb big" data-wd="close">\ud83d\udc4d All done</button></div>';
+    }
+    s.innerHTML = h; return;
+  }
   if(WD.phase === 'look' && isW){   /* 26.11.97 */
     h += wdKit('happy', 'Today\u2019s words: '+its+'<br>Look at each word. Say it out loud, then spell it in your head. Tap <b>I\u2019m ready</b> and I\u2019ll hide them.');
     h += '<button class="kwb big go" data-wd="ready">\ud83d\udc4d I\u2019m ready</button>';
@@ -11854,13 +11903,16 @@ function wdClick(e){
   if(a === 'done'){ if(!WD.strokes.length) return; WD.peekT = 0; WD.phase = 'check'; wdKick(); wdSide(); return; }
   if(a.indexOf('j:') === 0){
     var ws = wdState(), pages = wdPages();
-    pages.unshift({d:dateKey(), k:WD.kind, it:WD.items, w:Math.round(WD.W*10)/10, j:a.slice(2), s:wdPack(WD.strokes)});
+    var pg0 = {d:dateKey(), k:WD.kind, it:WD.items, w:Math.round(WD.W*10)/10, j:a.slice(2), s:wdPack(WD.strokes)};
+    if(WD.kind === 's'){ pg0.txt = WD.text; pg0.cid = WD.card; pg0.sc = Math.round(WD.sc*100)/100; if(WD.today) ws.ti = (ws.ti || 0) + 1; }   /* 26.11.98 */
+    pages.unshift(pg0);
     if(!wdPagesSave(pages)) toast('This page could not be saved (storage is full).', 2600);
     ws.done = (ws.done || 0) + 1;
     if(WD.today && WD.kind === 'l') ws.i = (ws.i + 4) % WD_SEQ.length;
     if(WD.today && WD.kind === 'w'){ if(WD.src === 'school') ws.si = (ws.si || 0) + WD.items.length; else ws.wi = (ws.wi || 0) + WD.items.length; }   /* 26.11.97 */
     save();
     WD.phase = 'saved'; wdKick(); wdSide();
+    try{ var wq = activeTasks().filter(function(t){ return t.wd && !state.done[t.id]; })[0]; if(wq){ toggleTask(wq.id); toast('\u270f\ufe0f Writing desk quest done!', 2600); } }catch(_){}   /* 26.11.98: optional daily quest */
     try{ Sound.tap(); }catch(_){}
     return;
   }
@@ -11875,6 +11927,11 @@ function renderWriteTab(){
   h += '<div class="panel"><h3>\ud83d\udcdd Spelling words</h3>';
   if(sch) h += '<div class="wdsrc"><button class="wdpk'+(wdSrc() === 'school' ? ' on' : '')+'" data-wdo="src:school">My school list</button><button class="wdpk'+(wdSrc() === 'kit' ? ' on' : '')+'" data-wdo="src:kit">Kit\u2019s words</button></div>';
   h += '<div class="row" style="margin-top:8px"><button class="btn primary" data-wdo="words">\u270f\ufe0f Practise today\u2019s 4 words</button></div></div>';
+  var tsn = wdTodaySentence();   /* 26.11.98 */
+  h += '<div class="panel"><h3>\ud83d\udcac Copy a sentence</h3>';
+  if(tsn){ var tc = BY_ID[tsn.id]; h += '<div class="wdsent">'+esc(tsn.t)+'</div><div class="wdfrom">From your card: '+esc(tc.e+' '+tc.n)+'</div><div class="row" style="margin-top:8px"><button class="btn" data-wdo="sent">\u270f\ufe0f Copy this sentence</button><button class="btn small" data-wdo="sentnext">\ud83d\udd00 Another one</button></div>'; }
+  else h += '<div class="hint">Collect a few more cards and their sentences will show up here!</div>';
+  h += '</div>';
   h += '<div class="panel"><h3>\ud83c\udfeb My school spelling list</h3><div class="hint">Type your words with spaces or one per line. They stay on this tablet.</div>'
     + '<textarea id="wdSchoolTx" class="wdtx" rows="3" autocapitalize="off" autocorrect="off" spellcheck="false">'+(sch ? sch.words.join(' ') : '')+'</textarea>'
     + '<div class="row"><button class="btn" data-wdo="school">\ud83d\udcbe Save my list</button>'+(sch ? '<button class="btn small" data-wdo="schoolclear">Clear list</button>' : '')+'</div></div>';
@@ -11887,7 +11944,7 @@ function renderWriteTab(){
   h += '</div>';
   h += '<div class="panel"><h3>\ud83d\udcd3 My writing</h3>';
   if(!pages.length) h += '<div class="hint">Your finished pages will be kept here.</div>';
-  else { h += '<div class="wdpages">'; pages.forEach(function(p, i){ h += '<button class="wdpg" data-wdv="'+i+'">'+wdThumb(p, 220)+'<small>'+p.d+' \u00b7 '+(p.it || []).join(', ')+'</small></button>'; }); h += '</div>'; }
+  else { h += '<div class="wdpages">'; pages.forEach(function(p, i){ h += '<button class="wdpg" data-wdv="'+i+'">'+wdThumb(p, 220)+'<small>'+p.d+' \u00b7 '+esc(p.k === 's' ? (p.txt || '') : (p.it || []).join(', '))+'</small></button>'; }); h += '</div>'; }
   h += '<div class="hint" style="margin-top:8px">Only the newest 30 pages are kept, on this tablet.</div></div>';
   v.innerHTML = h + '</div>';
 }
@@ -11897,6 +11954,12 @@ document.addEventListener('click', function(e){
     var o = t.getAttribute('data-wdo');
     if(o === 'today') wdOpen(wdToday());
     else if(o === 'words'){ var tw = wdTodayWords(); if(tw.length) wdOpen(tw); }   /* 26.11.97 */
+    else if(o === 'sent'){ var sn = wdTodaySentence(); if(sn) wdOpen([], null, {kind:'s', text:sn.t, card:sn.id}); }   /* 26.11.98 */
+    else if(o === 'sentnext'){ var w4 = wdState(); w4.ti = (w4.ti || 0) + 1; save(); render(); }
+    else if(o === 'addquest'){
+      if(!state.tasks.some(function(t){ return t.wd; })){ state.tasks.push({id:uid(), emoji:'\u270f\ufe0f', name:'Writing desk', minutes:0, days:[1,2,3,4,5], calm:false, fs:false, wd:true}); save(); toast('\u2705 Added the Writing desk quest (Mon to Fri). Edit it in Quests.', 3600); }
+      t.textContent = 'Added'; t.disabled = true;
+    }
     else if(o.indexOf('src:') === 0){ wdState().src = o.slice(4); save(); render(); }
     else if(o === 'school'){
       var tx = $('wdSchoolTx'), seen = {}, words = ((tx && tx.value) || '').split(/[\s,;]+/).filter(function(w){ var k = w.toLowerCase(); if(!/^[A-Za-z'-]{1,16}$/.test(w) || seen[k]) return false; seen[k] = 1; return true; }).slice(0, 25);
