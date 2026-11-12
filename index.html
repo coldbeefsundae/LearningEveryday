@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.80', errs = [], shown = false;
+  var V = '26.11.81', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-08';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -310,9 +310,10 @@ h1,h2,h3,p{margin:0}
 @keyframes holo{to{background-position:300% 0}}
 .r-SSR .tcg-art::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,150,.2),rgba(0,200,255,.2),rgba(255,230,0,.2));mix-blend-mode:overlay}
 /* 26.11.78: regional SSR frames (painted overlay + pearl sheen that follows the tilt; Canada's aurora gets the colour holo) */
-.tcg.hasfrm .tcg-in{z-index:auto}
+.tcgbox .tcg.hasfrm.hasfrm .tcg-in{z-index:auto}
 /* 26.11.80: card text sits above the frame (frame stays above the picture) */
-.tcg.hasfrm .tcg-in>.tcg-top,.tcg.hasfrm .tcg-in>.tcg-tag,.tcg.hasfrm .tcg-in>.tcg-foot{position:relative;z-index:5}
+/* 26.11.81: stronger selectors so the holo card rules (.tcg.hlf ...) further down cannot push the text back under the frame */
+.tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-top,.tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-tag,.tcgbox .tcg.hasfrm.hasfrm .tcg-in>.tcg-foot{position:relative;z-index:5}
 .frm{position:absolute;inset:0;pointer-events:none;z-index:4;border-radius:inherit;overflow:hidden}
 .frm>i{position:absolute;inset:0;display:block}
 .fimg{background-position:center;background-size:100% 100%;background-repeat:no-repeat;opacity:.85}
