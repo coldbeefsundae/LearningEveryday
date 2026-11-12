@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.89', errs = [], shown = false;
+  var V = '26.11.90', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -5122,7 +5122,7 @@ function cardBigFit(){
   var availW = W - px(cs.paddingLeft) - px(cs.paddingRight) - (land && bar ? bw + gap : 0);
   var availH = H - px(cs.paddingTop) - px(cs.paddingBottom) - (!land && bar ? bh + gap : 0);
   var k = Math.min(availW/250, availH/350) * .95;   /* 26.11.41: a little room, because the tilted card's near edge grows a few percent */
-  var dpr = window.devicePixelRatio || 1; k = Math.min(k, 2400/(350*dpr*z));   /* 26.11.84: keep the card under ~2400 screen pixels tall so big tablets don't run out of graphics memory */
+  var dpr = window.devicePixelRatio || 1; k = Math.min(k, (f.querySelector('.llx') ? 1700 : 2400)/(350*dpr*z));   /* 26.11.90: LL cards stop at ~1700 screen pixels tall (their glass layers ran out of graphics memory at 2400) */   /* 26.11.84: keep the card under ~2400 screen pixels tall so big tablets don't run out of graphics memory */
   o.style.setProperty('--bs', Math.max(.5, k).toFixed(3));
 }
 function cardBigOpen(){
