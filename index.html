@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.94', errs = [], shown = false;
+  var V = '26.11.95', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -912,6 +912,17 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 .kwmode.on{background:#4b3fb5;border-color:#4b3fb5;color:#fff}
 .kwmain{flex:1;min-height:0;display:flex;gap:14px;padding:12px}
 .kwboard{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
+/* 26.11.95: Kit's Writing Desk */
+#wdCv{border-radius:14px;box-shadow:0 6px 22px rgba(60,50,20,.22);background:#fffdf6;touch-action:none;display:block}
+.wd .kwboard{overflow:auto}
+.wdkit{display:inline-block;width:58px;height:60px;flex:none}.wdkit svg{width:100%;height:100%}
+.wdch{font-weight:900;color:#4b3fb5;font-size:1.15em;padding:0 2px}
+.wdpick{display:flex;flex-wrap:wrap;gap:6px}
+.wdpk{min-width:44px;height:44px;border-radius:12px;border:2px solid #e3d6bf;background:#fff;color:#2b2b44;font:800 20px system-ui;cursor:pointer}
+.wdpk.on{background:#ffe9c7;border-color:#ff8a3d}
+.wdpages{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.wdpg{border:1px solid #e8dcc6;background:#fff;border-radius:12px;padding:6px;text-align:left;cursor:pointer;color:#2b2b44}
+.wdpg svg{width:100%;height:auto;display:block;border-radius:8px}.wdpg small{display:block;margin-top:4px;opacity:.75}
 #kwCv{border-radius:14px;box-shadow:0 6px 22px rgba(60,50,20,.22);background:#fffdf6;touch-action:none}
 .kwside{width:min(380px,38vw);flex:none;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:2px 4px;transition:opacity .2s}
 .kw.drawing .kwside,.kw.drawing .kwtop{opacity:.22;pointer-events:none}
@@ -2613,6 +2624,9 @@ iframe.llstory{transition:opacity .45s ease}
     <button class="navbtn" data-tab="kanji" aria-label="Kanji">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><text x="12" y="16.6" text-anchor="middle" font-size="12" font-weight="900" style="fill:currentColor;stroke:none" lang="ja">字</text></svg>Kanji
     </button>
+    <button class="navbtn" data-tab="write" aria-label="Writing"><!-- 26.11.95: Kit's Writing Desk -->
+      <svg viewBox="0 0 24 24"><path d="M4 20l1.2-4.4L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.4 18.8z"/><path d="M13.8 7l3.2 3.2"/><path d="M4 20h16"/></svg>Writing
+    </button>
     <button class="navbtn" data-tab="cards" aria-label="Cards">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="12" height="17" rx="2.5"/><path d="M8 7.5h4M8 11h4"/><path d="M19 7.5v11a2.5 2.5 0 0 1-2.5 2.5H9"/></svg>Cards
       <span class="dot" id="packDot">0</span>
@@ -2665,6 +2679,7 @@ iframe.llstory{transition:opacity .45s ease}
       <div id="bedstrip" class="bedstrip" hidden></div>
       <section class="view show" id="view-home"></section>
       <section class="view" id="view-kanji"></section>
+      <section class="view" id="view-write"></section><!-- 26.11.95 -->
       <section class="view" id="view-cards"></section>
       <section class="view" id="view-shop"></section>
       <section class="view" id="view-money"></section>
@@ -6373,6 +6388,7 @@ function render(){
     else if(tab === 'money') renderMoney();
     else if(tab === 'journal') renderJournal();
     else if(tab === 'kanji') renderKanjiTab();
+    else if(tab === 'write') renderWriteTab();   /* 26.11.95 */
     else renderProfile();
   }catch(e){
     var v = $('view-'+(tab === 'profile' ? 'profile' : tab));
@@ -6384,7 +6400,7 @@ function render(){
 function setTab(t){
   if(t === 'money' && !bankOn()) t = 'home';
   tab = t;
-  ['home','kanji','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
+  ['home','kanji','write','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
   render();
   window.scrollTo(0,0);
 }
@@ -6550,6 +6566,7 @@ function nudgeExempt(){
 }
 function nudgeKanjiBusy(){
   if(tab === 'kanji') return true;
+  if(tab === 'write' || WD) return true;   /* 26.11.95: writing counts as learning, like Kanji */
   var p = $('ksay'); if(p && p.classList.contains('show')) return true;
   if(!$('overlay').classList.contains('show')) return false;
   return !!$('modal').querySelector('.kjmodal,.kotoqz,[class*="kfc"],[class*="kw"],[class*="kcb"],[class*="kbk"],[class*="kjw"]');
@@ -6871,6 +6888,11 @@ function showParentSection(key, scrollTop){
     h += pTog('Show “Kanji of the Day” and the English Word of the Day', 'eKanji', e.kanjiOn !== false);
     h += pNum('Points for learning the kanji (once a day, counts toward the extra limit)', 'eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts);
     h += pNum('Points for using the Japanese saying of the day (once a day, counts toward the extra limit)', 'eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
+    h += '<h3>\u270f\ufe0f Kit\u2019s Writing Desk</h3>';   /* 26.11.95 */
+    h += pTog('Show the Writing tab', 'eWrite', e.writeOn !== false);
+    h += pTog('Allow \u201cPeek with Kit\u201d', 'eWPeek', e.writePeek !== false);
+    h += '<div class="fld"><label for="eWSize">Line size</label><select id="eWSize"><option value="s"'+(e.writeSize === 's' ? ' selected' : '')+'>Small</option><option value="m"'+(!e.writeSize || e.writeSize === 'm' ? ' selected' : '')+'>Medium</option><option value="l"'+(e.writeSize === 'l' ? ' selected' : '')+'>Large</option></select></div>';
+    h += '<div class="row" style="margin-top:6px"><button class="btn small" data-wdpar="del">\ud83d\uddd1\ufe0f Delete saved writing pages</button></div>';
     h += '<div class="row" style="margin-top:8px"><button class="btn" data-kjpar="1">🈴 Kanji &amp; hoshuko settings</button></div>';
   } else if(key === 'safe'){
     h += '<h3>🃏 Card collection</h3><div class="hint">Removes every card she has found, so she can collect them again. Points, card packs and badges stay.</div><div class="row"><button class="btn danger small" data-act="pcardreset">🗑️ Reset all cards</button></div>';
@@ -6939,6 +6961,7 @@ function applyParentSettings(){
   e.quizPts = num('eQPts', 0, 5, e.quizPts);
   e.quizPerfect = num('eQPerf', 0, 10, e.quizPerfect);
   e.bitesOn = ck('eBites', e.bitesOn); e.bitesPts = num('eBitesPts', 0, 5, e.bitesPts);
+  if($('eWrite')){ e.writeOn = ck('eWrite', e.writeOn); e.writePeek = ck('eWPeek', e.writePeek); e.writeSize = $('eWSize').value; }   /* 26.11.95 */
   e.kanjiOn = ck('eKanji', e.kanjiOn); e.kanjiPts = num('eKanjiPts', 0, 5, e.kanjiPts == null ? 1 : e.kanjiPts); if($('eKotoPts')) e.kotoPts = num('eKotoPts', 0, 5, e.kotoPts == null ? 1 : e.kotoPts);
   e.quizOn = ck('eQuiz', e.quizOn); e.musicOn = ck('eMusic', e.musicOn);
   if($('eMusicOff')){ var mo = $('eMusicOff').value; e.musicOff = /^\d{2}:\d{2}$/.test(mo) ? mo : ''; }
@@ -8140,6 +8163,7 @@ function parentSaveLock(){
    big card 460, Kit bubble 125, window 50). Press Escape again for the next one.
    To add a new pop-up layer, add it here in its stacking order. */
 var LAYERS = [
+  {name:'writing desk',   open:function(){ return !!WD; }, close:function(){ wdClose(); }},   /* 26.11.95 */
   {name:'LL story',       open:function(){ return !!LLP || !!LLFX; }, close:function(){ if(LLP) llClose(); else llFxEsc(); }},
   {name:'say pop-up',     open:function(){ var p = $('ksay'); return !!(p && p.classList.contains('show')); }, close:function(){ hideSayPop(); }},
   {name:'journal writer', open:function(){ return !!JW.el; },        close:function(){ jwClose(); }},
@@ -10467,6 +10491,8 @@ function p4After(){
   if(tab === 'journal' && state.eco.journalOn === false){ setTab('home'); return; }
   [].forEach.call(document.querySelectorAll('[data-tab="kanji"]'), function(b){ b.style.display = state.eco.kanjiOn === false ? 'none' : ''; });
   if(tab === 'kanji' && state.eco.kanjiOn === false){ setTab('home'); return; }
+  [].forEach.call(document.querySelectorAll('[data-tab="write"]'), function(b){ b.style.display = state.eco.writeOn === false ? 'none' : ''; });   /* 26.11.95 */
+  if(tab === 'write' && state.eco.writeOn === false){ setTab('home'); return; }
   if(i.today && state.bdayConf !== dateKey()){
     state.bdayConf = dateKey(); save();
     if(kitAnimOK() && kitMovesOn()) setTimeout(function(){ kitBdayCelebrate(false); }, 600);
@@ -11522,6 +11548,278 @@ function kjKitLine(){
 }
 function kjHzStale(){ var hh = hz(); if(!hh.at) return true; return daysBetween(dateFromKey(hh.at), dateFromKey(dateKey())) >= 2; }
 function kjSub(){ var t = state.ui.kjTab; return ['today','book','practice','koto','grow'].indexOf(t) >= 0 ? t : 'today'; }
+/* ==== 26.11.95: Kit's Writing Desk, phase 1 (letter rows, peek, look together, My writing) ==== */
+/* Model letters: block print strokes. Units: 0 = top line, 1 = dashed middle line, 2 = baseline, 3 = descender line. [width, path] */
+var WD_G = {
+  a:[1,'M1 1.5A.5 .5 0 1 1 0 1.5A.5 .5 0 1 1 1 1.5M1 1V2'],
+  b:[1,'M0 0V2M0 1.5A.5 .5 0 1 0 1 1.5A.5 .5 0 1 0 0 1.5'],
+  c:[.95,'M.93 1.25A.5 .5 0 1 0 .93 1.75'],
+  d:[1,'M1 1.5A.5 .5 0 1 1 0 1.5A.5 .5 0 1 1 1 1.5M1 0V2'],
+  e:[1,'M0 1.5H1A.5 .5 0 1 0 .91 1.79'],
+  f:[.9,'M.85 .15A.4 .4 0 0 0 .25 .5V2M0 1H.75'],
+  g:[1,'M1 1.5A.5 .5 0 1 1 0 1.5A.5 .5 0 1 1 1 1.5M1 1V2.55A.45 .45 0 0 1 .12 2.67'],
+  h:[1,'M0 0V2M0 1.5A.5 .5 0 0 1 1 1.5V2'],
+  i:[0,'M0 1V2M0 .45h.001'],
+  j:[.5,'M.5 1V2.55A.4 .4 0 0 1 -.27 2.69M.5 .45h.001'],
+  k:[.9,'M0 0V2M.85 1L0 1.6M.3 1.4L.9 2'],
+  l:[0,'M0 0V2'],
+  m:[1.52,'M0 1V2M0 1.4A.38 .38 0 0 1 .76 1.4V2M.76 1.4A.38 .38 0 0 1 1.52 1.4V2'],
+  n:[1,'M0 1V2M0 1.5A.5 .5 0 0 1 1 1.5V2'],
+  o:[1,'M1 1.5A.5 .5 0 1 1 0 1.5A.5 .5 0 1 1 1 1.5'],
+  p:[1,'M0 1V3M0 1.5A.5 .5 0 1 0 1 1.5A.5 .5 0 1 0 0 1.5'],
+  q:[1,'M1 1.5A.5 .5 0 1 1 0 1.5A.5 .5 0 1 1 1 1.5M1 1V3'],
+  r:[.85,'M0 1V2M0 1.5A.55 .55 0 0 1 .85 1.08'],
+  s:[.9,'M.82 1.12C.6 .9 .05 .98 .12 1.3C.2 1.6 .85 1.45 .85 1.75C.85 2.08 .25 2.1 .05 1.85'],
+  t:[.75,'M.35 .3V2M0 1H.75'],
+  u:[1,'M0 1V1.5A.5 .5 0 0 0 1 1.5M1 1V2'],
+  v:[1,'M0 1L.5 2L1 1'],
+  w:[1.4,'M0 1L.35 2L.7 1L1.05 2L1.4 1'],
+  x:[.9,'M0 1L.9 2M.9 1L0 2'],
+  y:[1,'M0 1L.5 2M1 1L.2 3'],
+  z:[.9,'M0 1H.9L0 2H.9'],
+  A:[1.4,'M0 2L.7 0L1.4 2M.25 1.3H1.15'],
+  B:[1.1,'M0 0V2M0 0H.6A.5 .5 0 0 1 .6 1H0M.6 1A.5 .5 0 0 1 .6 2H0'],
+  C:[1.6,'M1.6 .2A1 1 0 1 0 1.6 1.8'],
+  D:[1.5,'M0 0V2M0 0H.5A1 1 0 0 1 .5 2H0'],
+  E:[1,'M1 0H0V2H1M0 1H.8'],
+  F:[1,'M1 0H0V2M0 1H.8'],
+  G:[2,'M1.6 .2A1 1 0 1 0 2 1H1.2'],
+  H:[1.2,'M0 0V2M1.2 0V2M0 1H1.2'],
+  I:[.8,'M.4 0V2M0 0H.8M0 2H.8'],
+  J:[1,'M1 0V1.5A.5 .5 0 0 1 0 1.5'],
+  K:[1.1,'M0 0V2M1.1 0L0 1.1M.4 .75L1.1 2'],
+  L:[1,'M0 0V2H1'],
+  M:[1.5,'M0 2V0L.75 1.3L1.5 0V2'],
+  N:[1.2,'M0 2V0L1.2 2V0'],
+  O:[2,'M2 1A1 1 0 1 1 0 1A1 1 0 1 1 2 1'],
+  P:[1.1,'M0 2V0H.6A.5 .5 0 0 1 .6 1H0'],
+  Q:[2,'M2 1A1 1 0 1 1 0 1A1 1 0 1 1 2 1M1.3 1.4L2 2.1'],
+  R:[1.1,'M0 2V0H.6A.5 .5 0 0 1 .6 1H0M.5 1L1.1 2'],
+  S:[1.2,'M1.2 .3C.9 -.1 .05 .05 .1 .5C.15 1 1.2 .95 1.2 1.45C1.2 2.05 .25 2.1 0 1.7'],
+  T:[1.2,'M0 0H1.2M.6 0V2'],
+  U:[1.2,'M0 0V1.4A.6 .6 0 0 0 1.2 1.4V0'],
+  V:[1.3,'M0 0L.65 2L1.3 0'],
+  W:[1.8,'M0 0L.45 2L.9 0L1.35 2L1.8 0'],
+  X:[1.2,'M0 0L1.2 2M1.2 0L0 2'],
+  Y:[1.2,'M0 0L.6 1L1.2 0M.6 1V2'],
+  Z:[1.2,'M0 0H1.2L0 2H1.2'],
+  '0':[1,'M1 1A.5 1 0 1 1 0 1A.5 1 0 1 1 1 1'],
+  '1':[.5,'M.1 .35L.5 0V2'],
+  '2':[1,'M.05 .45A.5 .45 0 1 1 .85 .95L0 2H1'],
+  '3':[1,'M.05 .3A.48 .48 0 1 1 .45 1A.5 .5 0 1 1 0 1.75'],
+  '4':[1.1,'M.8 2V0L0 1.4H1.1'],
+  '5':[1.1,'M.95 0H.15L.05 .9A.58 .55 0 1 1 0 1.75'],
+  '6':[1,'M.85 .1Q.05 .4 .02 1.45M0 1.5A.5 .5 0 1 0 1 1.5A.5 .5 0 1 0 0 1.5'],
+  '7':[1,'M0 0H1L.35 2'],
+  '8':[1,'M.5 1A.42 .5 0 1 1 .5 0A.42 .5 0 1 1 .5 1A.5 .5 0 1 0 .5 2A.5 .5 0 1 0 .5 1'],
+  '9':[1,'M.96 .5A.48 .5 0 1 0 0 .5A.48 .5 0 1 0 .96 .5V2']
+};
+var WD_SEQ = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+var WD_P2D = {};
+function wdPath(ch){ if(!WD_G[ch]) return null; if(!WD_P2D[ch]){ try{ WD_P2D[ch] = new Path2D(WD_G[ch][1]); }catch(e){ return null; } } return WD_P2D[ch]; }
+function wdState(){ if(!state.write) state.write = {i:0, done:0}; return state.write; }   /* tiny: next letter + practices done (for the wardrobe later) */
+function wdToday(){ var ws = wdState(), o = []; for(var k = 0; k < 4; k++) o.push(WD_SEQ[(ws.i + k) % WD_SEQ.length]); return o; }
+function wdBaseU(){ var s = state.eco.writeSize; return s === 's' ? 30 : s === 'l' ? 48 : 38; }
+/* Saved pages: own storage key, newest first, only 30 kept, never in backups (same idea as the Kanji ink album) */
+var WD_KEY = 'sq_write1';
+function wdPages(){ try{ var a = JSON.parse(localStorage.getItem(WD_KEY) || '[]'); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function wdPagesSave(a){
+  a = a.slice(0, 30);
+  while(a.length){ try{ localStorage.setItem(WD_KEY, JSON.stringify(a)); return true; }catch(e){ a.pop(); } }
+  try{ localStorage.removeItem(WD_KEY); }catch(e){} return false;
+}
+/* strokes in page units: [x0,y0,p0,x1,y1,p1,...], 2 decimals, thinned */
+function wdPack(strokes){
+  return strokes.map(function(s){ var o = [], lx = -9, ly = -9;
+    s.forEach(function(p, i){ if(i && i < s.length - 1 && Math.abs(p[0]-lx) + Math.abs(p[1]-ly) < .05) return; lx = p[0]; ly = p[1]; o.push(Math.round(p[0]*100)/100, Math.round(p[1]*100)/100, Math.round(p[2]*10)/10); });
+    return o; });
+}
+function wdUnpack(flat){ return (flat || []).map(function(f){ var o = []; for(var i = 0; i + 2 < f.length + 1 && i + 1 < f.length; i += 3) o.push([f[i], f[i+1], f[i+2] == null ? .5 : f[i+2]]); return o; }); }
+/* page geometry in units */
+var WD_M = 2.4, WD_ROWH = 3.9, WD_TOP = .7;
+function wdRowTop(r){ return WD_TOP + r*WD_ROWH; }
+function wdPageH(){ return WD_TOP + 4*WD_ROWH - .5; }
+function wdThumb(pg, w){
+  var W = pg.w || 20, H = wdPageH(), h = '<svg viewBox="0 0 '+W+' '+H+'" width="'+w+'" class="wdth" role="img" aria-label="Writing page"><rect width="'+W+'" height="'+H+'" fill="#fffdf6"/>';
+  for(var r = 0; r < 4; r++){ var t = wdRowTop(r); h += '<path d="M0 '+(t+2)+'H'+W+'" stroke="#a99ee8" stroke-width=".06"/><path d="M0 '+t+'H'+W+'M0 '+(t+1)+'H'+W+'" stroke="#d9d2f2" stroke-width=".05"/>'; }
+  h += '<g fill="none" stroke="#2b2b44" stroke-width=".16" stroke-linecap="round" stroke-linejoin="round">';
+  wdUnpack(pg.s).forEach(function(s){ if(s.length === 1) s = [s[0], [s[0][0]+.02, s[0][1]]]; h += '<polyline points="'+s.map(function(p){ return p[0]+','+p[1]; }).join(' ')+'"/>'; });
+  return h + '</g></svg>';
+}
+
+var WD = null, WDPICK = null;
+function wdOpen(items, view){
+  if(WD) wdClose(true);
+  var el = document.createElement('div'); el.className = 'kw wd'; el.id = 'wd';
+  el.innerHTML = '<div class="kwtop"><button class="kwx" data-wd="close" aria-label="Close">\u2715</button><div class="kwtitle"><span class="kwtm">\u270f\ufe0f Kit\u2019s Writing Desk</span></div></div>'
+    + '<div class="kwmain"><div class="kwboard" id="wdBoard"><canvas id="wdCv"></canvas></div><div class="kwside" id="wdSide"></div></div>';
+  document.body.appendChild(el);
+  WD = {el:el, cv:el.querySelector('#wdCv'), items:items, strokes:view ? wdUnpack(view.s) : [], cur:null, phase:view ? 'view' : 'write', view:view || null,
+        peekT:0, u:38, W:0, penSeen:false, dirty:true, raf:0, today:!view && items.join('') === wdToday().join('')};
+  WD.onResize = function(){ wdLayout(); };
+  window.addEventListener('resize', WD.onResize);
+  wdBind(); wdSide(); wdLayout();
+  if(window.ResizeObserver){ WD.ro = new ResizeObserver(function(){ if(WD && !WD.cur) wdLayout(); }); WD.ro.observe(el.querySelector('#wdBoard')); }
+  try{ Sound.tap(); }catch(_){}
+}
+function wdClose(quiet){
+  if(!WD) return;
+  cancelAnimationFrame(WD.raf); window.removeEventListener('resize', WD.onResize); if(WD.ro) WD.ro.disconnect();
+  if(WD.el && WD.el.parentNode) WD.el.parentNode.removeChild(WD.el);
+  WD = null;
+  if(!quiet && tab === 'write') render();
+}
+function wdLayout(){
+  if(!WD) return;
+  var b = WD.el.querySelector('#wdBoard'), bw = b.clientWidth - 8, bh = b.clientHeight - 8;
+  var u = Math.min(wdBaseU(), bh / wdPageH());
+  if(WD.view && WD.view.w) u = Math.min(u, bw / WD.view.w);
+  u = Math.max(14, u);
+  var W = WD.view && WD.view.w ? WD.view.w * u : bw;
+  WD.u = u; WD.W = W / u;
+  var dpr = Math.min(2, window.devicePixelRatio || 1), cv = WD.cv;
+  cv.style.width = W + 'px'; cv.style.height = (wdPageH()*u) + 'px';
+  cv.width = Math.round(W*dpr); cv.height = Math.round(wdPageH()*u*dpr); WD.dpr = dpr;
+  WD.dirty = true; wdDraw();
+}
+function wdKick(){ if(WD && !WD.raf) WD.raf = requestAnimationFrame(function(){ WD.raf = 0; wdDraw(); }); }
+function wdDraw(){
+  if(!WD) return;
+  var c = WD.cv.getContext('2d'), u = WD.u, W = WD.W, now = Date.now();
+  c.setTransform(WD.dpr*u, 0, 0, WD.dpr*u, 0, 0);
+  c.fillStyle = '#fffdf6'; c.fillRect(0, 0, W, wdPageH());
+  var showModel = WD.phase !== 'write', peekA = 0;
+  if(WD.peekT){ var t = (now - WD.peekT)/2600; peekA = t < .15 ? t/.15 : t < .7 ? 1 : t < 1 ? (1-t)/.3 : 0; if(t >= 1) WD.peekT = 0; }
+  for(var r = 0; r < 4; r++){
+    var y = wdRowTop(r), ch = WD.items[r];
+    c.lineCap = 'round';
+    c.strokeStyle = '#d9d2f2'; c.lineWidth = 1.6/u; c.setLineDash([]);
+    c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke();
+    c.setLineDash([8/u, 8/u]); c.beginPath(); c.moveTo(0, y+1); c.lineTo(W, y+1); c.stroke();
+    c.setLineDash([2/u, 6/u]); c.beginPath(); c.moveTo(0, y+3); c.lineTo(W, y+3); c.stroke();
+    c.setLineDash([]); c.strokeStyle = '#a99ee8'; c.lineWidth = 2.6/u; c.beginPath(); c.moveTo(0, y+2); c.lineTo(W, y+2); c.stroke();
+    c.strokeStyle = '#efe7d4'; c.lineWidth = 1.5/u; c.beginPath(); c.moveTo(WD_M, y - .2); c.lineTo(WD_M, y + 3.2); c.stroke();
+    var p = ch ? wdPath(ch) : null, gw = ch && WD_G[ch] ? WD_G[ch][0] : 0;
+    if(p && showModel){ c.save(); c.translate((WD_M - gw)/2, y); c.strokeStyle = '#4b3fb5'; c.lineWidth = .16; c.lineJoin = 'round'; c.stroke(p); c.restore(); }
+    else if(ch){ c.save(); c.setTransform(WD.dpr, 0, 0, WD.dpr, 0, 0); c.fillStyle = '#c9c1e6'; c.font = '800 '+Math.round(.7*u)+'px system-ui'; c.textAlign = 'center'; c.fillText(String(r+1), WD_M/2*u, (y + 1.75)*u); c.restore(); }
+    if(p && peekA > 0){
+      c.save(); c.globalAlpha = .55*peekA; c.strokeStyle = '#8a7bf0'; c.lineWidth = .14; c.lineJoin = 'round';
+      var step = gw + 1.1, x = WD_M + .7 + Math.max(0, -(ch === 'j' ? -.3 : 0));
+      while(x + gw < W - .3){ c.save(); c.translate(x, y); c.stroke(p); c.restore(); x += step; }
+      c.restore();
+    }
+  }
+  c.strokeStyle = '#2b2b44'; c.lineCap = 'round'; c.lineJoin = 'round';
+  WD.strokes.concat(WD.cur ? [WD.cur] : []).forEach(function(s){
+    if(s.length === 1){ c.lineWidth = .1 + .07*s[0][2]; c.beginPath(); c.moveTo(s[0][0], s[0][1]); c.lineTo(s[0][0]+.01, s[0][1]); c.stroke(); return; }
+    for(var i = 1; i < s.length; i++){ c.lineWidth = .09 + .08*s[i][2]; c.beginPath(); c.moveTo(s[i-1][0], s[i-1][1]); c.lineTo(s[i][0], s[i][1]); c.stroke(); }
+  });
+  if(WD.peekT) wdKick();
+}
+function wdBind(){
+  var cv = WD.cv;
+  function pt(e){ var r = cv.getBoundingClientRect(), u = WD.u; var p = e.pointerType === 'pen' ? (e.pressure || .5) : .5; return [Math.round((e.clientX - r.left)/u*100)/100, Math.round((e.clientY - r.top)/u*100)/100, p]; }
+  cv.addEventListener('pointerdown', function(e){
+    if(!WD || WD.phase !== 'write') return;
+    if(e.pointerType === 'pen') WD.penSeen = true;
+    if(e.pointerType === 'touch' && kanjiState().penOnly && WD.penSeen) return;   /* shared palm guard with Kanji */
+    e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(_){}
+    WD.cur = [pt(e)]; WD.pid = e.pointerId; WD.el.classList.add('drawing'); wdKick();
+  });
+  cv.addEventListener('pointermove', function(e){
+    if(!WD || !WD.cur || e.pointerId !== WD.pid) return;
+    var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if(!evs.length) evs = [e];
+    evs.forEach(function(ev){ WD.cur.push(pt(ev)); }); wdKick();
+  });
+  function end(e){
+    if(!WD || !WD.cur || (e && e.pointerId !== WD.pid)) return;
+    WD.strokes.push(WD.cur); WD.cur = null; WD.el.classList.remove('drawing'); wdKick();
+    if(WD.strokes.length === 1) wdSide();
+  }
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  WD.el.addEventListener('click', wdClick);
+}
+function wdKit(mood, msg){ return '<div class="kwkit"><span class="wdkit">'+kitSVG(mood, 'face')+'</span><p>'+msg+'</p></div>'; }
+function wdSide(){
+  if(!WD) return;
+  var s = WD.el.querySelector('#wdSide'), h = '', its = WD.items.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ');
+  if(WD.phase === 'write'){
+    h += wdKit('happy', 'Today\u2019s letters: '+its+'<br>Write each letter along its row. Take your time.');
+    h += '<div class="kwbtns">';
+    if(state.eco.writePeek !== false) h += '<button class="kwb" data-wd="peek">\ud83d\udc40 Peek with Kit</button>';
+    h += '<button class="kwb" data-wd="undo"'+(WD.strokes.length ? '' : ' disabled')+'>\u21a9\ufe0f Undo</button><button class="kwb" data-wd="clear"'+(WD.strokes.length ? '' : ' disabled')+'>\ud83e\uddfd Clear</button></div>';
+    h += '<button class="kwb big" data-wd="done"'+(WD.strokes.length ? '' : ' disabled')+'>\u2705 I\u2019m done</button>';
+    h += '<div class="kwfoot"><button class="kwb sm'+(kanjiState().penOnly ? ' on' : '')+'" data-wd="palm">\u270b Palm guard: '+(kanjiState().penOnly ? 'on' : 'off')+'</button></div>';
+  } else if(WD.phase === 'check'){
+    h += wdKit('happy', 'Let\u2019s look together! The purple letters show how each one is made.<br>How do you feel about your page?');
+    h += '<div class="kwchecks"><button class="kwb big go" data-wd="j:neat">\ud83c\udf1f Neat</button><button class="kwb big" data-wd="j:there">\ud83c\udf31 Getting there</button><button class="kwb" data-wd="again">\ud83d\udd04 Try again</button></div>';
+  } else if(WD.phase === 'saved'){
+    h += wdKit('cheer', 'Saved in <b>My writing</b>! Thank you for practising with me.');
+    h += '<div class="kwbtns"><button class="kwb big" data-wd="close">\ud83d\udc4d All done</button></div>';
+  } else {
+    var pg = WD.view || {};
+    h += wdKit('happy', 'A page from '+(pg.d || 'before')+'. Letters: '+its);
+    h += '<div class="kwbtns"><button class="kwb big" data-wd="close">Close</button></div>';
+  }
+  s.innerHTML = h;
+}
+function wdClick(e){
+  var t = e.target.closest && e.target.closest('[data-wd]'); if(!t || !WD) return;
+  var a = t.getAttribute('data-wd');
+  if(a === 'close'){ wdClose(); return; }
+  if(a === 'peek'){ WD.peekT = Date.now(); wdKick(); try{ Sound.tap(); }catch(_){} return; }
+  if(a === 'undo'){ WD.strokes.pop(); wdKick(); wdSide(); return; }
+  if(a === 'clear' || a === 'again'){ WD.strokes = []; WD.phase = 'write'; wdKick(); wdSide(); return; }
+  if(a === 'palm'){ var ks = kanjiState(); ks.penOnly = !ks.penOnly; save(); wdSide(); return; }
+  if(a === 'done'){ if(!WD.strokes.length) return; WD.peekT = 0; WD.phase = 'check'; wdKick(); wdSide(); return; }
+  if(a.indexOf('j:') === 0){
+    var ws = wdState(), pages = wdPages();
+    pages.unshift({d:dateKey(), it:WD.items, w:Math.round(WD.W*10)/10, j:a.slice(2), s:wdPack(WD.strokes)});
+    if(!wdPagesSave(pages)) toast('This page could not be saved (storage is full).', 2600);
+    ws.done = (ws.done || 0) + 1;
+    if(WD.today) ws.i = (ws.i + 4) % WD_SEQ.length;
+    save();
+    WD.phase = 'saved'; wdKick(); wdSide();
+    try{ Sound.tap(); }catch(_){}
+    return;
+  }
+}
+function renderWriteTab(){
+  var v = $('view-write'); if(!v) return;
+  if(state.eco.writeOn === false){ v.innerHTML = ''; return; }
+  var today = wdToday(), pages = wdPages(), h = '<div class="wdtab">';
+  h += '<div class="panel kjhead"><span class="kjkit">'+kitSVG('happy', 'hero')+'</span><div class="kjsay"><div class="kjbub">Today\u2019s letters are '+today.map(function(x){ return '<b class="wdch">'+x+'</b>'; }).join(' ')+'. Shall we write them together?</div></div></div>';
+  h += '<div class="panel"><div class="row"><button class="btn primary" data-wdo="today">\u270f\ufe0f Write today\u2019s page</button><button class="btn" data-wdo="pick">'+(WDPICK ? 'Hide letters' : '\ud83d\udd24 Pick my own letters')+'</button></div>';
+  if(WDPICK){
+    h += '<div class="hint" style="margin:10px 0 6px">Pick up to 4 letters or numbers.</div><div class="wdpick">';
+    WD_SEQ.forEach(function(x){ h += '<button class="wdpk'+(WDPICK.indexOf(x) > -1 ? ' on' : '')+'" data-wdk="'+x+'">'+x+'</button>'; });
+    h += '</div><div class="row" style="margin-top:8px"><button class="btn primary" data-wdo="mine"'+(WDPICK.length ? '' : ' disabled')+'>\u270f\ufe0f Write these'+(WDPICK.length ? ' ('+WDPICK.join(' ')+')' : '')+'</button></div>';
+  }
+  h += '</div>';
+  h += '<div class="panel"><h3>\ud83d\udcd3 My writing</h3>';
+  if(!pages.length) h += '<div class="hint">Your finished pages will be kept here.</div>';
+  else { h += '<div class="wdpages">'; pages.forEach(function(p, i){ h += '<button class="wdpg" data-wdv="'+i+'">'+wdThumb(p, 220)+'<small>'+p.d+' \u00b7 '+(p.it || []).join(' ')+'</small></button>'; }); h += '</div>'; }
+  h += '<div class="hint" style="margin-top:8px">Only the newest 30 pages are kept, on this tablet.</div></div>';
+  v.innerHTML = h + '</div>';
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-wdo],[data-wdk],[data-wdv],[data-wdpar]'); if(!t) return;
+  if(t.hasAttribute('data-wdo')){
+    var o = t.getAttribute('data-wdo');
+    if(o === 'today') wdOpen(wdToday());
+    else if(o === 'pick'){ WDPICK = WDPICK ? null : []; render(); }
+    else if(o === 'mine' && WDPICK && WDPICK.length){ var it = WDPICK.slice(); WDPICK = null; wdOpen(it); }
+    return;
+  }
+  if(t.hasAttribute('data-wdk')){ var k = t.getAttribute('data-wdk'), i = WDPICK ? WDPICK.indexOf(k) : -1; if(!WDPICK) return; if(i > -1) WDPICK.splice(i, 1); else if(WDPICK.length < 4) WDPICK.push(k); render(); return; }
+  if(t.hasAttribute('data-wdv')){ var pg = wdPages()[+t.getAttribute('data-wdv')]; if(pg) wdOpen(pg.it || [], pg); return; }
+  if(t.hasAttribute('data-wdpar')){
+    if(t.getAttribute('data-arm') !== '1'){ t.setAttribute('data-arm', '1'); t.textContent = 'Tap again to delete all pages'; return; }
+    try{ localStorage.removeItem(WD_KEY); }catch(_){}
+    t.removeAttribute('data-arm'); t.textContent = 'Deleted'; t.disabled = true; return;
+  }
+});
+
 function renderKanjiTab(){
   var v = $('view-kanji'); if(!v) return;
   if(state.eco.kanjiOn === false){ v.innerHTML = ''; return; }
