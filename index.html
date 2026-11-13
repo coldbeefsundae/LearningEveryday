@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.113', errs = [], shown = false;
+  var V = '26.11.115', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -6538,7 +6538,8 @@ function helpData(){
     {q:'What is in a pack?', a:li(['Each pack has <b>3 cards</b>.','The last card is always <b>Uncommon or better</b>.','Every '+PITY_LIMIT+' packs you are <b>guaranteed</b> a Super Rare (S) or better.','You can open up to <b>'+(packMax > 0 ? packMax : 'lots of')+' pack'+(packMax === 1 ? '' : 's')+' a day</b>.'])},
     {q:'What are LL (Living Legendary) cards?', a:'Six special cards that come alive: Halley’s Comet, Princess Kaguya, Kowloon Walled City, Nian, The Great Wave and the Dragon Gate Carp. Open one and tap <b>▶ Watch the story</b> to see a short animated story with music. They only come from lucky pack pulls ('+RATES.LL+'% for each card in a pack), never as the daily card. If you are still missing one, an LL card is guaranteed after about '+PITY_LL+' packs.'},
     {q:'What do C, B, A, S, SSR, LL and SSSR mean?', a:'They show how rare a card is:'+li(['<b>C</b> Common (lots of these)','<b>B</b> Uncommon','<b>A</b> Rare','<b>S</b> Super Rare','<b>SSR</b> Super Super Rare','<b>LL</b> Living Legendary: six cards that come alive. Tap ▶ Watch the story','<b>SSSR</b> Legendary: one very special card','In the <b>Cards</b> tab, tap the pack panel to see the exact chances.'])},
-    {q:'I got a card I already have. What happens?', a:'A duplicate fills the <b>⭐ promotion meter</b> for its rarity (on the Cards tab). When the meter is full, the card you just got is <b>promoted</b>: it gets a brighter look and a ⭐ star!'},
+    {q:'I got a card I already have. What happens?', a:'Duplicates are useful! A duplicate C, B, A or S card fills the <b>⭐ promotion meter</b> for its rarity at the top of the <b>Cards</b> tab. It takes <b>'+promoNeed('C')+'</b> C, <b>'+promoNeed('B')+'</b> B, <b>'+promoNeed('A')+'</b> A or <b>'+promoNeed('S')+'</b> S duplicates. When the meter is full, the card you just got is <b>promoted</b>: it gets a brighter look and a ⭐ star!'},
+    {q:'What are the stars on my cards?', a:li(['Each ⭐ means that card was <b>promoted</b> once.','A promoted card keeps its own rarity badge but shines like the next rarity up.','A <b>C</b> card can get 4 stars and end up looking like an <b>SSR</b>. B cards can get 3, A cards 2 and S cards 1.','Tap a card to see its stars and how many it can still earn.','SSR, LL and SSSR cards and family cards are already special, so they have no stars.'])},
     {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Inside, <b>tap the card</b> to see it big (tap anywhere to close), slide your finger on it to tilt it, and press <b>↻ Flip</b> to see the back. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
       {q:'Why do some cards shine?', a:'Rare cards (A and up) have a shiny <b>holo</b> foil. Slide your finger over the card (or move the mouse) to make it tilt and sparkle. The rarer the card, the fancier the shine! Tap a card in a new pack to <b>flip</b> it over.'},
       {q:'What are the quotes on my cards?', a:'Many history cards have a famous quote near the bottom: words that person said or wrote, or a famous line about them. Tap 🔊 to hear it (Chinese quotes are in Cantonese). Tap the quote to see what it means, and tap anywhere to close. If it is one of your Japanese sayings, you can jump to it in your saying book!'},
@@ -6561,7 +6562,17 @@ function helpData(){
       {q:'What is the Japanese saying of the day?', a:'A new ことわざ (proverb), 慣用句 (idiom) or 四字熟語 every day, starting with the ones people in Japan use the most. You see what it means, a picture of the words, and how to use it. Tap 🔊 to hear it. When you use it for real, tap ✅ <b>I used it today!</b> for a bonus point. Look up any saying in the 🗣️ ことわざ part of the Kanji tab: search in hiragana, kanji or English.'},
       {q:'How do I change my kanji book page?', a:'Tap the <b>page chip</b> under Kanji of the Day (or in My Book), then pick your book (上 or 下) and page. Use <b>Next page</b> when your class moves on.'},
    ]},
+   {t:'✏️ Writing and Kit', i:[
+    {q:'What is the Writing tab?', a:li(['It is <b>Kit’s Writing Desk</b>, a place to practise writing with your pen.','Practise <b>letters and numbers</b>, <b>spelling words</b>, or <b>copy a sentence</b> from a card.','Stuck? Tap <b>👀 Peek with Kit</b> to see how it goes, then try it yourself.','Tap <b>Save</b> when you finish. Your pages go in <b>My writing</b>, and Kit keeps your newest 30.'])},
+    {q:'Where do the spelling words come from?', a:'Kit has word lists for school. You can also type <b>your own words</b> in <b>My spelling list</b> on the Writing tab, with spaces or one per line, and practise them this week. It is your list, so change it any time. ✏️'},
+    {q:'What are Kit’s paws and presents?', a:li(['Every writing page you save adds a <b>paw</b> toward a present.','<b>4 pages = 1 present</b> for Kit’s Dressing Room.','Kit counts up to <b>2 pages each day</b>. The Writing tab says <b>“Today’s pages for paws: 1/2”</b>, then <b>2/2</b> when you have got all of today’s paws.','At 2/2 you can keep writing! Extra pages are still saved, they just won’t add more paws until tomorrow.','Four words on one page still count as <b>one page</b>.'])},
+    {q:'How does the Dressing Room work?', a:li(['Tap the <b>Kit’s Dressing Room</b> box on the Writing tab.','When a present is waiting, open it to find a new outfit piece.','Tap a piece to <b>put it on Kit</b>. Tap it again to take it off.','Outfits are things Kit wears, like hats, scarves and more. Some are special.'])},
+  ]},
    {t:'💗 More things to explore', i:[
+    {q:'What is Today in History?', a:'On the Quests screen, finish <b>all your quests</b> to reveal today’s History Hero card and win a <b>free Card Pack</b>! Until then it stays a mystery. 🔒'},
+    {q:'What are the weekly goal cards?', a:li(['Each week Kit shows <b>3 goal cards</b>. Flip them and choose one as your goal for the week.','From Friday to Sunday Kit asks how it went: <b>a lot</b>, <b>a little</b> or <b>not yet</b>. Every answer is okay!','Your answers add stamps to the card. Fill it up and it turns <b>gold</b>.','Checking in also earns '+helpSafe(gPts, 2)+' point'+(helpSafe(gPts, 2) === 1 ? '' : 's')+'.'])},
+    {q:'What is the Holiday Hunt?', a:li(['Around a holiday, from <b>2 days before to 2 days after</b>, little holiday treats hide around the app.','Look carefully and tap one to find it! You can find up to <b>3 a day</b>.','Each find is worth <b>1 point</b>. Red envelopes are worth <b>1 to 3</b>.','They are hiding, so look closely!'])},
+    {q:'Why is Kit sleepy at night?', a:li(['Kit gets <b>sleepy 15 minutes before bedtime</b>, then <b>falls asleep</b> until morning.','When Kit is asleep he is still and quiet, and tapping him says “Shh”. The Writing tab, Writing Desk and Dressing Room Kits sleep too.','The app gets quieter at night, too. Kit wakes up in the morning. 🌙'])},
     {q:'What is the Journal?', a:'Your calendar shows every perfect day. You can also pick how you feel and write about your day. Your past pages are kept there.'},
     {q:'What are “I saw you…” goal cards?', a:'Special cards from your grown-ups that say something good they noticed you doing. 💛'},
     {q:'Who is Kit?', a:'Kit is your fox buddy. Tap him to see what he does! He cheers when you finish things, dresses up for seasons and holidays, and does special seasonal and holiday moves. If you have been looking at cards or rewards for a while, he may pop in to suggest a quest. You can turn Kit off in <b>Me</b> if you like.'},
@@ -6623,6 +6634,14 @@ function helpData(){
     {q:'Birthdays and holidays?', a:'In <b>Celebrations &amp; alerts</b> you can set her birthday (party banner, confetti, a Birthday Star card, her Birthday Book) and add family birthdays for gentle reminders.'},
     {q:'Can the done alert include her journal?', a:'Yes. In <b>Celebrations &amp; alerts</b>, turn on the push notification (or webhook) and <b>Include today’s journal page</b>. The alert adds her feeling, what happened and what she wrote. If she writes or changes it after the alert, an update follows a couple of minutes after she stops (up to 6 a day). The Email and Text buttons on her screen never include it.'}
    ]},
+   {t:'📊 Insights and planning', i:[
+    {q:'What is Insights?', a:li(['Open it from the Parent home screen. It is a picture of her quests, not a score.','<b>Quest order</b>: a grid of the last 14 days. Each square is the order she did that quest in (darker = earlier), and ✕ means not finished.','<b>Each quest</b>: usually first or last, how often it is finished, the weekday it is most often unfinished and about when she does it.','<b>Whole days</b>: all quests finished by week, finished before your deadline, weekdays, finish time and routines.','<b>Feelings</b>: the feelings and “what happened” tags she picked in her journal. <b>What she writes is never read.</b>','<b>Before and after</b>: compares 14 days before and after a settings change you made.','Sections with fewer than 5 days say “Not enough days yet”. Today and rest days are left out.'])},
+    {q:'How do planned packs and the pack message work?', a:li(['In <b>Card packs → Planned packs</b> you choose what each of her next packs holds. Anything not planned uses the normal odds.','The <b>message</b> is shown to her when the pack is opened, so write it as something she earned.','Planned and promoted cards follow the same rules as normal ones. Duplicates in a planned pack fill promotion meters like any other.','On her birthday, the <b>Birthday God Pack</b> gives an extra pack with only SSR and LL cards.'])},
+    {q:'What can I change for the Writing desk?', a:li(['In <b>Writing desk</b> you can show or hide the Writing tab, allow or turn off <b>Peek with Kit</b>, pick Grade 3 or Grade 4 spelling words, and set the line size.','You can also delete her saved writing pages.','Kit counts up to <b>2 writing pages a day</b> toward paws, and <b>4 pages</b> make a present. These numbers are fixed. Extra pages still save.'])},
+    {q:'What can I change for the Holiday Hunt?', a:li(['In <b>Holiday Hunt</b> you can turn the hunt off, choose which holiday groups hide treats, and see the next holidays.','<b>Test it</b> shows a holiday’s treats in every hiding spot so you can check how they look. Preview finds give no points and it turns off when the app restarts.'])},
+    {q:'What is the daily log?', a:'A private record on this device of quest times and order, routines, points and your settings changes. It feeds Insights and is included in backups. <b>Journal text is never stored in it.</b> Find it in <b>Backup &amp; log</b>.'},
+    {q:'Why did a reminder or message wait?', a:'While she is in a full-screen activity (the Writing Desk, Kanji writing, the Dressing Room, the journal writer, a big card or the timer), Kit’s reminders and messages wait until she is done, so nothing interrupts her.'},
+  ]},
    {t:'💾 Backup, updates and problems', i:[
     {q:'Where is her progress saved?', a:'On this device only. Make a backup code in <b>Backup &amp; PIN</b> so you can restore on another device.'},
     {q:'How do updates work?', a:'The app loads from the web, so new versions arrive when you upload new files. Tap <b>🔄 Check for updates</b> (bottom of Me or Parent home), or close the app fully and reopen it (sometimes twice). The version number is shown next to the button.'},
@@ -7891,7 +7910,6 @@ function showCardDetail(id, fromParent){
   var h = '<span data-closable></span>';
   if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
   h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10" data-rotp="20.8"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">Tap the card to see it big · slide to tilt <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
-  h += promoDetailHTML(c);
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
@@ -7901,6 +7919,7 @@ function showCardDetail(id, fromParent){
   h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>'+llFactsHTML(c.id)+cardQuoteHTML(c.id);
   h += '<div class="row" style="margin-top:14px"><button class="btn good" data-say="story:'+id+'">🔊 Read it aloud</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div>';
   h += '<div class="hint" style="margin-top:8px">Tip: tap the name, place or year to hear it.</div>';
+  h += promoDetailHTML(c); /* 26.11.115: Promoted line moved to the very bottom of the card */
   h += '</div></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
   openModal(h);
@@ -8006,7 +8025,7 @@ function promoDetailHTML(c){
   var n = promoN(c.id), s = '';
   for(var i = 0; i < mx; i++) s += i < n ? '<span class="st">\u2605</span>' : '<span class="st0">\u2606</span>';
   var lk = promoLook(c);
-  return '<div class="promoline" data-noicon><b>Promoted</b> '+s+(n ? ' <small>looks like '+lk+'</small>' : ' <small>get duplicates to promote this card</small>')+'</div>';
+  return '<div class="promoline" data-noicon><b>Promoted:</b> '+s+(n ? ' <small>looks like '+lk+'</small>' : '')+'</div>';
 }
 function promoMetersHTML(){
   var m = promoObj(), h = '<div class="panel promop"><div class="pmh">\u2b50 Card promotion</div><div class="pmrow">';
