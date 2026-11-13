@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.111', errs = [], shown = false;
+  var V = '26.11.112', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -993,6 +993,7 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 /* 26.11.111 */.dropen{margin-left:auto;align-self:center;flex:none;background:var(--accent);color:#fff;font-weight:900;font-size:15px;border-radius:99px;padding:8px 14px}.drready{color:#c2410c;font-weight:800}
 /* 26.11.109 */.drtoday{display:inline-block;margin-top:6px;font-size:15px;font-weight:700;line-height:1.35;color:#5a5470}
 @media (prefers-reduced-motion:reduce){.drgsvg,.drtw{animation:none}}
+/* 26.11.112 */body[data-bed=asleep] :is(.drgsvg,.drtw){animation:none}
 /* 26.11.111: in the dark looks the activity screens use a dimmer paper so they are not a bright flash at night */
 body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .kw{--kw-bg:#d8d0bd;--kw-bar:#e3dccb;--kw-line:#c4b99f;--kw-card:#ece6d6;--kw-btn-line:#b8ad93}
 /* 26.11.98 */.wdsent{font:800 22px/1.35 system-ui;color:#2b2b44;margin:8px 0 2px}.wdfrom{font-size:14px;opacity:.85;margin-bottom:6px}
@@ -2720,9 +2721,23 @@ iframe.llstory{transition:opacity .45s ease}
 .ib{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 .ibt{width:100%;height:84px;display:flex;align-items:flex-end;background:rgba(127,127,170,.14);border-radius:8px;overflow:hidden}
 .ibt i{display:block;width:100%;background:var(--accent);border-radius:8px 8px 0 0}
-.ibv{font-size:12px;font-weight:800;min-height:14px;opacity:.85}
+.ibv{font-size:13px;font-weight:800;min-height:14px;opacity:.85;text-align:center;line-height:1.1}
 .ib small{font-size:14px;opacity:.85;font-weight:700}
 .ipct{font-weight:900;font-size:18px;padding:0 6px}
+/* 26.11.112: Insights */
+.ish{font-size:20px;margin:22px 0 6px;padding-top:12px;border-top:2px solid var(--line)}
+.ihl{display:flex;flex-direction:column;gap:6px;background:rgba(127,127,170,.08);border-radius:16px;padding:12px 14px;margin:8px 0;font-size:16px;line-height:1.35}
+.iomap{overflow-x:auto;margin:8px 0 12px;-webkit-overflow-scrolling:touch}
+.iomap table{border-collapse:separate;border-spacing:3px;font-size:14px}
+.iomap th{font-weight:800;color:var(--muted);text-align:center;min-width:34px;line-height:1.15}
+.iomap .q{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;font-weight:800;padding-right:8px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iomap td.c{width:34px;height:34px;text-align:center;border-radius:9px;font-weight:900}
+.iomap td.e{background:rgba(127,127,170,.08)}
+.iomap td.x{background:#fde2e2;color:#b42318}
+.ifw{display:flex;align-items:center;gap:10px;margin:6px 0}
+.ifl{flex:none;width:86px;font-weight:800;font-size:14px;color:var(--muted)}
+.ifb{flex:1;display:flex;height:30px;border-radius:10px;overflow:hidden;background:rgba(127,127,170,.1)}
+.ifb i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px;min-width:0;overflow:hidden}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -3280,13 +3295,23 @@ function bedRefreshKit(wake){
     if(wake && kitAnimOK()) setTimeout(function(){ var sv = document.querySelector('.hero .kit'); if(sv) kitPlay(sv, ['yawn','']); }, 500);
   }catch(e){}
 }
+/* 26.11.112: the Writing tab, Writing Desk and Dressing Room Kits follow bedtime too, redrawn in place (no full render, so a half-typed spelling list is kept) */
+function bedRefreshWrite(){
+  try{
+    var wk = document.querySelector('#view-write .kjkit'); if(wk) wk.innerHTML = kitSVG('happy', 'hero');
+    var mini = document.querySelectorAll('#view-write .drmini'); for(var i = 0; i < mini.length; i++) mini[i].innerHTML = drKitSVG(drState().wear, 'drkit');
+    if(WD) wdSide();
+    if(DR) drDraw();
+  }catch(e){}
+}
 function updateBed(force){
   try{
     var i = bedInfo(), mode = i ? i.mode : '', key = mode + ':' + (i && i.mins || 0);
+    if(document.body.getAttribute('data-bed') !== mode) document.body.setAttribute('data-bed', mode);   /* 26.11.112 */
     if(!force && window.__bedKey === key) return;
     var prev = window.__bedMode; window.__bedKey = key; window.__bedMode = mode;
     var el = $('bedstrip'); if(el){ var h = bedStripHTML(); el.innerHTML = h; el.hidden = !h; }
-    if(prev !== undefined && prev !== mode) bedRefreshKit(prev === 'asleep' && mode === '');
+    if(prev !== undefined && prev !== mode){ bedRefreshKit(prev === 'asleep' && mode === ''); bedRefreshWrite(); }
   }catch(e){}
 }
 /* ---------- Kit's seasonal, holiday + birthday moves: props drawn on his 120 x 124 picture, hidden until a move plays.
@@ -3924,11 +3949,15 @@ function wkReady(){
   return false;
 }
 
-/* ---------- 26.11.77: Insights (reads the daily log; whole-day history also comes from the streak calendar) ---------- */
+/* ---------- 26.11.112: Insights, rebuilt. A clear picture of her quests (order, finished, unfinished), whole days, and the feelings she picks.
+   Reads only data the app already keeps (daily log, streak calendar, journal feeling + tags). Her written journal text is never read here.
+   Fixes: whole weeks everywhere (current week marked "so far"); order is re-ranked per day so unticking/re-ticking cannot skew it;
+   before/after always uses 14 days each side; units on changes; "Not enough days yet" under 5 days. ---------- */
 var INS = {w:4};
-function insDays(n){
-  var today = dateKey(), from = addDaysKey(today, -n*7), out = [];
-  for(var k = from; k < today; k = addDaysKey(k, 1)){
+var INS_MIN = 5;
+function insRange(from, to){   /* days from..to (to not included), rest and birthday days left out */
+  var out = [];
+  for(var k = from; k < to; k = addDaysKey(k, 1)){
     var d = state.dlog && state.dlog[k], h = state.history && state.history[k];
     if(h === 'rest' || h === 'bday') continue;
     var rec = {k:k, wd:parseKey(k).getDay(), wk:weekKeyOf(k), d:null, full:null};
@@ -3941,103 +3970,201 @@ function insDays(n){
   }
   return out;
 }
+function insWeeks(n){ var out = [], w = weekKeyOf(dateKey()); for(var i = n - 1; i >= 0; i--) out.push(addDaysKey(w, -7*i)); return out; }
+function insDays(n){ return insRange(insWeeks(n)[0], dateKey()); }
 function insPct(a, b){ return b ? Math.round(a/b*100) : null; }
-function insTime(m){ if(m == null || isNaN(m)) return '-'; m = Math.round(m); var h = Math.floor(m/60), mm = m%60; return fmt12(pad(h)+':'+pad(mm)); }
+function insTime(m){ if(m == null || isNaN(m)) return '-'; m = Math.round(m) % 1440; var h = Math.floor(m/60), mm = m%60; return fmt12(pad(h)+':'+pad(mm)); }
 function insName(id){ return (state.dnames && state.dnames[id]) || id; }
 function insMedian(a){ if(!a.length) return null; a = a.slice().sort(function(x, y){ return x - y; }); var m = Math.floor(a.length/2); return a.length % 2 ? a[m] : (a[m-1] + a[m])/2; }
+function insAvg(days, f){ var n = 0, t = 0; days.forEach(function(r){ var v = f(r); if(v != null){ n++; t += v; } }); return n ? t/n : null; }
 function insBars(vals, labels, fmt, hi){
   var mx = hi || 100, h = '<div class="ibars">';
-  vals.forEach(function(v, i){ h += '<div class="ib"><div class="ibv">'+(v == null ? '' : fmt(v))+'</div><div class="ibt"><i style="height:'+(v == null ? 0 : Math.max(3, Math.round(v/mx*100)))+'%"></i></div><small>'+labels[i]+'</small></div>'; });
+  vals.forEach(function(v, i){ h += '<div class="ib"><div class="ibv">'+(v == null ? '' : fmt(v, i))+'</div><div class="ibt"><i style="height:'+(v == null ? 0 : Math.max(3, Math.round(v/mx*100)))+'%"></i></div><small>'+labels[i]+'</small></div>'; });
   return h + '</div>';
 }
-function insWeeks(n){ var out = [], w = weekKeyOf(dateKey()); for(var i = n - 1; i >= 0; i--) out.push(addDaysKey(w, -7*i)); return out; }
 function insWkLabel(w){ var p = w.split('-'); return +p[1] + '/' + +p[2]; }
-function insAvg(days, f){ var n = 0, t = 0; days.forEach(function(r){ var v = f(r); if(v != null){ n++; t += v; } }); return n ? t/n : null; }
+function insWkLabels(wks){ var cur = weekKeyOf(dateKey()); return wks.map(function(w){ return insWkLabel(w) + (w === cur ? '<br>so far' : ''); }); }
+function insFew(n){ return '<div class="hint">Not enough days yet ('+n+' so far, needs '+INS_MIN+').</div>'; }
 function insMarks(){
   var seen = {}, out = [];
   (state.dmark || []).forEach(function(m){ if(String(m.l).indexOf('Points by parent') === 0) return; var key = m.d + '|' + m.l; if(seen[key]) return; seen[key] = 1; out.push(m); });
   return out;
 }
-function parInsights(){
-  var N = INS.w, days = insDays(N), logged = days.filter(function(r){ return r.d; });
-  var h = '<div class="row" style="margin-bottom:6px"><button class="btn small'+(N === 4 ? ' primary' : '')+'" data-act="pinsr" data-w="4">4 weeks</button><button class="btn small'+(N === 12 ? ' primary' : '')+'" data-act="pinsr" data-w="12">12 weeks</button></div>';
-  if(!days.length) return h + '<div class="hint">Nothing to show yet. Insights fill in as days finish.</div>';
-  h += '<div class="hint">'+days.length+' day'+(days.length === 1 ? '' : 's')+' counted ('+logged.length+' with full detail). Rest days and days the app was not opened with no record are left out. '+(logged.length < 7 ? 'Quest times, order and routines need about a week of detail to be useful; they start from the day the log was installed.' : '')+'</div>';
-  /* whole-day trend */
-  var wks = insWeeks(N), wv = wks.map(function(w){ var ds = days.filter(function(r){ return r.wk === w; }); return ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null; });
-  var tot = insPct(days.filter(function(r){ return r.full; }).length, days.length);
-  h += '<h3>All quests finished, by week</h3><div class="hint">Overall: '+tot+'% of days.</div>' + insBars(wv, wks.map(insWkLabel), function(v){ return v + '%'; }, 100);
-  var mk = insMarks().filter(function(m){ return m.d >= wks[0]; });
-  if(mk.length){ h += '<div class="hint">🔧 Changes you made in this period: '+mk.slice(-6).map(function(m){ return esc(insWkLabel(weekKeyOf(m.d)))+' '+esc(m.l); }).join(' · ')+'</div>'; }
-  /* weekdays */
-  var wd = [0,1,2,3,4,5,6].map(function(i){ var ds = days.filter(function(r){ return r.wd === i; }); return {i:i, n:ds.length, p:ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null}; });
-  var order = [1,2,3,4,5,6,0];
-  h += '<h3>Weekdays</h3>' + insBars(order.map(function(i){ return wd[i].p; }), order.map(function(i){ return DAY_NAMES[i]; }), function(v){ return v + '%'; }, 100);
-  var worst = wd.filter(function(x){ return x.n >= 2 && x.p != null; }).sort(function(a, b){ return a.p - b.p; })[0];
-  if(worst) h += '<div class="hint">Weakest day: <b>'+DAY_NAMES[worst.i]+'</b> ('+worst.p+'% of those days finished, out of '+worst.n+').</div>';
-  if(!logged.length) return h + '<div class="hint" style="margin-top:14px">Per-quest details (missed chores, order, time of day, routines) appear after the first full days are logged.</div>' + insBefore(days);
-  /* per quest */
+/* one day's finished quests, ranked 1..n by the order they were ticked (gaps from unticking do not matter) */
+function insRanks(d){
+  var ids = Object.keys(d.q || {}).filter(function(id){ return (d.a || []).indexOf(id) >= 0; });
+  ids.sort(function(a, b){ return d.q[a][1] - d.q[b][1]; });
+  var out = {}; ids.forEach(function(id, i){ out[id] = [i + 1, ids.length]; }); return out;
+}
+function insQuests(logged){
   var Q = {};
   logged.forEach(function(r){
-    var d = r.d, nd = Object.keys(d.q).length;
+    var d = r.d, rk = insRanks(d);
     d.a.forEach(function(id){
-      var q = Q[id] || (Q[id] = {id:id, act:0, done:0, times:[], pos:[], first:0, multi:0, wd:{}});
+      var q = Q[id] || (Q[id] = {id:id, act:0, done:0, times:[], pos:[], first:0, last:0, multi:0, wd:{}});
       q.act++; q.wd[r.wd] = q.wd[r.wd] || {a:0, m:0}; q.wd[r.wd].a++;
-      if(d.q[id]){ q.done++; q.times.push(d.q[id][0]); if(nd >= 2){ q.multi++; q.pos.push((d.q[id][1] - 1)/(nd - 1)); if(d.q[id][1] === 1) q.first++; } }
-      else q.wd[r.wd].m++;
+      if(d.q[id] && rk[id]){
+        q.done++; q.times.push(d.q[id][0]);
+        var x = rk[id];
+        if(x[1] >= 2){ q.multi++; q.pos.push((x[0] - 1)/(x[1] - 1)); if(x[0] === 1) q.first++; if(x[0] === x[1]) q.last++; }
+      } else q.wd[r.wd].m++;
     });
   });
-  var qs = Object.keys(Q).map(function(k){ return Q[k]; });
-  /* missed chores */
-  var ms = qs.filter(function(q){ return q.act - q.done > 0; }).sort(function(a, b){ return (b.act - b.done) - (a.act - a.done); });
-  h += '<h3>Missed chores</h3>';
-  if(!ms.length) h += '<div class="hint">No missed quests in this period. 🎉</div>';
-  else ms.slice(0, 6).forEach(function(q){
-    var wm = Object.keys(q.wd).map(function(k){ return {k:+k, m:q.wd[k].m}; }).sort(function(a, b){ return b.m - a.m; })[0];
-    h += '<div class="prow"><div class="pn">'+esc(insName(q.id))+'<small>missed '+(q.act - q.done)+' of '+q.act+' days'+(wm && wm.m > 1 ? ' · most on '+DAY_NAMES[wm.k] : '')+'</small></div><div class="ipct">'+insPct(q.done, q.act)+'%</div></div>';
-  });
-  /* order habits */
-  var os = qs.filter(function(q){ return q.multi >= 3; }).sort(function(a, b){ return insAvg(a.pos, function(x){ return x; }) - insAvg(b.pos, function(x){ return x; }); });
-  h += '<h3>Order habits</h3>';
-  if(os.length < 2) h += '<div class="hint">Needs a few more days with two or more quests done.</div>';
-  else{
-    h += '<div class="hint">From usually first to usually last:</div>';
-    os.forEach(function(q, i){ var f = insPct(q.first, q.multi); h += '<div class="prow"><div class="pe">'+(i+1)+'</div><div class="pn">'+esc(insName(q.id))+'<small>first on '+f+'% of days</small></div></div>'; });
-    var lastQ = os[os.length - 1], never = qs.filter(function(q){ return q.multi >= 3 && q.first === 0; });
-    if(never.length) h += '<div class="hint">Never done first: '+never.map(function(q){ return esc(insName(q.id)); }).join(', ')+'.</div>';
-  }
-  /* time of day */
-  h += '<h3>Time of day</h3>';
-  var ft = wks.map(function(w){ return insAvg(logged.filter(function(r){ return r.wk === w && r.d.f; }), function(r){ return r.d.f; }); });
-  var ftv = ft.filter(function(v){ return v != null; });
-  if(ftv.length){
-    var lo = Math.min.apply(null, ftv), hi = Math.max.apply(null, ftv), span = Math.max(30, hi - lo);
-    h += '<div class="hint">When all quests are finished, on average:</div>' + insBars(ft.map(function(v){ return v == null ? null : 30 + 70*(v - lo)/span; }), wks.map(insWkLabel), function(v){ return ''; }, 100);
-    h += '<div class="hint">'+wks.map(function(w, i){ return ft[i] == null ? '' : insWkLabel(w)+' '+insTime(ft[i]); }).filter(Boolean).join(' · ')+'</div>';
-    if(ftv.length >= 3){ var diff = ftv[ftv.length - 1] - ftv[0]; if(Math.abs(diff) >= 10) h += '<div class="hint"><b>'+(diff > 0 ? 'Drifting later' : 'Drifting earlier')+'</b> by about '+Math.round(Math.abs(diff))+' min over this period.</div>'; }
-  } else h += '<div class="hint">No fully finished days with times yet.</div>';
-  var tq = qs.filter(function(q){ return q.times.length >= 3; });
-  tq.forEach(function(q){ h += '<div class="prow"><div class="pn">'+esc(insName(q.id))+'<small>usually done around '+insTime(insMedian(q.times))+'</small></div></div>'; });
-  /* routines */
-  var R = {m:{n:0, ok:0, late:0, miss:0}, n:{n:0, ok:0, late:0, miss:0}};
-  logged.forEach(function(r){ ['m','n'].forEach(function(w){ if((r.d.rs || []).indexOf(w) < 0) return; var o = r.d.r[w], x = R[w]; x.n++; if(o && o.c){ if(o.ok) x.ok++; else x.late++; } else x.miss++; }); });
-  var rh = '';
-  [['m', '☀️ Morning'], ['n', '🌙 Evening']].forEach(function(a){ var x = R[a[0]]; if(x.n) rh += '<div class="prow"><div class="pn">'+a[1]+' routine<small>on time '+x.ok+' · late '+x.late+' · not finished '+x.miss+' (of '+x.n+' days)</small></div><div class="ipct">'+insPct(x.ok, x.n)+'%</div></div>'; });
-  if(rh) h += '<h3>Routines</h3>' + rh;
-  return h + insBefore(days);
+  return Object.keys(Q).map(function(k){ var q = Q[k]; q.p = q.pos.length ? q.pos.reduce(function(a, b){ return a + b; }, 0)/q.pos.length : null; return q; });
 }
-function insBefore(days){
-  var h = '<h3>Before and after your changes</h3>', ms = insMarks().slice(-8).reverse(), shown = 0, hs = '';
+function insUsually(q){
+  if(q.multi < 3 || q.p == null) return '';
+  if(q.first/q.multi >= .6) return 'first';
+  if(q.last/q.multi >= .6) return 'last';
+  return q.p < .3 ? 'early' : q.p < .7 ? 'in the middle' : 'late';
+}
+/* order map: last 14 days, a row per quest, a square per day with the order number, or ✕ if not finished */
+function insOrderMap(){
+  var today = dateKey(), ks = [];
+  for(var i = 14; i >= 1; i--) ks.push(addDaysKey(today, -i));
+  var cols = ks.map(function(k){ var d = state.dlog && state.dlog[k], h = state.history && state.history[k];
+    return {k:k, d:(d && d.x && !d.g && d.a && d.a.length && h !== 'rest' && h !== 'bday') ? d : null, rest:h === 'rest' || h === 'bday'}; });
+  var used = cols.filter(function(c){ return c.d; });
+  if(used.length < INS_MIN) return '<h3>Quest order, last 14 days</h3>' + insFew(used.length);
+  var rows = {}, rk = {};
+  cols.forEach(function(c){ if(!c.d) return; rk[c.k] = insRanks(c.d); c.d.a.forEach(function(id){ rows[id] = rows[id] || {id:id, ps:[]}; var x = rk[c.k][id]; if(x && x[1] >= 2) rows[id].ps.push((x[0]-1)/(x[1]-1)); }); });
+  var list = Object.keys(rows).map(function(id){ var r = rows[id]; r.p = r.ps.length ? r.ps.reduce(function(a, b){ return a + b; }, 0)/r.ps.length : 2; return r; })
+    .sort(function(a, b){ return a.p - b.p; });
+  var h = '<h3>Quest order, last 14 days</h3><div class="hint">Each square is the order she did that quest in. Darker means earlier. \u2715 means not finished. Blank means not on that day, a rest day, or no record.</div>';
+  h += '<div class="iomap"><table><thead><tr><th class="q"></th>';
+  cols.forEach(function(c){ var dt = parseKey(c.k); h += '<th>'+DAY_NAMES[dt.getDay()].slice(0, 2)+'<br>'+dt.getDate()+'</th>'; });
+  h += '</tr></thead><tbody>';
+  list.forEach(function(r){
+    h += '<tr><td class="q">'+esc(insName(r.id))+'</td>';
+    cols.forEach(function(c){
+      if(!c.d || c.d.a.indexOf(r.id) < 0){ h += '<td class="c e"></td>'; return; }
+      var x = rk[c.k][r.id];
+      if(!x){ h += '<td class="c x" title="Not finished">\u2715</td>'; return; }
+      var p = x[1] >= 2 ? (x[0]-1)/(x[1]-1) : 0, mix = Math.round(100 - 68*p);
+      h += '<td class="c" style="background:color-mix(in srgb,var(--accent) '+mix+'%,#fff);color:'+(mix >= 60 ? '#fff' : 'var(--ink)')+'">'+x[0]+'</td>';
+    });
+    h += '</tr>';
+  });
+  return h + '</tbody></table></div>';
+}
+function insHighlights(qs){
+  var out = [];
+  var f = qs.filter(function(q){ return q.multi >= INS_MIN && q.first/q.multi >= .6; }).sort(function(a, b){ return b.first/b.multi - a.first/a.multi; })[0];
+  if(f) out.push('<b>'+esc(insName(f.id))+'</b> is done first on '+f.first+' of '+f.multi+' days.');
+  var l = qs.filter(function(q){ return q.multi >= INS_MIN && q.last/q.multi >= .6 && q !== f; }).sort(function(a, b){ return b.last/b.multi - a.last/a.multi; })[0];
+  if(l) out.push('<b>'+esc(insName(l.id))+'</b> is usually last ('+l.last+' of '+l.multi+' days).');
+  var u = qs.filter(function(q){ return q.act - q.done >= 2; }).sort(function(a, b){ return (b.act - b.done)/b.act - (a.act - a.done)/a.act; })[0];
+  if(u) out.push('<b>'+esc(insName(u.id))+'</b> is the quest most often left unfinished ('+(u.act - u.done)+' of '+u.act+' days).');
+  var all = qs.filter(function(q){ return q.act >= INS_MIN && q.done === q.act; });
+  if(all.length) out.push('Always finished: '+all.map(function(q){ return '<b>'+esc(insName(q.id))+'</b>'; }).join(', ')+'.');
+  return out.length ? '<div class="ihl">'+out.map(function(x){ return '<div>'+x+'</div>'; }).join('')+'</div>' : '';
+}
+function insQuestCards(qs){
+  var h = '<h3>Each quest</h3>';
+  var list = qs.filter(function(q){ return q.act >= 2; }).sort(function(a, b){ return (a.p == null ? 2 : a.p) - (b.p == null ? 2 : b.p); });
+  if(!list.length) return h + insFew(0);
+  list.forEach(function(q){
+    var bits = [], us = insUsually(q);
+    if(us) bits.push('Usually <b>'+us+'</b>');
+    if(q.multi >= 3 && q.first) bits.push('first on '+q.first+' of '+q.multi+' days');
+    bits.push('finished '+q.done+' of '+q.act+' days');
+    var wm = Object.keys(q.wd).map(function(k){ return {k:+k, m:q.wd[k].m}; }).sort(function(a, b){ return b.m - a.m; })[0];
+    if(wm && wm.m >= 2) bits.push('most often unfinished on '+DAY_NAMES[wm.k]);
+    if(q.times.length >= 3) bits.push('usually done around '+insTime(insMedian(q.times)));
+    h += '<div class="prow"><div class="pn">'+esc(insName(q.id))+'<small>'+bits.join(' \u00b7 ')+'</small></div><div class="ipct">'+insPct(q.done, q.act)+'%</div></div>';
+  });
+  return h;
+}
+function insFeelings(wks){
+  var from = wks[0], today = dateKey(), J = state.journal || {}, ks = Object.keys(J).filter(function(k){ return k >= from && k <= today && J[k].m && moodBy(J[k].m); }).sort();
+  var h = '<h3>Feelings she picked</h3>';
+  if(ks.length < INS_MIN) return h + insFew(ks.length);
+  h += '<div class="hint">From the feeling she chose in her journal on '+ks.length+' days. What she writes is not read here.</div>';
+  var cur = weekKeyOf(today);
+  wks.forEach(function(w){
+    var wk = ks.filter(function(k){ return weekKeyOf(k) === w; }); if(!wk.length) return;
+    var c = {}; wk.forEach(function(k){ c[J[k].m] = (c[J[k].m] || 0) + 1; });
+    h += '<div class="ifw"><span class="ifl">'+insWkLabel(w)+(w === cur ? ' so far' : '')+'</span><span class="ifb">';
+    MOODS.forEach(function(m){ if(c[m[0]]) h += '<i style="flex:'+c[m[0]]+';background:'+m[3]+'" title="'+m[2]+' '+c[m[0]]+'"><span data-noicon>'+m[1]+'</span></i>'; });
+    h += '</span></div>';
+  });
+  var tot = {}; ks.forEach(function(k){ tot[J[k].m] = (tot[J[k].m] || 0) + 1; });
+  var top = MOODS.filter(function(m){ return tot[m[0]]; }).sort(function(a, b){ return tot[b[0]] - tot[a[0]]; });
+  h += '<div class="hint">Most often: '+top.slice(0, 3).map(function(m){ return '<span data-noicon>'+m[1]+'</span> '+m[2]+' ('+tot[m[0]]+')'; }).join(' \u00b7 ')+'</div>';
+  /* which "what happened" tags go with each feeling (2+ days together) */
+  var lines = [];
+  top.forEach(function(m){
+    if(tot[m[0]] < 2) return;
+    var tc = {}; ks.forEach(function(k){ if(J[k].m !== m[0]) return; (J[k].ev || []).forEach(function(t){ tc[t] = (tc[t] || 0) + 1; }); });
+    var tt = EVENTS.filter(function(e){ return tc[e[0]] >= 2; }).sort(function(a, b){ return tc[b[0]] - tc[a[0]]; }).slice(0, 3);
+    if(tt.length) lines.push('<div class="prow"><div class="pn"><span data-noicon>'+m[1]+'</span> '+m[2]+'<small>often with '+tt.map(function(e){ return '<span data-noicon>'+e[1]+'</span> '+e[2]+' ('+tc[e[0]]+')'; }).join(', ')+'</small></div></div>');
+  });
+  if(lines.length) h += '<div class="hint" style="margin-top:8px">What happened on those days:</div>' + lines.join('');
+  return h;
+}
+function parInsights(){
+  var N = INS.w, wks = insWeeks(N), days = insRange(wks[0], dateKey()), logged = days.filter(function(r){ return r.d; });
+  var h = '<div class="row" style="margin-bottom:6px"><button class="btn small'+(N === 4 ? ' primary' : '')+'" data-act="pinsr" data-w="4">4 weeks</button><button class="btn small'+(N === 12 ? ' primary' : '')+'" data-act="pinsr" data-w="12">12 weeks</button></div>';
+  h += '<div class="hint">'+days.length+' day'+(days.length === 1 ? '' : 's')+' counted ('+logged.length+' with full quest detail), from '+esc(wks[0])+'. Today and rest days are left out.</div>';
+  var qs = insQuests(logged);
+  /* 1. quests */
+  h += '<h2 class="ish">\ud83d\udccb Her quests</h2>';
+  if(logged.length >= INS_MIN) h += insHighlights(qs);
+  h += insOrderMap();
+  h += logged.length >= INS_MIN ? insQuestCards(qs) : '<h3>Each quest</h3>' + insFew(logged.length);
+  /* 2. whole days */
+  h += '<h2 class="ish">\ud83d\udcc5 Whole days</h2>';
+  if(days.length < INS_MIN) h += insFew(days.length);
+  else {
+    var wv = wks.map(function(w){ var ds = days.filter(function(r){ return r.wk === w; }); return ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null; });
+    var tot = insPct(days.filter(function(r){ return r.full; }).length, days.length);
+    h += '<h3>All quests finished, by week</h3><div class="hint">Overall: '+tot+'% of days.</div>' + insBars(wv, insWkLabels(wks), function(v){ return v + '%'; }, 100);
+    var mk = insMarks().filter(function(m){ return m.d >= wks[0]; });
+    if(mk.length){ h += '<div class="hint">\ud83d\udd27 Changes you made in this period: '+mk.slice(-6).map(function(m){ return esc(insWkLabel(m.d))+' '+esc(m.l); }).join(' \u00b7 ')+'</div>'; }
+    var dl = logged.filter(function(r){ return r.d.e != null || !r.full; });
+    if(dl.length >= INS_MIN){ var early = dl.filter(function(r){ return r.full && r.d.e === 1; }).length; h += '<div class="prow"><div class="pn">\u23f0 Finished before your deadline<small>'+early+' of '+dl.length+' days with full detail</small></div><div class="ipct">'+insPct(early, dl.length)+'%</div></div>'; }
+    var wd = [0,1,2,3,4,5,6].map(function(i){ var ds = days.filter(function(r){ return r.wd === i; }); return {i:i, n:ds.length, p:ds.length ? insPct(ds.filter(function(r){ return r.full; }).length, ds.length) : null}; });
+    var order = [1,2,3,4,5,6,0];
+    h += '<h3>Weekdays</h3>' + insBars(order.map(function(i){ return wd[i].p; }), order.map(function(i){ return DAY_NAMES[i]; }), function(v){ return v + '%'; }, 100);
+    var ok = wd.filter(function(x){ return x.n >= 2 && x.p != null; }), best = Math.max.apply(null, ok.map(function(x){ return x.p; }).concat([0]));
+    var worst = ok.filter(function(x){ return x.p < 100 && best - x.p >= 15; }).sort(function(a, b){ return a.p - b.p; })[0];
+    if(worst) h += '<div class="hint">Hardest day: <b>'+DAY_NAMES[worst.i]+'</b> ('+worst.p+'% of '+worst.n+' days finished).</div>';
+    /* time of day: labelled */
+    var ft = wks.map(function(w){ return insAvg(logged.filter(function(r){ return r.wk === w && r.d.f; }), function(r){ return r.d.f; }); });
+    var ftv = ft.filter(function(v){ return v != null; });
+    h += '<h3>Finish time</h3>';
+    if(ftv.length){
+      var lo = Math.min.apply(null, ftv), hi = Math.max.apply(null, ftv), span = Math.max(30, hi - lo);
+      h += '<div class="hint">When all quests were finished, on average. Taller is later.</div>' + insBars(ft.map(function(v){ return v == null ? null : 30 + 70*(v - lo)/span; }), insWkLabels(wks), function(v, i){ return insTime(ft[i]); }, 100);
+      if(ftv.length >= 3){ var diff = ftv[ftv.length - 1] - ftv[0]; if(Math.abs(diff) >= 10) h += '<div class="hint"><b>'+(diff > 0 ? 'Getting later' : 'Getting earlier')+'</b> by about '+Math.round(Math.abs(diff))+' min over this period.</div>'; }
+    } else h += '<div class="hint">No fully finished days with times yet.</div>';
+    var R = {m:{n:0, ok:0, late:0, miss:0}, n:{n:0, ok:0, late:0, miss:0}};
+    logged.forEach(function(r){ ['m','n'].forEach(function(w){ if((r.d.rs || []).indexOf(w) < 0) return; var o = r.d.r && r.d.r[w], x = R[w]; x.n++; if(o && o.c){ if(o.ok) x.ok++; else x.late++; } else x.miss++; }); });
+    var rh = '';
+    [['m', '\u2600\ufe0f Morning'], ['n', '\ud83c\udf19 Evening']].forEach(function(a){ var x = R[a[0]]; if(x.n) rh += '<div class="prow"><div class="pn">'+a[1]+' routine<small>on time '+x.ok+' \u00b7 late '+x.late+' \u00b7 not finished '+x.miss+' (of '+x.n+' days)</small></div><div class="ipct">'+insPct(x.ok, x.n)+'%</div></div>'; });
+    if(rh) h += '<h3>Routines</h3>' + rh;
+  }
+  /* 3. feelings */
+  if(state.eco.journalOn !== false) h += '<h2 class="ish">\ud83d\udc9b Feelings</h2>' + insFeelings(wks);
+  /* 4. before / after */
+  return h + insBefore();
+}
+function insBefore(){
+  var h = '<h3>Before and after your changes</h3>', ms = insMarks().slice(-8).reverse(), today = dateKey(), hs = '', shown = 0;
+  if(!ms.length) return h + '<div class="hint">After you change something (deadline, points, routines, quests), this compares two weeks before with two weeks after.</div>';
   ms.forEach(function(m){
-    var b = days.filter(function(r){ return r.k >= addDaysKey(m.d, -14) && r.k < m.d; }), a = days.filter(function(r){ return r.k > m.d && r.k <= addDaysKey(m.d, 14); });
-    if(b.length < 3 || a.length < 3) return;
+    var b = insRange(addDaysKey(m.d, -14), m.d), a = insRange(addDaysKey(m.d, 1), addDaysKey(m.d, 15) < today ? addDaysKey(m.d, 15) : today);
+    var name = esc(m.l)+(m.a !== '' && m.b !== '' && m.b !== 'edited' && String(m.l).indexOf('Quest') !== 0 ? ': '+esc(m.a)+' \u2192 '+esc(m.b) : '');
+    if(b.length < 3 || a.length < 3){
+      hs += '<div class="prow"><div class="pn">'+name+'<small>'+esc(m.d)+' \u00b7 '+(a.length < 3 && m.d >= addDaysKey(today, -15) ? 'too recent to compare yet' : 'not enough days with a record to compare')+'</small></div></div>';
+      return;
+    }
+    shown++;
     var pb = insPct(b.filter(function(r){ return r.full; }).length, b.length), pa = insPct(a.filter(function(r){ return r.full; }).length, a.length);
     var tb = insAvg(b.filter(function(r){ return r.d && r.d.f; }), function(r){ return r.d.f; }), ta = insAvg(a.filter(function(r){ return r.d && r.d.f; }), function(r){ return r.d.f; });
-    shown++;
-    hs += '<div class="prow"><div class="pn">'+esc(m.l)+(m.a !== '' && m.b !== '' && m.b !== 'edited' && String(m.l).indexOf('Quest') !== 0 ? ': '+esc(m.a)+' → '+esc(m.b) : '')+'<small>'+esc(m.d)+' · finished all quests '+pb+'% → '+pa+'%'+(tb != null && ta != null ? ' · finish time '+insTime(tb)+' → '+insTime(ta) : '')+' ('+b.length+' days before, '+a.length+' after)</small></div><div class="ipct">'+(pa - pb >= 0 ? '+' : '')+(pa - pb)+'</div></div>';
+    hs += '<div class="prow"><div class="pn">'+name+'<small>'+esc(m.d)+' \u00b7 all quests finished '+pb+'% \u2192 '+pa+'%'+(tb != null && ta != null ? ' \u00b7 finish time '+insTime(tb)+' \u2192 '+insTime(ta) : '')+' ('+b.length+' days before, '+a.length+' after)</small></div><div class="ipct">'+(pa - pb >= 0 ? '+' : '')+(pa - pb)+' pts</div></div>';
   });
-  if(!shown) return h + '<div class="hint">After you change something (deadline, points, routines, quests), compare two weeks before and after here. Needs at least 3 days on each side.</div>';
-  return h + '<div class="hint">Two weeks before vs two weeks after. Other things change too, so treat this as a hint, not proof.</div>' + hs;
+  return h + (shown ? '<div class="hint">Two weeks before vs two weeks after. Other things change too, so treat this as a hint, not proof.</div>' : '') + hs;
 }
 function toggleTask(id, cardEl){
   if(state.done[id]){
@@ -12429,12 +12556,13 @@ function drTodayLine(){
   var n = drTodayN();
   return '<span class="drtoday">Today\u2019s pages for paws: <b>'+n+'/2</b>'+(n >= 2 ? '<br>You\u2019ve got all of today\u2019s paws! Extra pages are still saved, but they won\u2019t add more paws until tomorrow.' : '')+'</span>';
 }
-var DR_HEAD = null;
+var DR_HEAD = {};   /* 26.11.112: one cached head per bedtime mode ('', 'drowsy', 'asleep') */
 function drHead(){
-  if(DR_HEAD) return DR_HEAD;
-  var svg = kitSVG('happy', 'face', {slots:{}}), m = /<g class="k-all">([\s\S]*)<\/g><\/svg>\s*$/.exec(svg);
-  DR_HEAD = m ? m[1].replace(/<path d="M32 100q28 12 56 0[\s\S]*$/, '') : '';
-  return DR_HEAD;
+  var bk = bedMode() || 'day';
+  if(DR_HEAD[bk] !== undefined) return DR_HEAD[bk];
+  var svg = kitSVG('happy', 'drface', {slots:{}}), m = /<g class="k-all">([\s\S]*)<\/g><\/svg>\s*$/.exec(svg);   /* 26.11.112: 'drface' (not 'face') so bedtime applies */
+  DR_HEAD[bk] = m ? m[1].replace(/<path d="M32 100q28 12 56 0[\s\S]*$/, '') : '';
+  return DR_HEAD[bk];
 }
 function drKitSVG(wear, cls){
   wear = wear || {}; var P = [];
@@ -12901,10 +13029,12 @@ document.addEventListener('click', function(e){
   var ks = kjExtra();
   if(t.hasAttribute('data-tabgo')){ try{ Sound.tap(); }catch(_){} setTab(t.getAttribute('data-tabgo')); return; }
   if(t.classList.contains('kjkit')){
+    if(bedMode() === 'asleep'){ toast('\ud83e\udd2b Shh... Kit is sleeping. See you in the morning!', 2600); return; }   /* 26.11.112 */
     var sv = t.querySelector('.kit');
     if(sv && kitAnimOK()) kitPlay(sv, kitPickAction());
+    if(!t.closest('#view-kanji')) return;   /* 26.11.112: Writing tab Kit only moves; Kanji thoughts stay on the Kanji tab */
     KJT.n++; KJT.say = KJ_GROW[(KJT.n + dayNumX()) % KJ_GROW.length];
-    var b = document.querySelector('.kjbub'); if(b) b.innerHTML = KJT.say; return;
+    var b = document.querySelector('#view-kanji .kjbub'); if(b) b.innerHTML = KJT.say; return;
   }
   try{ Sound.tap(); }catch(_){}
   if(t.hasAttribute('data-kjtab')){ state.ui.kjTab = t.getAttribute('data-kjtab'); KJT.say = null; save(); render(); window.scrollTo(0,0); return; }
