@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.112', errs = [], shown = false;
+  var V = '26.11.113', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2724,6 +2724,56 @@ iframe.llstory{transition:opacity .45s ease}
 .ibv{font-size:13px;font-weight:800;min-height:14px;opacity:.85;text-align:center;line-height:1.1}
 .ib small{font-size:14px;opacity:.85;font-weight:700}
 .ipct{font-weight:900;font-size:18px;padding:0 6px}
+/* 26.11.113: card promotion */
+.tpro{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);z-index:6;display:flex;gap:1px;padding:1px 7px;border-radius:99px;background:rgba(28,22,52,.9);color:#ffd24d;font-size:12px;line-height:1.25;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:none}
+.tpro i{font-style:normal;display:inline-block}
+.tpro i.pop{animation:prStarPop .8s cubic-bezier(.2,1.6,.4,1) both}
+.z-S .tpro{font-size:10px;padding:0 5px;bottom:-7px}
+.z-O .tpro{display:none}
+@keyframes prStarPop{0%{transform:scale(0) rotate(-90deg)}60%{transform:scale(2) rotate(15deg)}100%{transform:scale(1) rotate(0)}}
+.promop{margin:0 0 10px}
+.pmh{font-weight:900;font-size:18px;margin-bottom:8px}
+.pmrow{display:flex;gap:10px;flex-wrap:wrap}
+.pmc{flex:1;min-width:110px;background:rgba(127,127,170,.12);border-radius:14px;padding:8px 10px}
+.pmc b{font-size:16px}.pmc small{font-size:14px;font-weight:800;color:var(--muted)}
+.pms{display:flex;gap:4px;margin-top:6px}
+.pms i{flex:1;height:10px;border-radius:99px;background:rgba(127,127,170,.3)}
+.pms i.on{background:#f5a623}
+.promoline{margin:8px 0 2px;font-weight:800;font-size:16px;text-align:center}
+.promoline .st{color:#e0a100;font-size:20px}.promoline .st0{color:var(--muted);font-size:20px}.promoline small{font-size:14px;color:var(--muted);font-weight:700}
+.prrays{position:absolute;left:50%;top:50%;width:270%;aspect-ratio:1;margin:-135% 0 0 -135%;z-index:-1;pointer-events:none;border-radius:50%;background:repeating-conic-gradient(var(--pc,#fff) 0 7deg,transparent 7deg 22deg);-webkit-mask-image:radial-gradient(circle,#000 6%,transparent 60%);mask-image:radial-gradient(circle,#000 6%,transparent 60%);opacity:0;transform:scale(.2);animation:prRays 1.6s ease-out forwards}
+.prrays.big{background:repeating-conic-gradient(#fff 0 10deg,rgba(255,226,138,.0) 10deg 24deg,#ffe28a 24deg 28deg,transparent 28deg 40deg);animation-duration:2.2s}
+.prrays.out{animation:prRaysOut .6s ease-in forwards}
+@keyframes prRays{0%{opacity:0;transform:scale(.2) rotate(0)}40%{opacity:.9}100%{opacity:.9;transform:scale(1) rotate(80deg)}}
+@keyframes prRaysOut{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.35)}}
+.flip.prgo .flip-front .tcgbox{animation:prHeat var(--pd,1.1s) ease-in-out both}
+.flip.prgo.hot .flip-front .tcgbox{animation-name:prHeatHot}
+@keyframes prHeat{0%{transform:scale(1) rotate(0)}15%{transform:scale(1.06) rotate(-2deg)}30%{transform:scale(1.1) rotate(2.4deg)}45%{transform:scale(1.12) rotate(-3deg)}60%{transform:scale(1.14) rotate(3.2deg)}75%{transform:scale(1.15) rotate(-2.4deg)}100%{transform:scale(1.16) rotate(0)}}
+@keyframes prHeatHot{0%{transform:scale(1) rotate(0);filter:brightness(1)}15%{transform:scale(1.05) rotate(-1.5deg)}30%{transform:scale(1.09) rotate(2deg);filter:brightness(1.3)}45%{transform:scale(1.12) rotate(-2.6deg);filter:brightness(1.7)}60%{transform:scale(1.14) rotate(3deg);filter:brightness(2.1) saturate(.6)}80%{transform:scale(1.17) rotate(-2.6deg);filter:brightness(2.6) saturate(.35)}100%{transform:scale(1.18) rotate(0);filter:brightness(3) saturate(.2)}}
+.flip.prland .flip-front .tcgbox{animation:prLand .7s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes prLand{0%{transform:scale(1.2);filter:brightness(2.2)}100%{transform:scale(1);filter:none}}
+.prshellw{position:absolute;inset:-1%;z-index:7;border-radius:7% / 5%;overflow:hidden;pointer-events:none;opacity:0;animation:prShellIn 1.1s ease-in forwards}
+.prshell{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff 0,#fffbe0 38%,#ffe28a 72%,#ffc43d 100%);box-shadow:inset 0 0 30px #fff}
+.prshell.l{clip-path:polygon(0 0,52% 0,46% 12%,54% 24%,45% 38%,55% 52%,46% 66%,54% 80%,47% 92%,50% 100%,0 100%)}
+.prshell.r{clip-path:polygon(52% 0,100% 0,100% 100%,50% 100%,47% 92%,54% 80%,46% 66%,55% 52%,45% 38%,54% 24%,46% 12%)}
+.prcrack{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 0 4px #fff);stroke-dasharray:1;stroke-dashoffset:1}
+.prshellw.crack .prcrack{animation:prCrack .6s ease-out forwards}
+.prshellw.crack{animation:prShellIn 1.1s ease-in forwards,prShake .12s linear infinite}
+.prshellw.split{animation:none;opacity:1}
+.prshellw.split .prcrack{opacity:0}
+.prshellw.split .prshell.l{animation:prSplitL .65s ease-in forwards}
+.prshellw.split .prshell.r{animation:prSplitR .65s ease-in forwards}
+@keyframes prShellIn{0%{opacity:0}100%{opacity:1}}
+@keyframes prCrack{to{stroke-dashoffset:0}}
+@keyframes prShake{0%{transform:translate(0,0)}25%{transform:translate(1.5px,-1px)}50%{transform:translate(-1.5px,1px)}75%{transform:translate(1px,1.5px)}100%{transform:translate(0,0)}}
+@keyframes prSplitL{to{transform:translateX(-115%) rotate(-14deg);opacity:0}}
+@keyframes prSplitR{to{transform:translateX(115%) rotate(14deg);opacity:0}}
+.prbanner{position:fixed;left:50%;top:9%;transform:translateX(-50%);z-index:calc(var(--z-celebrate) + 90);max-width:92vw;text-align:center;font-weight:900;font-size:22px;line-height:1.25;color:#3a2a00;background:linear-gradient(180deg,#fff3b0,#ffd24d);border:3px solid #fff;border-radius:22px;padding:12px 22px;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:prBan .6s cubic-bezier(.2,1.5,.4,1) both;pointer-events:none}
+.prbanner.big{font-size:26px;background:linear-gradient(180deg,#fff,#ffe28a)}
+.prbanner.out{animation:prBanOut .5s ease-in forwards}
+@keyframes prBan{0%{opacity:0;transform:translateX(-50%) scale(.5)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+@keyframes prBanOut{to{opacity:0;transform:translateX(-50%) translateY(-14px)}}
+@media (prefers-reduced-motion:reduce){.tpro i.pop,.prbanner{animation:none}}
 /* 26.11.112: Insights */
 .ish{font-size:20px;margin:22px 0 6px;padding-top:12px;border-top:2px solid var(--line)}
 .ihl{display:flex;flex-direction:column;gap:6px;background:rgba(127,127,170,.08);border-radius:16px;padding:12px 14px;margin:8px 0;font-size:16px;line-height:1.35}
@@ -4954,9 +5004,9 @@ function addCard(id){
   var had = state.cards[id] || 0;
   state.cards[id] = had + 1;
   if(!had){ (state.cardDates = state.cardDates || {})[id] = dateKey(); }
-  lastDupPts = 0; lastDupCr = 0;
+  lastPromo = null; lastDupInfo = null;
   if(!had) state.newCards[id] = true;
-  else { var dc = BY_ID[id]; lastDupCr = dupCredits(dc ? dc.k : 'C'); lastDupPts = dupJarAdd(lastDupCr); }
+  else promoDup(id);   /* 26.11.113: a duplicate fills its promotion meter */
   return !had;
 }
 function dailyCard(){
@@ -5111,17 +5161,21 @@ function faceHTML(c, o){
   if(c.k === 'LL' && window.LLX && LLX.art && LLX.art[c.id]) return llxFaceHTML(c, o);
   if(c.k === 'SSSR') return sssrFaceHTML(c, o);   /* 26.11.105 */
   var rg = REGIONS[c.r];
-  var ht = o.holo ? hlTier(c.k) : '', hf = ht && ht !== 'matte';
-  var fr = frameHTML(c, !!o.holo);
-  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+c.k+' reg-'+c.r+(hf ? ' hlf' : '')+(fr ? ' hasfrm' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+(hf ? hlPaper(ht) : '');
+  /* 26.11.113: a promoted card keeps its real tier (c.k) but is drawn with the look of the next rarity up (cv.k) */
+  var lk = o.look !== undefined ? o.look : promoLook(c), cv = c;
+  if(lk !== c.k){ cv = {}; for(var kk in c) cv[kk] = c[kk]; cv.k = lk; }
+  var ht = o.holo ? hlTier(cv.k) : '', hf = ht && ht !== 'matte';
+  var fr = frameHTML(cv, !!o.holo);
+  var h = '<div class="tcgbox'+(hf ? ' hf-'+ht : '')+'"><div class="tcg r-'+cv.k+' reg-'+c.r+(hf ? ' hlf' : '')+(fr ? ' hasfrm' : '')+'">'+(hf ? '<div class="hlx hlx-fg"></div>' : '')+'<div class="tcg-in">'+(hf ? hlPaper(ht) : '');
   var u = imgURL(c.id);
   h += '<div class="tcg-top"><div><div class="tcg-name" data-say="name:'+c.id+'">'+esc(c.n)+'</div>'+(c.nat ? '<div class="tcg-nat" data-say="nat:'+c.id+'">'+esc(c.nat)+'</div>' : '')+'</div><div class="tcg-rar">'+c.k+'</div></div>';
   h += '<div class="tcg-art'+(u?' has-img':'')+'">'+(u ? '<img class="tcg-img" src="'+u+'" alt="" draggable="false">' : '<span class="tcg-emoji">'+c.e+'</span>')/* 26.11.94: decorative ▶ removed from LL cards (it did nothing) */+'</div>';
   h += '<div class="tcg-tag" data-say="tag:'+c.id+'">'+esc(c.s)+'</div>';
   h += '<div class="tcg-foot"><span data-say="place:'+c.id+'">'+rg.flag+' '+TYPE_LABEL[c.t]+'</span><span class="tcg-year" data-say="year:'+c.id+'">'+esc(c.y)+'</span></div>';
-  h += '</div>'+(hf ? hlDeco(c.k) : '')+fr+'<i class="tcg-shine"></i></div>';
+  h += '</div>'+(hf ? hlDeco(cv.k) : '')+fr+'<i class="tcg-shine"></i></div>';
   if(o.isNew) h += '<span class="tbadge nw">NEW</span>';
   if(o.count > 1) h += '<span class="tbadge ct">×'+o.count+'</span>';
+  h += promoStripHTML(c, o);
   return h + '</div>';
 }
 /* 26.11.105: SSSR cards get their own front (gold frame, gem corners, name ribbon, star badge, rainbow edge kept), their own light, a gold-on-gold back, a special pull, and live numbers that grow with her. */
@@ -6391,6 +6445,7 @@ function renderCards(){
   h += '<div class="panel packpanel"><div class="packart packmini">'+packArtSVG()+'</div><div><h3>'+state.packs+' Card Pack'+(state.packs===1?'':'s')+'</h3><p>Each pack has '+CARDS_PER_PACK+' history cards. Get packs by finishing all your quests and by solving the Bonus Challenge!</p><div class="links"><button class="btn-light" data-act="openpack"'+(state.packs<1?' disabled':'')+'>🎴 Open a pack</button><button class="linkbtn" data-act="rates">Pull rates</button></div><p style="margin-top:8px;font-size:12px">'+(packCap()>0 ? (packsLeftToday()>0 ? '📅 Packs left to open today: <b>'+packsLeftToday()+'</b> of '+packCap() : '🌙 Done for today! Saved packs open tomorrow.') : '')+'</p><p style="margin-top:4px;font-size:12px">Lucky guarantee: an S or SSR card within '+left+' pack'+(left===1?'':'s')+'.</p></div></div>';
   h += '</div>';
 
+  h += promoMetersHTML();
   h += '<div class="row" style="margin:0 0 10px"><button class="btn" data-gl="book">🎴 My character cards</button></div>';
   var zoom = state.cardZoom || 'L';
   h += '<div class="zoombar"><div class="seg"><span class="seglabel">🔍 View</span>';
@@ -6463,7 +6518,6 @@ function helpData(){
   var cur = helpSafe(function(){ return curfewOn() ? fmt12(e.screenEnd || '20:45') : ''; }, '');
   var wkDays = []; (wc.days || []).forEach(function(d){ wkDays.push(d === 6 ? 'Saturday' : 'Sunday'); }); wkDays.sort();
   var ftDays = []; (fc.days || []).forEach(function(d){ ftDays.push(d === 6 ? 'Saturday' : 'Sunday'); }); ftDays.sort();
-  var dper = helpSafe(dupPer, 5);
   var streakText = STREAK_STEPS.map(function(n){ return n+' days = +'+STREAK_BONUS[n]; }).join(', ');
   function li(a){ return '<ul><li>'+a.join('</li><li>')+'</li></ul>'; }
   var kid = [
@@ -6474,7 +6528,7 @@ function helpData(){
       'Each quest you finish gives you a few points ('+e.base+' points are shared across the day’s quests).',
       'Finish <b>all</b> your quests for a <b>+'+e.finish+'</b> bonus. Finish before <b>'+dl+'</b> for the full bonus.',
       'The <b>Bonus Challenge</b> gives <b>+'+e.bonus+'</b> points and a free pack.',
-      'Quizzes, Today’s Bites, Kanji of the Day and duplicate cards give small extra points. Those “extras” have a limit of <b>'+e.extraCap+'</b> a day.',
+      'Quizzes, Today’s Bites and Kanji of the Day give small extra points. Those “extras” have a limit of <b>'+e.extraCap+'</b> a day.',
       'Streaks give big bonuses. 🔥 '+streakText+'.'])},
     {q:'What are the things at the top?', a:li(['🔥 <b>Streak</b>: days in a row with all quests done.','🎴 <b>Packs</b>: card packs ready to open. Tap to open one.','⭐ <b>Points</b>: tap <b>Rewards</b> to spend them.','The bar under your name is your level. It grows as you find cards.'])},
     {q:'What if I miss a day?', a:'Don’t worry! You get <b>one rest day each week</b> (tap the rest day button in Me). Your streak stays safe, but there are no points that day.'}
@@ -6484,7 +6538,7 @@ function helpData(){
     {q:'What is in a pack?', a:li(['Each pack has <b>3 cards</b>.','The last card is always <b>Uncommon or better</b>.','Every '+PITY_LIMIT+' packs you are <b>guaranteed</b> a Super Rare (S) or better.','You can open up to <b>'+(packMax > 0 ? packMax : 'lots of')+' pack'+(packMax === 1 ? '' : 's')+' a day</b>.'])},
     {q:'What are LL (Living Legendary) cards?', a:'Six special cards that come alive: Halley’s Comet, Princess Kaguya, Kowloon Walled City, Nian, The Great Wave and the Dragon Gate Carp. Open one and tap <b>▶ Watch the story</b> to see a short animated story with music. They only come from lucky pack pulls ('+RATES.LL+'% for each card in a pack), never as the daily card. If you are still missing one, an LL card is guaranteed after about '+PITY_LL+' packs.'},
     {q:'What do C, B, A, S, SSR, LL and SSSR mean?', a:'They show how rare a card is:'+li(['<b>C</b> Common (lots of these)','<b>B</b> Uncommon','<b>A</b> Rare','<b>S</b> Super Rare','<b>SSR</b> Super Super Rare','<b>LL</b> Living Legendary: six cards that come alive. Tap ▶ Watch the story','<b>SSSR</b> Legendary: one very special card','In the <b>Cards</b> tab, tap the pack panel to see the exact chances.'])},
-    {q:'I got a card I already have. What happens?', a:'A duplicate goes in your <b>🫙 jar</b>. Every time the jar gets to <b>'+dper+'</b>, you earn <b>1 point</b>. Rarer duplicates fill the jar faster, and the leftovers stay for next time.'},
+    {q:'I got a card I already have. What happens?', a:'A duplicate fills the <b>⭐ promotion meter</b> for its rarity (on the Cards tab). When the meter is full, the card you just got is <b>promoted</b>: it gets a brighter look and a ⭐ star!'},
     {q:'Where are my cards?', a:'Open the <b>Cards</b> tab. Tap a card to read its story. Inside, <b>tap the card</b> to see it big (tap anywhere to close), slide your finger on it to tilt it, and press <b>↻ Flip</b> to see the back. Use the filters to look at one part of the world. Cards you have not found yet show as a mystery.'},
       {q:'Why do some cards shine?', a:'Rare cards (A and up) have a shiny <b>holo</b> foil. Slide your finger over the card (or move the mouse) to make it tilt and sparkle. The rarer the card, the fancier the shine! Tap a card in a new pack to <b>flip</b> it over.'},
       {q:'What are the quotes on my cards?', a:'Many history cards have a famous quote near the bottom: words that person said or wrote, or a famous line about them. Tap 🔊 to hear it (Chinese quotes are in Cantonese). Tap the quote to see what it means, and tap anywhere to close. If it is one of your Japanese sayings, you can jump to it in your saying book!'},
@@ -6531,8 +6585,8 @@ function helpData(){
    ]},
    {t:'⭐ Points and bonuses', i:[
     {q:'How are points calculated?', a:li(['<b>'+e.base+'</b> points are shared across the day’s quests.','<b>+'+e.finish+'</b> finish bonus when all are done. It is full before <b>'+dl+'</b> and <b>'+(e.latePct == null ? 50 : e.latePct)+'%</b> after.','Streak bonuses: '+streakText+'.','Most she can save: <b>'+e.bankCap+'</b> points.'])+'Change these in <b>Points &amp; bonuses</b>.'},
-    {q:'What are “extra points”?', a:'Bonus Challenge (+'+e.bonus+'), quizzes, bites, kanji and duplicate cards all count as extras. Together they are capped at <b>'+e.extraCap+'</b> points a day.'},
-    {q:'How do duplicate cards pay out?', a:'Each duplicate adds credits to a jar: C 1, B 2, A 4, S 8, SSR 20, LL 40, SSSR 60 (you can change these). Every <b>'+dper+'</b> credits becomes 1 point and leftovers carry over.'},
+    {q:'What are “extra points”?', a:'Bonus Challenge (+'+e.bonus+'), quizzes, bites and kanji all count as extras. Together they are capped at <b>'+e.extraCap+'</b> points a day.'},
+    {q:'How does card promotion work?', a:'Every duplicate C, B, A or S card fills a meter. It takes <b>'+promoNeed('C')+'</b> C, <b>'+promoNeed('B')+'</b> B, <b>'+promoNeed('A')+'</b> A or <b>'+promoNeed('S')+'</b> S duplicates. When a meter is full, the duplicate you just opened is <b>promoted</b>: it keeps its own rarity badge but looks like the next rarity up, and gets a ⭐. A C card can be promoted 4 times (up to an SSR look), a B card 3 times, an A card 2 times and an S card once. SSR, LL, SSSR and family cards cannot be promoted.'},
     {q:'What is the rest day?', a:'One rest day per week keeps the streak alive (no points that day). It can be used automatically if a day is missed. Both options are in Points &amp; bonuses.'},
     {q:'How do I fix points or packs?', a:'Use the − and + buttons on the Parent home. You can also give the rest of today’s points.'}
    ]},
@@ -7106,10 +7160,9 @@ function showParentSection(key, scrollTop){
     h += '<div class="ecogrid">';
     h += pNum('Points for bonus challenge', 'eBonus', 0, 50, e.bonus);
     h += pNum('Extra points limit per day', 'eExtra', 0, 200, e.extraCap);
-    h += '</div><div class="hint" style="margin-bottom:6px">Extra points = bonus challenge, duplicate cards, quizzes, bites and kanji. All share the daily extra limit.</div>';
-    h += '<h3>Duplicate cards</h3><div class="hint" style="margin-bottom:6px">Each duplicate drops credits in a jar. Every time the jar reaches the number below, it turns into 1 point (leftovers carry over). Credits per duplicate:</div><div class="ecogrid">';
-    h += pNum('Credits for 1 point', 'eDupPer', 1, 50, dupPer());
-    ['C','B','A','S','SSR','LL','SSSR'].forEach(function(k){ h += pNum(k+' duplicate', 'eDup'+k, 0, 500, dupCredits(k)); });
+    h += '</div><div class="hint" style="margin-bottom:6px">Extra points = bonus challenge, quizzes, bites and kanji. All share the daily extra limit.</div>';
+    h += '<h3>Card promotion</h3><div class="hint" style="margin-bottom:6px">Duplicates fill a meter for their rarity. When the meter is full, the duplicate she just opened is promoted (a brighter look and a star). How many duplicates fill each meter:</div><div class="ecogrid">';
+    ['C','B','A','S'].forEach(function(k){ h += pNum(k+' duplicates', 'ePromo'+k, 1, 20, promoNeed(k)); });
     h += '</div>';
     h += '<h3>Rest day</h3>';
     h += pTog('Allow one rest day per week', 'eRest', e.restOn);
@@ -7247,7 +7300,7 @@ function applyParentSettings(){
   e.bonus = num('eBonus', 0, 50, e.bonus);
   e.screenCap = num('eScreen', 0, 600, e.screenCap);
   e.extraCap = num('eExtra', 0, 200, e.extraCap);
-  if($('eDupPer')){ e.dupPer = num('eDupPer', 1, 50, dupPer()); ['C','B','A','S','SSR','LL','SSSR'].forEach(function(k){ e['dup'+k] = num('eDup'+k, 0, 500, dupCredits(k)); }); }
+  if($('ePromoC')){ ['C','B','A','S'].forEach(function(k){ e['promo'+k] = num('ePromo'+k, 1, 20, promoNeed(k)); }); }
   e.packCap = num('ePackCap', 0, 20, packCap());
   if($('eFreePacks')) e.freePacks = num('eFreePacks', 0, 5, freePacks());
   if($('eNudgeOn')){ e.nudgeOn = ck('eNudgeOn', true); e.nudgeMins = num('eNudgeMins', 3, 60, nudgeMins()); }
@@ -7362,7 +7415,7 @@ function parentClick(e){
     case 'pcardreset':
       var nc = Object.keys(state.cards || {}).length;
       confirmBox('🗑️ Reset all cards?', 'This removes all '+nc+' cards she has found, so she can collect them again. Points, card packs and badges stay. This cannot be undone.', 'Yes, reset all cards', function(){
-        state.cards = {}; state.newCards = {}; state.cardDates = {}; state.pity = 0; state.pityE = 0; state.pityFam = 0;
+        state.cards = {}; state.newCards = {}; state.cardDates = {}; state.promo = {}; state.promoMeter = {C:0,B:0,A:0,S:0}; state.pity = 0; state.pityE = 0; state.pityFam = 0;
         if(typeof state.avatar === 'string' && state.avatar.indexOf('img:') === 0 && !/^img:av\d\d$/.test(state.avatar)) state.avatar = '🦊';
         save(); render(); toast('🃏 Card collection reset', 2600); showParentSection('safe');
       }, true);
@@ -7519,8 +7572,8 @@ function tearPack(){
   stg.torn = true;
   state.packs -= 1; state.packsOpened += 1; if(!god) state.packDay.n += 1;
   stg.cards = rollPack();
-  stg.dup = 0; stg.dupCr = 0;
-  stg.news = stg.cards.map(function(c){ var nn = addCard(c.id); stg.dup += lastDupPts; stg.dupCr += lastDupCr; return nn; });
+  stg.promos = []; stg.dups = {}; stg.pbusy = 0;
+  stg.news = stg.cards.map(function(c, i){ var nn = addCard(c.id); stg.promos[i] = lastPromo; if(lastDupInfo && !lastPromo) stg.dups[lastDupInfo.k] = lastDupInfo.n+'/'+lastDupInfo.need; return nn; });
   save();
   var pk = $('packart'); if(pk) pk.classList.add('tearing');
   Sound.pack();
@@ -7533,7 +7586,7 @@ function claimDaily(){
   var nw = addCard(c.id);
   state.packs += 1;
   save(); renderTop();
-  stg = {kind:'daily', cards:[c], news:[nw], dup:lastDupPts, dupCr:lastDupCr, flipped:0, torn:true, rank:rankInfo().rank.title};
+  stg = {kind:'daily', cards:[c], news:[nw], promos:[lastPromo], dups:(lastDupInfo && !lastPromo ? (function(){ var o = {}; o[lastDupInfo.k] = lastDupInfo.n+'/'+lastDupInfo.need; return o; })() : {}), pbusy:0, flipped:0, torn:true, rank:rankInfo().rank.title};
   $('stage').classList.add('show');
   Sound.pack(); flashFx();
   drawReveal();
@@ -7543,7 +7596,7 @@ function drawReveal(){
   var h = '<div class="stage-title">'+(stg.kind === 'daily' ? '🌅 Today\'s History Hero!' : stg.god ? '🎂 Your Birthday God Pack!' : '✨ Your new cards!')+'</div><div class="reveal-row hlsc">';
   cs.forEach(function(c,i){
     var hint = c.k === 'SSSR' ? ' hint-SSSR' : c.k === 'LL' ? ' hint-LL' : '';
-    h += '<div class="flip'+(big?' big':'')+hint+'" data-i="'+i+'" style="animation-delay:'+(i*.14)+'s"><div class="flip-in"><div class="flip-face flip-back">'+backHTML(c.k)+'</div><div class="flip-face flip-front">'+faceHTML(c,{isNew:stg.news[i], holo:true})+'</div></div></div>';
+    h += '<div class="flip'+(big?' big':'')+hint+'" data-i="'+i+'" style="animation-delay:'+(i*.14)+'s"><div class="flip-in"><div class="flip-face flip-back">'+backHTML(c.k)+'</div><div class="flip-face flip-front">'+faceHTML(c, promoRevealOpts(i))+'</div></div></div>';
   });
   h += '</div><div class="stage-hint" id="shint">'+(big ? 'Tap the card to flip it!' : 'Tap each card to flip it!')+'</div><div class="stage-actions" id="sact">'+(cs.length > 1 ? '<button class="btn-ghostl" data-act="flipall">Flip all</button>' : '')+'</div>';
   $('stage').innerHTML = h;
@@ -7566,19 +7619,106 @@ function flipCard(f){
     else if(c.k === 'A'){ Sound.chime(); }
     else { Sound.tap(); }
   }, 120);
-  if(stg.flipped >= stg.cards.length) setTimeout(stageDone, 900);
+  if(stg.promos && stg.promos[i]){ stg.pbusy = (stg.pbusy || 0) + 1; setTimeout(function(){ promoRun(f, i); }, 1100); }   /* 26.11.113 */
+  if(stg.flipped >= stg.cards.length) setTimeout(stageWait, 900);
 }
+/* ---------- 26.11.113: the promotion celebration. The card swells and wiggles, rays break out, a flash, then it takes its new look with a new star.
+   C to B to A to S share one sequence in each tier's colour. The final step (S to SSR) is longer: the card glows white-hot, beams burst out, a shell cracks, one last flash, and the SSR look steps out.
+   Calm mode, reduced motion and bedtime get a quiet version. Tap anywhere to skip to the end. ---------- */
+var PRCOL = {B:'#5ee0b0', A:'#ffc24d', S:'#c39bff', SSR:'#fff6c8'};
+var PRTXT = {B:'Congratulations, your card has promoted!', A:'Congratulations, your card has promoted!', S:'Wow! Your card has promoted again!', SSR:'Amazing! Your card shines like an SSR!'};
+function promoQuiet(){ try{ return !!(state.ui && state.ui.calm) || bedMode() === 'asleep' || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
+function promoRun(f, i){
+  if(!stg || !stg.promos || !stg.promos[i]) return;
+  stg.pq = stg.pq || []; stg.pq.push({f:f, i:i});
+  if(!stg.pcur) promoNext();
+}
+function promoNext(){
+  if(!stg) return;
+  var q = stg.pq && stg.pq.shift();
+  if(!q){ stg.pcur = null; return; }
+  promoPlay(q.f, q.i, function(){ if(!stg) return; stg.pbusy = Math.max(0, (stg.pbusy || 0) - 1); stg.pcur = null; promoNext(); });
+}
+function promoPlay(f, i, done){
+  var S = stg, P = S.promos[i], c = S.cards[i], to = P.to, quiet = promoQuiet(), timers = [], fin = false, swapped = false, big = to === 'SSR';
+  var col = PRCOL[to] || '#fff';
+  function T(fn, ms){ timers.push(setTimeout(function(){ if(stg !== S || fin) return; fn(); }, ms)); }
+  function swap(){
+    if(swapped) return; swapped = true;
+    var fr = f.querySelector('.flip-front'); if(fr){ fr.innerHTML = faceHTML(c, {holo:true, pop:true}); try{ hlStart(); }catch(e){} }
+    f.classList.remove('prgo', 'hot'); void f.offsetWidth; if(!quiet) f.classList.add('prland');
+  }
+  function banner(){
+    var old = document.querySelector('.prbanner'); if(old) old.remove();
+    var b = document.createElement('div'); b.className = 'prbanner'+(big ? ' big' : ''); b.setAttribute('data-noicon', '1');
+    b.innerHTML = '<span>\u2b50</span> '+(PRTXT[to] || PRTXT.B); document.body.appendChild(b);
+    setTimeout(function(){ if(b.parentNode) b.classList.add('out'); }, quiet ? 2400 : 3000); setTimeout(function(){ if(b.parentNode) b.remove(); }, quiet ? 2900 : 3500);
+  }
+  function burst(){
+    if(quiet) return;
+    confetti(); try{ sparkles(f); }catch(e){}
+    if(to === 'S' || big){ try{ starBurst(); }catch(e){} }
+    if(big){ setTimeout(function(){ if(stg === S) confetti(); }, 600); }
+  }
+  function sound(){
+    if(quiet) return;
+    try{ if(big) Sound.ssr(); else if(to === 'S') Sound.rareS(); else Sound.chime(); }catch(e){}
+  }
+  function cleanup(){
+    timers.forEach(clearTimeout);
+    var r = f.querySelectorAll('.prrays'); [].forEach.call(r, function(x){ x.classList.add('out'); setTimeout(function(){ if(x.parentNode) x.remove(); }, 650); });
+    var sw = f.querySelector('.prshellw'); if(sw) setTimeout(function(){ if(sw.parentNode) sw.remove(); }, 700);
+  }
+  function finish(){
+    if(fin) return; fin = true;
+    var wasSwapped = swapped;
+    swap(); cleanup();
+    if(!wasSwapped){ burst(); sound(); if(big && !quiet) flashFx(); }
+    banner();
+    setTimeout(function(){ done(); }, wasSwapped ? 500 : 900);
+  }
+  S.pcur = {skip:function(){ finish(); }};
+  if(quiet){
+    T(function(){ swap(); banner(); }, 500);
+    T(function(){ finish(); }, 1900);
+    return;
+  }
+  f.style.setProperty('--pd', big ? '2.1s' : '1.1s');
+  f.style.setProperty('--pc', col);
+  f.classList.add('prgo'); if(big) f.classList.add('hot');
+  var rays = document.createElement('div'); rays.className = 'prrays'+(big ? ' big' : ''); f.appendChild(rays);
+  try{ Sound.tap(); }catch(e){}
+  if(!big){
+    T(function(){ if(to !== 'B') flashFx(); swap(); burst(); sound(); banner(); }, 1050);
+    T(function(){ finish(); }, 2500);
+  } else {
+    T(function(){
+      var w = document.createElement('div'); w.className = 'prshellw'; w.innerHTML = '<div class="prshell l"></div><div class="prshell r"></div><svg class="prcrack" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="52,0 46,12 54,24 45,38 55,52 46,66 54,80 47,92 50,100" fill="none" stroke="#c77c00" stroke-width="2.2" vector-effect="non-scaling-stroke" pathLength="1"/></svg>';
+      var fr = f.querySelector('.flip-front'); (fr || f).appendChild(w);
+      var fi = f.querySelector('.flip-front'); if(fi) fi.style.position = fi.style.position || '';
+    }, 900);
+    T(function(){ var w = f.querySelector('.prshellw'); if(w) w.classList.add('crack'); }, 1500);
+    T(function(){ flashFx(); var w = f.querySelector('.prshellw'); swap(); if(w) w.classList.add('split'); [].forEach.call(f.querySelectorAll('.prrays'), function(x){ x.classList.add('out'); }); burst(); sound(); }, 2150);
+    T(function(){ banner(); }, 2500);
+    T(function(){ finish(); }, 4200);
+  }
+}
+document.addEventListener('click', function(e){
+  if(stg && stg.pcur && e.target.closest && e.target.closest('#stage')){ e.stopPropagation(); e.preventDefault(); stg.pcur.skip(); }
+}, true);
+function stageWait(){ if(!stg) return; if(stg.pbusy > 0){ setTimeout(stageWait, 350); return; } stageDone(); }
+
 function stageDone(){
   if(!stg) return;
   var sh = $('shint'), sa = $('sact'); if(!sa) return;
   var h = '';
   if(stg.kind === 'daily'){
-    if(sh) sh.textContent = '🎁 You also got +1 Card Pack!'+(stg.dup ? ' ♻️ Duplicate card: +'+stg.dup+' point'+(stg.dup === 1 ? '' : 's')+'!' : (stg.dupCr ? ' ♻️ Duplicate card! Jar '+dupJarText() : ''));
+    if(sh) sh.textContent = '🎁 You also got +1 Card Pack!'+promoNote();
     h += '<button class="btn-gold" data-act="sread">📖 Read the story</button>';
   } else {
     var best = stg.cards.reduce(function(b,c){ return RAR_ORDER.indexOf(c.k) < RAR_ORDER.indexOf(b.k) ? c : b; }, stg.cards[0]);
     var newN = stg.news.filter(Boolean).length;
-    if(sh) sh.textContent = (newN ? ('🎉 '+newN+' new card'+(newN>1?'s':'')+' added! Best pull: '+best.k) : 'No new cards this time. Try again!') + (stg.dup ? ' ♻️ Duplicates became +'+stg.dup+' point'+(stg.dup === 1 ? '' : 's')+'! Jar '+dupJarText() : (stg.dupCr ? ' ♻️ Duplicates are filling the jar: '+dupJarText() : ''));
+    if(sh) sh.textContent = (newN ? ('🎉 '+newN+' new card'+(newN>1?'s':'')+' added! Best pull: '+best.k) : 'No new cards this time. Try again!') + promoNote();
     if(state.packs > 0 && packsLeftToday() > 0) h += '<button class="btn-gold" data-act="again">🎴 Open another ('+state.packs+')</button>';
     else if(state.packs > 0) h += '<div class="stage-hint" style="margin:8px 0">🌙 That’s all the packs for today. '+state.packs+' saved for tomorrow!</div>';
   }
@@ -7751,6 +7891,7 @@ function showCardDetail(id, fromParent){
   var h = '<span data-closable></span>';
   if(fromParent){ var have = state.cards[id] || 0; h += '<div class="pcvbanner '+(have ? 'have' : 'miss')+'">👪 Parent view · '+(have ? 'Your child has this card'+(have > 1 ? ' (x'+have+')' : '') : 'Your child has not found this card yet')+'. Looking here changes nothing.</div>'; }
   h += '<div class="detail"><div class="dc"><div class="dflip hlsc" id="dflip" data-rot="10" data-rotp="20.8"><div class="dflip-in"><div class="flip-face dfront">'+faceHTML(c,{count:state.cards[id], holo:true})+'</div><div class="flip-face dback">'+backHTML(c.k)+'</div></div></div><div class="dfliphint">Tap the card to see it big · slide to tilt <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
+  h += promoDetailHTML(c);
   h += '<div class="tagrow"><span class="tag rr r-'+c.k+'">'+c.k+'</span><button class="tag say" data-say="place:'+id+'">'+REGIONS[c.r].flag+' '+REGIONS[c.r].name+' 🔊</button><span class="tag">'+TYPE_LABEL[c.t]+'</span><span class="tag">#'+String(c.no).padStart(3,'0')+'</span></div>';
   h += '<h2 class="say" data-say="name:'+id+'">'+esc(c.n)+' <span class="spk">🔊</span></h2>';
   if(c.nat) h += '<div class="nat say" data-say="nat:'+id+'">'+esc(c.nat)+' <span class="spk">🔊</span></div>';
@@ -7825,7 +7966,7 @@ function showRates(){
     h += '<div class="prow"><span class="tag rr r-'+k+'" style="min-width:56px;text-align:center">'+k+'</span><div class="pn">'+names[k]+'<small>'+(k === 'SSR' ? poolFor('SSR').length : BY_RAR[k].length)+' card'+((k === 'SSR' ? poolFor('SSR').length : BY_RAR[k].length) === 1 ? '' : 's')+' in the collection</small></div><b style="font-size:20px">'+RATES[k]+'%</b></div>';
     if(k === 'SSR' && FAM_IDS.length) h += '<div class="prow"><span class="tag rr r-SSR" style="min-width:56px;text-align:center">💛</span><div class="pn">Family cards<small>'+FAM_IDS.length+' cards, super special</small></div><b style="font-size:20px">'+RATES.FAM+'%</b></div>';
   });
-  h += '</div><p style="font-weight:700;line-height:1.5">🍀 The last card in every pack is always at least Uncommon (B).<br>🌟 You are guaranteed an S or SSR card at least once every '+PITY_LIMIT+' packs.'+(FAM_IDS.length ? '<br>💛 If luck is slow, a family card is guaranteed after about '+PITY_FAM+' packs and the SSSR star after about '+PITY_E+' packs.' : '')+(BY_RAR.LL.length ? '<br>▶ Living Legendary (LL) cards only come from lucky pack pulls (never the daily card). If you are still missing one, an LL card is guaranteed after about '+PITY_LL+' packs.' : '')+'<br>🔁 Duplicates are fine. They show a ×2 badge.</p>';
+  h += '</div><p style="font-weight:700;line-height:1.5">🍀 The last card in every pack is always at least Uncommon (B).<br>🌟 You are guaranteed an S or SSR card at least once every '+PITY_LIMIT+' packs.'+(FAM_IDS.length ? '<br>💛 If luck is slow, a family card is guaranteed after about '+PITY_FAM+' packs and the SSSR star after about '+PITY_E+' packs.' : '')+(BY_RAR.LL.length ? '<br>▶ Living Legendary (LL) cards only come from lucky pack pulls (never the daily card). If you are still missing one, an LL card is guaranteed after about '+PITY_LL+' packs.' : '')+'<br>🔁 Duplicates are useful! They fill the ⭐ promotion meters and show a ×2 badge.</p>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn primary" data-x="1">Got it</button></div>';
   openModal(h);
   $('modal').onchange = null;
@@ -7835,23 +7976,61 @@ function showRates(){
 /* =========================================================
    POINTS, REWARDS, STREAK & CALENDAR
    ========================================================= */
-var DUP_POINTS = {C:1, B:2, A:3, S:5, SSR:10, LL:20, SSSR:30};
+/* ---------- 26.11.113: card promotion (replaces the duplicate jar).
+   Every duplicate C, B, A or S card fills a shared meter for its rarity (C 5, B 4, A 3, S 3). When the meter is full, the card she just got is PROMOTED:
+   it keeps its real rarity (packs, odds, pity and collection counts never change) but is drawn with the look of the next rarity up, and earns a star.
+   A C card can be promoted 4 times (B, A, S, SSR looks), B 3, A 2, S 1. SSR, LL, SSSR and family cards cannot be promoted. ---------- */
 var STREAK_BONUS = {3:5, 7:15, 14:30, 30:100};
 var STREAK_STEPS = [3, 7, 14, 30];
-var lastDupPts = 0, lastDupCr = 0;
-/* v52+: duplicate jar. Each duplicate adds credits; every N credits (default 5) becomes 1 point. Leftovers carry over. */
-var DUP_CREDITS = {C:1, B:2, A:4, S:8, SSR:20, LL:40, SSSR:60};
-function dupPer(){ var v = state.eco && state.eco.dupPer; return v > 0 ? v : 5; }
-function dupCredits(k){ var v = state.eco && state.eco['dup'+k]; return (v === undefined || v === null || isNaN(v)) ? (DUP_CREDITS[k] || 1) : v; }
-function dupJarAdd(cr){
-  var per = dupPer(); state.dupJar = Math.max(0, (state.dupJar || 0) + cr);
-  var want = Math.floor(state.dupJar / per); if(want < 1) return 0;
-  var paid = addPoints(want, 'Duplicate cards', true);
-  state.dupJar -= paid * per;
-  if(state.dupJar > per * 10) state.dupJar = per * 10;
-  return paid;
+var PROMO_STEPS = ['C','B','A','S','SSR'], PROMO_NEED = {C:5, B:4, A:3, S:3};
+var lastPromo = null, lastDupInfo = null;
+function promoNeed(k){ var v = state.eco && state.eco['promo'+k]; return v > 0 ? v : PROMO_NEED[k]; }
+function promoMax(k){ var i = PROMO_STEPS.indexOf(k); return (i < 0 || i > 3) ? 0 : 4 - i; }
+function promoObj(){ if(!state.promo || typeof state.promo !== 'object') state.promo = {}; if(!state.promoMeter || typeof state.promoMeter !== 'object') state.promoMeter = {C:0,B:0,A:0,S:0}; return state.promoMeter; }
+function promoN(id){ var c = BY_ID[id]; if(!c) return 0; return Math.min(promoMax(c.k), (state.promo && state.promo[id]) || 0); }
+function promoLook(c){ var i = PROMO_STEPS.indexOf(c.k); return (i < 0 || i > 3) ? c.k : PROMO_STEPS[Math.min(4, i + promoN(c.id))]; }
+function promoDup(id){
+  var c = BY_ID[id]; if(!c || promoMax(c.k) < 1 || promoN(id) >= promoMax(c.k)) return;
+  var m = promoObj(), need = promoNeed(c.k), from = promoLook(c), nb = promoN(id);
+  m[c.k] = (m[c.k] || 0) + 1;
+  lastDupInfo = {k:c.k, n:m[c.k], need:need};
+  if(m[c.k] >= need){ m[c.k] = 0; state.promo[id] = nb + 1; lastPromo = {id:id, from:from, to:promoLook(c), n:nb + 1, nb:nb}; lastDupInfo.up = true; }
 }
-function dupJarText(){ var per = dupPer(); return '🫙 '+(state.dupJar || 0)+'/'+per; }
+function promoStripHTML(c, o){
+  var n = o.pn !== undefined ? o.pn : promoN(c.id); if(!n || promoMax(c.k) < 1) return '';
+  var s = ''; for(var i = 0; i < n; i++) s += '<i'+(o.pop && i === n - 1 ? ' class="pop"' : '')+'>\u2605</i>';
+  return '<span class="tpro" data-noicon aria-label="Promoted '+n+' time'+(n === 1 ? '' : 's')+'">'+s+'</span>';
+}
+function promoDetailHTML(c){
+  var mx = promoMax(c.k); if(mx < 1 || !state.cards[c.id]) return '';
+  var n = promoN(c.id), s = '';
+  for(var i = 0; i < mx; i++) s += i < n ? '<span class="st">\u2605</span>' : '<span class="st0">\u2606</span>';
+  var lk = promoLook(c);
+  return '<div class="promoline" data-noicon><b>Promoted</b> '+s+(n ? ' <small>looks like '+lk+'</small>' : ' <small>get duplicates to promote this card</small>')+'</div>';
+}
+function promoMetersHTML(){
+  var m = promoObj(), h = '<div class="panel promop"><div class="pmh">\u2b50 Card promotion</div><div class="pmrow">';
+  ['C','B','A','S'].forEach(function(k){
+    var need = promoNeed(k), n = Math.min(need, m[k] || 0);
+    h += '<div class="pmc"><b>'+k+'</b> <small>'+n+'/'+need+'</small><div class="pms">';
+    for(var i = 0; i < need; i++) h += '<i'+(i < n ? ' class="on"' : '')+'></i>';
+    h += '</div></div>';
+  });
+  return h + '</div><div class="hint">Every duplicate fills its meter. When a meter is full, the card you just got is promoted: it gets a brighter look and a \u2b50!</div></div>';
+}
+function promoNote(){
+  var pr = (stg.promos || []).filter(Boolean), t = '';
+  if(pr.length) t += ' \u2b50 '+pr.length+' card'+(pr.length > 1 ? 's were' : ' was')+' promoted!';
+  var up = {}; pr.forEach(function(p){ if(BY_ID[p.id]) up[BY_ID[p.id].k] = 1; });
+  var ks = Object.keys(stg.dups || {}).filter(function(k){ return !up[k]; });
+  if(ks.length) t += ' \u2b50 Duplicate! Promotion meter: '+ks.map(function(k){ return k+' '+stg.dups[k]; }).join(', ');
+  return t;
+}
+function promoRevealOpts(i){
+  var o = {isNew:stg.news[i], holo:true}, P = stg.promos && stg.promos[i];
+  if(P){ o.look = P.from; o.pn = P.nb; }
+  return o;
+}
 var cal = {y:new Date().getFullYear(), m:new Date().getMonth()};
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -7923,6 +8102,17 @@ function migrate(s){
     for(var k in base[o]){ if(!(k in s[o])) s[o][k] = base[o][k]; }
   });
   if(!s.cardDates || typeof s.cardDates !== 'object'){ s.cardDates = {}; Object.keys(s.cards || {}).forEach(function(id){ if(s.cards[id]) s.cardDates[id] = dateKey(); }); }
+  if(!s.promo || typeof s.promo !== 'object') s.promo = {};
+  if(!s.promoMeter || typeof s.promoMeter !== 'object') s.promoMeter = {C:0,B:0,A:0,S:0};
+  if(!s.promoInit){   /* 26.11.113: her existing duplicates fill the meters, rounded down so the next duplicate promotes; the old jar is retired */
+    var pn_ = {C:5,B:4,A:3,S:3};
+    ['C','B','A','S'].forEach(function(k){
+      var need = (s.eco && s.eco['promo'+k] > 0) ? s.eco['promo'+k] : pn_[k], sum = 0;
+      CARDS.forEach(function(c){ if(c.k === k && (s.cards || {})[c.id] > 1) sum += s.cards[c.id] - 1; });
+      s.promoMeter[k] = Math.min(need - 1, sum);
+    });
+    s.dupJar = 0; s.promoInit = 1;
+  }
   if(s.eco && (!s.eco.notify || typeof s.eco.notify !== 'object')) s.eco.notify = base.eco.notify;
   if(!s.stats || typeof s.stats !== 'object') s.stats = {bitesDays:0};
   if(!Array.isArray(s.fam)) s.fam = [];
@@ -8064,7 +8254,7 @@ function rewardCardHTML(r){
 function renderShopCoins(){
   var e = state.eco;
   var h = '<div class="panel shophead"><div class="bal"><div class="balico">⭐</div><div><div class="ballabel">My points</div><div class="balnum">'+state.points+'</div><div class="balsub">= '+fmtMinutes(wkNow() ? Math.floor(state.points * wkCfg().per / wkCfg().pts) : state.points)+' of screen time'+(wkNow() ? ' (weekend price!)' : '')+'</div></div></div>';
-  h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>♻️ Duplicate cards <b>'+dupPer()+' = 1 pt, rarer pay more</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
+  h += '<div class="earn"><span>✅ Quests <b>'+e.base+'</b> shared</span><span>🏁 Finish all <b>+'+e.finish+'</b></span><span>🎁 Bonus <b>+'+e.bonus+'</b></span><span>⭐ Duplicates <b>promote your cards</b></span><span>🔥 Streaks <b>up to +100</b></span></div></div>';
   var goal = state.goalId ? rewardById(state.goalId) : null;
   if(goal && goal.on){
     var gp = Math.min(100, Math.round(state.points / rewardCost(goal) * 100));
