@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.115', errs = [], shown = false;
+  var V = '26.11.116', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2742,7 +2742,9 @@ iframe.llstory{transition:opacity .45s ease}
 .promoline{margin:8px 0 2px;font-weight:800;font-size:16px;text-align:center}
 .promoline .st{color:#e0a100;font-size:20px}.promoline .st0{color:var(--muted);font-size:20px}.promoline small{font-size:14px;color:var(--muted);font-weight:700}
 .prrays{position:absolute;left:50%;top:50%;width:270%;aspect-ratio:1;margin:-135% 0 0 -135%;z-index:-1;pointer-events:none;border-radius:50%;background:repeating-conic-gradient(var(--pc,#fff) 0 7deg,transparent 7deg 22deg);-webkit-mask-image:radial-gradient(circle,#000 6%,transparent 60%);mask-image:radial-gradient(circle,#000 6%,transparent 60%);opacity:0;transform:scale(.2);animation:prRays 1.6s ease-out forwards}
-.prrays.big{background:repeating-conic-gradient(#fff 0 10deg,rgba(255,226,138,.0) 10deg 24deg,#ffe28a 24deg 28deg,transparent 28deg 40deg);animation-duration:2.2s}
+.prrays.big{background:conic-gradient(from 0deg,#fff 0 2deg,transparent 2deg 19deg,#ffe28a 19deg 26deg,transparent 26deg 41deg,#fff 41deg 43deg,transparent 43deg 60deg,#ffd35c 60deg 71deg,transparent 71deg 88deg,#fff 88deg 91deg,transparent 91deg 112deg,#ffe28a 112deg 117deg,transparent 117deg 133deg,#fff 133deg 140deg,transparent 140deg 158deg,#ffd35c 158deg 161deg,transparent 161deg 179deg,#fff 179deg 183deg,transparent 183deg 205deg,#ffe28a 205deg 214deg,transparent 214deg 229deg,#fff 229deg 231deg,transparent 231deg 252deg,#ffd35c 252deg 258deg,transparent 258deg 273deg,#fff 273deg 279deg,transparent 279deg 301deg,#ffe28a 301deg 304deg,transparent 304deg 322deg,#fff 322deg 328deg,transparent 328deg 345deg,#ffd35c 345deg 351deg,transparent 351deg 360deg);animation-duration:2.2s;filter:blur(1.2px)}
+.prrays.big::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 20deg,transparent 0 9deg,#fff 9deg 11deg,transparent 11deg 37deg,#fff6c9 37deg 44deg,transparent 44deg 75deg,#fff 75deg 77deg,transparent 77deg 104deg,#ffe28a 104deg 108deg,transparent 108deg 146deg,#fff 146deg 152deg,transparent 152deg 190deg,#fff6c9 190deg 192deg,transparent 192deg 231deg,#fff 231deg 237deg,transparent 237deg 268deg,#ffe28a 268deg 271deg,transparent 271deg 309deg,#fff 309deg 312deg,transparent 312deg 360deg);animation:prRaysB 2.6s linear infinite}
+@keyframes prRaysB{to{transform:rotate(-70deg)}}
 .prrays.out{animation:prRaysOut .6s ease-in forwards}
 @keyframes prRays{0%{opacity:0;transform:scale(.2) rotate(0)}40%{opacity:.9}100%{opacity:.9;transform:scale(1) rotate(80deg)}}
 @keyframes prRaysOut{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.35)}}
@@ -2754,20 +2756,28 @@ iframe.llstory{transition:opacity .45s ease}
 @keyframes prLand{0%{transform:scale(1.2);filter:brightness(2.2)}100%{transform:scale(1);filter:none}}
 .prshellw{position:absolute;inset:-1%;z-index:7;border-radius:7% / 5%;overflow:hidden;pointer-events:none;opacity:0;animation:prShellIn 1.1s ease-in forwards}
 .prshell{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff 0,#fffbe0 38%,#ffe28a 72%,#ffc43d 100%);box-shadow:inset 0 0 30px #fff}
-.prshell.l{clip-path:polygon(0 0,52% 0,46% 12%,54% 24%,45% 38%,55% 52%,46% 66%,54% 80%,47% 92%,50% 100%,0 100%)}
-.prshell.r{clip-path:polygon(52% 0,100% 0,100% 100%,50% 100%,47% 92%,54% 80%,46% 66%,55% 52%,45% 38%,54% 24%,46% 12%)}
-.prcrack{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 0 4px #fff);stroke-dasharray:1;stroke-dashoffset:1}
-.prshellw.crack .prcrack{animation:prCrack .6s ease-out forwards}
+.prshell{background:radial-gradient(circle at 50% 48%,#fff 0,#fffbe0 30%,#ffe28a 70%,#ffc43d 100%)}
+.prcrackw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.prcrack,.prcglow{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.prcrack{stroke:#b36b00;stroke-width:2;filter:drop-shadow(0 0 3px #fff)}
+.prcglow{stroke:#fff;stroke-width:7;opacity:0;filter:blur(2.5px)}
+.prshellw.crack .prcrack{animation:prCrack .32s ease-out forwards;animation-delay:var(--cd,0s)}
+.prshellw.crack .prcglow{animation:prCrack .32s ease-out forwards,prGlowOn .5s ease-in forwards;animation-delay:var(--cd,0s),calc(var(--cd,0s) + .15s)}
+.prflare{position:absolute;left:50%;top:48%;width:10%;aspect-ratio:1;margin:-5% 0 0 -5%;border-radius:50%;background:radial-gradient(circle,#fff 0,#fff 30%,rgba(255,240,170,.85) 55%,transparent 72%);opacity:0;transform:scale(.3)}
+.prshellw.crack .prflare{animation:prFlare .65s ease-in forwards}
+.prshellw.split .prflare{animation:prFlareBang .6s ease-out forwards}
+@keyframes prGlowOn{to{opacity:.95}}
+@keyframes prFlare{to{opacity:1;transform:scale(2.4)}}
+@keyframes prFlareBang{0%{opacity:1;transform:scale(2.4)}100%{opacity:0;transform:scale(14)}}
 .prshellw.crack{animation:prShellIn 1.1s ease-in forwards,prShake .12s linear infinite}
 .prshellw.split{animation:none;opacity:1}
-.prshellw.split .prcrack{opacity:0}
-.prshellw.split .prshell.l{animation:prSplitL .65s ease-in forwards}
-.prshellw.split .prshell.r{animation:prSplitR .65s ease-in forwards}
+.prshellw.split .prcrackw{opacity:0}
+.prshellw.split{overflow:visible}
+.prshellw.split .prshell{animation:prShard .7s cubic-bezier(.4,0,.9,.6) forwards}
 @keyframes prShellIn{0%{opacity:0}100%{opacity:1}}
 @keyframes prCrack{to{stroke-dashoffset:0}}
 @keyframes prShake{0%{transform:translate(0,0)}25%{transform:translate(1.5px,-1px)}50%{transform:translate(-1.5px,1px)}75%{transform:translate(1px,1.5px)}100%{transform:translate(0,0)}}
-@keyframes prSplitL{to{transform:translateX(-115%) rotate(-14deg);opacity:0}}
-@keyframes prSplitR{to{transform:translateX(115%) rotate(14deg);opacity:0}}
+@keyframes prShard{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
 .prbanner{position:fixed;left:50%;top:9%;transform:translateX(-50%);z-index:calc(var(--z-celebrate) + 90);max-width:92vw;text-align:center;font-weight:900;font-size:22px;line-height:1.25;color:#3a2a00;background:linear-gradient(180deg,#fff3b0,#ffd24d);border:3px solid #fff;border-radius:22px;padding:12px 22px;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:prBan .6s cubic-bezier(.2,1.5,.4,1) both;pointer-events:none}
 .prbanner.big{font-size:26px;background:linear-gradient(180deg,#fff,#ffe28a)}
 .prbanner.out{animation:prBanOut .5s ease-in forwards}
@@ -7658,6 +7668,50 @@ function promoNext(){
   if(!q){ stg.pcur = null; return; }
   promoPlay(q.f, q.i, function(){ if(!stg) return; stg.pbusy = Math.max(0, (stg.pbusy || 0) - 1); stg.pcur = null; promoNext(); });
 }
+/* 26.11.115: S to SSR shell. Jagged cracks spread from the centre; the shell breaks into shards along the same lines. */
+function prShellBuild(){
+  var CX = 50, CY = 48, N = 8 + Math.floor(Math.random()*2), rays = [], base = Math.random()*40, k, j;
+  function edge(a){
+    var dx = Math.cos(a), dy = Math.sin(a), t = 1e9, tx;
+    if(dx > 0){ tx = (100 - CX)/dx; if(tx < t) t = tx; } else if(dx < 0){ tx = (0 - CX)/dx; if(tx < t) t = tx; }
+    if(dy > 0){ tx = (100 - CY)/dy; if(tx < t) t = tx; } else if(dy < 0){ tx = (0 - CY)/dy; if(tx < t) t = tx; }
+    return [CX + dx*t, CY + dy*t, t];
+  }
+  for(k = 0; k < N; k++){
+    var ang = (base + (k + (Math.random()*.5 - .25)) * 360 / N) * Math.PI / 180, e = edge(ang), pts = [[CX, CY]];
+    var px = -Math.sin(ang), py = Math.cos(ang);
+    for(j = 1; j <= 4; j++){
+      var t = e[2] * j / 4.4, o = (Math.random()*2 - 1) * (4 + j), x = CX + Math.cos(ang)*t + px*o, y = CY + Math.sin(ang)*t + py*o;
+      pts.push([x, y]);
+    }
+    pts.push([e[0], e[1]]);
+    rays.push({a:(ang*180/Math.PI + 360) % 360, pts:pts, branch:[]});
+    var bi = 2 + Math.floor(Math.random()*2), bp = pts[bi], ba = ang + (Math.random() < .5 ? -1 : 1) * (.5 + Math.random()*.4), bl = 6 + Math.random()*8;
+    rays[k].branch = [[bp[0], bp[1]], [bp[0] + Math.cos(ba)*bl*.55, bp[1] + Math.sin(ba)*bl*.55 + (Math.random()*3 - 1.5)], [bp[0] + Math.cos(ba)*bl, bp[1] + Math.sin(ba)*bl]];
+  }
+  rays.sort(function(a, b){ return a.a - b.a; });
+  var corners = [[100, 100, 45], [0, 100, 135], [0, 0, 225], [100, 0, 315]];
+  function P(p){ return p[0].toFixed(1)+'% '+p[1].toFixed(1)+'%'; }
+  var shards = '';
+  for(k = 0; k < N; k++){
+    var A = rays[k], B = rays[(k + 1) % N], poly = A.pts.map(P), a1 = A.a, a2 = B.a < A.a ? B.a + 360 : B.a;
+    corners.forEach(function(c){ var ca = c[2]; if(ca < a1) ca += 360; if(ca > a1 && ca < a2) poly.push(P(c)); });
+    for(j = B.pts.length - 1; j >= 0; j--) poly.push(P(B.pts[j]));
+    var mid = (a1 + a2) / 2 * Math.PI / 180, d = 90 + Math.random()*50, rot = (Math.random()*36 - 18).toFixed(0);
+    shards += '<div class="prshell" style="clip-path:polygon('+poly.join(',')+');--dx:'+(Math.cos(mid)*d).toFixed(0)+'%;--dy:'+(Math.sin(mid)*d).toFixed(0)+'%;--rot:'+rot+'deg"></div>';
+  }
+  function PL(pts){ return pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' '); }
+  var svg = '<svg class="prcrackw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">', paths = '';
+  rays.forEach(function(r, q){
+    var cd = (q * .04).toFixed(2)+'s';
+    paths += '<g style="--cd:'+cd+'"><polyline class="prcglow" pathLength="1" vector-effect="non-scaling-stroke" points="'+PL(r.pts)+'"/><polyline class="prcrack" pathLength="1" vector-effect="non-scaling-stroke" points="'+PL(r.pts)+'"/><polyline class="prcrack" pathLength="1" vector-effect="non-scaling-stroke" style="stroke-width:1.4" points="'+PL(r.branch)+'"/></g>';
+  });
+  var w = document.createElement('div'); w.className = 'prshellw';
+  w.innerHTML = shards + svg + paths.replace(/<g style="--cd:([^"]*)">/g, '<g>') + '</svg><div class="prflare"></div>';
+  /* give each polyline its own delay (CSS vars do not inherit into SVG g in every browser, so set it on the lines) */
+  var gs = w.querySelectorAll('svg g'); [].forEach.call(gs, function(g, q){ var cd = (q * .04).toFixed(2)+'s'; [].forEach.call(g.children, function(el){ el.style.setProperty('--cd', cd); }); });
+  return w;
+}
 function promoPlay(f, i, done){
   var S = stg, P = S.promos[i], c = S.cards[i], to = P.to, quiet = promoQuiet(), timers = [], fin = false, swapped = false, big = to === 'SSR';
   var col = PRCOL[to] || '#fff';
@@ -7712,13 +7766,13 @@ function promoPlay(f, i, done){
     T(function(){ finish(); }, 2500);
   } else {
     T(function(){
-      var w = document.createElement('div'); w.className = 'prshellw'; w.innerHTML = '<div class="prshell l"></div><div class="prshell r"></div><svg class="prcrack" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="52,0 46,12 54,24 45,38 55,52 46,66 54,80 47,92 50,100" fill="none" stroke="#c77c00" stroke-width="2.2" vector-effect="non-scaling-stroke" pathLength="1"/></svg>';
+      var w = prShellBuild();
       var fr = f.querySelector('.flip-front'); (fr || f).appendChild(w);
       var fi = f.querySelector('.flip-front'); if(fi) fi.style.position = fi.style.position || '';
     }, 900);
     T(function(){ var w = f.querySelector('.prshellw'); if(w) w.classList.add('crack'); }, 1500);
-    T(function(){ flashFx(); var w = f.querySelector('.prshellw'); swap(); if(w) w.classList.add('split'); [].forEach.call(f.querySelectorAll('.prrays'), function(x){ x.classList.add('out'); }); burst(); sound(); }, 2150);
-    T(function(){ banner(); }, 2500);
+    T(function(){ flashFx(); var w = f.querySelector('.prshellw'); swap(); if(w) w.classList.add('split'); [].forEach.call(f.querySelectorAll('.prrays'), function(x){ x.classList.add('out'); }); burst(); sound(); }, 2250);
+    T(function(){ banner(); }, 2600);
     T(function(){ finish(); }, 4200);
   }
 }
