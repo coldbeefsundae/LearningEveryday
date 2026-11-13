@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.107', errs = [], shown = false;
+  var V = '26.11.108', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -11943,7 +11943,8 @@ function wdDraw(){
 }
 function wdBind(){
   var cv = WD.cv;
-  function pt(e){ var r = cv.getBoundingClientRect(), u = WD.u; var p = e.pointerType === 'pen' ? (e.pressure || .5) : .5; return [Math.round((e.clientX - r.left)/u*100)/100, Math.round((e.clientY - r.top)/u*100)/100, p]; }
+  /* 26.11.108: use the rendered canvas rectangle, not the unzoomed layout unit size. This keeps pen input aligned when the app's body text-size zoom is active. */
+  function pt(e){ var r = cv.getBoundingClientRect(), p = e.pointerType === 'pen' ? (e.pressure || .5) : .5; return [Math.round((e.clientX - r.left)/r.width*WD.W*100)/100, Math.round((e.clientY - r.top)/r.height*wdPageH()*100)/100, p]; }
   cv.addEventListener('pointerdown', function(e){
     if(!WD || WD.phase !== 'write') return;
     if(e.pointerType === 'pen') WD.penSeen = true;
