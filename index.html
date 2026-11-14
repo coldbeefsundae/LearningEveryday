@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.116', errs = [], shown = false;
+  var V = '26.11.121', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -874,7 +874,7 @@ body[data-calm=on] .kit *{animation:none!important}
 .kitbub .kbtxt{flex:1;min-width:0}
 .kitbub .kbtxt b{color:inherit}
 .kitbub .kbbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub::before{background:#232650;color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .kitbub,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .kitbub::before{background:#232650;color:#fff}
 /* ---- v42: grouped badges ---- */
 .bdsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0 8px;font-weight:900;font-size:15px}
 .bdsec small{font-weight:800;opacity:.85;font-size:14px}
@@ -995,7 +995,7 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitbub,b
 @media (prefers-reduced-motion:reduce){.drgsvg,.drtw{animation:none}}
 /* 26.11.112 */body[data-bed=asleep] :is(.drgsvg,.drtw){animation:none}
 /* 26.11.111: in the dark looks the activity screens use a dimmer paper so they are not a bright flash at night */
-body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .kw{--kw-bg:#d8d0bd;--kw-bar:#e3dccb;--kw-line:#c4b99f;--kw-card:#ece6d6;--kw-btn-line:#b8ad93}
+body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery],[data-skin=aurora]) .kw{--kw-bg:#d8d0bd;--kw-bar:#e3dccb;--kw-line:#c4b99f;--kw-card:#ece6d6;--kw-btn-line:#b8ad93}
 /* 26.11.98 */.wdsent{font:800 22px/1.35 system-ui;color:#2b2b44;margin:8px 0 2px}.wdfrom{font-size:14px;opacity:.85;margin-bottom:6px}
 .kwside .wdsent{font-size:20px;background:#fff;border-radius:12px;padding:8px 10px;margin:8px 0}
 /* 26.11.97 */.wdsrc{display:flex;gap:6px;flex-wrap:wrap}.wdsrc .wdpk{font-size:15px;padding:0 14px}
@@ -1310,8 +1310,8 @@ body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .kw{--kw-bg:#d
 
 /* =====================================================================
    LOOKS (skins). Switch with the 🎨 button or Me > Choose your look.
-   Tokens: body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) dark skins, body:is([data-skin=hybrid],[data-skin=night]) hybrid, body[data-skin=arcade] arcade, body[data-skin=gallery] gallery, body[data-skin=atlas] atlas,
-           body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) hybrid+arcade (bottom dock), body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) every non-classic skin
+   Tokens: body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) dark skins, body:is([data-skin=hybrid],[data-skin=night]) hybrid, body[data-skin=arcade] arcade, body:is([data-skin=gallery],[data-skin=aurora]) gallery, body[data-skin=atlas] atlas,
+           body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) hybrid+arcade (bottom dock), body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) every non-classic skin
    ===================================================================== */
 .avwrap{position:relative;flex:none}
 .xp,.lvb{display:none}
@@ -1328,14 +1328,14 @@ body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .kw{--kw-bg:#d
 .sk-gallery{background:radial-gradient(60px 40px at 20% 20%,rgba(94,231,223,.55),transparent),linear-gradient(135deg,#0a0e20,#1b2250 55%,#9b7bff)}
 .sk-atlas{background:linear-gradient(135deg,#f4e8cf,#e9d3a2 60%,#bf3b2b)}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic],[data-skin=seaglass]) .xp{display:block;width:min(240px,100%);height:11px;border-radius:8px;background:rgba(127,127,160,.28);overflow:hidden;margin-top:6px}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic],[data-skin=seaglass]) .xp i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .6s}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=washi],[data-skin=comic],[data-skin=seaglass]) .lvb{display:block;position:absolute;right:-12px;bottom:-5px;font-size:12px;font-weight:900;border-radius:99px;padding:2px 9px;background:var(--accent);color:#fff;border:2px solid var(--lvbc,#fff);white-space:nowrap}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora],[data-skin=washi],[data-skin=comic],[data-skin=seaglass],[data-skin=rosequartz]) .xp{display:block;width:min(240px,100%);height:11px;border-radius:8px;background:rgba(127,127,160,.28);overflow:hidden;margin-top:6px}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora],[data-skin=washi],[data-skin=comic],[data-skin=seaglass],[data-skin=rosequartz]) .xp i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .6s}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora],[data-skin=washi],[data-skin=comic],[data-skin=seaglass],[data-skin=rosequartz]) .lvb{display:block;position:absolute;right:-12px;bottom:-5px;font-size:12px;font-weight:900;border-radius:99px;padding:2px 9px;background:var(--accent);color:#fff;border:2px solid var(--lvbc,#fff);white-space:nowrap}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .themepanel,body[data-skin=atlas] .themepanel{display:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .themepanel,body[data-skin=atlas] .themepanel{display:none}
 
 /* ---------- shared dark palette ---------- */
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]){
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]){
   --ink:#eaeeff;--muted:#8e97c4;--line:rgba(255,255,255,.13);--surface:rgba(255,255,255,.06);--bg:#0a0e20;
   --accent:#8b7bff;--accent-2:#5ee7df;--accent-soft:rgba(139,123,255,.22);
   --good:#36d6a0;--good-soft:rgba(94,231,223,.14);
@@ -1346,84 +1346,84 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]){
   background:radial-gradient(700px 480px at 88% -8%,rgba(155,123,255,.40),transparent 70%),radial-gradient(640px 480px at -4% 104%,rgba(94,231,223,.24),transparent 70%),radial-gradient(500px 360px at 60% 110%,rgba(255,123,208,.16),transparent 70%),#0a0e20;
   background-attachment:fixed;
 }
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rail{background:rgba(255,255,255,.05);border-color:var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .logo{color:#0a0e20;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 0 30px rgba(94,231,223,.45)}
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .navbtn.on{background:linear-gradient(135deg,rgba(94,231,223,.22),rgba(155,123,255,.36));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 0 24px rgba(155,123,255,.45)}
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .navbtn .dot{background:var(--g3);color:#0a0e20;border-color:#0a0e20;box-shadow:0 0 14px rgba(255,123,208,.7)}
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .railtool{background:rgba(255,255,255,.09);color:#fff}
-/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .railtool.on{background:rgba(255,215,106,.32)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .topbar{background:rgba(10,14,32,.74);border-color:var(--line)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .avatar{background:linear-gradient(#1b2250,#10153a);border:0;box-shadow:0 0 0 3px #0a0e20,0 0 0 5px var(--g1),0 0 26px rgba(94,231,223,.55)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .xp{background:rgba(255,255,255,.1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .xp i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.7)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .lvb{background:linear-gradient(135deg,var(--g3),var(--g2))}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:none}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pill.bank{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.14));border-color:rgba(255,215,106,.45)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .redeem{background:linear-gradient(135deg,#ffb86b,#ff7bd0);color:#0a0e20;box-shadow:0 4px 0 #b8466f,0 0 22px rgba(255,123,208,.45)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .redeem:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip{background:rgba(94,231,223,.14);color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.warn{background:rgba(255,184,107,.16);color:#ffb86b}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.late{background:rgba(255,123,208,.16);color:#ff9ad8}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .chip.ok{background:rgba(94,231,223,.2);color:#5ee7df}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .prog,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigprog{background:rgba(255,255,255,.09);box-shadow:inset 0 3px 0 rgba(0,0,0,.25)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .progfill{background:linear-gradient(90deg,var(--g1),var(--g2));background-size:100% 100%;animation:none;box-shadow:0 0 16px rgba(94,231,223,.6)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigprog i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.5)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .progtxt{color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .panel{background:var(--surface);border:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quotecard{background:linear-gradient(135deg,rgba(155,123,255,.18),rgba(94,231,223,.08))}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quotecard::before{color:#fff;opacity:.1}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qlabel{color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .dlabel{color:#ffd76a}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .disc.ready{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.12));border-color:rgba(255,215,106,.5)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ratebox{background:linear-gradient(135deg,rgba(255,215,106,.16),rgba(255,123,208,.10));border-color:rgba(255,215,106,.4);color:#ffe6a3;box-shadow:none}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ratebox b{color:#fff}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner{border-color:var(--line)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.screen{background:linear-gradient(135deg,rgba(54,214,160,.26),rgba(94,231,223,.14));color:#aef5dc}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.win,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bonus{background:linear-gradient(135deg,rgba(255,215,106,.24),rgba(255,184,107,.12));color:#ffe6a3}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.late{background:linear-gradient(135deg,rgba(255,123,208,.22),rgba(155,123,255,.14));color:#ffc2e6}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn-white{background:rgba(255,255,255,.15);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 4px 0 rgba(0,0,0,.28)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p0{--tile:#ff8fc0}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p1{--tile:#6fc4ff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p2{--tile:#ffcf5a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p3{--tile:#b49bff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p4{--tile:#ff9a7a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .p5{--tile:#5ee7b0}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tile{background:var(--tile);box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 20px -3px var(--tile)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .check{background:transparent;border-color:rgba(255,255,255,.3);color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5);box-shadow:0 4px 0 rgba(0,0,0,.28),0 0 24px -8px rgba(94,231,223,.55)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .q-name{color:#a9b6ee;text-decoration-color:rgba(94,231,223,.7)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 4px 0 #3d4ec0,0 0 22px rgba(94,231,223,.65)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .timer{background:rgba(255,255,255,.07)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ring .bg{stroke:rgba(255,255,255,.15)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .ring .fg{stroke:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tbtn{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .tbtn.go{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus{--tile:rgba(255,255,255,.25);background:linear-gradient(110deg,#ff9f1c,#ff5d8f 60%,#c04dff);border-color:transparent;color:#fff}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus .q-name small{color:rgba(255,255,255,.92)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus .check{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.55);color:#fff}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.bonus.done .q-name small{color:var(--muted)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fchip{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fchip.on{background:linear-gradient(135deg,rgba(94,231,223,.28),rgba(155,123,255,.42));color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 0 22px rgba(155,123,255,.45)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .stat{background:rgba(255,255,255,.06)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .av{background:rgba(255,255,255,.06)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .av.on{background:var(--accent-soft);border-color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bigavatar{background:linear-gradient(#1b2250,#10153a);border-color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .nameinput{background:rgba(255,255,255,.06);border-color:var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .nameinput:focus{border-color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .sw{border-color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .skinopt{background:rgba(255,255,255,.05)}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .rail{background:rgba(255,255,255,.05);border-color:var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .logo{color:#0a0e20;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 0 30px rgba(94,231,223,.45)}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .navbtn.on{background:linear-gradient(135deg,rgba(94,231,223,.22),rgba(155,123,255,.36));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 0 24px rgba(155,123,255,.45)}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .navbtn .dot{background:var(--g3);color:#0a0e20;border-color:#0a0e20;box-shadow:0 0 14px rgba(255,123,208,.7)}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .railtool{background:rgba(255,255,255,.09);color:#fff}
+/*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .railtool.on{background:rgba(255,215,106,.32)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .topbar{background:rgba(10,14,32,.74);border-color:var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .avatar{background:linear-gradient(#1b2250,#10153a);border:0;box-shadow:0 0 0 3px #0a0e20,0 0 0 5px var(--g1),0 0 26px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .xp{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .xp i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.7)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .lvb{background:linear-gradient(135deg,var(--g3),var(--g2))}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .pill.bank{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.14));border-color:rgba(255,215,106,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .redeem{background:linear-gradient(135deg,#ffb86b,#ff7bd0);color:#0a0e20;box-shadow:0 4px 0 #b8466f,0 0 22px rgba(255,123,208,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .redeem:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .chip{background:rgba(94,231,223,.14);color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .chip.warn{background:rgba(255,184,107,.16);color:#ffb86b}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .chip.late{background:rgba(255,123,208,.16);color:#ff9ad8}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .chip.ok{background:rgba(94,231,223,.2);color:#5ee7df}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .prog,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bigprog{background:rgba(255,255,255,.09);box-shadow:inset 0 3px 0 rgba(0,0,0,.25)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .progfill{background:linear-gradient(90deg,var(--g1),var(--g2));background-size:100% 100%;animation:none;box-shadow:0 0 16px rgba(94,231,223,.6)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bigprog i{background:linear-gradient(90deg,var(--g1),var(--g2));box-shadow:0 0 14px rgba(94,231,223,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .progtxt{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .panel{background:var(--surface);border:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quotecard{background:linear-gradient(135deg,rgba(155,123,255,.18),rgba(94,231,223,.08))}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quotecard::before{color:#fff;opacity:.1}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .qlabel{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .dlabel{color:#ffd76a}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .disc.ready{background:linear-gradient(135deg,rgba(255,215,106,.18),rgba(255,123,208,.12));border-color:rgba(255,215,106,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .ratebox{background:linear-gradient(135deg,rgba(255,215,106,.16),rgba(255,123,208,.10));border-color:rgba(255,215,106,.4);color:#ffe6a3;box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .ratebox b{color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner{border-color:var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.screen{background:linear-gradient(135deg,rgba(54,214,160,.26),rgba(94,231,223,.14));color:#aef5dc}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.win,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.bonus{background:linear-gradient(135deg,rgba(255,215,106,.24),rgba(255,184,107,.12));color:#ffe6a3}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.late{background:linear-gradient(135deg,rgba(255,123,208,.22),rgba(155,123,255,.14));color:#ffc2e6}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .btn-white{background:rgba(255,255,255,.15);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 4px 0 rgba(0,0,0,.28)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p0{--tile:#ff8fc0}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p1{--tile:#6fc4ff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p2{--tile:#ffcf5a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p3{--tile:#b49bff}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p4{--tile:#ff9a7a}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .p5{--tile:#5ee7b0}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .tile{background:var(--tile);box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 20px -3px var(--tile)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .check{background:transparent;border-color:rgba(255,255,255,.3);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5);box-shadow:0 4px 0 rgba(0,0,0,.28),0 0 24px -8px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.done .q-name{color:#a9b6ee;text-decoration-color:rgba(94,231,223,.7)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 4px 0 #3d4ec0,0 0 22px rgba(94,231,223,.65)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .timer{background:rgba(255,255,255,.07)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .ring .bg{stroke:rgba(255,255,255,.15)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .ring .fg{stroke:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .tbtn{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .tbtn.go{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus{--tile:rgba(255,255,255,.25);background:linear-gradient(110deg,#ff9f1c,#ff5d8f 60%,#c04dff);border-color:transparent;color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus .q-name small{color:rgba(255,255,255,.92)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus .check{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.55);color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus.done{background:linear-gradient(100deg,rgba(94,231,223,.17),rgba(155,123,255,.12));border-color:rgba(94,231,223,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus.done .check{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.bonus.done .q-name small{color:var(--muted)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .fchip{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .fchip.on{background:linear-gradient(135deg,rgba(94,231,223,.28),rgba(155,123,255,.42));color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 0 22px rgba(155,123,255,.45)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .stat{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .av{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .av.on{background:var(--accent-soft);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bigavatar{background:linear-gradient(#1b2250,#10153a);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .nameinput{background:rgba(255,255,255,.06);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .nameinput:focus{border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .sw{border-color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .skinopt{background:rgba(255,255,255,.05)}
 /* modals + parent mode */
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal{background:#11163a;border:1px solid var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal h2,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .modal h3{color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.primary{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.good{background:linear-gradient(135deg,#36d6a0,#5ee7df);color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .btn.danger{background:linear-gradient(135deg,#ff7b8d,#ff7bd0);color:#0a0e20}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .fld input,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) textarea{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .prow,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .passage,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .opt,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .day,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .emojis button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .pad button{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .day.on{background:var(--accent-soft);border-color:var(--g1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .okline{background:rgba(255,255,255,.07);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .okline.good{background:rgba(54,214,160,.16);color:#aef5dc}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .switch span{background:rgba(255,255,255,.22)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .toast{border:1px solid var(--line)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .modal{background:#11163a;border:1px solid var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .modal h2,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .modal h3{color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .btn{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .btn.primary{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .btn.good{background:linear-gradient(135deg,#36d6a0,#5ee7df);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .btn.danger{background:linear-gradient(135deg,#ff7b8d,#ff7bd0);color:#0a0e20}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .fld input,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) textarea{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .prow,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .passage,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .opt,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .day,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .emojis button,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .pad button{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .day.on{background:var(--accent-soft);border-color:var(--g1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .okline{background:rgba(255,255,255,.07);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .okline.good{background:rgba(54,214,160,.16);color:#aef5dc}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .switch span{background:rgba(255,255,255,.22)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .toast{border:1px solid var(--line)}
 
 /* ---------- bottom dock layout (hybrid + arcade) ---------- */
 body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .app{display:block}
@@ -1449,21 +1449,34 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .panel{bor
 
 /* ---------- landscape two-column home ---------- */
 @media (min-width:900px) and (orientation:landscape){
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) #view-home.show,body[data-skin=atlas] #view-home.show,body[data-skin=gallery] #view-home.show{display:grid;grid-template-columns:minmax(0,1fr) 410px;column-gap:22px;align-items:start}
-  body[data-skin=gallery] #view-home.show{grid-template-columns:410px minmax(0,1fr)}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .hero{grid-column:1/-1;grid-row:1}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .banners{grid-column:1/-1;grid-row:2}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .sec{grid-column:1;grid-row:3}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .qgrid{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr))}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery]) #view-home .duo{grid-column:2;grid-row:3/5;grid-template-columns:minmax(0,1fr);margin-bottom:0}
-  body[data-skin=gallery] #view-home .sec{grid-column:2}
-  body[data-skin=gallery] #view-home .qgrid{grid-column:2;grid-template-columns:minmax(0,1fr);gap:10px}
-  body[data-skin=gallery] #view-home .duo{grid-column:1}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) #view-home.show,body[data-skin=atlas] #view-home.show,body:is([data-skin=gallery],[data-skin=aurora]) #view-home.show{display:grid;grid-template-columns:minmax(0,1fr) 410px;column-gap:22px;align-items:start}
+  body:is([data-skin=gallery],[data-skin=aurora]) #view-home.show{grid-template-columns:410px minmax(0,1fr)}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .hero{grid-column:1/-1;grid-row:1}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .banners{grid-column:1/-1;grid-row:2}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .sec{grid-column:1;grid-row:3}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .qgrid{grid-column:1;grid-row:4;grid-template-columns:repeat(2,minmax(0,1fr))}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .duo{grid-column:2;grid-row:3/5;grid-template-columns:minmax(0,1fr);margin-bottom:0}
+  /* 26.11.119: Free Time, Routine, goal cards, quiz, Bites and Kanji had no place in this grid, so the browser slotted them into gaps and pushed the quests around. Every Home section now has its own row. */
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home>*{grid-column:1/-1}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .hero{grid-row:1}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .banners{grid-row:2}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .ftpanel:not(.rtpanel){grid-row:3}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .rtpanel{grid-row:4}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .sec{grid-column:1;grid-row:5}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .qgrid{grid-column:1;grid-row:6}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .duo{grid-column:2;grid-row:5/7}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .gpanel{grid-row:7}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .quizpanel{grid-row:8}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .bitespanel{grid-row:9}
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade],[data-skin=atlas],[data-skin=gallery],[data-skin=aurora]) #view-home .kjpanel{grid-row:10}
+  body:is([data-skin=gallery],[data-skin=aurora]) #view-home .sec{grid-column:2}
+  body:is([data-skin=gallery],[data-skin=aurora]) #view-home .qgrid{grid-column:2;grid-template-columns:minmax(0,1fr);gap:10px}
+  body:is([data-skin=gallery],[data-skin=aurora]) #view-home .duo{grid-column:1}
   body[data-skin=atlas] #view-home .qgrid{grid-template-columns:minmax(0,1fr);gap:12px}
-  body[data-skin=gallery] .quest{min-height:78px;padding:10px 16px;border-radius:22px}
-  body[data-skin=gallery] .tile{width:48px;height:48px;border-radius:15px;font-size:26px}
-  body[data-skin=gallery] .check{width:36px;height:36px;font-size:20px}
-  body[data-skin=gallery] .q-name{font-size:18px;font-weight:700}
+  body:is([data-skin=gallery],[data-skin=aurora]) .quest{min-height:78px;padding:10px 16px;border-radius:22px}
+  body:is([data-skin=gallery],[data-skin=aurora]) .tile{width:48px;height:48px;border-radius:15px;font-size:26px}
+  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:36px;height:36px;font-size:20px}
+  body:is([data-skin=gallery],[data-skin=aurora]) .q-name{font-size:18px;font-weight:700}
 }
 @media (max-width:820px){
   /*[MENU]*/body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .navbtn{padding:0 16px;font-size:15px;gap:6px}
@@ -1513,8 +1526,8 @@ body:is([data-skin=hybrid],[data-skin=night]) .packpanel{background:linear-gradi
 body:is([data-skin=hybrid],[data-skin=night]) .btn-light{background:linear-gradient(135deg,var(--g1),#7fb0ff);color:#0a0e20;box-shadow:0 5px 0 #2b6fa8,0 0 28px rgba(94,231,223,.45)}
 body:is([data-skin=hybrid],[data-skin=night]) .btn-gold{box-shadow:0 5px 0 #c9780a,0 0 28px rgba(255,159,26,.4)}
 body:is([data-skin=hybrid],[data-skin=night]) .panel{border-radius:28px}
-body[data-skin=gallery] .packpanel{background:linear-gradient(135deg,rgba(155,123,255,.3),rgba(94,231,223,.18));border:1px solid var(--line)}
-body[data-skin=gallery] .btn-light{background:linear-gradient(90deg,var(--g1),var(--g2));color:#0a0e20;box-shadow:0 0 24px rgba(94,231,223,.35)}
+body:is([data-skin=gallery],[data-skin=aurora]) .packpanel{background:linear-gradient(135deg,rgba(155,123,255,.3),rgba(94,231,223,.18));border:1px solid var(--line)}
+body:is([data-skin=gallery],[data-skin=aurora]) .btn-light{background:linear-gradient(90deg,var(--g1),var(--g2));color:#0a0e20;box-shadow:0 0 24px rgba(94,231,223,.35)}
 
 /* ---------- Storybook Atlas (paper) ---------- */
 body[data-skin=atlas]{
@@ -1618,6 +1631,7 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   /*[MENU]*/body[data-skin=atlas] .logo{display:none}
   /*[MENU]*/body[data-skin=atlas] .navbtn{padding:0 10px;font-size:17px;height:44px}
   /*[MENU]*/body[data-skin=atlas] .railtool{width:38px;height:38px;font-size:17px}
+  /*[MENU]*/body[data-skin=atlas] .rail{height:62px}   /* 26.11.119: was 78px, so the top bar (top:62px) slid under the menu */
   body[data-skin=atlas] .topbar{top:62px}
   body[data-skin=atlas] .toprow{padding:10px 14px 6px}
   body[data-skin=atlas] .progrow{padding:0 14px 10px}
@@ -1761,18 +1775,18 @@ body[data-calm=on] *,body[data-calm=on] *::before,body[data-calm=on] *::after{an
 @media (max-width:760px){.rgrid{grid-template-columns:1fr}.balnum{font-size:42px}.earn{max-width:none}}
 
 /* dark skins */
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rcard{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 3px 0 rgba(0,0,0,.28)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rcard.can{border-color:rgba(94,231,223,.6);box-shadow:0 3px 0 rgba(0,0,0,.28),0 0 22px -8px rgba(94,231,223,.55)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rtile{background:rgba(255,255,255,.1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .earn span,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .snext{background:rgba(155,123,255,.2)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.rest{background:linear-gradient(135deg,rgba(155,123,255,.26),rgba(94,231,223,.14));color:#d6cfff}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.streak{background:linear-gradient(135deg,rgba(255,184,107,.22),rgba(255,123,208,.16));color:#ffd9b3}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(.rwgi,.rwgn,.rwgrp){background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .rwcost{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .calnav{background:rgba(255,255,255,.1)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday{background:rgba(255,255,255,.06)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday.done{background:linear-gradient(135deg,#ffd76a,#ffb347);color:#4a2f00}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .cday.rest{background:linear-gradient(135deg,rgba(155,123,255,.5),rgba(94,231,223,.35));color:#fff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .rcard{background:rgba(255,255,255,.05);border-color:var(--line);box-shadow:0 3px 0 rgba(0,0,0,.28)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .rcard.can{border-color:rgba(94,231,223,.6);box-shadow:0 3px 0 rgba(0,0,0,.28),0 0 22px -8px rgba(94,231,223,.55)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .rtile{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .earn span,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .snext{background:rgba(155,123,255,.2)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.rest{background:linear-gradient(135deg,rgba(155,123,255,.26),rgba(94,231,223,.14));color:#d6cfff}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.streak{background:linear-gradient(135deg,rgba(255,184,107,.22),rgba(255,123,208,.16));color:#ffd9b3}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(.rwgi,.rwgn,.rwgrp){background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .rwcost{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .calnav{background:rgba(255,255,255,.1)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .cday{background:rgba(255,255,255,.06)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .cday.done{background:linear-gradient(135deg,#ffd76a,#ffb347);color:#4a2f00}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .cday.rest{background:linear-gradient(135deg,rgba(155,123,255,.5),rgba(94,231,223,.35));color:#fff}
 /* arcade */
 body[data-skin=arcade] .shophead .balnum,body[data-skin=arcade] .shophead .balsub{color:inherit}
 body[data-skin=arcade] .rcard{border:3px solid #e3ddff;box-shadow:0 4px 0 #e3ddff}
@@ -1786,16 +1800,16 @@ body[data-skin=atlas] .banner.streak{background:#fbefd2;color:#7a3b00}
 body[data-skin=atlas] .cday.done{background:linear-gradient(135deg,#f3d36b,#e0a92c)}
 body[data-skin=atlas] .cday.rest{background:#d9e8e0;color:#1f5a4b}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizpanel.ready{background:linear-gradient(135deg,rgba(162,155,254,.22),rgba(116,194,255,.14));border-color:rgba(162,155,254,.5)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizpanel.done{background:linear-gradient(135deg,rgba(22,183,119,.2),rgba(22,183,119,.08));border-color:rgba(22,183,119,.5)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qdots i{background:rgba(255,255,255,.18)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quizres .rpts{background:rgba(255,215,106,.2);color:#ffd76a}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qrow{background:rgba(255,255,255,.07)}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .qrow.ok{background:rgba(22,183,119,.18)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .kitsay{background:rgba(255,255,255,.12)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quizpanel.ready{background:linear-gradient(135deg,rgba(162,155,254,.22),rgba(116,194,255,.14));border-color:rgba(162,155,254,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quizpanel.done{background:linear-gradient(135deg,rgba(22,183,119,.2),rgba(22,183,119,.08));border-color:rgba(22,183,119,.5)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .qdots i{background:rgba(255,255,255,.18)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quizres .rpts{background:rgba(255,215,106,.2);color:#ffd76a}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .qrow{background:rgba(255,255,255,.07)}body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .qrow.ok{background:rgba(22,183,119,.18)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .kitsay{background:rgba(255,255,255,.12)}
 body[data-skin=arcade] .quizpanel.ready{background:#fff}body[data-skin=arcade] .quizpanel.done{background:#fff}
 body[data-skin=arcade] .kitsay{background:rgba(255,255,255,.22);color:#fff}
 body[data-skin=atlas] .quizpanel{border:1.5px solid var(--ink)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bite{background:rgba(255,255,255,.08)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bite{background:rgba(255,255,255,.08)}
 body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 
 /* ===================== PHASE 4: holidays, birthday, journal, badges ===================== */
@@ -1902,21 +1916,21 @@ body[data-skin=arcade] .bite{background:rgba(108,92,231,.1)}
 .bdg.off{opacity:.55}
 .bdg.off .bi{filter:grayscale(1)}
 .bdpanel .btn{margin-top:2px}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bday,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .banner.bday.soft{color:#4a1030}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .mood.on,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .evb.on{color:var(--ink)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.bday,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .banner.bday.soft{color:#4a1030}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .mood.on,body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .evb.on{color:var(--ink)}
 @media (max-width:420px){.moodgrid,.evgrid{gap:6px}.mood .me{font-size:27px}.rctile b{font-size:19px}}
 a.btn-white{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .fld input[type=email],.fld input[type=tel],.fld input[type=url],.fld input[type=date],.pin{height:54px;border-radius:15px;border:3px solid rgba(127,127,160,.35);padding:0 14px;font:inherit;font-size:17px;font-weight:700;background:rgba(127,127,160,.08);color:inherit;width:100%;min-width:0}
 .pin{height:46px;width:auto;font-size:15px}
 .fld input[type=email]:focus,.fld input[type=tel]:focus,.fld input[type=url]:focus,.fld input[type=date]:focus,.pin:focus{outline:none;border-color:var(--accent)}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .quest.done .q-name small.qpts{color:var(--muted)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest .q-name small.qpts{color:rgba(255,255,255,.88)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .quest.done .q-name small.qpts{color:var(--muted)}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkamt.pos{color:#7be0a8}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkamt.neg{color:#ff9a90}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bkamt.pos{color:#7be0a8}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bkamt.neg{color:#ff9a90}
 
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkjar{color:#c9c4ee}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .bkjar{color:#c9c4ee}
 
 .hlp h2{margin:0 0 6px}
 .hlptabs{display:flex;gap:6px;margin:8px 0 10px;background:rgba(127,127,160,.12);border-radius:16px;padding:4px}
@@ -2387,12 +2401,12 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .bkjar{co
 
 /* ---------- visibility audit (26.11.24) ---------- */
 .warnhint{color:#a8281c}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) .warnhint{color:#ffa196}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner){--ink:#1e2142;--muted:#565d7e;--line:rgba(30,33,66,.16)}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#ksay .ksbox,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk){color:#1e2142}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn:not(.primary):not(.good):not(.danger){background:#eeedf8;color:#1e2142;box-shadow:0 3px 0 #cfcbe6}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn.primary{background:#6453e6;color:#fff;box-shadow:0 3px 0 #3d2fb0}
-body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .hint{color:#565d7e}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) .warnhint{color:#ffa196}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner){--ink:#1e2142;--muted:#565d7e;--line:rgba(30,33,66,.16)}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(#ksay .ksbox,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk){color:#1e2142}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn:not(.primary):not(.good):not(.danger){background:#eeedf8;color:#1e2142;box-shadow:0 3px 0 #cfcbe6}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .btn.primary{background:#6453e6;color:#fff;box-shadow:0 3px 0 #3d2fb0}
+body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=gallery],[data-skin=aurora]) :is(#kitnudge .kn-bub,#ksay .ksbox,.cq,.cqpq,.kw,.pcv,.seg,.gcard,.bkdt,.clo.lock .clk,.jwbox,.gtry,.mx,.dt .fun,.pcvbanner) .hint{color:#565d7e}
 #kitnudge .kn-btns .btn:not(.primary){border:2px solid #cfcbe6}
 
 /* ---------- new looks (26.11.24): Starlight Bright, Washi Garden, Comic Pop ---------- */
@@ -2472,6 +2486,47 @@ body[data-skin=seaglass] .hint{color:#3f6267}
 /*[MENU]*/body[data-skin=seaglass] .navbtn{color:#3f6267;font-size:14px}
 /*[MENU]*/body[data-skin=seaglass] .navbtn.on{background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.18)}
 body[data-skin=seaglass] :focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+/* 26.11.118: Rose Quartz look (soft blush glass), same layout as Ocean Glass */
+.sk-rosequartz{background:radial-gradient(60px 26px at 30% 100%,rgba(255,255,255,.7),transparent),linear-gradient(170deg,#fff7f9,#f6d9e2 55%,#e7a1b8)}
+body[data-skin=rosequartz]{
+  --ink:#4a2433;--muted:#7a5463;--line:#f0d3dc;--surface:#ffffff;--bg:#fbeff2;
+  --good:#0f7a52;--good-soft:#dcf5ea;
+  --shadow-1:0 1px 0 #ffffff inset,0 2px 0 #f0d3dc,0 10px 24px -14px rgba(74,36,51,.28);
+  --shadow-2:0 2px 0 #f0d3dc,0 22px 44px -20px rgba(74,36,51,.35);
+  color:#4a2433;
+  background:radial-gradient(900px 260px at 50% 108%,rgba(231,161,184,.30),transparent 70%),radial-gradient(700px 300px at 0 0,rgba(255,255,255,.75),transparent 70%),linear-gradient(180deg,#fff7f9,#fbeff2 60%,#f6e1e7);
+  background-attachment:fixed;
+}
+body[data-skin=rosequartz] :is(.panel,.quest,.modal){background:rgba(255,255,255,.88);border:1.5px solid #f0d3dc}
+body[data-skin=rosequartz] .quest{border-top:5px solid var(--accent)}
+body[data-skin=rosequartz] .topbar{background:rgba(255,247,249,.92);border-bottom:1.5px solid #f0d3dc}
+body[data-skin=rosequartz] .btn{background:#fbe6ec;color:#4a2433;box-shadow:0 3px 0 #ecc4d1}
+body[data-skin=rosequartz] .btn.primary{background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.22)}
+body[data-skin=rosequartz] .hint{color:#7a5463}
+/*[MENU]*/body[data-skin=rosequartz] .rail{background:rgba(255,255,255,.9);border-color:#f0d3dc}
+/*[MENU]*/body[data-skin=rosequartz] .navbtn{color:#7a5463;font-size:14px}
+/*[MENU]*/body[data-skin=rosequartz] .navbtn.on{background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+body[data-skin=rosequartz] :focus-visible{outline:3px solid #a3365b;outline-offset:2px}
+/* 26.11.119: Rose Quartz gets its own character: frosted pearl panels, crystal corners, rose-gold checks, slow light, pearl menu */
+body[data-skin=rosequartz]::before{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;background:radial-gradient(38% 30% at 22% 30%,rgba(247,186,206,.45),transparent 70%),radial-gradient(34% 28% at 78% 62%,rgba(214,196,245,.38),transparent 70%),radial-gradient(30% 24% at 50% 92%,rgba(255,214,226,.40),transparent 70%);animation:rqDrift 38s ease-in-out infinite alternate}
+@keyframes rqDrift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(2.5%,-2%) scale(1.04)}100%{transform:translate(-2%,2.5%) scale(1.02)}}
+@media (prefers-reduced-motion:reduce){body[data-skin=rosequartz]::before{animation:none}}
+body[data-skin=rosequartz][data-bed]:not([data-bed=""]):not([data-bed=off])::before{animation:none}
+body[data-skin=rosequartz] :is(.panel,.quest){background:linear-gradient(180deg,rgba(255,255,255,.80),rgba(255,248,250,.72));-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1.5px solid rgba(240,211,220,.95);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 0 1px rgba(255,255,255,.45),0 2px 0 #f0d3dc,0 14px 30px -18px rgba(74,36,51,.32)}
+body[data-skin=rosequartz] .modal{background:rgba(255,251,252,.97);border:1.5px solid #f0d3dc;box-shadow:inset 0 1px 0 #fff,0 24px 50px -20px rgba(74,36,51,.4)}
+body[data-skin=rosequartz] .quest{border-top:1.5px solid rgba(240,211,220,.95)}
+body[data-skin=rosequartz] .quest::before{content:"";position:absolute;left:20px;right:20px;top:0;height:4px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--accent),#f3b7c9,#e9d7ff);opacity:.9;pointer-events:none}
+body[data-skin=rosequartz] .quest::after{content:"";position:absolute;top:9px;right:9px;width:14px;height:14px;pointer-events:none;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);background:linear-gradient(150deg,#fff 0,#f6cfdb 45%,#d98aa6 100%);opacity:.75;transition:filter .3s,opacity .3s}
+body[data-skin=rosequartz] .quest.done::after{opacity:1;background:linear-gradient(150deg,#fff6e8 0,#f2c6a0 40%,#c9806b 100%);filter:drop-shadow(0 0 4px rgba(242,180,150,.9))}
+body[data-skin=rosequartz] .quest.done{background:linear-gradient(180deg,rgba(255,246,240,.9),rgba(253,236,232,.82));border-color:#f1cfc3}
+body[data-skin=rosequartz] .quest.done .q-name{color:#8a5a52;text-decoration-color:rgba(201,128,107,.55)}
+body[data-skin=rosequartz] .check{border-color:#ecc4d1;background:rgba(255,255,255,.85)}
+body[data-skin=rosequartz] .quest.done .check{background:linear-gradient(145deg,#f7d3b8,#d9967c 55%,#b8705e);border-color:#c9806b;color:#fff;text-shadow:0 1px 1px rgba(90,40,30,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 3px 0 #a9614f}
+body[data-skin=rosequartz] .tile{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -4px 0 rgba(74,36,51,.06)}
+body[data-skin=rosequartz] .btn{background:linear-gradient(180deg,#fff,#fbe6ec);color:#4a2433;box-shadow:inset 0 1px 0 #fff,0 3px 0 #ecc4d1}
+body[data-skin=rosequartz] .btn.primary{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),var(--accent);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 0 rgba(0,0,0,.22)}
+/*[MENU]*/body[data-skin=rosequartz] .rail{background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,247,250,.9));-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-color:#f0d3dc;box-shadow:inset -1px 0 0 #fff}
+/*[MENU]*/body[data-skin=rosequartz] .navbtn.on{background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,0) 60%),var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.16),0 0 18px -2px rgba(231,161,184,.85)}
 
 
 /* 26.11.31: big card view */
@@ -2512,6 +2567,10 @@ body[data-skin=seaglass] :focus-visible{outline:3px solid #0f766e;outline-offset
   /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .navbtn{min-width:54px}
   /*[MENU]*/body[data-skin=atlas] .navbtn{padding:0 8px;font-size:16px}
 }
+/* 26.11.119: the floating menu in landscape takes its natural width (left:50% alone could squeeze it to half the screen), capped to the screen, and scrolls if longer */
+@media (orientation:landscape) and (min-width:761px) and (min-height:501px){
+  /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .rail{width:max-content;justify-content:flex-start}
+}
 /* side menu (Classic, Midnight Gallery, Washi, Comic) in landscape: smaller when the screen is short, and scrolls if needed */
 @media (orientation:landscape) and (min-width:761px){
   /*[MENU]*/body:not(:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade],[data-skin=atlas])) .rail{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
@@ -2525,7 +2584,8 @@ body[data-skin=seaglass] :focus-visible{outline:3px solid #0f766e;outline-offset
 }
 /* floating menu (Midnight Arcade, Starlight Bright, Pocket Arcade): never wider than the screen */
 @media (min-width:761px){
-  /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .rail{max-width:calc(100vw - 16px);overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  /* 26.11.119: % not vw (vw grows with the text-size zoom); centred; scroll stays inside the menu */
+  /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .rail{max-width:calc(100% - 16px);margin-left:auto;margin-right:auto;overscroll-behavior-x:contain;touch-action:pan-x;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
   /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .rail>*{flex-shrink:0}
   /*[MENU]*/body[data-skin=atlas] .rail{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
   /*[MENU]*/body[data-skin=atlas] .rail>*:not(.spacer){flex-shrink:0}
@@ -2711,7 +2771,7 @@ iframe.llstory{transition:opacity .45s ease}
 @media (orientation:portrait),(max-width:699px){
   .pburger{display:inline-flex}
   .pnav{position:absolute;left:0;top:0;bottom:0;z-index:6;transform:translateX(-105%);transition:transform .22s ease;width:min(82vw,300px);background:#f1effa;color:#241f4a;box-shadow:6px 0 24px rgba(0,0,0,.25)}
-  body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery]) .pnav{background:#1a2050;color:#fff}
+  body:is([data-skin=hybrid],[data-skin=night],[data-skin=gallery],[data-skin=aurora]) .pnav{background:#1a2050;color:#fff}
   .pshell.open .pnav{transform:none}
   .pshell.open .pscrim{display:block;position:absolute;inset:0;z-index:5;background:rgba(10,8,30,.45)}
   .pmain{padding:0 14px 40px}
@@ -2798,6 +2858,54 @@ iframe.llstory{transition:opacity .45s ease}
 .ifl{flex:none;width:86px;font-weight:800;font-size:14px;color:var(--muted)}
 .ifb{flex:1;display:flex;height:30px;border-radius:10px;overflow:hidden;background:rgba(127,127,170,.1)}
 .ifb i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px;min-width:0;overflow:hidden}
+
+/* ===== 26.11.121: Aurora Night (unlockable). Builds on the Midnight Gallery dark rules, then adds its own sky. ===== */
+.sk-aurora{background:linear-gradient(170deg,transparent 30%,rgba(110,240,181,.55) 45%,transparent 58%),linear-gradient(160deg,transparent 40%,rgba(184,140,255,.45) 55%,transparent 68%),radial-gradient(1.5px 1.5px at 20% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 15%,#fff,transparent),radial-gradient(1px 1px at 45% 35%,#fff,transparent),linear-gradient(180deg,#050b18,#0b1a2c 70%,#123040)}
+.skinopt.locked .skprev{filter:saturate(.55) brightness(.75);position:relative;display:grid;place-items:center}
+.skinopt.locked .sklock{font-size:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.skinopt.locked small{font-weight:700}
+body[data-skin=aurora]{
+  --ink:#ece9de;--muted:#a7b7bd;--line:rgba(190,235,225,.14);--surface:rgba(16,32,48,.62);--bg:#060d1a;
+  --accent:#3fa985;--accent-2:#7ac8ff;--accent-soft:rgba(110,240,181,.18);
+  --good:#6ef0b5;--good-soft:rgba(110,240,181,.14);
+  --g1:#6ef0b5;--g2:#7ac8ff;--g3:#c49bff;--lvbc:#060d1a;
+  --shadow-1:0 18px 36px -22px rgba(0,0,0,.8),inset 0 1px 0 rgba(220,255,245,.07);
+  --shadow-2:0 30px 60px -20px rgba(0,0,0,.9);
+  color:var(--ink);
+  background:linear-gradient(180deg,#040914 0,#071326 45%,#0b2233 80%,#0e2a36 100%);
+  background-attachment:fixed;
+}
+body[data-skin=aurora]::before{content:"";position:fixed;inset:-15% -10% 30% -10%;z-index:-1;pointer-events:none;filter:blur(28px);opacity:.75;background:radial-gradient(45% 18% at 30% 38%,rgba(110,240,181,.55),transparent 70%),radial-gradient(40% 14% at 62% 30%,rgba(122,200,255,.40),transparent 70%),radial-gradient(35% 16% at 80% 45%,rgba(196,155,255,.38),transparent 70%),radial-gradient(30% 10% at 15% 22%,rgba(110,240,181,.30),transparent 70%);transform-origin:50% 30%;animation:aurWave 26s ease-in-out infinite alternate}
+@keyframes aurWave{0%{transform:skewX(-8deg) translateX(-3%) scaleY(1);opacity:.6}50%{transform:skewX(6deg) translateX(2%) scaleY(1.15);opacity:.85}100%{transform:skewX(-3deg) translateX(4%) scaleY(.95);opacity:.7}}
+body[data-skin=aurora]::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;background:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 27% 8%,#fff,transparent),radial-gradient(1.4px 1.4px at 41% 22%,#fff,transparent),radial-gradient(1px 1px at 58% 12%,#fff,transparent),radial-gradient(1.3px 1.3px at 73% 25%,#fff,transparent),radial-gradient(1px 1px at 88% 9%,#fff,transparent),radial-gradient(1px 1px at 8% 44%,#fff,transparent),radial-gradient(1.2px 1.2px at 94% 40%,#fff,transparent),radial-gradient(1px 1px at 50% 3%,#fff,transparent),radial-gradient(1px 1px at 66% 48%,rgba(255,255,255,.8),transparent);animation:aurTwinkle 7s ease-in-out infinite alternate}
+@keyframes aurTwinkle{0%{opacity:.35}100%{opacity:.7}}
+@media (prefers-reduced-motion:reduce){body[data-skin=aurora]::before,body[data-skin=aurora]::after{animation:none}}
+body[data-skin=aurora][data-calm=on]::before,body[data-skin=aurora][data-calm=on]::after{animation:none}
+body[data-skin=aurora][data-bed]:not([data-bed=""]):not([data-bed=off])::before{animation:none;opacity:.35}
+body[data-skin=aurora] .panel{background:linear-gradient(180deg,rgba(20,40,58,.70),rgba(12,26,40,.66));border:1px solid rgba(190,235,225,.14);box-shadow:inset 0 1px 0 rgba(220,255,245,.08),0 18px 36px -22px rgba(0,0,0,.8)}
+body[data-skin=aurora] .quest{background:linear-gradient(180deg,rgba(20,40,58,.74),rgba(12,26,40,.70));border:1px solid rgba(190,235,225,.14);box-shadow:inset 0 1px 0 rgba(220,255,245,.08),0 14px 30px -20px rgba(0,0,0,.85)}
+body[data-skin=aurora] .quest::after{content:"";position:absolute;top:10px;right:10px;width:13px;height:13px;border-radius:50%;pointer-events:none;box-shadow:inset -4px -1px 0 0 #f3ecd2;opacity:.75;transition:background .4s,box-shadow .4s}
+body[data-skin=aurora] .quest.done::after{background:#f3ecd2;box-shadow:0 0 10px 2px rgba(243,236,210,.55);opacity:1}
+body[data-skin=aurora] .quest.done{background:linear-gradient(180deg,rgba(24,56,60,.78),rgba(14,36,44,.72));border-color:rgba(110,240,181,.32)}
+body[data-skin=aurora] .check{border-color:rgba(190,235,225,.28);background:rgba(255,255,255,.04)}
+body[data-skin=aurora] .quest.done .check{background:linear-gradient(145deg,#8ff5c6,#3fa985);border-color:#6ef0b5;color:#04221a;box-shadow:0 0 16px rgba(110,240,181,.45)}
+/*[MENU]*/body[data-skin=aurora] .rail{background:linear-gradient(180deg,rgba(10,22,38,.86),rgba(6,14,26,.86));border-color:rgba(190,235,225,.12)}
+/*[MENU]*/body[data-skin=aurora] .navbtn{color:#a7b7bd}
+/*[MENU]*/body[data-skin=aurora] .navbtn.on{background:linear-gradient(135deg,rgba(110,240,181,.22),rgba(122,200,255,.18),rgba(196,155,255,.24));color:#fff;box-shadow:inset 0 0 0 1px rgba(220,255,245,.18),0 0 22px -4px rgba(110,240,181,.55)}
+body[data-skin=aurora] .topbar{background:rgba(6,13,26,.78)}
+body[data-skin=aurora] .btn.primary{background:linear-gradient(135deg,#4fc79c,#3fa985 55%,#3a8fb8);color:#04221a;box-shadow:0 3px 0 #1f6b55,0 0 18px -4px rgba(110,240,181,.5)}
+body[data-skin=aurora] :focus-visible{outline:3px solid #8ff5c6;outline-offset:2px}
+.aurmodal{text-align:center;padding:4px 4px 8px}
+.aursky{position:relative;height:150px;border-radius:20px;overflow:hidden;margin-bottom:14px;background:linear-gradient(180deg,#040914,#0b2233)}
+.aursky i{position:absolute;left:-20%;right:-20%;height:60px;border-radius:50%;filter:blur(14px);opacity:0;animation:aurRise 2.4s ease-out forwards}
+.aursky i:nth-child(1){top:30px;background:rgba(110,240,181,.8)}
+.aursky i:nth-child(2){top:55px;background:rgba(122,200,255,.6);animation-delay:.4s}
+.aursky i:nth-child(3){top:40px;background:rgba(196,155,255,.6);animation-delay:.8s}
+.aurmoon{position:absolute;right:24px;top:18px;width:26px;height:26px;border-radius:50%;background:#f3ecd2;box-shadow:0 0 18px 4px rgba(243,236,210,.5)}
+@keyframes aurRise{0%{opacity:0;transform:translateY(40px) skewX(-10deg)}100%{opacity:.9;transform:translateY(0) skewX(6deg)}}
+.aurkit{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;font-weight:700}
+@media (prefers-reduced-motion:reduce){.aursky i{animation:none;opacity:.8}}
+body[data-calm=on] .aursky i{opacity:.8}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -3073,6 +3181,7 @@ function markDayComplete(){
   if(!cont) state.streakPaid = {};
   state.lastComplete = t;
   state.daysCompleted += 1;
+  setTimeout(auroraCheckUnlock, 6000);   /* 26.11.121 */
   state.history[t] = 'done';
   if(state.streak > (state.streakBest || 0)) state.streakBest = state.streak;
   var m = STREAK_BONUS[state.streak];
@@ -5544,7 +5653,8 @@ if(window.visualViewport) window.visualViewport.addEventListener('resize', cardB
    speakers (sound volume + mute) and the app's music fades out while it plays. One story at a time;
    closing it removes the frame completely so nothing keeps running.
    ========================================================= */
-var LL_INFO = {"ll01": {"key": "halley", "facts": [["☄️ Comes back about every <b>76 years</b>", "約76年ごとに もどってくる"], ["🔭 Edmond Halley predicted its return in <b>1705</b>", "1705年に ハレーが よそくした"], ["🧊 Its icy heart is about <b>15 km</b> long and darker than coal", "こおりの しんは 長さ 約15km。すみよりも 黒い"], ["📅 Next visit: <b>28 July 2061</b>", "つぎは 2061年7月28日"]]}, "ll02": {"key": "kaguya", "facts": [["🎋 Found inside a <b>glowing bamboo</b> stalk", "光る 竹の 中から 見つかった"], ["📜 From <b>The Tale of the Bamboo Cutter</b>, Japan's oldest story", "『竹取物語』 日本で いちばん 古い 物語"], ["🌕 She went home to the Moon on a <b>full moon</b> night", "まんげつの 夜に 月へ 帰った"], ["🗻 Some say <b>Mount Fuji</b> got its name from this story", "富士山の 名前は この お話から 来たとも 言われる"]]}, "ll03": {"key": "kowloon", "facts": [["🏯 Began as a Chinese <b>fort</b>, left out when Britain leased the land around it in 1898", "イギリスが 1898年に まわりを かりた とき、とりでだけ 外された"], ["🏙️ About <b>33,000 people</b> in 350 buildings, one of the most crowded places ever", "やく 350の ビルに 3万3千人。世界で いちばん こんでいた 場所の 1つ"], ["🎮 Inspired many <b>sci-fi</b> films, comics and games", "SF映画、まんが、ゲームの ヒントに なった"], ["🌳 Now <b>Kowloon Walled City Park</b> (opened 1995)", "いまは 九龍寨城公園 (1995年〜)"]]}, "ll04": {"key": "nian", "facts": [["🧧 Nian was scared of <b>red</b>, bright light and loud noise", "赤い 色、明るい 光、大きな 音が にがて"], ["🏮 That is why New Year has <b>red lanterns</b> and red envelopes", "だから お正月には 赤い ちょうちんと お年玉ぶくろ"], ["🥁 Drums, gongs and <b>lion dances</b> chase bad luck away", "たいこ、ドラ、獅子舞で わるい ことを 追いはらう"], ["🎆 Some say <b>過年</b> (celebrating New Year) means \"getting past Nian\"", "「過年」は「年を のりこえる」という いみ とも 言われる"]]}, "ll05": {"key": "wave", "facts": [["🎨 By <b>Katsushika Hokusai</b>, made when he was about 70", "葛飾北斎が 70さいごろに かいた"], ["🗻 Look closely: <b>Mount Fuji</b> is tiny, under the wave", "よく 見ると 富士山が 波の 下に 小さく"], ["🪵 A <b>woodblock print</b>: carved wood, printed many times", "木はんが：木を ほって 何まいも 刷った"], ["🔵 Its blue was a new paint from Europe: <b>Prussian blue</b>", "青は ヨーロッパから 来た 新しい 色「ベロ藍」"]]}, "ll06": {"key": "carp", "facts": [["🐟 A carp that climbs the <b>Dragon Gate</b> falls becomes a dragon", "竜門の 滝を のぼった 鯉は 竜に なる"], ["🌊 The Dragon Gate is on China's <b>Yellow River</b>", "竜門は 中国の 黄河に ある"], ["🎏 That is why <b>koinobori</b> fly on Children's Day, May 5", "だから 5月5日 こどもの日に こいのぼり"], ["📝 鯉の滝登り / 鯉躍龍門: working hard to <b>succeed</b>", "「鯉の滝登り」は がんばって 出世する こと"]]}, "ll07": {"key": "cpr", "facts": [["🏔️ Finished in 1885, more than <b>5 years ahead</b> of its deadline", "1885年に かんせい、よていより 5年いじょう はやく"], ["🇨🇳 About <b>15,000 workers from China</b> built the hardest part, in British Columbia", "中国から 来た やく 15,000人が いちばん むずかしい ところを 作った"], ["🔨 The <b>last spike</b> was plain iron, and the first one bent!", "さいごの くぎは ふつうの 鉄。1本目は まがった！"], ["🌊 It joined east to west, like Canada's motto <b>\"From sea to sea\"</b>", "東と 西を つないだ。カナダの モットーは「海から 海へ」"]]}, "ll08": {"key": "hangul", "facts": [["🔤 Hangul started with <b>28 letters</b>; Korean uses 24 today", "はじめは 28字、今は 24字"], ["👄 Consonants are shaped like the <b>mouth and tongue</b> making the sound", "子音は 音を 出す 口や したの 形"], ["📅 <b>Hangul Day</b> is 9 October", "ハングルの 日は 10月9日"], ["🌏 The 1446 book that introduced it is on UNESCO's <b>Memory of the World</b> list", "1446年の 本は ユネスコの「世界の記憶」"]]}, "ll09": {"key": "insulin", "facts": [["🏝️ The tiny cell clusters that make insulin are called <b>islands</b>", "インスリンを 作る 小さな 細胞は「島」と よばれる"], ["👦 <b>Leonard Thompson</b>, 14, was the first patient, in January 1922", "さいしょの かんじゃは 14さいの レナード（1922年1月）"], ["🏅 The discovery won a <b>Nobel Prize</b> in 1923", "1923年に ノーベル賞"], ["🔥 The <b>Flame of Hope</b> at Banting House has burned since 1989", "バンティング・ハウスの「きぼうの 火」は 1989年から もえている"]]}};
+/* 26.11.117: Living Legendary facts now use the same lines as the story scripts */
+var LL_INFO = {"ll01": {"key": "halley", "facts": [["🔭 <b>1705:</b> Edmond Halley: “The comets of 1531, 1607 and 1682 were all the SAME comet! It will come back in 1758.”", "ハレー「1531年、1607年、1682年の ほうき星は、ぜんぶ 同じ ほうき星だ！ 1758年に また来るぞ」"], ["🎄 <b>Christmas 1758:</b> A farmer spots it in the sky. It came back, just like Halley said!", "1758年の クリスマス。のうかの 人が 見つけた。ハレーの 言ったとおり、もどってきた！"], ["🚀 <b>1986:</b> Space probes fly out to meet it, even Japan’s Suisei! Giotto flies closest and sees its icy heart.", "たんさきが 会いに行った。日本の「すいせい」も！ ジオットは いちばん 近くで こおりの しんを 見た！"], ["<b>Next visit: 2061 ✨</b>", "つぎに 来るのは 2061年！"]]}, "ll02": {"key": "kaguya", "facts": [["🎋 <b>Long, long ago:</b> An old bamboo cutter found a bamboo stalk that glowed. Inside was a tiny girl, small enough to sit in his hand!", "むかしむかし、竹取りの おじいさんが 光る竹を 見つけた。中には 手のひらに のるほどの 小さな 女の子が！"], ["🌕 <b>Three months later:</b> She grew up in just three months, kind and shining bright. But she often gazed at the Moon, her real home.", "3か月で 大きく なった かぐや姫。でも よく 月を 見上げていた。月こそ ほんとうの ふるさと。"], ["☁️ <b>The full moon night:</b> The Moon people came for her on a shining cloud. Kaguya left a letter for her family and floated home.", "十五夜、月の 人たちが 光る 雲に のって むかえに 来た。かぐや姫は 家族に 手紙を のこして 月へ 帰った。"], ["<b>Japan’s oldest story: over 1,000 years old! 🌕</b>", "日本で いちばん 古い 物語。1000年 以上 前の お話！"]]}, "ll03": {"key": "kowloon", "facts": [["🏙️ <b>1950s to 1980s:</b> People built homes on top of homes, until about 350 buildings were squeezed into one giant block for 33,000 people.", "家の 上に 家を つみ上げて、やく 350の ビルが 1つの 大きな かたまりに。3万3千人が 住んでいた。"], ["🎮 <b>A city of the future?:</b> Its tangled, glowing maze later inspired lots of sci-fi films, comics and video games.", "ごちゃごちゃで 光る めいろは、のちに たくさんの SF映画や まんが、ゲームの ヒントに なった。"], ["🏮 <b>Almost no rules:</b> There was almost no law, and the lanes were dark. But real families lived here and helped each other.", "ほとんど 法律の ない 町。道は 暗かった。でも 本当の 家族が くらし、たすけあって いた。"], ["🏯 <b>1840s to 1898:</b> It began as a small Chinese fort. In 1898 Britain leased all the land around it, but left the fort out. So who was in charge? Nobody agreed!", "はじまりは 中国の 小さな とりで。1898年、イギリスは まわりの 土地を かりたのに、とりでだけ 外した。だれが きめるの？ だれも わからなかった！"], ["🌳 <b>1994 to today:</b> By 1994 the buildings were taken down. Now it is a beautiful park, and the old fort’s office still stands.", "1994年までに ビルは こわされ、いまは きれいな 公園。むかしの とりでの 役所も のこって いる。"], ["<b>From fort, to city with almost no rules, to peaceful garden 🌳</b>", "とりで → ルールの ない 町 → しずかな 庭園 🌳"]]}, "ll04": {"key": "nian", "facts": [["🧧 <b>Long, long ago in China:</b> Every New Year’s Eve, a huge monster called Nian came down from the mountains, and everyone hid at home.", "むかし 中国。大みそかに なると「年(ねん)」という かいぶつが 山から おりてきて、みんな 家に かくれた。"], ["👴 <b>A clever old man:</b> A wise old man found Nian’s secret: it was scared of the colour red, bright lights and loud noises!", "かしこい おじいさんが ひみつを 見つけた。年は 赤い 色と 明るい 光と 大きな 音が にがて だったのだ！"], ["🥁 <b>The first New Year:</b> So everyone hung red banners, lit lanterns and banged drums and gongs. Nian ran away and never came back!", "みんなで 赤い かざりを はり、ちょうちんを ともし、たいこと ドラを ならした。年は にげて 二度と 来なかった！"], ["<b>That’s why New Year is red and loud! 新年快樂 🧧</b>", "だから お正月は 赤くて にぎやか！"]]}, "ll05": {"key": "wave", "facts": [["🎨 <b>Edo, Japan, about 1830:</b> Hokusai painted every single day of his long life. At about 70, he made his most famous picture.", "北斎は まいにち 絵を かいた。70さいごろ、いちばん 有名な 絵を かいた。"], ["🌊 <b>The Great Wave:</b> A giant wave with foamy fingers, three little boats, and tiny Mount Fuji far away. Can you spot it?", "大きな 波、3そうの 小さな ふね、遠くに 小さな 富士山。見つけられるかな？"], ["🪵 <b>Printed for everyone:</b> It was carved into wood blocks and printed again and again, so ordinary families could buy one.", "木はんに ほって 何まいも 刷ったので、ふつうの 家族も 買えた。"], ["<b>Hokusai said: “By 110, every dot I paint will come alive!” 🌊</b>", "「110さいに なれば、点も 線も 生きて いるように なる」"]]}, "ll06": {"key": "carp", "facts": [["🌊 <b>Long ago, China:</b> On the Yellow River stood the Dragon Gate, a waterfall so tall that almost no fish could climb it.", "むかし 中国の 黄河に「竜門」という とても 高い 滝が あった。のぼれる 魚は ほとんど いなかった。"], ["🐟 <b>Again and again:</b> One little golden carp kept jumping. It fell back, tried again... and again... and never gave up!", "小さな 金色の 鯉が なんども ジャンプ。落ちても また ちょうせん。ぜったいに あきらめなかった！"], ["🐉 <b>Over the top!:</b> With one last mighty leap it flew over the top, and turned into a golden dragon!", "さいごの 大ジャンプで 滝を こえた 鯉は、金色の 竜に なった！"], ["<b>Never give up! That’s why carp streamers fly on Children’s Day 🎏</b>", "あきらめないで！だから こどもの日に こいのぼり 🎏"]]}, "ll07": {"key": "cpr", "facts": [["🏔️ <b>Before 1885:</b> Canada was huge, with giant mountains between east and west. A railway would join it together.", "カナダは とても 大きな 国。東と 西の あいだに 高い 山が ありました。"], ["👷 <b>1880s:</b> Thousands of workers came from far away, hoping to send money home to their families.", "とおくから たくさんの 人が 来ました。家族に お金を おくるためです。"], ["🇨🇳 <b>The hardest part:</b> About 15,000 came from China. They did the most dangerous work for less pay, and hundreds of them died.", "中国から やく 15,000人が 来ました。いちばん きけんな しごとを して、たくさんの 人が なくなりました。"], ["🔨 <b>7 November 1885:</b> The last spike! Everyone cheered. But the workers from China were not in the famous photo.", "さいごの くぎ！みんな よろこびました。でも、有名な しゃしんに 中国の 人たちは いませんでした。"], ["🚂 <b>Today:</b> Now they are remembered. In Toronto, a memorial honours them, and trains still cross the mountains.", "今は みんなが おぼえています。トロントには 記念の ぞうが あり、列車は 今も 山を こえます。"], ["<b>Built by many hands, from sea to sea 🚂</b>", "たくさんの 手で、うみから うみへ 🚂"]]}, "ll08": {"key": "hangul", "facts": [["👑 <b>1440s:</b> In King Sejong’s time, writing used thousands of hard characters. Most people never learned to read.", "セジョン王の ころ、字は とても むずかしく、ほとんどの 人は 読めませんでした。"], ["🌾 <b>The problem:</b> Farmers couldn’t read a notice or write a letter home. The king felt sad for them.", "のうかの 人は おしらせも 手紙も 読めません。王さまは かなしく 思いました。"], ["🔤 <b>1443:</b> So he made 28 simple letters, shaped like your mouth when you speak, and the sky, the earth and people.", "そこで 王さまは 28の かんたんな 字を 作りました。口の 形や、空・大地・人の 形です。"], ["📜 <b>Hundreds of years:</b> Some scholars said no, and Hangul waited hundreds of years. But mothers, kids and farmers kept it alive.", "はんたいする 人も いて、長い あいだ 使われませんでした。でも お母さんや 子どもたちが 大切に しました。"], ["🌏 <b>Today:</b> Today almost everyone in Korea can read, and Korean stories, songs and films are loved all over the world.", "今では ほとんど みんなが 読めます。韓国の 歌や えいがは 世界中で 大人気です。"], ["<b>From a king’s gift of 28 letters, to a whole country reading 📜</b>", "王さまの 28の 字から、みんなが 読める 国へ 📜"]]}, "ll09": {"key": "insulin", "facts": [["💉 <b>Before 1922:</b> Long ago, children with diabetes got very sick, and doctors had no medicine to help them.", "むかし、とうにょうびょうの 子どもは とても 重い びょうきに なり、くすりも ありませんでした。"], ["🔬 <b>1921:</b> In a small Toronto lab, Frederick Banting and Charles Best worked day and night, searching for a cure.", "トロントの 小さな けんきゅうしつで、バンティングと ベストは 毎日 がんばりました。"], ["🏝️ <b>The secret:</b> They found it in tiny ‘islands’ of cells and named it insulin. In 1922, Leonard, 14, was the first to get it!", "体の 中の 小さな 「島」で 見つけて、インスリンと 名づけました。1922年、14さいの レナードが はじめて もらいました！"], ["🛏️ <b>People say...:</b> People say doctors went from bed to bed, and a whole ward of children woke up smiling.", "お医者さんが ベッドを まわると、子どもたちが みんな えがおで 目を さました、と 言われています。"], ["🔥 <b>Today:</b> They sold insulin’s recipe for $1 so everyone could have it. A Flame of Hope burns until there is a cure.", "みんなが 使えるように、たった 1ドルで ゆずりました。なおる 日まで 「きぼうの 火」が もえています。"], ["<b>From one big idea, to medicine for the whole world 💛</b>", "1つの アイデアから、世界中の くすりへ 💛"]]}};
 var LLP = null;
 function llFactsHTML(id){
   var inf = LL_INFO[id]; if(!inf) return '';
@@ -6101,10 +6211,29 @@ var SKINS = [
   {k:'washi', n:'Washi Garden', d:'Soft paper and ink, calm and easy on the eyes'},
   {k:'comic', n:'Comic Pop', d:'Bold black outlines, super easy to read'},
   {k:'seaglass', n:'Ocean Glass', d:'Cool sea-glass colours, calm and clear'},   /* 26.11.110 */
+  {k:'rosequartz', n:'Rose Quartz', d:'Soft blush glass, gentle and refined'},   /* 26.11.118 */
+  {k:'aurora', n:'Aurora Night', d:'Northern lights over a quiet night sky', lock:true},   /* 26.11.121 */
   {k:'classic', n:'Classic', d:'The first look'}
 ];
+/* 26.11.121: Aurora Night unlocks after N full quest days (days with every quest done; they add up, gaps are fine) */
+var AURORA_DAYS = 30;
+function auroraNeed(){ var v = state.eco && state.eco.auroraDays; return v > 0 ? v : AURORA_DAYS; }
+function auroraHave(){ return state.daysCompleted || 0; }
+function skinOpen(sk){ return !sk.lock || auroraHave() >= auroraNeed(); }
+function auroraCheckUnlock(){
+  try{
+    if(state.auroraSeen || auroraHave() < auroraNeed()) return;
+    if(sqActivityOpen() || ($('overlay') && $('overlay').classList.contains('show'))){ setTimeout(auroraCheckUnlock, 4000); return; }
+    state.auroraSeen = true; save();
+    openModal('<div class="aurmodal"><div class="aursky"><i></i><i></i><i></i><b class="aurmoon"></b></div><h2>Aurora Night is yours! 🌌</h2><p>'+auroraNeed()+' days with every quest done. The northern lights came out for you.</p><div class="aurkit">'+kitHTML('happy','big')+'<span>“You did it! The night sky is yours now.”</span></div><div class="row" style="justify-content:center;gap:10px;margin-top:12px"><button class="btn primary" data-aurora-try="1">✨ Try it</button><button class="btn" data-x="1">Later</button></div></div>');
+    $('modal').onclick = function(e){ var b = e.target.closest('button'); if(!b) return;
+      if(b.hasAttribute('data-x')){ $('modal').onclick = null; closeModal(); return; }
+      if(b.hasAttribute('data-aurora-try')){ $('modal').onclick = null; state.skin = 'aurora'; save(); closeModal(); render(); } };
+    try{ Sound.chime(); }catch(_){}
+  }catch(e){}
+}
 function skinKey(){
-  for(var i=0;i<SKINS.length;i++){ if(SKINS[i].k === state.skin) return state.skin; }
+  for(var i=0;i<SKINS.length;i++){ if(SKINS[i].k === state.skin) return skinOpen(SKINS[i]) ? state.skin : 'hybrid'; }
   return 'hybrid';
 }
 function skinName(){
@@ -6114,7 +6243,7 @@ function skinName(){
 function nextSkin(){
   var idx = 0;
   for(var i=0;i<SKINS.length;i++){ if(SKINS[i].k === skinKey()) idx = i; }
-  state.skin = SKINS[(idx+1) % SKINS.length].k;
+  for(var n=1;n<=SKINS.length;n++){ var sk = SKINS[(idx+n) % SKINS.length]; if(skinOpen(sk)){ state.skin = sk.k; return; } }
 }
 
 function greeting(){ var h = new Date().getHours(); return h < 12 ? 'Good morning' : (h < 18 ? 'Good afternoon' : 'Good evening'); }
@@ -6590,6 +6719,7 @@ function helpData(){
     {q:'What are badges?', a:'Badges are awards for things like streaks, collecting cards, quizzes and kanji. Find them in <b>Me</b>. Gold, silver and bronze show how far you got.'},
     {q:'What happens on my birthday?', a:'You get a party banner, confetti, balloons, Kit in a party hat (tap him to make a wish!), and a <b>Birthday Star card</b> to keep. Look in <b>Me → Birthday Book</b> to see all your birthday cards and your “year in review”.'},
     {q:'How do I change how it looks?', a:'Go to <b>Me</b>. You can change your picture, name, colour and “look”. You can also change sounds, music (with a sleep timer), text size, the language of the bites, and calm mode for quieter animations. You can even choose whether Kit shows up. Find S, SSR, LL or SSSR cards to unlock <b>hero pictures</b>.'},
+      {q:'How do I get Aurora Night?', a:li(['<b>Aurora Night</b> is a special look with the northern lights.','It unlocks after <b>'+auroraNeed()+' days</b> where you finish <b>every</b> quest.','The days add up. Missing a day is OK, nothing is lost.','See how close you are in <b>Me → Choose your look</b>.'])},   /* 26.11.121 */
       {q:'Which look is easiest to read?', a:'All the looks are checked so words are easy to read. If you want extra-clear text, try <b>Starlight Bright</b> (dark) or <b>Comic Pop</b> (bright, with bold outlines). <b>Washi Garden</b> is soft and calm. <b>Ocean Glass</b> is cool and clear, with bigger menu labels. In Classic, Pocket Arcade, Washi Garden and Comic Pop you can also pick your colour.'}
    ]},
    {t:'🛠️ If something looks odd', i:[
@@ -6724,7 +6854,9 @@ function renderProfile(){
   h += streakPanelHTML();
   h += helpPanelHTML();
   h += '<div class="panel lookpanel"><div class="ptitle">🖼️ Choose your look</div><div class="skingrid">';
-  SKINS.forEach(function(s){ h += '<button class="skinopt'+(skinKey()===s.k?' on':'')+'" data-skin-pick="'+s.k+'"><div class="skprev sk-'+s.k+'"></div><b>'+s.n+'</b><small>'+s.d+'</small></button>'; });
+  SKINS.forEach(function(s){
+    if(!skinOpen(s)){ h += '<button class="skinopt locked" data-skin-locked="'+s.k+'"><div class="skprev sk-'+s.k+'"><span class="sklock">🔒</span></div><b>'+s.n+'</b><small>🌌 '+Math.min(auroraHave(), auroraNeed())+' of '+auroraNeed()+' full quest days</small></button>'; return; }   /* 26.11.121 */
+    h += '<button class="skinopt'+(skinKey()===s.k?' on':'')+'" data-skin-pick="'+s.k+'"><div class="skprev sk-'+s.k+'"></div><b>'+s.n+'</b><small>'+s.d+'</small></button>'; });
   h += '</div></div>';
   h += '<div class="panel profilecard"><div class="bigavatar" id="bigavatar">'+avatarInner(state.avatar)+'</div>';
   h += '<input class="nameinput" id="nameInput" type="text" maxlength="16" placeholder="Type your name" value="'+esc(state.name)+'">';
@@ -7193,6 +7325,7 @@ function showParentSection(key, scrollTop){
     h += '<h3>Card promotion</h3><div class="hint" style="margin-bottom:6px">Duplicates fill a meter for their rarity. When the meter is full, the duplicate she just opened is promoted (a brighter look and a star). How many duplicates fill each meter:</div><div class="ecogrid">';
     ['C','B','A','S'].forEach(function(k){ h += pNum(k+' duplicates', 'ePromo'+k, 1, 20, promoNeed(k)); });
     h += '</div>';
+    h += '<h3>🌌 Aurora Night look</h3><div class="hint" style="margin-bottom:6px">Unlocks after this many days with every quest done (they add up; gaps are fine). She has '+auroraHave()+' now. Set it to 1 to unlock it straight away.</div><div class="ecogrid">'+pNum('Full quest days needed', 'eAurora', 1, 365, auroraNeed())+'</div>';   /* 26.11.121 */
     h += '<h3>Rest day</h3>';
     h += pTog('Allow one rest day per week', 'eRest', e.restOn);
     h += pTog('Use the rest day automatically if a day is missed', 'eAuto', e.autoRest);
@@ -7329,6 +7462,7 @@ function applyParentSettings(){
   e.bonus = num('eBonus', 0, 50, e.bonus);
   e.screenCap = num('eScreen', 0, 600, e.screenCap);
   e.extraCap = num('eExtra', 0, 200, e.extraCap);
+  if($('eAurora')) e.auroraDays = num('eAurora', 1, 365, auroraNeed());   /* 26.11.121 */
   if($('ePromoC')){ ['C','B','A','S'].forEach(function(k){ e['promo'+k] = num('ePromo'+k, 1, 20, promoNeed(k)); }); }
   e.packCap = num('ePackCap', 0, 20, packCap());
   if($('eFreePacks')) e.freePacks = num('eFreePacks', 0, 5, freePacks());
@@ -8638,6 +8772,7 @@ $('view-profile').addEventListener('click', function(e){
   if(b.hasAttribute('data-av')){ state.avatar = b.getAttribute('data-av'); save(); Sound.chime(); render(); return; }
   if(b.hasAttribute('data-theme-pick')){ state.theme = b.getAttribute('data-theme-pick'); save(); Sound.tap(); render(); return; }
   if(b.hasAttribute('data-skin-pick')){ state.skin = b.getAttribute('data-skin-pick'); save(); Sound.chime(); render(); return; }
+  if(b.hasAttribute('data-skin-locked')){ toast('🌌 The northern lights come out after '+auroraNeed()+' days with every quest done. You have '+Math.min(auroraHave(), auroraNeed())+' so far!', 4200); return; }   /* 26.11.121 */
   if(b.hasAttribute('data-cal')){ calShift(+b.getAttribute('data-cal')); Sound.tap(); render(); return; }
   if(b.hasAttribute('data-ts')){ state.ui.ts = b.getAttribute('data-ts'); save(); Sound.tap(); render(); return; }
   if(b.hasAttribute('data-lang')){ state.ui.lang = b.getAttribute('data-lang'); save(); Sound.tap(); render(); return; }
@@ -14659,6 +14794,7 @@ state = load();
 if(FAMPACK && FAMPACK.bday && FAMPACK.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:FAMPACK.bday.y, m:FAMPACK.bday.m, d:FAMPACK.bday.d}; }
 try{ checkNewDay(); }catch(e){ try{ console.error('newday', e); }catch(_){} }
 setTimeout(godPackCheck, 1500);
+setTimeout(auroraCheckUnlock, 9000);   /* 26.11.121: if she already has enough full quest days */
 save();
 render();
 try{ tick(); }catch(e){ try{ console.error('tick', e); }catch(_){} }
