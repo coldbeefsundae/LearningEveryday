@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.121', errs = [], shown = false;
+  var V = '26.11.122', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-12';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2571,6 +2571,12 @@ body[data-skin=rosequartz] .btn.primary{background:linear-gradient(180deg,rgba(2
 @media (orientation:landscape) and (min-width:761px) and (min-height:501px){
   /*[MENU]*/body:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade]) .rail{width:max-content;justify-content:flex-start}
 }
+
+/* 26.11.122: one spacing rule for every tab. Top-level boxes get the same 18px gap; a heading sits 12px above what it introduces. */
+.view.show>:not(#_sq){margin-top:0;margin-bottom:0}
+.view.show>:not(#_sq)+:not(#_sq){margin-top:18px}
+.view.show>.sec:not(#_sq)+:not(#_sq){margin-top:12px}
+.view.show>:not(#_sq):is([style*="display:none"],[hidden],script,style,template)+:not(#_sq){margin-top:0}
 /* side menu (Classic, Midnight Gallery, Washi, Comic) in landscape: smaller when the screen is short, and scrolls if needed */
 @media (orientation:landscape) and (min-width:761px){
   /*[MENU]*/body:not(:is([data-skin=hybrid],[data-skin=night],[data-skin=arcade],[data-skin=atlas])) .rail{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
@@ -2875,28 +2881,69 @@ body[data-skin=aurora]{
   background:linear-gradient(180deg,#040914 0,#071326 45%,#0b2233 80%,#0e2a36 100%);
   background-attachment:fixed;
 }
-body[data-skin=aurora]::before{content:"";position:fixed;inset:-15% -10% 30% -10%;z-index:-1;pointer-events:none;filter:blur(28px);opacity:.75;background:radial-gradient(45% 18% at 30% 38%,rgba(110,240,181,.55),transparent 70%),radial-gradient(40% 14% at 62% 30%,rgba(122,200,255,.40),transparent 70%),radial-gradient(35% 16% at 80% 45%,rgba(196,155,255,.38),transparent 70%),radial-gradient(30% 10% at 15% 22%,rgba(110,240,181,.30),transparent 70%);transform-origin:50% 30%;animation:aurWave 26s ease-in-out infinite alternate}
-@keyframes aurWave{0%{transform:skewX(-8deg) translateX(-3%) scaleY(1);opacity:.6}50%{transform:skewX(6deg) translateX(2%) scaleY(1.15);opacity:.85}100%{transform:skewX(-3deg) translateX(4%) scaleY(.95);opacity:.7}}
-body[data-skin=aurora]::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;background:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 27% 8%,#fff,transparent),radial-gradient(1.4px 1.4px at 41% 22%,#fff,transparent),radial-gradient(1px 1px at 58% 12%,#fff,transparent),radial-gradient(1.3px 1.3px at 73% 25%,#fff,transparent),radial-gradient(1px 1px at 88% 9%,#fff,transparent),radial-gradient(1px 1px at 8% 44%,#fff,transparent),radial-gradient(1.2px 1.2px at 94% 40%,#fff,transparent),radial-gradient(1px 1px at 50% 3%,#fff,transparent),radial-gradient(1px 1px at 66% 48%,rgba(255,255,255,.8),transparent);animation:aurTwinkle 7s ease-in-out infinite alternate}
-@keyframes aurTwinkle{0%{opacity:.35}100%{opacity:.7}}
-@media (prefers-reduced-motion:reduce){body[data-skin=aurora]::before,body[data-skin=aurora]::after{animation:none}}
-body[data-skin=aurora][data-calm=on]::before,body[data-skin=aurora][data-calm=on]::after{animation:none}
-body[data-skin=aurora][data-bed]:not([data-bed=""]):not([data-bed=off])::before{animation:none;opacity:.35}
+/* 26.11.122: Aurora sky. The curtains live in the top status panel; the page only gets a faint tint and soft stars. */
+body[data-skin=aurora]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(90% 34% at 30% 0,rgba(80,220,170,.16),transparent 70%),radial-gradient(70% 30% at 82% 0,rgba(170,110,255,.14),transparent 70%)}
+body[data-skin=aurora]::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle 4.5px at 8% 14%,rgba(255,255,255,0.95) 0,rgba(255,255,255,0.81) 22%,rgba(200,230,255,0.28) 50%,transparent 100%),radial-gradient(circle 3.5px at 31% 6%,rgba(255,255,255,0.8) 0,rgba(255,255,255,0.68) 22%,rgba(200,230,255,0.24) 50%,transparent 100%),radial-gradient(circle 4px at 57% 18%,rgba(255,255,255,0.9) 0,rgba(255,255,255,0.77) 22%,rgba(200,230,255,0.27) 50%,transparent 100%),radial-gradient(circle 5px at 83% 9%,rgba(255,255,255,1) 0,rgba(255,255,255,0.85) 22%,rgba(200,230,255,0.30) 50%,transparent 100%),radial-gradient(circle 3.5px at 94% 33%,rgba(255,255,255,0.75) 0,rgba(255,255,255,0.64) 22%,rgba(200,230,255,0.22) 50%,transparent 100%),radial-gradient(circle 3.5px at 18% 38%,rgba(255,255,255,0.7) 0,rgba(255,255,255,0.59) 22%,rgba(200,230,255,0.21) 50%,transparent 100%);animation:aurTwinkle 9s ease-in-out infinite alternate}
+@keyframes aurTwinkle{0%{opacity:.45}100%{opacity:.95}}
+body[data-skin=aurora] .topbar{overflow:hidden;background:linear-gradient(180deg,#071426,#0a1a2c);text-shadow:0 1px 3px rgba(0,0,0,.65)}
+body[data-skin=aurora] .topbar>*{position:relative;z-index:1}
+body[data-skin=aurora] .topbar::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(60% 55% at 32% 78%,rgba(170,255,220,.30),transparent 70%),
+   repeating-linear-gradient(90deg,transparent 0 6px,rgba(200,255,230,.10) 8px,transparent 11px),
+   repeating-linear-gradient(90deg,transparent 0 15px,rgba(255,255,255,.08) 18px,transparent 23px),
+   repeating-linear-gradient(90deg,transparent 0 27px,rgba(210,170,255,.10) 31px,transparent 37px),
+   linear-gradient(90deg,rgba(40,210,160,.42) 0,rgba(70,200,190,.36) 22%,rgba(80,150,255,.32) 45%,rgba(160,100,255,.36) 68%,rgba(235,95,200,.32) 100%);
+  background-size:180% 100%,46px 100%,92px 100%,148px 100%,100% 100%;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.9) 30%,rgba(0,0,0,.35) 75%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.9) 30%,rgba(0,0,0,.35) 75%,transparent 100%);
+  opacity:.62;animation:aurCurtain 24s ease-in-out infinite alternate}
+@keyframes aurCurtain{0%{background-position:0% 0,0 0,0 0,0 0,0 0;opacity:.5}50%{background-position:60% 0,23px 0,-40px 0,70px 0,0 0;opacity:.7}100%{background-position:100% 0,46px 0,-92px 0,148px 0,0 0;opacity:.58}}
+body[data-skin=aurora] .topbar::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle 3.5px at 6% 22%,rgba(255,255,255,0.85) 0,rgba(255,255,255,0.72) 22%,rgba(200,230,255,0.26) 50%,transparent 100%),radial-gradient(circle 4.5px at 22% 12%,rgba(255,255,255,1) 0,rgba(255,255,255,0.85) 22%,rgba(200,230,255,0.30) 50%,transparent 100%),radial-gradient(circle 3px at 41% 30%,rgba(255,255,255,0.7) 0,rgba(255,255,255,0.59) 22%,rgba(200,230,255,0.21) 50%,transparent 100%),radial-gradient(circle 3.5px at 49% 8%,rgba(255,255,255,0.8) 0,rgba(255,255,255,0.68) 22%,rgba(200,230,255,0.24) 50%,transparent 100%),radial-gradient(circle 4.5px at 63% 16%,rgba(255,255,255,0.95) 0,rgba(255,255,255,0.81) 22%,rgba(200,230,255,0.28) 50%,transparent 100%),radial-gradient(circle 3px at 74% 40%,rgba(255,255,255,0.7) 0,rgba(255,255,255,0.59) 22%,rgba(200,230,255,0.21) 50%,transparent 100%),radial-gradient(circle 3.5px at 88% 10%,rgba(255,255,255,0.85) 0,rgba(255,255,255,0.72) 22%,rgba(200,230,255,0.26) 50%,transparent 100%),radial-gradient(circle 3px at 97% 28%,rgba(255,255,255,0.7) 0,rgba(255,255,255,0.59) 22%,rgba(200,230,255,0.21) 50%,transparent 100%);animation:aurTwinkle 6.5s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){body[data-skin=aurora]::after,body[data-skin=aurora] .topbar::before,body[data-skin=aurora] .topbar::after{animation:none}}
+body[data-skin=aurora][data-calm=on]::after,body[data-skin=aurora][data-calm=on] .topbar::before,body[data-skin=aurora][data-calm=on] .topbar::after{animation:none}
+body[data-skin=aurora][data-bed]:not([data-bed=""]):not([data-bed=off]) .topbar::before{animation:none;opacity:.25}
+
+/* 26.11.122: the quest check IS the moon. Crescent when open, it waxes into a full glowing yellow moon when done. */
+body[data-skin=aurora] .check{position:relative;isolation:isolate;background:transparent;border-color:transparent;color:transparent;box-shadow:none;transition:box-shadow .6s}
+body[data-skin=aurora] .check::before{content:"";position:absolute;inset:2px;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle at 35% 32%,#f6f8fb,#cdd6e2 62%,#9cadc0);
+  -webkit-mask-image:radial-gradient(circle closest-side,transparent 0 24%,#000 25%);mask-image:radial-gradient(circle closest-side,transparent 0 24%,#000 25%);
+  -webkit-mask-size:400% 400%;mask-size:400% 400%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:43.3% 54.7%;mask-position:43.3% 54.7%;
+  filter:drop-shadow(0 0 3px rgba(220,235,255,.35));opacity:.9;
+  transition:-webkit-mask-position .6s ease-out,mask-position .6s ease-out,background .6s,opacity .3s}
+body[data-skin=aurora] .quest.done .check{background:transparent;border-color:transparent;color:transparent;box-shadow:0 0 18px 4px rgba(255,214,90,.5),0 0 40px 8px rgba(255,214,90,.18)}
+body[data-skin=aurora] .quest.done .check::before{opacity:1;filter:none;
+  background:radial-gradient(circle at 30% 34%,rgba(190,135,30,.28) 0 9%,transparent 10%),radial-gradient(circle at 63% 60%,rgba(190,135,30,.24) 0 12%,transparent 13%),radial-gradient(circle at 38% 72%,rgba(190,135,30,.2) 0 6%,transparent 7%),radial-gradient(circle at 38% 34%,#fff8d2,#ffd95a 58%,#f0b22c);
+  -webkit-mask-position:8.3% 91.7%;mask-position:8.3% 91.7%}
+body[data-skin=aurora] .quest.locked .check::before{opacity:.45}
+body[data-skin=aurora] .quest.bonus .check{color:#fff;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.8);background:transparent;border-color:transparent}
+body[data-skin=aurora] .quest.bonus.done .check{color:transparent;text-shadow:none}
+body[data-skin=aurora] .quest.bonus .check::after{content:"✨";position:absolute;top:-6px;right:-8px;font-size:15px;opacity:0;transition:opacity .4s .4s;text-shadow:none}
+body[data-skin=aurora] .quest.bonus.done .check::after{opacity:1}
+@media (prefers-reduced-motion:reduce){body[data-skin=aurora] .check::before{transition:none}}
+body[data-skin=aurora][data-calm=on] .check::before{transition:none}
+
+/* 26.11.122: the glowing aurora ovals live only in the selected menu button */
+/*[MENU]*/body[data-skin=aurora] .navbtn.on{isolation:isolate;background:rgba(8,20,34,.9);color:#fff;box-shadow:inset 0 0 0 1px rgba(220,255,245,.20),0 0 22px -6px rgba(110,240,181,.55)}
+/*[MENU]*/body[data-skin=aurora] .navbtn.on::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 45% at 30% 35%,rgba(110,240,181,.75),transparent 70%),radial-gradient(40% 45% at 72% 60%,rgba(122,200,255,.6),transparent 70%),radial-gradient(35% 40% at 50% 90%,rgba(196,155,255,.65),transparent 70%);
+  background-size:170% 170%;filter:blur(5px);opacity:.85;animation:aurNav 12s ease-in-out infinite alternate}
+@keyframes aurNav{0%{background-position:0% 0%}50%{background-position:100% 40%}100%{background-position:40% 100%}}
+@media (prefers-reduced-motion:reduce){body[data-skin=aurora] .navbtn.on::before{animation:none}}
+body[data-skin=aurora][data-calm=on] .navbtn.on::before,body[data-skin=aurora][data-bed]:not([data-bed=""]):not([data-bed=off]) .navbtn.on::before{animation:none}
+
 body[data-skin=aurora] .panel{background:linear-gradient(180deg,rgba(20,40,58,.70),rgba(12,26,40,.66));border:1px solid rgba(190,235,225,.14);box-shadow:inset 0 1px 0 rgba(220,255,245,.08),0 18px 36px -22px rgba(0,0,0,.8)}
 body[data-skin=aurora] .quest{background:linear-gradient(180deg,rgba(20,40,58,.74),rgba(12,26,40,.70));border:1px solid rgba(190,235,225,.14);box-shadow:inset 0 1px 0 rgba(220,255,245,.08),0 14px 30px -20px rgba(0,0,0,.85)}
-body[data-skin=aurora] .quest::after{content:"";position:absolute;top:10px;right:10px;width:13px;height:13px;border-radius:50%;pointer-events:none;box-shadow:inset -4px -1px 0 0 #f3ecd2;opacity:.75;transition:background .4s,box-shadow .4s}
-body[data-skin=aurora] .quest.done::after{background:#f3ecd2;box-shadow:0 0 10px 2px rgba(243,236,210,.55);opacity:1}
 body[data-skin=aurora] .quest.done{background:linear-gradient(180deg,rgba(24,56,60,.78),rgba(14,36,44,.72));border-color:rgba(110,240,181,.32)}
-body[data-skin=aurora] .check{border-color:rgba(190,235,225,.28);background:rgba(255,255,255,.04)}
-body[data-skin=aurora] .quest.done .check{background:linear-gradient(145deg,#8ff5c6,#3fa985);border-color:#6ef0b5;color:#04221a;box-shadow:0 0 16px rgba(110,240,181,.45)}
 /*[MENU]*/body[data-skin=aurora] .rail{background:linear-gradient(180deg,rgba(10,22,38,.86),rgba(6,14,26,.86));border-color:rgba(190,235,225,.12)}
 /*[MENU]*/body[data-skin=aurora] .navbtn{color:#a7b7bd}
-/*[MENU]*/body[data-skin=aurora] .navbtn.on{background:linear-gradient(135deg,rgba(110,240,181,.22),rgba(122,200,255,.18),rgba(196,155,255,.24));color:#fff;box-shadow:inset 0 0 0 1px rgba(220,255,245,.18),0 0 22px -4px rgba(110,240,181,.55)}
 body[data-skin=aurora] .topbar{background:rgba(6,13,26,.78)}
 body[data-skin=aurora] .btn.primary{background:linear-gradient(135deg,#4fc79c,#3fa985 55%,#3a8fb8);color:#04221a;box-shadow:0 3px 0 #1f6b55,0 0 18px -4px rgba(110,240,181,.5)}
 body[data-skin=aurora] :focus-visible{outline:3px solid #8ff5c6;outline-offset:2px}
 .aurmodal{text-align:center;padding:4px 4px 8px}
 .aursky{position:relative;height:150px;border-radius:20px;overflow:hidden;margin-bottom:14px;background:linear-gradient(180deg,#040914,#0b2233)}
+.aursky::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 6px,rgba(200,255,230,.14) 8px,transparent 11px),repeating-linear-gradient(90deg,transparent 0 17px,rgba(220,190,255,.12) 21px,transparent 27px),linear-gradient(90deg,rgba(40,210,160,.45),rgba(80,150,255,.35) 50%,rgba(235,95,200,.4));-webkit-mask-image:linear-gradient(180deg,#000,transparent 95%);mask-image:linear-gradient(180deg,#000,transparent 95%);opacity:0;animation:aurRise 2.4s ease-out .3s forwards}
 .aursky i{position:absolute;left:-20%;right:-20%;height:60px;border-radius:50%;filter:blur(14px);opacity:0;animation:aurRise 2.4s ease-out forwards}
 .aursky i:nth-child(1){top:30px;background:rgba(110,240,181,.8)}
 .aursky i:nth-child(2){top:55px;background:rgba(122,200,255,.6);animation-delay:.4s}
