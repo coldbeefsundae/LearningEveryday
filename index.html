@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.124', errs = [], shown = false;
-  window.__SQV = V; window.__SQDATE = '2026-11-14';
+  var V = '26.11.125', errs = [], shown = false;
+  window.__SQV = V; window.__SQDATE = '2026-11-15';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
     try{ note((ev && ev.message ? ev.message : 'Error') + ' [line ' + (ev && ev.lineno) + ':' + (ev && ev.colno) + ']'); }catch(e){}
@@ -2770,6 +2770,9 @@ iframe.llstory{transition:opacity .45s ease}
 .pbt{font-size:22px;letter-spacing:-.3px}
 .pburger{display:none}
 .pscrim{display:none}
+.pemb .pemb-h{display:none}
+.pemb [data-act="pcvclose"],.pemb [data-act="rwback"],.pemb [data-act="p4back"],.pemb [data-act="calclose"],.pemb [data-act="pnewsback"],.pemb [data-bk="pback"],.pemb [data-help="parent"],.pemb [data-help="close"],.pemb [data-b="back"],.pemb [data-r="back"],.pemb [data-x]{display:none !important}
+.pemb .gmodal{max-width:none;padding:0;background:none;box-shadow:none}
 .ptdh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
 .ptds{display:flex;gap:14px;font-weight:900;font-size:18px}
 .pbarw{height:12px;border-radius:99px;background:rgba(127,127,170,.22);overflow:hidden;margin:10px 0 4px}
@@ -4767,17 +4770,17 @@ var RAW_CARDS = [
   ["cn07", "Cai Lun", "蔡倫", "CN", "c. 105 AD", "P", "📄", "A", "Improved paper-making", "Cai Lun was an official who found a way to make paper from tree bark, old rags and fishing nets. Paper was light, cheap and easy to write on. It changed how people shared ideas.", "Before paper, people wrote on bamboo strips and silk."],
   ["cn08", "Zhang Heng", "張衡", "CN", "78–139 AD", "P", "🐉", "C", "Inventor of an earthquake detector", "Zhang Heng was a scientist and inventor. He built a bronze machine with dragon heads and little balls. When the ground shook far away, a ball dropped into a toad's mouth.", "He also made a water-powered model of the stars."],
   ["cn09", "Zu Chongzhi", "祖沖之", "CN", "429–500 AD", "P", "🔢", "C", "Pi expert", "Zu Chongzhi was a mathematician who worked out the number pi very, very closely. He found it was about 3.1415926. Nobody got a closer answer for almost 900 years!", "He also helped build a kind of paddle-boat."],
-  ["cn10", "Zhang Qian", "張騫", "CN", "c. 138 BC", "P", "🐪", "C", "Opened the Silk Road", "Emperor Wu sent Zhang Qian on a long trip to the west. He travelled for years across deserts and mountains. His journey helped open the Silk Road, where people traded silk, tea and ideas.", "The Silk Road was not one road. It was many paths joined together."],
+  ["cn10", "Zhang Qian", "張騫", "CN", "c. 138 BC", "P", "🐪", "C", "Opened the Silk Road", "Emperor Wu sent Zhang Qian on a long trip to the west. He travelled for years across deserts and mountains. His journey helped open the Silk Road, where people traded silk, horses and ideas.", "The Silk Road was not one road. It was many paths joined together."],
   ["cn11", "Zhuge Liang", "諸葛亮", "CN", "181–234 AD", "P", "🏮", "SSR", "The Sleeping Dragon", "Zhuge Liang was a super-smart advisor in the Three Kingdoms time. He was famous for clever plans and good ideas. Stories say he invented wooden ox carts and lantern balloons.", "In one story, he calmly played music so the enemy thought a trap was waiting."],
   ["cn12", "Hua Mulan", "花木蘭", "CN", "Legend, c. 500 AD", "L", "🏹", "SSR", "The brave daughter", "In an old Chinese poem, Mulan takes her father's place in the army so he doesn't have to go. She is brave, smart and kind, and she returns home safely to her family.", "The Ballad of Mulan is about 1,500 years old."],
-  ["cn13", "Empress Wu Zetian", "武則天", "CN", "624–705 AD", "P", "👸", "S", "The only woman emperor", "Wu Zetian became the one and only woman to rule China as emperor. She chose helpers by their talent, not their families, and she supported schools and farmers.", "She even held special exams to find smart helpers."],
+  ["cn13", "Empress Wu Zetian", "武則天", "CN", "624–705 AD", "P", "👸", "S", "The empress who chose helpers by talent", "Wu Zetian became the one and only woman to rule China as emperor. She chose helpers by their talent, not their families, and she supported schools and farmers.", "She even held special exams to find smart helpers."],
   ["cn14", "Li Bai", "李白", "CN", "701–762 AD", "P", "🌕", "A", "The moon poet", "Li Bai was one of China's most loved poets. He wrote about the moon, mountains, rivers and friends. Many Chinese children learn his poems by heart.", "His poem “Quiet Night Thought” is about missing home under the moon."],
   ["cn15", "Du Fu", "杜甫", "CN", "712–770 AD", "P", "✍️", "C", "The poet-sage", "Du Fu wrote poems about everyday life: families, farms and kindness to others. People call him a poet-sage because his words are so wise and caring.", "He wrote more than 1,400 poems that still survive."],
   ["cn16", "Xuanzang", "玄奘", "CN", "602–664 AD", "P", "🐒", "A", "The traveling monk", "Xuanzang walked from China to India to find old books. The trip took about 17 years! He brought back hundreds of books and translated them. His trip inspired the story Journey to the West.", "The monk Tripitaka in that story is based on him. The Monkey King was made up!"],
   ["cn17", "Bi Sheng", "畢昇", "CN", "c. 1040 AD", "P", "🖨️", "B", "Inventor of movable type", "Bi Sheng made small clay blocks with one word on each. Printers could line them up, print a page, then use the blocks again. It made printing faster than carving a whole page.", "Gutenberg's press came about 400 years later."],
   ["cn18", "Fireworks Invented", "煙花", "CN", "c. 900–1100 AD", "E", "🎆", "C", "Bang! Sparkle!", "Long ago, people in China noticed that a special powder made bamboo burst with a loud pop. They used the pops and sparks to celebrate New Year. That was the start of fireworks!", "People believed the loud noise scared away bad luck."],
   ["cn19", "The Compass", "指南針", "CN", "c. 1000–1100 AD", "E", "🧭", "B", "Which way is north?", "Chinese inventors found that a magnet needle always points the same way. Sailors used compasses to find their way at sea, even on cloudy days.", "One early compass was a spoon-shaped magnet that spun on a plate."],
-  ["cn20", "Zheng He", "鄭和", "CN", "1371–1433 AD", "P", "⛵", "S", "Admiral of the treasure fleet", "Zheng He led giant ships on seven big voyages, sailing to Southeast Asia, India and even Africa. His fleet carried silk, tea, and gifts to make friends in faraway lands.", "His biggest ships were longer than a football field."],
+  ["cn20", "Zheng He", "鄭和", "CN", "1371–1433 AD", "P", "⛵", "S", "Admiral of the treasure fleet", "Zheng He led giant ships on seven big voyages, sailing to Southeast Asia, India and even Africa. His fleet carried silk, tea, and gifts to make friends in faraway lands.", "Old records say his biggest ships were longer than a football field."],
   ["cn21", "Kublai Khan", "忽必烈", "CN", "1215–1294 AD", "P", "🐎", "B", "Founder of the Yuan Dynasty", "Kublai Khan was a Mongol leader who became emperor of China. He built a new capital where Beijing is today and welcomed travelers like Marco Polo.", "He made paper money that people could use across his lands."],
   ["cn22", "The Forbidden City", "紫禁城", "CN", "1420 AD", "E", "🏯", "A", "The emperors' palace", "The Forbidden City in Beijing was a huge palace city with hundreds of buildings. Emperors lived there for almost 500 years. Today anyone can visit it as a museum.", "Its roofs are yellow because yellow was the emperor's color."],
   ["cn23", "Sun Yat-sen", "孫中山", "CN", "1866–1925 AD", "P", "🏛️", "C", "Father of modern China", "Sun Yat-sen was a doctor who wanted a fair country with good schools and laws. In 1911, the long age of emperors ended, and he became a leader of the new republic.", "He studied medicine in Hong Kong before becoming a leader."],
@@ -4795,7 +4798,7 @@ var RAW_CARDS = [
   ["jp03", "Heian-kyō (Kyoto) Founded", "平安京", "JP", "794 AD", "E", "🌸", "C", "A new capital city", "In 794, Japan's emperor moved to a brand-new capital called Heian-kyō, now called Kyoto. It stayed the capital for over 1,000 years, filled with temples, gardens and festivals.", "The city was planned like a giant checkerboard."],
   ["jp04", "Murasaki Shikibu", "紫式部", "JP", "c. 973–1014 AD", "P", "📖", "A", "Wrote The Tale of Genji", "Murasaki Shikibu lived at the emperor's court and wrote a long story about a prince named Genji. Many people call it the world's first novel!", "She wrote it a thousand years ago, with a brush and ink."],
   ["jp05", "Sei Shōnagon", "清少納言", "JP", "c. 966–1017 AD", "P", "🖌️", "C", "Wrote The Pillow Book", "Sei Shōnagon wrote down things she noticed and loved, like “Things that make the heart beat faster.” Her book feels like a diary full of lists and funny thoughts.", "She wrote about things that were elegant, cute and annoying."],
-  ["jp06", "Minamoto no Yoritomo", "源頼朝", "JP", "1147–1199 AD", "P", "🏞️", "C", "Japan's first shogun", "Yoritomo set up a new kind of government in Kamakura. He became the first shogun, a leader who ran the country while the emperor stayed in Kyoto. Samurai helped him keep order.", "Kamakura is now a seaside town famous for a giant Buddha statue."],
+  ["jp06", "Minamoto no Yoritomo", "源頼朝", "JP", "1147–1199 AD", "P", "🏞️", "C", "Founder of the first shogunate", "Yoritomo set up a new kind of government in Kamakura. He became shogun, the first to head a samurai government, a leader who ran the country while the emperor stayed in Kyoto. Samurai helped him keep order.", "Kamakura is now a seaside town famous for a giant Buddha statue."],
   ["jp07", "Tomoe Gozen", "巴御前", "JP", "1100s AD", "P", "🏹", "S", "Samurai archer and rider", "Tomoe Gozen is remembered in old stories as a brave samurai, a skilled rider and one of the best archers of her time. She rode into battle beside the general Minamoto no Yoshinaka.", "Stories say she was as strong as a thousand fighters."],
   ["jp08", "Oda Nobunaga", "織田信長", "JP", "1534–1582 AD", "P", "🔥", "SSR", "Bold unifier of Japan", "Nobunaga was a daring leader who began uniting Japan after a long time of fighting. He liked new ideas and used new tools like muskets and market reforms.", "A famous poem says: if the cuckoo doesn't sing, Nobunaga will make it sing."],   /* 26.11.104: Nobunaga promoted from S to SSR */
   ["jp09", "Toyotomi Hideyoshi", "豊臣秀吉", "JP", "1537–1598 AD", "P", "🏯", "A", "From farm boy to ruler", "Hideyoshi began as a poor farmer's son but worked hard and became the leader of Japan. He built the great Osaka Castle. Stories say he was clever and funny.", "In the cuckoo poem, Hideyoshi finds a way to make it want to sing."],
@@ -4815,7 +4818,7 @@ var RAW_CARDS = [
   ["jp23", "Tokyo 1964: Olympics and Shinkansen", "新幹線", "JP", "1964 AD", "E", "🚄", "B", "Bullet train begins", "In 1964, Tokyo hosted the Olympics and the first Shinkansen bullet train began running between Tokyo and Osaka, going very fast for its time. The world saw modern Japan shine.", "The Shinkansen has been famous for being on time, to the minute."],
   ["jp24", "Akira Yoshizawa", "吉澤章", "JP", "1911–2005 AD", "P", "🦢", "B", "Grandmaster of origami", "Akira Yoshizawa turned paper folding into an art. He invented ways to fold animals that look like they are alive and made thousands of designs. He also created ways to show others how to fold.", "He helped create the folding diagrams people use around the world."],
   ["jp25", "Osamu Tezuka", "手塚治虫", "JP", "1928–1989 AD", "P", "🤖", "A", "Creator of Astro Boy", "Osamu Tezuka drew manga and made cartoons. He created Astro Boy, a kind robot boy with a big heart. He inspired many manga and anime artists in Japan.", "People call him the “God of Manga”."],
-  ["jp26", "Mukai Chiaki", "向井千秋", "JP", "Born 1952 AD", "P", "👩‍🚀", "B", "First Japanese woman in space", "Mukai Chiaki was a doctor who became an astronaut. In 1994 she flew on the space shuttle Columbia and studied how bodies work in space. She flew again in 1998.", "She did experiments with fish in space!"],
+  ["jp26", "Mukai Chiaki", "向井千秋", "JP", "Born 1952 AD", "P", "👩‍🚀", "B", "Doctor and astronaut", "Mukai Chiaki was a doctor who became an astronaut. She was the first Japanese woman in space. In 1994 she flew on the space shuttle Columbia and studied how bodies work in space. She flew again in 1998.", "She did experiments with fish in space!"],
   ["jp27", "Hayabusa2 Brings Home Space Rocks", "はやぶさ2", "JP", "2020 AD", "E", "🛰️", "S", "A trip to an asteroid and back", "Japan's spacecraft Hayabusa2 flew to an asteroid called Ryugu, collected dust and pebbles, and sent them back to Earth in a capsule in 2020. It was a space mission about 5 billion kilometres long.", "The asteroid's name means “Dragon Palace”, from a Japanese tale."],
   ["jp28", "Tōdai-ji Great Buddha", "東大寺", "JP", "752 AD", "E", "🛕", "C", "A giant bronze statue in Nara", "In 752, Japan finished the giant bronze Buddha in the city of Nara. It is about 15 metres tall and sits inside one of the biggest wooden buildings in the world.", "In Nara, friendly deer roam the park and bow for treats."],
   ["jp29", "Himeji Castle", "姫路城", "JP", "1609 AD", "E", "🏰", "B", "The White Heron castle", "Himeji Castle is so bright and white that people say it looks like a bird taking flight. It was finished more than 400 years ago and is still standing today.", "The castle has hidden slots and tricky paths to confuse intruders."],
@@ -4830,10 +4833,10 @@ var RAW_CARDS = [
   ["kr07", "Seoul 1988 Olympics", "서울올림픽", "KR", "1988 AD", "E", "🏅", "C", "The world visits Seoul", "In 1988, Seoul hosted the Summer Olympic Games. Athletes from many countries came together. The cute tiger mascot, Hodori, welcomed everyone.", "Hodori is a tiger because tigers are a symbol of Korea."],
 /* ---------------- CANADA ---------------- */
   ["ca01", "Terry Fox", "", "CA", "1958–1981 AD", "P", "🏃", "A", "Marathon of Hope", "Terry Fox had one leg and ran across Canada to raise money for cancer research. He ran about 42 kilometres almost every day. People all over the world still run in his honor.", "He ran for 143 days and over 5,000 kilometres."],
-  ["ca02", "Banting & Best", "", "CA", "1921 AD", "E", "💉", "B", "Discovered insulin", "In Toronto, Dr. Frederick Banting and Charles Best found a medicine called insulin that helps people with diabetes stay healthy. It saved many lives.", "Banting sold the patent for just $1 so everyone could afford it."],
+  ["ca02", "Banting & Best", "", "CA", "1921 AD", "E", "💉", "B", "Discovered insulin", "In Toronto, Dr. Frederick Banting and Charles Best found a medicine called insulin that helps people with diabetes stay healthy. It saved many lives.", "Banting and Best sold the patent for just $1 so everyone could afford it."],
   ["ca03", "James Naismith", "", "CA", "1861–1939 AD", "P", "🏀", "B", "Invented basketball", "James Naismith was a Canadian teacher who needed an indoor game for winter. In 1891 he nailed peach baskets to a wall and invented basketball with 13 simple rules.", "The first players tossed a soccer ball, not a basketball."],
   ["ca04", "The Great Law of Peace", "", "CA", "Long, long ago", "E", "🌳", "A", "Nations choose peace", "Long ago, nations in the Great Lakes area, now called the Haudenosaunee, joined together under the Great Law of Peace. They buried their weapons under a Tree of Peace.", "Their five nations shared decisions by talking until everyone agreed."],
-  ["ca05", "Roberta Bondar", "", "CA", "Born 1945 AD", "P", "👩‍🚀", "C", "First Canadian woman in space", "Roberta Bondar was a doctor and scientist who became an astronaut. In 1992 she flew on the space shuttle Discovery and studied how space changes the human body.", "She is also an amazing nature photographer."],
+  ["ca05", "Roberta Bondar", "", "CA", "Born 1945 AD", "P", "👩‍🚀", "C", "Astronaut and nature photographer", "Roberta Bondar was a doctor and scientist who became an astronaut. She was the first Canadian woman in space. In 1992 she flew on the space shuttle Discovery and studied how space changes the human body.", "She is also an amazing nature photographer."],
   ["ca06", "Canada's Confederation", "", "CA", "1867 AD", "E", "🍁", "C", "Canada Day begins", "On July 1, 1867, a few provinces joined together to form the country of Canada. Today we celebrate that day each year as Canada Day with parades and fireworks.", "At first Canada had only four provinces."],
   ["ca07", "Alexander Graham Bell", "", "CA", "1847–1922 AD", "P", "📞", "A", "Inventor of the telephone", "Alexander Graham Bell was a teacher and inventor. He lived in Brantford, Ontario for a time and worked on ways to send voices through wires. In 1876 his telephone worked!", "His first words by phone were “Mr. Watson, come here.”"],
 /* ---------------- EUROPE ---------------- */
@@ -4885,7 +4888,7 @@ var RAW_CARDS = [
   ["jp31", "Ninomiya Kinjirō", "二宮金次郎", "JP", "1787–1856 AD", "P", "🪵", "C", "The boy who read while he worked", "As a boy, Kinjirō worked hard to help his family. He carried firewood on his back and read books as he walked. Later he became a famous teacher of farming and saving.", "Many old Japanese schools have a statue of him reading while he walks."],
   ["jp32", "Momotarō", "桃太郎", "JP", "Old tale", "L", "🍑", "C", "The peach boy", "In this famous Japanese tale, an old couple found a giant peach floating down a river. Inside was a baby boy named Momotarō. When he grew up, a dog, a monkey and a pheasant joined him on a brave journey in return for his dumplings.", "Sweet millet dumplings called kibi dango are still sold in Okayama."],
   ["jp33", "Noguchi Hideyo", "野口英世", "JP", "1876–1928 AD", "P", "🔬", "B", "The doctor who studied germs", "As a small child, Hideyo badly burned his hand. Kind people helped pay for an operation, and he decided to become a doctor. He grew up to be a scientist who studied dangerous diseases and travelled the world for his research.", "His portrait was on Japan’s 1,000 yen note from 2004 until 2024."],
-  ["jp34", "The Tenshō Boys Visit Europe", "天正遣欧少年使節", "JP", "1582–1590 AD", "E", "⛵", "A", "Four boys sail to meet the Pope", "In 1582, four Japanese teenagers sailed from Nagasaki to Europe. They met kings and the pope, and played European instruments for them. They were among the first Japanese visitors to Europe.", "They came home in 1590 with a European printing press."],
+  ["jp34", "The Tenshō Boys Visit Europe", "天正遣欧少年使節", "JP", "1582–1590 AD", "E", "⛵", "A", "Four boys sail to meet the Pope", "In 1582, four Japanese teenagers sailed from Nagasaki to Europe. They met kings and the pope. Back in Japan, they played European music for the ruler Hideyoshi. They were among the first Japanese visitors to Europe.", "They came home in 1590 with a European printing press."],
   ["kr08", "Heo Jun", "허준", "KR", "1539–1615 AD", "P", "🩺", "B", "The royal doctor", "Heo Jun was a royal doctor who cared for people rich and poor. He wrote the Dongui Bogam, a big medical book that explained medicines in a way ordinary people could understand.", "The Dongui Bogam was added to UNESCO’s Memory of the World list in 2009."],
   ["kr09", "Shin Saimdang", "신사임당", "KR", "1504–1551 AD", "P", "🖌️", "C", "Artist of flowers and insects", "Shin Saimdang was a skilled painter, poet and calligrapher. She was famous for her delicate paintings of plants, flowers and tiny insects.", "Her portrait is on Korea’s 50,000 won banknote."],
   ["kr10", "The Turtle Ship", "거북선", "KR", "1592 AD", "E", "🐢", "A", "Admiral Yi’s armored ship", "Korean turtle ships had a curved roof like a turtle’s shell, covered with spikes, to protect the sailors. Admiral Yi Sun-sin used them to defend Korea from the sea.", "No complete turtle ship survives, so historians study old drawings to rebuild them."],
@@ -4961,7 +4964,7 @@ var RAW_CARDS = [
   ["cn59", "Giant Pandas", "大熊貓", "CN", "Today", "E", "🐼", "C", "China's treasure", "Giant pandas live in the mountains of Sichuan, China, and eat bamboo for most of the day. A baby panda is tiny and pink when it is born. Pandas are a symbol of China and of protecting nature.", "A panda can eat 12 to 38 kilograms of bamboo in a day."],
   ["cn60", "Xi Jinping", "習近平", "CN", "Born 1953 AD", "P", "🏛️", "A", "President of China", "Xi Jinping was born in Beijing. He studied chemical engineering at Tsinghua University. He has been President of the People's Republic of China since 2013 and also leads the Communist Party. (As of 2026.)", "China is the world's most populous country after India."],
   ["cn61", "Tiangong Space Station", "天宮", "CN", "2021 AD to today", "E", "🚀", "B", "China's home in space", "Tiangong means “Heavenly Palace”. China began building its own space station in 2021, and astronauts, called taikonauts, live and do experiments there. They travel on Shenzhou spacecraft.", "Taikonaut comes from the Chinese word for space, taikong."],
-  ["jp35", "Sanae Takaichi", "高市早苗", "JP", "Born 1961 AD", "P", "🏛️", "A", "Japan's first woman Prime Minister", "Sanae Takaichi was born in Nara, Japan. In October 2025 she became Japan's first woman Prime Minister. As a student she played drums in a band. (As of 2026.)", "She also likes riding motorcycles."],
+  ["jp35", "Sanae Takaichi", "高市早苗", "JP", "Born 1961 AD", "P", "🏛️", "A", "Prime Minister of Japan", "Sanae Takaichi was born in Nara, Japan. In October 2025 she became Japan's first woman Prime Minister. As a student she played drums in a band. (As of 2026.)", "She also likes riding motorcycles."],
   ["jp36", "Minamoto no Yoshitsune", "源義経", "JP", "1159–1189 AD", "P", "🌸", "B", "The young general", "Yoshitsune was a young and brilliant general of the Minamoto clan. He helped win the Genpei War against the Taira clan, including the sea battle of Dan-no-ura in 1185. Many stories and plays are told about him.", "One legend says he jumped from boat to boat in the sea battle, the “eight-boat leap”."],
   ["jp37", "Benkei", "弁慶", "JP", "d. 1189 AD", "L", "🛡️", "C", "The warrior monk", "Benkei was a strong warrior monk and Yoshitsune's most loyal friend. A famous story says he tried to collect 1,000 swords and was beaten by young Yoshitsune on a bridge, so he became his follower.", "The story says he stood and protected Yoshitsune even at the very end."],
   ["jp38", "Takeda Shingen", "武田信玄", "JP", "1521–1573 AD", "P", "🐯", "C", "The Tiger of Kai", "Takeda Shingen was a powerful warlord in the Sengoku (warring states) period. His army's banner said: fast as the wind, quiet as the forest, fierce as fire, and still as a mountain.", "He fought many times against Uesugi Kenshin at Kawanakajima."],
@@ -5008,12 +5011,12 @@ var RAW_CARDS = [
   ["am11", "Benjamin Franklin", "", "AM", "1706–1790 AD", "P", "🪁", "C", "The curious inventor", "Benjamin Franklin was a printer, writer, scientist and inventor. He studied electricity and invented the lightning rod, which protects buildings. He was also a leader of the American Revolution.", "He invented bifocal glasses."],
   ["am12", "Amelia Earhart", "", "AM", "1897–1937 AD", "P", "✈️", "C", "The brave pilot", "Amelia Earhart loved flying. In 1932 she became the first woman to fly alone across the Atlantic Ocean. She inspired many people to try brave new things. She disappeared in 1937 during a flight around the world.", "She set many flying records."],
   ["am13", "Steve Jobs", "", "AM", "1955–2011 AD", "P", "📱", "A", "The Apple co-founder", "Steve Jobs started Apple with friends in a garage in 1976. His company made the Macintosh, iPod, iPhone and iPad, which changed how people use computers and phones. He wanted technology to be simple and beautiful.", "He studied calligraphy, which inspired pretty fonts on computers."],
-  ["af12", "Hatshepsut", "", "AF", "c. 1507–1458 BC", "P", "👑", "B", "The woman pharaoh", "Hatshepsut was one of the few women to rule Egypt as pharaoh. During her reign Egypt was peaceful and rich. She sent ships to far lands to trade, and built a beautiful temple at Deir el-Bahri.", "She sometimes wore a fake beard, as pharaohs did."],
+  ["af12", "Hatshepsut", "", "AF", "c. 1507–1458 BC", "P", "👑", "B", "Pharaoh of peace and trade", "Hatshepsut was one of the few women to rule Egypt as pharaoh. During her reign Egypt was peaceful and rich. She sent ships to far lands to trade, and built a beautiful temple at Deir el-Bahri.", "She sometimes wore a fake beard, as pharaohs did."],
   ["af13", "Hannibal", "", "AF", "247–c. 183 BC", "P", "🐘", "C", "The general with elephants", "Hannibal was a general from Carthage in North Africa. Around 218 BC he led an army, with war elephants, over the Alps to attack Rome. It was one of the most daring marches in history.", "Most of his elephants did not survive the cold mountains."],
   ["as10", "Buddha (Siddhartha Gautama)", "", "AS", "c. 500 BC", "P", "🪷", "B", "The Awakened One", "Siddhartha Gautama was a prince in what is now Nepal. He left his palace to search for wisdom and, after meditating under a tree, became the Buddha. His teachings of kindness and calm spread to China, Korea and Japan.", "The word Buddha means “awakened one”."],
   ["as11", "Srinivasa Ramanujan", "", "AS", "1887–1920 AD", "P", "🔢", "C", "The math wizard", "Srinivasa Ramanujan grew up in southern India. He taught himself mathematics and wrote down thousands of amazing number patterns. Math experts in England saw his work and invited him to Cambridge.", "He often said his ideas came to him in dreams."],
   ["as12", "Hammurabi", "", "AS", "c. 1810–1750 BC", "P", "📜", "C", "The king of laws", "Hammurabi was king of Babylon in what is now Iraq. He had a list of laws carved on a tall stone pillar so everyone could see them. It is one of the oldest written law codes.", "The pillar is now in the Louvre museum in Paris."],
-  ["as13", "Cuneiform, the First Writing", "", "AS", "c. 3400 BC", "E", "🧱", "B", "Writing begins", "In Sumer, people made marks on wet clay with a reed pen, and the clay hardened into a tablet. Their wedge-shaped writing is called cuneiform. It is one of the first kinds of writing in the world.", "Chinese characters and Egyptian hieroglyphs were also invented independently."],
+  ["as13", "Cuneiform, the First Writing", "", "AS", "c. 3400 BC", "E", "🧱", "B", "Writing begins", "In Sumer, people made marks on wet clay with a reed pen, and the clay hardened into a tablet. Their wedge-shaped writing is called cuneiform. It is one of the first kinds of writing in the world.", "Egyptian hieroglyphs appeared at about the same time, and Chinese characters came much later."],
   ["au08", "Great Barrier Reef", "", "AU", "Today", "E", "🐠", "C", "The world's biggest coral reef", "The Great Barrier Reef off the coast of Australia is made of thousands of reefs and islands. Tiny animals called coral built it over thousands of years. Turtles, sharks and colorful fish live there.", "It is so big that you can see it from space."],
   ["sa10", "Moai of Easter Island", "", "SA", "c. 1250–1500 AD", "E", "🗿", "C", "The giant stone heads", "The Rapa Nui people carved giant stone figures called moai on Easter Island, far out in the Pacific Ocean. The island belongs to Chile. There are nearly 900 moai.", "The tallest moai standing is about 10 meters high."],
   ["sa11", "Amazon Rainforest", "", "SA", "Today", "E", "🌳", "C", "The world's biggest rainforest", "The Amazon Rainforest in South America is the largest rainforest on Earth. It has the huge Amazon River, millions of kinds of insects, and animals like jaguars, sloths and macaws. It helps clean our air.", "About one in ten known animal species lives in the Amazon."],
@@ -5045,7 +5048,7 @@ var RAW_CARDS = [
   ["eu30", "London", "", "EU", "Capital of the United Kingdom", "K", "🕰️", "A", "The city on the Thames", "London sits on the River Thames. It has the Tower of London, red double-decker buses and a famous clock tower. The Romans built a town here called Londinium almost 2,000 years ago.", "Big Ben is not the tower. It is the name of the big bell inside it."],
   ["eu31", "Paris", "", "EU", "Capital of France", "K", "🥖", "A", "The city of light", "Paris is the capital of France and sits on the River Seine. It is famous for the Louvre museum, the Notre-Dame cathedral and cafés on every corner. People call it the City of Light.", "There are more than 30 bridges over the Seine in Paris."],
   ["eu32", "Rome", "", "EU", "Capital of Italy", "K", "⛲", "B", "The Eternal City", "Rome is more than 2,000 years old and is called the Eternal City. The Colosseum, the Roman Forum and the Pantheon stand among modern streets. A story says Rome was founded in 753 BC by Romulus.", "Millions of coins are thrown into the Trevi Fountain each year, and the money helps people in need."],
-  ["eu33", "Berlin", "", "EU", "Capital of Germany", "K", "🚲", "C", "The city with the TV tower", "Berlin is the capital of Germany. It has many museums, parks and the Brandenburg Gate. For 28 years, from 1961 to 1989, a wall split the city in two. When the wall opened, people celebrated in the streets.", "The Berlin TV Tower is about 368 metres tall, the tallest building in Germany."],
+  ["eu33", "Berlin", "", "EU", "Capital of Germany", "K", "🚲", "C", "The city with the TV tower", "Berlin is the capital of Germany. It has many museums, parks and the Brandenburg Gate. For 28 years, from 1961 to 1989, a wall split the city in two. When the wall opened, people celebrated in the streets.", "The Berlin TV Tower is about 368 metres tall, the tallest structure in Germany."],
   ["eu34", "Madrid", "", "EU", "Capital of Spain", "K", "🚣", "C", "The capital high on a plateau", "Madrid is the capital of Spain and sits in the middle of the country. It has the Prado Museum full of famous paintings and a big park with a lake where people go rowing. Many people stay out late and eat dinner after 9 pm.", "Madrid is one of the highest capital cities in Europe."],
   ["sa13", "Brasília", "", "SA", "Capital of Brazil", "K", "⚽", "C", "The city built from nothing", "Brasília was built in just a few years and became Brazil's capital in 1960. The architect Oscar Niemeyer designed its buildings with sweeping curves, like a cathedral shaped like a crown of hands. Seen from above, the city looks like a bird or an airplane.", "Before 1956, the land where Brasília stands was mostly empty plains."],
   ["sa14", "Buenos Aires", "", "SA", "Capital of Argentina", "K", "💃", "C", "The home of tango", "Buenos Aires sits beside the wide Río de la Plata. It is the home of tango dancing, and people dance in the streets and squares. Its colourful houses and big football clubs make it lively day and night.", "A famous bookshop there, El Ateneo, is inside an old theatre."],
@@ -5067,7 +5070,7 @@ var RAW_CARDS = [
   ["af18", "Victoria Falls", "", "AF", "Zambia and Zimbabwe", "K", "🌈", "B", "The smoke that thunders", "Victoria Falls is a huge waterfall on the Zambezi River, between Zambia and Zimbabwe. It is about 1.7 kilometres wide. The local name, Mosi-oa-Tunya, means \"the smoke that thunders\", because the mist rises so high.", "On bright full-moon nights, people can see a rainbow made by moonlight."],
   ["am17", "Grand Canyon", "", "AM", "Arizona, USA", "K", "🏜️", "A", "A giant canyon carved by a river", "The Grand Canyon is a giant canyon in Arizona. The Colorado River has been carving it for millions of years. It is about 446 kilometres long and more than 1.6 kilometres deep, with red, orange and cream layers of rock.", "The rock layers at the bottom are almost 2 billion years old."],
   ["as18", "Mount Everest", "", "AS", "Nepal and Tibet (China)", "K", "🏔️", "S", "The top of the world", "Mount Everest is the highest mountain on Earth, at 8,849 metres above sea level. It stands in the Himalayas on the border of Nepal and Tibet. In 1953, Edmund Hillary and Tenzing Norgay were the first people to reach the top.", "Sherpa guides help climbers on Everest, and the mountain grows a tiny bit taller every year."],
-  ["as19", "Scheherazade", "شهرزاد", "AS", "Stories from c. 800 AD", "L", "🧞", "SSR", "The storyteller who told a story every night", "In a very old book of stories, a clever young woman named Scheherazade meets a sad, grumpy king who had stopped trusting anyone. Every night she told him an exciting story and stopped at the best part, so he always wanted to hear more. After 1,001 nights of stories, the king had learned to be kind again.", "Books of her tales include famous stories like Aladdin, Ali Baba and Sinbad the Sailor."],
+  ["as19", "Scheherazade", "شهرزاد", "AS", "Stories from c. 800 AD", "L", "🧞", "SSR", "The storyteller who told a story every night", "In a very old book of stories, a clever young woman named Scheherazade meets a sad, grumpy king who had stopped trusting anyone. Every night she told him an exciting story and stopped at the best part, so he always wanted to hear more. After 1,001 nights of stories, the king had learned to be kind again.", "Many books of her tales also include Aladdin, Ali Baba and Sinbad the Sailor."],
   ["af19", "The Sahara", "", "AF", "North Africa", "K", "🏜️", "B", "The biggest hot desert", "The Sahara is the largest hot desert in the world, nearly as big as the whole United States. It has huge golden dunes, rocky mountains and small oases with palm trees. People have crossed it with camels for thousands of years.", "About 6,000 years ago, parts of the Sahara were green with grass and lakes."],
   ["ll01", "Halley's Comet", "ハレー彗星", "GL", "every ~76 years", "E", "☄️", "LL", "The comet that keeps its promise", "Halley's Comet is a giant ball of ice and dust that loops around the Sun and comes back about every 76 years. In 1705 Edmond Halley worked out that the comets seen in 1531, 1607 and 1682 were all the same one, and he predicted it would return in 1758. He died before then, but on Christmas night 1758 it came back, just as he said, and it was named after him.", "In 1986 a team of space probes flew out to meet it, including Japan's Suisei and Sakigake. Its next visit is on 28 July 2061."],
   ["ll02", "Princess Kaguya", "かぐや姫", "JP", "over 1,000 years old", "L", "🌕", "LL", "The girl from the Moon", "An old bamboo cutter found a tiny girl inside a glowing bamboo stalk and raised her as his daughter. She grew up to be the beautiful Princess Kaguya. Many nobles, and even the Emperor, wanted to marry her, but she gave them impossible tasks. On a full-moon night, people from the Moon came down to take her home.", "The Tale of the Bamboo Cutter is often called Japan's oldest story. Some say Mount Fuji got its name from its ending, when the Emperor's letter was burned on the tallest mountain, closest to the sky."],
@@ -6155,6 +6158,7 @@ function backStep(){
   try{
     var psh = $('pshell');
     if(psh && psh.classList.contains('open')){ psh.classList.remove('open'); return 'drawer'; }
+    if(window.__parEmb && psh && $('overlay').classList.contains('show')){ var ek = window.__parEmb; parEmbLeave(); if(ek === 'task') parBackQuests(); else if(ek === 'news') showParentSection('learn'); else { window.__parView = 'today'; showParent(); } return 'parent screen'; }
     if(!window.__parSec && psh && $('overlay').classList.contains('show') && window.__parView && window.__parView !== 'today'){ window.__parView = 'today'; showParent(); return 'parent view'; }
     if(window.__parSec && $('overlay').classList.contains('show')){ var b = $('modal').querySelector('[data-act="pbackhome"]'); if(b){ b.click(); return 'parent section'; } }
   }catch(e){}
@@ -6859,7 +6863,7 @@ function helpHTML(tab){
 function showHelp(tab, from){
   if(from !== undefined) HELP_FROM = from;
   tab = tab === 'par' ? 'par' : 'kid';
-  openModal(helpHTML(tab));
+  parIn('help', helpHTML(tab));
   $('modal').onclick = function(e){
     var b = e.target.closest && e.target.closest('button'); if(!b) return;
     var a = b.getAttribute('data-help'); if(!a) return;
@@ -7183,7 +7187,7 @@ function showNudge(){
   var f = window[n]; if(typeof f !== 'function') return;
   window[n] = function(){ KN2.inLearn = true; try{ return f.apply(this, arguments); } finally{ KN2.inLearn = false; } };
 });
-function closeModal(){ try{ $('modal').classList.remove('pfull'); $('overlay').classList.remove('pf'); $('overlay').classList.remove('ovstage'); }catch(_){} try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){} window.__parSec = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
+function closeModal(){ try{ $('modal').classList.remove('pfull'); $('overlay').classList.remove('pf'); $('overlay').classList.remove('ovstage'); }catch(_){} try{ var cb_ = $('cbig'); if(cb_) cb_.parentNode.removeChild(cb_); }catch(_){} window.__parSec = null; window.__parEmb = null; knReset(); stopSpeak(); MH = []; $('modal').__sig = ''; $('overlay').classList.remove('show'); $('modal').innerHTML=''; }
 
 /* ---- PIN ---- */
 function askPin(onOk){
@@ -7259,26 +7263,62 @@ function parNavBtn(ico, label, attr, on, badge){
   return '<button class="pnavb'+(on ? ' on' : '')+'" '+attr+'><span class="pni">'+ico+'</span><span class="pnl">'+label+'</span>'+(badge ? '<span class="pnbd">'+badge+'</span>' : '')+'</button>';
 }
 function parNav(active){
+  var ea = active; active = ({'e:cal':'more','e:help':'more','e:news':'s:learn','e:task':'quests','e:bak':'s:safe'})[active] || active;
   var npend = state.requests.filter(function(q){ return q.status === 'pending'; }).length;
   var v = function(k, ico, label, badge){ return parNavBtn(ico, label, 'data-act="pview" data-v="'+k+'"', active === k, badge); };
   var sc = function(k, ico, label){ return parNavBtn(ico, label, 'data-act="psec" data-sec="'+k+'"', active === 's:'+k); };
   var h = '<nav class="pnav" id="pnav"><div class="pnt">👪 Parent</div>';
   h += v('today', '🏠', 'Today') + v('quests', '📋', 'Quests') + v('points', '⭐', 'Points &amp; packs') + v('rewards', '🎁', 'Rewards to give', npend || '') + v('insights', '📈', 'Insights');
   h += '<div class="pngrp">Settings</div>';
-  h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', false);
+  h += parNavBtn('🎁', 'Rewards &amp; prices', 'data-act="rweditor"', ea === 'e:rw');
   h += sc('pts', '⭐', 'Points &amp; bonuses') + sc('packs', '🎴', 'Card packs') + sc('rt', '🪥', 'Routines') + sc('kitlooks', '👗', 'Kit\u2019s wardrobe') + sc('time', '⏱️', 'Time &amp; limits') + sc('learn', '📚', 'Learning &amp; news') + sc('kanji', '🈴', 'Kanji') + sc('write', '\u270f\ufe0f', 'Writing desk') + sc('hunt', '\ud83c\udf81', 'Holiday Hunt');   /* 26.11.103 */   /* 26.11.99: Kanji and Writing get their own windows */
-  h += parNavBtn('🎉', 'Celebrations &amp; alerts', 'data-act="pp4"', false);
-  h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', false);
-  h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', false);
-  h += parNavBtn('🔎', 'Card viewer', 'data-act="pcards"', false);
-  h += parNavBtn('👪', 'Family pack', 'data-fp="1"', false);
+  h += parNavBtn('🎉', 'Celebrations &amp; alerts', 'data-act="pp4"', ea === 'e:cel');
+  h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', ea === 'e:bk');
+  h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', ea === 'e:gl');
+  h += parNavBtn('🔎', 'Card viewer', 'data-act="pcards"', ea === 'e:cards');
+  h += parNavBtn('👪', 'Family pack', 'data-fp="1"', ea === 'e:fp');
   h += sc('safe', '💾', 'Backup &amp; log');
   h += '<div class="pngrp">More</div>' + v('more', '🧰', 'Tools &amp; help');
   h += '<div class="pnsp"></div><button class="btn primary pndone" data-act="pclose">✅ Done (saves and locks)</button></nav>';
   return h;
 }
+/* ---------- 26.11.125: Parent screens show inside the Parent panel (menu stays), never as separate full windows ---------- */
+window.__parCtx = false; window.__parEmb = null;
+function parIn(key, html){
+  if(!(window.__parCtx && parentUnlocked)){ openModal(html); return false; }
+  var keep = (window.__parEmb === key && $('pmain')) ? $('pmain').scrollTop : 0;
+  var title = ({cards:'🔎 Card viewer'})[key] || key, m = html.match(/<h2([^>]*)>([\s\S]*?)<\/h2>/);
+  if(m){
+    title = m[2].replace(/<[^>]+>/g, '');
+    var at = /class="/.test(m[1]) ? m[1].replace('class="', 'class="pemb-h ') : m[1] + ' class="pemb-h"';
+    html = html.replace(m[0], '<h2' + at + '>' + m[2] + '</h2>');
+  }
+  window.__parSec = null; window.__parEmb = key;
+  openModal(parShell(html, title, 'e:' + key));
+  var pm = $('pmain'); if(pm){ pm.classList.add('pemb'); pm.scrollTop = keep; }
+  if(!window.__parCap){
+    window.__parCap = 1;
+    $('modal').addEventListener('click', function(e){
+      if(!window.__parEmb || !e.target.closest) return;
+      if(!e.target.closest('.pnav, .pscrim, .pbar')) return;
+      var b = e.target.closest('[data-act]'); if(!b || b.tagName === 'INPUT') return;
+      if(b.getAttribute('data-act') !== 'pdrawer') parEmbLeave();
+      e.stopPropagation(); parentClick(e);
+    }, true);
+  }
+  return true;
+}
+function parGOpen(key, h){
+  if(parIn(key, h)){ $('modal').onclick = null; return; }
+  $('modal').onclick = function(e){ if(e.target.closest('[data-x]')){ $('modal').onclick = null; closeModal(); } };
+}
+/* save anything typed on a screen before moving to another one */
+function parEmbLeave(){
+  try{ if(window.__parEmb === 'cel' && $('pcBday')){ p4Collect(); save(); render(); } }catch(_){}
+}
+function parBackQuests(){ window.__parSec = null; window.__parView = 'quests'; showParent(); }
 function parShell(inner, title, active){
-  return '<div class="pshell" id="pshell">' + parNav(active) + '<div class="pscrim" data-act="pdrawer"></div><div class="pmain" id="pmain"><div class="pbar"><button class="btn small pburger" data-act="pdrawer" aria-label="Menu">☰ Menu</button><b class="pbt">'+title+'</b></div><div data-pview="1"'+(active.indexOf('s:') === 0 ? '' : ' data-phome="1"')+'>' + inner + '</div></div></div>';
+  return '<div class="pshell" id="pshell">' + parNav(active) + '<div class="pscrim" data-act="pdrawer"></div><div class="pmain" id="pmain"><div class="pbar"><button class="btn small pburger" data-act="pdrawer" aria-label="Menu">☰ Menu</button><b class="pbt">'+title+'</b></div><div data-pview="1"'+(active.indexOf('s:') === 0 || active.indexOf('e:') === 0 ? '' : ' data-phome="1"')+'>' + inner + '</div></div></div>';
 }
 function parScroller(){ var m = $('modal'); return (m && m.querySelector('.pmain')) || m; }
 function parHm(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; }
@@ -7308,6 +7348,7 @@ function parToday(){
   return h + '</div>';
 }
 function showParent(scrollTop){
+  window.__parCtx = true; window.__parEmb = null;
   if(window.__parSec){ showParentSection(window.__parSec, scrollTop); return; }
   var v = window.__parView || 'today', h = '', k = v;
   if(v === 'quests'){
@@ -7354,6 +7395,7 @@ function showParent(scrollTop){
 }
 var PAR_SECTIONS = {packs:'🎴 Card packs', pts:'⭐ Points &amp; bonuses', rt:'🪥 Routines', kitlooks:'👗 Kit\u2019s wardrobe &amp; moves', time:'⏱️ Time &amp; limits', learn:'📚 Learning &amp; news', safe:'💾 Backup &amp; log', kanji:'🈴 Kanji', write:'\u270f\ufe0f Writing desk', hunt:'\ud83c\udf81 Holiday Hunt'};   /* 26.11.103: hunt */
 function showParentSection(key, scrollTop){
+  window.__parCtx = true; window.__parEmb = null;
   window.__parSec = key;
   var e = state.eco, h = '<div class="row" style="justify-content:space-between;align-items:center"><button class="btn small" data-act="pbackhome">← Back</button><button class="btn primary small" data-act="psave">💾 Save</button></div>';
   h += '<h2 style="margin-top:12px">'+PAR_SECTIONS[key]+'</h2><div class="hint" style="margin-bottom:4px">Changes save automatically when you go back or close.</div>';
@@ -7579,7 +7621,7 @@ function parentClick(e){
     case 'pcvreg': PCV.reg = b.getAttribute('data-v'); showParentCards(st); break;
     case 'pcvopen': PCV.scroll = st; showCardDetail(id, true); break;
     case 'pcvclose': showParent(); break;
-    case 'pnewsback': showParent(); break;
+    case 'pnewsback': showParentSection('learn'); break;
     case 'pnewsdel': var ni = parseInt(id, 10); if(!isNaN(ni) && state.news && state.news[ni]){ state.newsBlock = state.newsBlock || []; state.newsBlock.push(state.news[ni].en); if(state.newsBlock.length > 300) state.newsBlock.shift(); state.news.splice(ni, 1); save(); render(); } showNewsList(st); break;
     case 'pnews': var nr = importNewsPack($('pNews').value); toast(nr.msg, 3000); render(); showParent(st); break;
     case 'pp4': showCelebrate(); break;
@@ -7651,19 +7693,19 @@ function showTaskForm(task){
   h += '<label class="row" style="font-weight:800;margin:6px 0"><span class="switch"><input type="checkbox" id="fFs" '+(t.fs?'checked':'')+'><span></span></span> Full-screen black timer (tap to pause)</label>';
   h += '<div class="fld"><label>Assigned on these days</label><div class="days" id="fDays">'+DAY_NAMES.map(function(n,i){return '<button class="day'+(t.days.indexOf(i)>-1?' on':'')+'" data-day="'+i+'">'+n+'</button>';}).join('')+'</div></div>';
   h += '<div class="row" style="justify-content:space-between;margin-top:20px"><div class="row"><button class="btn" data-act="fcancel">Cancel</button>'+(task?'<button class="btn danger" data-act="fdel">🗑 Delete</button>':'')+'</div><button class="btn primary" data-act="fsave">💾 Save quest</button></div>';
-  openModal(h);
+  parIn('task', h);
   $('modal').onchange = null;
   $('modal').onclick = function(e){
     var b = e.target.closest('button'); if(!b) return;
     if(b.hasAttribute('data-emoji')){ $('fEmoji').value = b.getAttribute('data-emoji'); return; }
     if(b.hasAttribute('data-day')){ b.classList.toggle('on'); return; }
     var act = b.getAttribute('data-act');
-    if(act==='fcancel'){ showParent(); }
+    if(act==='fcancel'){ parBackQuests(); }
     else if(act==='fdel'){
       confirmBox('Delete quest?','Remove "'+esc(task.name)+'" completely?','Delete',function(){
         state.tasks = state.tasks.filter(function(x){return x.id!==task.id;});
         delete state.done[task.id]; delete state.overrides[task.id]; delete state.timers[task.id];
-        afterProgressChange(); showParent();
+        afterProgressChange(); parBackQuests();
       }, true);
     }
     else if(act==='fsave'){
@@ -7685,7 +7727,7 @@ function showTaskForm(task){
         var notToday = days.indexOf(new Date().getDay())===-1;
         if(notToday && days.length) toast('✅ Saved. It will show on ' + days.map(function(x){return DAY_NAMES[x];}).join(', ') + ', not today.', 4200);
       }
-      Sound.chime(); afterProgressChange(); showParent();
+      Sound.chime(); afterProgressChange(); parBackQuests();
     }
   };
 }
@@ -7701,7 +7743,7 @@ function fillStorageStatus(){
 }
 function showBackup(){
   var code = backupCode();
-  openModal('<h2>📋 Backup code</h2><p class="hint" style="font-size:15px;margin-bottom:10px">Copy this code and save it somewhere safe (a note, an email to yourself, a messaging app). Paste it into Restore on any device to bring everything back: quests, stars, packs, cards, and settings.</p><textarea id="bcode" readonly>'+code+'</textarea><div class="row" style="margin-top:12px"><button class="btn primary" data-b="copy">📋 Copy code</button><button class="btn" data-b="file">⬇️ Save as file</button></div><div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" data-b="back">← Back</button></div>');
+  parIn('bak', '<h2>📋 Backup code</h2><p class="hint" style="font-size:15px;margin-bottom:10px">Copy this code and save it somewhere safe (a note, an email to yourself, a messaging app). Paste it into Restore on any device to bring everything back: quests, stars, packs, cards, and settings.</p><textarea id="bcode" readonly>'+code+'</textarea><div class="row" style="margin-top:12px"><button class="btn primary" data-b="copy">📋 Copy code</button><button class="btn" data-b="file">⬇️ Save as file</button></div><div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" data-b="back">← Back</button></div>');
   $('modal').onchange = null;
   $('modal').onclick = function(e){
     var b = e.target.closest('[data-b]'); if(!b) return;
@@ -7725,7 +7767,7 @@ function showBackup(){
   };
 }
 function showRestore(){
-  openModal('<h2>♻️ Restore from backup</h2><p class="hint" style="font-size:15px;margin-bottom:10px">Paste a backup code below, or choose a saved backup file. This replaces the data on this device.</p><textarea id="rcode" placeholder="SQ1:..."></textarea><div class="row" style="margin-top:12px"><button class="btn primary" data-r="go">♻️ Restore now</button><label class="btn" style="display:inline-flex;align-items:center">📂 Choose file<input type="file" id="rfile" accept=".txt,.json" style="display:none"></label></div><div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" data-r="back">← Back</button></div>');
+  parIn('bak', '<h2>♻️ Restore from backup</h2><p class="hint" style="font-size:15px;margin-bottom:10px">Paste a backup code below, or choose a saved backup file. This replaces the data on this device.</p><textarea id="rcode" placeholder="SQ1:..."></textarea><div class="row" style="margin-top:12px"><button class="btn primary" data-r="go">♻️ Restore now</button><label class="btn" style="display:inline-flex;align-items:center">📂 Choose file<input type="file" id="rfile" accept=".txt,.json" style="display:none"></label></div><div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" data-r="back">← Back</button></div>');
   $('modal').onchange = function(e){
     if(e.target.id === 'rfile' && e.target.files && e.target.files[0]){
       var fr = new FileReader();
@@ -8159,7 +8201,7 @@ function showCardDetail(id, fromParent){
   h += promoDetailHTML(c); /* 26.11.115: Promoted line moved to the very bottom of the card */
   h += '</div></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
-  openModal(h);
+  if(fromParent) parIn('cards', h); else openModal(h);
   if($('dflip')){ hlFlipBind($('dflip')); hlStart(); var fb_ = $('dflipBtn'); if(fb_) fb_.onclick = function(ev){ ev.stopPropagation(); hlFlipNow(); }; }
   $('modal').onchange = null;
   $('modal').onclick = function(e){
@@ -8207,8 +8249,8 @@ function showParentCards(scrollTop){
   h += '<div class="hint" id="pcvcount" style="margin:6px 0">'+pcvList().length+' of '+CARDS.length+' cards</div>';
   h += '<div class="pcgrid" id="pcvgrid">'+pcvGridHTML()+'</div>';
   h += '<div class="row" style="margin-top:14px"><button class="btn" data-act="pcvclose">← Back to Parent</button></div>';
-  openModal(h);
-  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  parIn('cards', h);
+  if(scrollTop !== undefined) parScroller().scrollTop = scrollTop;
   $('modal').onclick = parentClick; $('modal').onchange = null;
   $('modal').oninput = function(e){
     if(e.target && e.target.id === 'pcvq'){ PCV.q = e.target.value; $('pcvgrid').innerHTML = pcvGridHTML(); $('pcvcount').textContent = pcvList().length+' of '+CARDS.length+' cards'; }
@@ -8693,10 +8735,10 @@ function showRewardEditor(scroll){
   h += '<div class="row" style="margin-top:10px"><button class="btn good" data-act="rwadd">Add reward</button><button class="btn" data-act="rwreset">Reset all to default</button></div>';
   h += '<div class="hint" style="margin-top:10px">Treats are 1× a week and big goals 1× a month by default (weeks start Monday, months on the 1st). Screen time has no limit here.</div><div class="row" style="margin-top:6px"><button class="btn" data-act="rwlimreset">🔓 Let her get everything again now</button></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn primary" data-act="rwback">Back to Parent controls</button></div>';
-  openModal(h);
-  if(scroll !== undefined) $('modal').scrollTop = scroll;
+  parIn('rw', h);
+  if(scroll !== undefined) parScroller().scrollTop = scroll;
   $('modal').onchange = function(e){
-    var el = e.target, sc = $('modal').scrollTop;
+    var el = e.target, sc = parScroller().scrollTop;
     var gid = el.getAttribute && el.getAttribute('data-gid');
     if(gid && el.getAttribute('data-gr')){
       var g = null; rwGroups().forEach(function(x){ if(x.id === gid) g = x; });
@@ -8716,7 +8758,7 @@ function showRewardEditor(scroll){
   };
   $('modal').onclick = function(e){
     var b = e.target.closest('[data-act]'); if(!b || b.tagName === 'INPUT' || b.disabled) return;
-    var a = b.getAttribute('data-act'), id = b.getAttribute('data-id'), gid = b.getAttribute('data-gid'), sc = $('modal').scrollTop;
+    var a = b.getAttribute('data-act'), id = b.getAttribute('data-id'), gid = b.getAttribute('data-gid'), sc = parScroller().scrollTop;
     if(a === 'rwback'){ showParent(); return; }
     if(a === 'gup' || a === 'gdown'){
       var arr = rwGroups(), i = -1; arr.forEach(function(x, k){ if(x.id === gid) i = k; });
@@ -9819,8 +9861,8 @@ function showNewsList(scrollTop){
     h += '<div class="newsrow" style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(127,127,160,.25)"><div style="flex:1;font-weight:600;font-size:14px"><span class="hint">'+esc(x.d)+' · '+esc(x.s || '')+'</span><br>'+esc(x.en)+'</div><button class="btn small" data-act="pnewsdel" data-id="'+i+'" aria-label="Remove this bite">✕</button></div>';
   });
   h += '<div class="row" style="margin-top:14px"><button class="btn" data-act="pnewsback">← Back</button></div>';
-  openModal(h);
-  if(scrollTop !== undefined) $('modal').scrollTop = scrollTop;
+  parIn('news', h);
+  if(scrollTop !== undefined) parScroller().scrollTop = scrollTop;
   $('modal').onclick = parentClick; $('modal').onchange = null;
 }
 function importNewsPack(txt){
@@ -10916,7 +10958,7 @@ function calendarHTML(){
 function showCalendarModal(){
   var h = '<span data-closable></span><h2>📅 Streak calendar</h2>'+calendarHTML();
   h += '<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn primary" data-act="calclose">Back</button></div>';
-  openModal(h);
+  parIn('cal', h);
   $('modal').onchange = null;
   $('modal').onclick = function(e){
     var dy = e.target.closest('[data-day]');
@@ -10964,7 +11006,7 @@ function showDay(k, from){
     rowb += '<button class="btn primary" data-act="jedit" data-day="'+k+'">✏️ '+(je ? 'Edit my page' : 'Write about this day')+'</button>';
   }
   h += '<div class="row" style="justify-content:flex-end;margin-top:14px;gap:8px">'+rowb+'<button class="btn" data-act="dayclose">'+(from === 'parent' ? 'Back' : 'Close')+'</button></div>';
-  openModal(h);
+  if(from === 'parent') parIn('cal', h); else openModal(h);
   $('modal').onclick = function(e){
     var dy = e.target.closest('[data-day]');
     if(dy && !dy.getAttribute('data-act')){ showDay(dy.getAttribute('data-day'), from); return; }
@@ -11202,7 +11244,7 @@ function showCelebrate(){
   h += '<div class="fld"><label>Advanced: email webhook URL (optional, for automatic email)</label><input type="url" id="pcNHook" placeholder="https://script.google.com/macros/s/.../exec" value="'+esc(n.hook)+'"></div>';
   h += '<div class="row" style="margin:6px 0"><button class="btn small" data-act="ntest">Send a test message</button></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:14px;gap:8px"><button class="btn" data-act="p4back">Back</button><button class="btn primary" data-act="p4save">💾 Save</button></div>';
-  openModal(h);
+  parIn('cel', h);
   $('modal').onclick = p4Click;
 }
 function p4Collect(){
@@ -15218,7 +15260,7 @@ function showGoalParent(){
   h += '<h3>This week</h3><div class="hint">'+(a ? '“'+esc(GBYID[a.pick].t)+'” '+esc(gWhereLabel(a))+'. Days tried: '+gDotCount(a) : 'No card picked yet.')+'</div>';
   h += '<div class="row" style="margin-top:10px"><button class="btn small" data-gl="reset">↺ Reset this week’s pick</button></div>';
   h += '<div class="row" style="margin-top:14px"><button class="btn primary" data-x="1">Done</button></div></div>';
-  gOpen(h);
+  parGOpen('gl', h);
 }
 function gReset(){
   var g = gS(), wk = gDealWk();
@@ -15479,7 +15521,7 @@ function showFamPack(){
   if(on) h += '<div class="hint">New cards are added and changed cards are updated (matched by card id). Nothing is removed, and everything she has already found stays found.</div>';
   h += '<div class="hint" id="fpMsg"></div>';
   h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button>'+(on ? '<button class="btn danger" data-fp="remove">Remove pack</button>' : '')+'</div></div>';
-  gOpen(h);
+  parGOpen('fp', h);
 }
 /* v49: adding a family pack MERGES into the one on this device. Cards you already have (and everything you unlocked) stay.
    A card with a new id is added; a card with the same id is updated; nothing is removed. A backup of the old pack is kept. */
@@ -16318,7 +16360,7 @@ function showBankParent(){
     h += '<div class="fld"><label>Weekly allowance ($)</label><input type="text" id="bkWeekly" inputmode="decimal" value="'+(b.weekly/100).toFixed(2)+'"></div>';
     h += '<div class="fld"><label>Added every</label>'+bkSel('bkDow', BK_DAYS.map(function(d, i){ return [i, d]; }))+'</div><div class="hint" id="bkMsg">Tip: turn this on only on the device that will keep the money (her tablet).</div>';
     h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-bk="pback">Back</button><button class="btn primary" data-bk="popen">Start tracking</button></div></div>';
-    gOpen(h);
+    parGOpen('bk', h);
     var dw = $('bkDow'); if(dw) dw.value = String(b.payDay);
     return;
   }
@@ -16340,7 +16382,7 @@ function showBankParent(){
   h += '<div class="row"><button class="btn primary" data-bk="psave">Save settings</button></div>';
   h += '<h3>🧾 Recent entries</h3><div class="bkhist">'+(bkHistoryRows(10).map(bkRowHTML).join('') || '<div class="hint">Nothing yet.</div>')+'</div>';
   h += '<div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" data-bk="pback">Back to Parent</button><button class="btn primary" data-x="1">Done</button></div></div>';
-  gOpen(h);
+  parGOpen('bk', h);
   var dw2 = $('bkDow'); if(dw2) dw2.value = String(b.payDay);
 }
 function bkSel(id, opts){ return '<select id="'+id+'">'+opts.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('')+'</select>'; }
