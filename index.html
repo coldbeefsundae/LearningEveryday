@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.127', errs = [], shown = false;
+  var V = '26.11.128', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -252,7 +252,7 @@ h1,h2,h3,p{margin:0}
 .sec h2{font-size:22px;font-weight:900;letter-spacing:-.3px}
 .sec .count{font-weight:800;color:var(--muted);font-size:14px}
 
-.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.127: cards keep their own height, so a timer card next door no longer pushes a tick down */
+.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.128: cards keep their own height, so a timer card next door no longer pushes a tick down */
 .quest{--tile:#ece9ff;background:#fff;border-radius:24px;border:2px solid var(--line);box-shadow:var(--shadow-1);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .2s,background .3s,border-color .3s;display:flex;flex-direction:column;gap:12px;justify-content:center;min-height:104px;position:relative}
 .quest:active{transform:scale(.975)}
 .p0{--tile:#ffe4ef}.p1{--tile:#dff2ff}.p2{--tile:#fff0d2}.p3{--tile:#ece6ff}.p4{--tile:#ffe6dd}.p5{--tile:#d9f6ef}
@@ -1535,7 +1535,7 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .panel{bor
   body[data-skin=atlas] #view-home .qgrid{grid-template-columns:minmax(0,1fr);gap:12px}
   body:is([data-skin=gallery],[data-skin=aurora]) .quest{min-height:78px;padding:10px 16px;border-radius:22px}
   body:is([data-skin=gallery],[data-skin=aurora]) .tile{width:48px;height:48px;border-radius:15px;font-size:26px}
-  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.127: was 36px in landscape only */
+  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.128: was 36px in landscape only */
   body:is([data-skin=gallery],[data-skin=aurora]) .q-name{font-size:18px;font-weight:700}
 }
 @media (max-width:820px){
@@ -1685,7 +1685,7 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill{height:50px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill .v{font-size:20px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .tile{width:52px;height:52px;font-size:28px}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.127: same size in both orientations */
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.128: same size in both orientations */
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .page{padding:14px}
   /*[MENU]*/body[data-skin=atlas] .rail{height:62px;padding:0 8px;gap:2px}
   /*[MENU]*/body[data-skin=atlas] .logo{display:none}
@@ -3016,6 +3016,11 @@ body[data-skin=aurora] :focus-visible{outline:3px solid #8ff5c6;outline-offset:2
 .aurkit{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;font-weight:700}
 @media (prefers-reduced-motion:reduce){.aursky i{animation:none;opacity:.8}}
 body[data-calm=on] .aursky i{opacity:.8}
+.ktlist{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow:auto;margin-top:8px}
+.ktrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:12px;background:rgba(0,0,0,.04)}
+.ktn{width:28px;font-weight:800;text-align:center}
+.ktw{flex:1;font-size:1.4em;display:flex;flex-direction:column}.ktw small{font-size:.55em;opacity:.7}
+.kthit{color:#e0559a}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -12021,7 +12026,7 @@ function kjBookBody(maxh, noWhere){
   var ink = kinkLoad(), hh = hz(), idx = {}, h = '';
   KANJI.forEach(function(k, i){ idx[k.k] = i; });
   h += '<div class="kblegend"><span><i style="background:rgba(108,92,231,.2);border-color:rgba(108,92,231,.55)"></i>practised here</span><span><i style="background:rgba(108,92,231,.07);border-color:rgba(108,92,231,.18)"></i>done at hoshuko</span><span><i style="background:rgba(128,128,128,.12)"></i>not yet</span><span>\u270d\ufe0f in my writing</span></div>';
-  if(!noWhere && hh.on && kjKidPage()) h += '<div class="row" style="margin-top:8px;gap:8px;align-items:center"><span class="hint" style="margin:0">📍 You are on <b lang="ja">3年'+hh.vol+'</b> page <b>'+hh.page+'</b></span><button class="btn small" data-kjw="open">Change page</button></div>';
+  if(!noWhere && hh.on && kjKidPage()) h += '<div class="row" style="margin-top:8px;gap:8px;align-items:center"><span class="hint" style="margin:0">📍 '+kjPagesLabel()+'</span><button class="btn small" data-kjw="open">Change pages</button></div>';
   h += '<div style="max-height:'+maxh+';overflow:auto;margin-top:6px">';
   ['\u4e0a','\u4e0b'].forEach(function(v){
     h += '<div class="kbvol">3\u5e74'+v+(hh.on && hh.vol === v ? ' \u00b7 hoshuko is here' : '')+'</div>';
@@ -13793,9 +13798,9 @@ function kjTodayHTML(){
 function kjBookTabHTML(){
   var hh = hz(), dow = parseKey(dateKey()).getDay(), h = '';
   if(hh.on && kjKidPage()){
-    h += '<div class="panel kjwherep"><div class="ptitle">📍 Where am I?</div><p>You are on <b lang="ja">3年'+hh.vol+'</b> page <b>'+hh.page+'</b>. Kanji of the Day comes from this page and the 3 before it.</p>';
+    h += '<div class="panel kjwherep"><div class="ptitle">📍 Where am I?</div><p>'+(kjPagesOn() ? 'Practising '+kjPagesLabel()+'. Kanji of the Day comes from these pages.' : 'You are on '+kjPagesLabel()+'. Kanji of the Day comes from this page and the 3 before it.')+'</p>';
     if((dow === 6 || dow === 0) && kjHzStale()) h += '<p class="hint">🏫 Hoshuko weekend! If your class started a new page, move your page so Kit knows.</p>';
-    h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" data-kjw="step:1">Next page \u25b6</button><button class="btn" data-kjw="open">Pick a page</button></div></div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" data-kjw="step:1">Next page \u25b6</button><button class="btn" data-kjw="open">Pick pages</button></div></div>';
   }
   h += '<div class="panel"><div class="ptitle">📖 My Kanji Book</div><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again, or 🃏 to practise a page.</div>'+kjBookBody('none', true)+'</div>';
   return h;
@@ -13807,6 +13812,7 @@ function kjPracticeHTML(){
   if(ks.prac.n >= 3) h += '<div class="kjbreak">🧃 <b>Brain break idea:</b> '+['10 star jumps','a glass of water','look out the window for 20 seconds','a big stretch up to the sky','3 slow breaths'][ks.prac.n % 5]+'. Then come back if you want!</div>';
   h += '<div class="kjpgrid">';
   [['Kanji cards', [['data-kfc="mode:read"','👀 Read it','See the kanji, flip for the reading'], ['data-kfc="mode:recall"','💭 Remember it','See the meaning, think of the kanji'], ['data-kfc="mode:pick"','🔍 Find the kanji','Pick the right one from four'], ['data-kfc="mode:look"','👯 Look-alikes','Tell tricky twins apart']]],
+   ['Test', [['data-kt="open"','📝 Kanji test','Listen, write on paper, check']]],
    ['Kanji combos', [['data-kcb="mode:build"','🧩 Build the word','Put two kanji together'], ['data-kcb="mode:miss"','🔎 Missing kanji','Which kanji fits the gap?'], ['data-kcb="mode:readw"','📖 Read the word','Pick the right reading'], ['data-kcb="fam:today"','🔗 Word family','All the words with one kanji']]],
    ['Writing', [['data-kw-open="today"','✍️ Write it','Stroke order and neat writing'], ['data-kwalbum="1"','📓 My writing','See how it has grown']]]
   ].forEach(function(g){
@@ -13923,28 +13929,43 @@ document.addEventListener('click', function(e){
 function kjKidPage(){ return hz().kid !== false; }
 function kjWhereChip(){
   var hh = hz(); if(!hh.on || !kjKidPage()) return '';
-  return '<button class="kjwhere" data-kjw="open">\ud83d\udcd8 <span lang="ja">3\u5e74'+hh.vol+'</span> \u00b7 page '+hh.page+' \u00b7 <u>Change page</u></button>';
+  return '<button class="kjwhere" data-kjw="open">\ud83d\udcd8 '+kjPagesLabel()+' \u00b7 <u>Change pages</u></button>';
 }
 var KJW = {vol:null};
 function showKjWhere(){
   knScreen('kjwhere', showKjWhere);
-  var hh = hz(), v = KJW.vol || hh.vol;
-  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd8 Which page are you on?</h2>';
-  h += '<div class="hint">Tap the page your class is on at hoshuko. Kanji of the Day picks from this page and the 3 kanji pages before it.</div>';
-  h += '<div class="row" style="gap:8px;margin:10px 0 8px">';
+  var hh = hz(), v = KJW.vol || hh.vol, pl = kjPagesOn();
+  var h = '<div class="kjmodal"><h2 style="margin:0 0 6px">\ud83d\udcd8 Which pages?</h2>';
+  h += '<div class="hint">Tap one page or lots of pages. Kanji of the Day and \ud83d\udccd Recent pages practice use the pages you pick.</div>';
+  h += '<div class="row" style="gap:8px;margin:10px 0 8px;flex-wrap:wrap">';
   ['\u4e0a','\u4e0b'].forEach(function(x){ h += '<button class="btn '+(v === x ? 'primary' : '')+'" data-kjw="vol:'+x+'"><span lang="ja">3\u5e74'+x+'</span></button>'; });
+  h += '<button class="btn small" data-kjw="week">\ud83c\udfeb This week + last week</button>';
+  if(pl) h += '<button class="btn small" data-kjw="clear">Clear</button>';
   h += '</div><div class="kjpgs kjwgrid">';
   kbPages(v).forEach(function(x){
-    var on = hh.vol === v && hh.page === x.p, met = x.ks.filter(kjIsMet).length;
-    h += '<button class="kjpg'+(on ? ' on' : '')+'" data-kjw="pg:'+v+':'+x.p+'"><small>'+(on ? '\ud83d\udccd ' : '')+'p.'+x.p+'</small><span lang="ja">'+x.ks.join('')+'</span>'+(met === x.ks.length ? '<small>\u2b50</small>' : '')+'</button>';
+    var on = pl ? kjPageOn(v, x.p) : (hh.vol === v && hh.page === x.p), met = x.ks.filter(kjIsMet).length;
+    h += '<button class="kjpg'+(on ? ' on' : '')+'" data-kjw="pg:'+v+':'+x.p+'"><small>'+(on ? '\u2705 ' : '')+'p.'+x.p+'</small><span lang="ja">'+x.ks.join('')+'</span>'+(met === x.ks.length ? '<small>\u2b50</small>' : '')+'</button>';
   });
-  h += '</div><div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" data-kjw="step:-1">\u25c0 Back a page</button><button class="btn" data-kjw="step:1">Next page \u25b6</button><button class="btn primary" data-x="1">Done</button></div></div>';
+  var n = pl ? kjPagesKanji(pl).length : 0;
+  h += '</div><div class="hint" style="margin-top:8px">'+(pl ? '\u2705 '+pl.length+' page'+(pl.length === 1 ? '' : 's')+' \u00b7 '+n+' kanji' : 'Nothing ticked yet: Kit uses page '+hh.page+' and the 3 pages before it.')+'</div>';
+  h += '<div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" data-kjw="step:-1">\u25c0 Back a page</button><button class="btn" data-kjw="step:1">Next page \u25b6</button><button class="btn primary" data-x="1">Done</button></div></div>';
   openModal(h);
   setTimeout(function(){ var on = document.querySelector('.kjwgrid .kjpg.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest'}); }, 30);
 }
+/* 26.11.128: tap pages on and off. The furthest ticked page becomes "where she is". */
+function kjTogglePage(v, p){
+  var hh = hz(), l = (kjPagesOn() || []).slice(), at = -1;
+  l.forEach(function(x, i){ if(x.v === v && x.p === p) at = i; });
+  if(at > -1) l.splice(at, 1); else l.push({v:v, p:p});
+  l.sort(function(a, b){ return (a.v === b.v ? a.p - b.p : (a.v === '\u4e0a' ? -1 : 1)); });
+  hh.pages = l.length ? l : null;
+  if(l.length){ var last = l[l.length - 1]; hh.vol = last.v; hh.page = last.p; }
+  hh.by = 'kid'; hh.at = dateKey(); KJW.vol = v; save();
+  render(); showKjWhere();
+}
 function kjSetPage(v, p){
   var hh = hz(), moved = hh.vol !== v || hh.page !== p;
-  hh.vol = v; hh.page = p; hh.by = 'kid'; hh.at = dateKey(); KJW.vol = v; save();
+  hh.vol = v; hh.page = p; hh.pages = null; hh.by = 'kid'; hh.at = dateKey(); KJW.vol = v; save();
   if(moved) toast('\ud83d\udcd8 Got it! You are on page '+p+'.', 1800);
   render(); showKjWhere();
 }
@@ -13955,7 +13976,15 @@ document.addEventListener('click', function(e){
   var a = t.getAttribute('data-kjw'), hh = hz();
   if(a === 'open'){ KJW.vol = hh.vol; showKjWhere(); return; }
   if(a.indexOf('vol:') === 0){ KJW.vol = a.slice(4); showKjWhere(); return; }
-  if(a.indexOf('pg:') === 0){ var p = a.split(':'); kjSetPage(p[1], +p[2]); return; }
+  if(a.indexOf('pg:') === 0){ var p = a.split(':'); kjTogglePage(p[1], +p[2]); return; }
+  if(a === 'clear'){ hh.pages = null; save(); render(); showKjWhere(); return; }
+  if(a === 'week'){
+    var al = kbPages('\u4e0a').concat(kbPages('\u4e0b')), ix = -1;
+    al.forEach(function(x, i){ if(x.v === hh.vol && x.p === hh.page) ix = i; });
+    if(ix < 0) ix = 0;
+    hh.pages = al.slice(Math.max(0, ix - 1), ix + 1).map(function(x){ return {v:x.v, p:x.p}; });
+    save(); toast('\ud83d\udcd8 This week and last week are ticked.', 1800); render(); showKjWhere(); return;
+  }
   if(a.indexOf('step:') === 0){
     var dir = +a.slice(5), all = kbPages('\u4e0a').concat(kbPages('\u4e0b')), at = -1;
     all.forEach(function(x, i){ if(x.v === hh.vol && x.p === hh.page) at = i; });
@@ -13965,23 +13994,168 @@ document.addEventListener('click', function(e){
     kjSetPage(nx.v, nx.p);
   }
 }, true);
+/* ---------- 26.11.128: Kanji test (like the hoshuko test: listen, write on paper, check) ---------- */
+var KT = null;
+function ktLog(){ var ks = kanjiState(); if(!ks.tests) ks.tests = []; return ks.tests; }
+function ktSay(k, n){ try{ speakText(n+'\u3070\u3093\u3002 '+k.w+'\u3002 '+k.w+'\u3002', 'ja-JP'); }catch(e){} }
+function ktOpen(){
+  var hh = hz();
+  KT = {stage:'setup', vol:hh.vol, pages:(kjPagesOn() || [{v:hh.vol, p:hh.page}]).map(function(x){ return {v:x.v, p:x.p}; }), n:10, cards:[], i:0, mark:{}};
+  ktShow();
+}
+function ktHas(v, p){ return KT.pages.some(function(x){ return x.v === v && x.p === p; }); }
+function ktShow(){
+  var s = KT; if(!s) return;
+  knScreen('ktest', ktShow);
+  var h = '<div class="kjmodal kfc">';
+  if(s.stage === 'setup'){
+    var nk = kjPagesKanji(s.pages).length;
+    h += '<h2 style="margin:0 0 4px">\ud83d\udcdd Kanji test</h2>';
+    h += '<div class="hint">Just like hoshuko! Kit reads a word out loud. You write it on paper. Then you check your answers.</div>';
+    h += '<div class="kfch" style="margin:10px 0 4px">1. Which pages are on the test?</div><div class="row" style="gap:8px;flex-wrap:wrap">';
+    ['\u4e0a','\u4e0b'].forEach(function(x){ h += '<button class="btn small '+(s.vol === x ? 'primary' : '')+'" data-kt="vol:'+x+'"><span lang="ja">3\u5e74'+x+'</span></button>'; });
+    h += '</div><div class="kjpgs kjwgrid" style="margin-top:6px">';
+    kbPages(s.vol).forEach(function(x){
+      var on = ktHas(s.vol, x.p);
+      h += '<button class="kjpg'+(on ? ' on' : '')+'" data-kt="pg:'+s.vol+':'+x.p+'"><small>'+(on ? '\u2705 ' : '')+'p.'+x.p+'</small><span lang="ja">'+x.ks.join('')+'</span></button>';
+    });
+    h += '</div><div class="hint" style="margin-top:6px">'+(s.pages.length ? '\u2705 '+s.pages.length+' page'+(s.pages.length === 1 ? '' : 's')+' \u00b7 '+nk+' kanji' : 'Tap at least one page.')+'</div>';
+    h += '<div class="kfch" style="margin:10px 0 4px">2. How many?</div><div class="kcbchips">';
+    [[5,'5'],[10,'10'],[0,'All of them']].forEach(function(c){ h += '<button class="kcbchip'+(s.n === c[0] ? ' on' : '')+'" data-kt="n:'+c[0]+'">'+c[1]+'</button>'; });
+    h += '</div><div class="hint" style="margin-top:8px">\u270f\ufe0f Get a pencil and paper. Write the numbers 1, 2, 3\u2026 down the side.</div>';
+    h += '<div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn" data-x="1">Close</button><button class="btn primary" data-kt="start"'+(nk ? '' : ' disabled')+'>Start the test \u25b6</button></div></div>';
+    openModal(h); return;
+  }
+  if(s.stage === 'play'){
+    var k = s.cards[s.i], num = s.i + 1;
+    h += '<div class="hint" style="text-align:center">Question '+num+' of '+s.cards.length+'</div>';
+    h += '<div class="kfccard" style="cursor:default"><span class="kfcbig">'+num+'</span><small>Listen, then write the word on your paper.</small></div>';
+    if(s.hint) h += '<div class="kfctip" style="text-align:center"><span lang="ja" style="font-size:1.4em">'+esc(k.wr)+'</span><br><small>'+esc(k.wm)+'</small></div>';
+    h += '<div class="row kfcbtns" style="flex-wrap:wrap"><button class="btn" data-kt="say">\ud83d\udd01 Say it again</button>'+(s.hint ? '' : '<button class="btn" data-kt="hint">\ud83d\udc40 Show hint</button>')+'<button class="btn primary" data-kt="next">'+(num < s.cards.length ? 'Next \u25b6' : 'I\u2019m done writing \u2714')+'</button></div>';
+    h += '<div class="row" style="margin-top:10px;justify-content:space-between">'+(s.i ? '<button class="btn small" data-kt="prev">\u25c0 Back</button>' : '<span></span>')+'<button class="btn small" data-kt="quit">Stop the test</button></div></div>';
+    openModal(h);
+    if(!s.spoke[s.i]){ s.spoke[s.i] = 1; setTimeout(function(){ ktSay(k, num); }, 350); }
+    return;
+  }
+  if(s.stage === 'check'){
+    var left = s.cards.filter(function(k){ return s.mark[k.k] == null; }).length;
+    h += '<h2 style="margin:0 0 4px">\u2714 Check your answers</h2>';
+    h += '<div class="hint">Look at your paper. Tap \u2705 if you got it, or \u274c if it needs more practice. Every stroke counts, just like at school!</div>';
+    h += '<div class="ktlist">';
+    s.cards.forEach(function(k, i){
+      var m = s.mark[k.k], w = esc(k.w).split(k.k).join('<b class="kthit">'+k.k+'</b>');
+      h += '<div class="ktrow"><span class="ktn">'+(i + 1)+'</span><span class="ktw" lang="ja">'+w+'<small>'+esc(k.wr)+'</small></span>';
+      h += '<button class="btn small'+(m === 1 ? ' primary' : '')+'" data-kt="ok:'+k.k+'">\u2705</button><button class="btn small'+(m === 0 ? ' primary' : '')+'" data-kt="no:'+k.k+'">\u274c</button></div>';
+    });
+    h += '</div><div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn small" data-kt="allok">All \u2705</button><button class="btn primary" data-kt="finish"'+(left ? ' disabled' : '')+'>'+(left ? left+' left to check' : 'Finish \u2714')+'</button></div></div>';
+    openModal(h); return;
+  }
+  if(s.stage === 'end'){
+    var ok = s.cards.filter(function(k){ return s.mark[k.k] === 1; }), miss = s.cards.filter(function(k){ return s.mark[k.k] === 0; });
+    h += '<h2 style="margin:0 0 6px;text-align:center">\ud83c\udf1f You finished the test!</h2>';
+    h += '<div style="text-align:center;font-size:2em;font-weight:800">'+ok.length+' / '+s.cards.length+'</div>';
+    h += '<div class="hint" style="text-align:center">'+(miss.length ? (miss.length <= 2 ? 'So close! A little practice and these will stick.' : 'Tests show us what to practise next. That is their job!') : 'Every single one! Your practice is paying off.')+'</div>';
+    if(s.got) h += '<div class="hint" style="text-align:center">\u2b50 +'+s.got+' for doing a test</div>';
+    if(miss.length) h += '<div class="kfcres">\ud83d\udd01 <span>'+miss.map(function(k){ return '<b lang="ja">'+k.k+'</b>'; }).join(' ')+'</span><small>Kit will show these more often.</small></div>';
+    h += '<div class="row" style="margin-top:14px;justify-content:space-between;flex-wrap:wrap;gap:8px"><button class="btn" data-x="1">Done</button>';
+    if(miss.length) h += '<button class="btn" data-kt="practise">\ud83c\udccf Practise these</button>';
+    h += '<button class="btn primary" data-kt="again">\ud83d\udcdd Test again</button></div></div>';
+    openModal(h); return;
+  }
+}
+function ktFinish(){
+  var s = KT, wk = kwk(), miss = [], ok = 0;
+  s.cards.forEach(function(k){
+    var e = wk[k.k] = wk[k.k] || {};
+    if(s.mark[k.k] === 1){ e.g = (e.g || 0) + 1; ok++; } else { e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; miss.push(k.k); }
+    e.t = Date.now(); try{ kjMeet(k.k); }catch(_){}
+  });
+  var log = ktLog();
+  log.push({d:dateKey(), at:Date.now(), pages:s.pages.map(function(x){ return x.v+x.p; }), n:s.cards.length, ok:ok, miss:miss});
+  if(log.length > 60) log.splice(0, log.length - 60);
+  kjStat('kanjiTests');
+  s.got = 0;
+  var ks = kanjiState();
+  if(ks.testPtsDay !== dateKey()){ ks.testPtsDay = dateKey(); try{ s.got = addPoints(2, 'Did a kanji test', true) || 0; }catch(_){} }
+  save(); s.stage = 'end'; render(); checkBadgesX(); ktShow();
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kt]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  try{ Sound.tap(); }catch(_){}
+  var a = t.getAttribute('data-kt'), s = KT;
+  if(a === 'open' || !s){ ktOpen(); return; }
+  if(a.indexOf('vol:') === 0){ s.vol = a.slice(4); ktShow(); return; }
+  if(a.indexOf('pg:') === 0){
+    var p = a.split(':'), v = p[1], n = +p[2], at = -1;
+    s.pages.forEach(function(x, i){ if(x.v === v && x.p === n) at = i; });
+    if(at > -1) s.pages.splice(at, 1); else s.pages.push({v:v, p:n});
+    ktShow(); return;
+  }
+  if(a.indexOf('n:') === 0){ s.n = +a.slice(2); ktShow(); return; }
+  if(a === 'start'){
+    var all = kjPagesKanji(s.pages).map(function(c){ return KJ_BY[c]; });
+    if(!all.length) return;
+    all = shuffle(all, Math.random);
+    s.cards = s.n ? all.slice(0, s.n) : all; s.i = 0; s.mark = {}; s.spoke = {}; s.hint = false; s.stage = 'play'; ktShow(); return;
+  }
+  if(a === 'say'){ ktSay(s.cards[s.i], s.i + 1); return; }
+  if(a === 'hint'){ s.hint = true; ktShow(); return; }
+  if(a === 'next'){ try{ stopSpeak(); }catch(_){} s.hint = false; if(s.i < s.cards.length - 1){ s.i++; } else s.stage = 'check'; ktShow(); return; }
+  if(a === 'prev'){ try{ stopSpeak(); }catch(_){} s.hint = false; if(s.i) s.i--; s.spoke[s.i] = 0; ktShow(); return; }
+  if(a === 'quit'){ try{ stopSpeak(); }catch(_){} s.stage = 'setup'; ktShow(); return; }
+  if(a.indexOf('ok:') === 0){ s.mark[a.slice(3)] = 1; ktShow(); return; }
+  if(a.indexOf('no:') === 0){ s.mark[a.slice(3)] = 0; ktShow(); return; }
+  if(a === 'allok'){ s.cards.forEach(function(k){ if(s.mark[k.k] == null) s.mark[k.k] = 1; }); ktShow(); return; }
+  if(a === 'finish'){ ktFinish(); return; }
+  if(a === 'again'){ var pg = s.pages, nn = s.n; ktOpen(); KT.pages = pg; KT.n = nn; ktShow(); return; }
+  if(a === 'practise'){
+    var sl = kfcSel(); sl.src = 'own'; sl.own = s.cards.filter(function(k){ return s.mark[k.k] === 0; }).map(function(k){ return k.k; }); save();
+    KFC = {stage:'menu'}; kfcShow(); return;
+  }
+}, true);
+function ktParentHTML(){
+  var log = ktLog();
+  var h = '<h3>\ud83d\udcdd Her practice tests in StarQuest</h3>';
+  if(!log.length) return h + '<div class="hint">No tests yet. She can do one in Kanji \u2192 Practice \u2192 \ud83d\udcdd Kanji test.</div>';
+  h += '<div class="ktlist">';
+  log.slice(-8).reverse().forEach(function(x){
+    h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d)+'</span><span class="ktw"><b>'+x.ok+' / '+x.n+'</b><small>p. '+esc(x.pages.join(', '))+'</small></span><span lang="ja">'+(x.miss.length ? '\ud83d\udd01 '+x.miss.join(' ') : '\u2b50')+'</span></div>';
+  });
+  return h + '</div>';
+}
 function kbPages(v){ return KBOOK.filter(function(x){ return x.v === v; }); }
 
 /* look-alike groups: a = in grade 3 (can be asked), d = extra look-alikes shown as choices */
 var KLOOK = [
   {a:'由申', d:'田甲', tip:'田 has no stick poking out. 由 sticks out the top. 甲 sticks out the bottom. 申 sticks out of both the top and the bottom.'},
-  {a:'央', d:'失矢', tip:'央 has a box on top, like a hat. 失 starts with a slanting stroke instead.'},
-  {a:'氷', d:'水永', tip:'氷 is 水 with an extra ice drop at the top left.'},
-  {a:'倍部', d:'', tip:'倍 has the person 亻 on the left. 部 has the village mark 阝 on the right.'},
-  {a:'係', d:'孫', tip:'係 has the person 亻 on the left. 孫 has the child 子 on the left.'},
-  {a:'持待', d:'特', tip:'持 has the hand 扌. 待 has the step 彳. 特 has the cow 牛.'},
+  {a:'央', d:'失矢夫', tip:'央 has a box on top, like a hat. 失 starts with a slanting stroke instead.'},
+  {a:'氷泳', d:'水永', tip:'氷 is 水 with an extra ice drop. 泳 has water 氵 next to 永 (swim!).'},
+  {a:'倍部都', d:'位', tip:'倍 has the person 亻 on the left. 部 and 都 have the village mark 阝 on the right.'},
+  {a:'係', d:'孫系糸', tip:'係 has the person 亻 on the left. 孫 has the child 子 on the left.'},
+  {a:'持待', d:'特時', tip:'持 has the hand 扌. 待 has the step 彳. 特 has the cow 牛. 時 has the sun 日.'},
   {a:'板坂返', d:'反', tip:'板 has a tree 木 (a board is wood). 坂 has earth 土 (a slope). 返 has the road 辶 (go back).'},
-  {a:'者暑', d:'署', tip:'者 is the plain one. 暑 puts the sun 日 on top (hot!). 署 puts a net on top.'},
-  {a:'悲悪', d:'', tip:'悲 has 非 on top of the heart 心. 悪 has 亜 on top of the heart 心.'},
-  {a:'洋', d:'羊', tip:'洋 has water 氵 (the ocean). 羊 is the sheep, with no water.'},
-  {a:'動重童', d:'', tip:'動 is 重 plus the power 力. 童 has 立 on top of 里.'},
-  {a:'想相', d:'', tip:'想 is 相 with a heart 心 underneath.'},
-  {a:'院', d:'完', tip:'院 has the village mark 阝 on the left. 完 has the roof 宀 on top.'}
+  {a:'者暑', d:'署著', tip:'者 is the plain one. 暑 puts the sun 日 on top (hot!). 署 puts a net on top.'},
+  {a:'悲悪意', d:'思', tip:'They all have the heart 心 underneath. 悲 has 非 on top, 悪 has 亜, 意 has 音.'},
+  {a:'洋羊様美', d:'', tip:'They all have a sheep 羊. 洋 adds water 氵, 様 adds a tree 木, 美 has 大 underneath.'},
+  {a:'動重童', d:'働', tip:'動 is 重 plus the power 力. 童 has 立 on top of 里.'},
+  {a:'想相箱', d:'根', tip:'想 is 相 with a heart 心 underneath. 箱 is 相 with bamboo ⺮ on top.'},
+  {a:'院', d:'完防阪', tip:'院 has the village mark 阝 on the left. 完 has the roof 宀 on top.'},
+  {a:'柱住注主', d:'', tip:'They all have 主. 柱 adds a tree 木 (pillar), 住 adds a person 亻 (live), 注 adds water 氵 (pour).'},
+  {a:'湯陽', d:'場揚', tip:'湯 has water 氵 (hot water). 陽 has the village mark 阝 (sun). 場 has earth 土.'},
+  {a:'列死', d:'例刻', tip:'列 has the knife 刂 on the right. 死 has ヒ on the right.'},
+  {a:'開問', d:'間閉', tip:'They all have the gate 門. 開 has hands opening it, 問 has a mouth 口 (asking), 間 has the sun 日.'},
+  {a:'島', d:'鳥鳴烏', tip:'島 is a bird 鳥 sitting on a mountain 山 (an island!).'},
+  {a:'期', d:'朝明基', tip:'期 has the moon 月 on the right side, next to 其.'},
+  {a:'鉄銀', d:'金鉛', tip:'Metal 金 is on the left. 鉄 has 失 on the right, 銀 has 艮.'},
+  {a:'旅族放', d:'方', tip:'They all start with 方. 旅 ends like 衣, 族 has an arrow 矢, 放 has 攵.'},
+  {a:'速送追', d:'連', tip:'They all have the road 辶. 速 has 束, 送 has 关, 追 has 㠯.'},
+  {a:'植', d:'直値置', tip:'植 has a tree 木 next to 直 (plant it straight!).'},
+  {a:'球', d:'求救王', tip:'球 has the jewel 王 on the left and 求 on the right.'},
+  {a:'秒', d:'少砂妙', tip:'秒 has the grain 禾 on the left and 少 on the right.'},
+  {a:'礼', d:'札乱孔', tip:'礼 has the altar 礻 on the left. 札 has a tree 木.'},
+  {a:'皿血', d:'四西', tip:'血 is 皿 with a little drop on top.'},
+  {a:'筆笛等', d:'答', tip:'They all have bamboo ⺮ on top. 筆 has 聿 (a brush), 笛 has 由, 等 has 寺.'}
 ];
 function klookOf(ch){ for(var i = 0; i < KLOOK.length; i++){ if(KLOOK[i].a.indexOf(ch) > -1) return KLOOK[i]; } return null; }
 
@@ -13991,7 +14165,17 @@ function kwk(){ var ks = kanjiState(); if(!ks.wk) ks.wk = {}; return ks.wk; }
 function kjWeight(ch){ var e = kwk()[ch]; if(!e) return 1; return 1 + 3*Math.min(e.m || 0, 3) + Math.max(0, (e.a || 0) - 0.7*(e.g || 0)) + 0.7*Math.min(e.nw || 0, 3) + 0.6*Math.min(e.cm || 0, 3); }
 function kjWeak(){ return KANJI.map(function(k){ return k.k; }).filter(function(c){ return kjWeight(c) >= 2.5; }).sort(function(a, b){ return kjWeight(b) - kjWeight(a); }); }
 function kjFocus(){ var f = kanjiState().focus; return (f && f.list) ? f.list : []; }
+function kjPagesOn(){ var h = hz(); return (h.pages && h.pages.length) ? h.pages : null; }
+function kjPageOn(v, p){ var l = kjPagesOn(); return !!(l && l.some(function(x){ return x.v === v && x.p === p; })); }
+function kjPagesLabel(){
+  var h = hz(), l = kjPagesOn();
+  if(!l) return '<b lang="ja">3\u5e74'+h.vol+'</b> page <b>'+h.page+'</b>';
+  if(l.length === 1) return '<b lang="ja">3\u5e74'+l[0].v+'</b> page <b>'+l[0].p+'</b>';
+  return '<b>'+l.length+' pages</b> ('+l.map(function(x){ return '<span lang="ja">'+x.v+'</span>'+x.p; }).join(', ')+')';
+}
+function kjPagesKanji(l){ var out = []; KBOOK.forEach(function(x){ if(l.some(function(y){ return y.v === x.v && y.p === x.p; })) out = out.concat(x.ks); }); return kjUniq(out).filter(function(c){ return !!KJ_BY[c]; }); }
 function kjRecent(){
+  var pl = kjPagesOn(); if(pl) return kjPagesKanji(pl);
   var h = hz(), pgs = kbPages(h.vol).filter(function(x){ return x.p <= h.page; }), out = [];
   pgs.slice(-4).forEach(function(x){ out = out.concat(x.ks); });
   return out;
@@ -14073,15 +14257,18 @@ function kfcPick(n){
 function kfcLookPick(n){
   var pool = kfcPool(), note = false;
   var base = (pool || KANJI).filter(function(k){ return klookOf(k.k); });
-  if(!base.length){ base = KANJI.filter(function(k){ return klookOf(k.k); }); note = !!pool; }
-  if(note) toast('None of your kanji have look-alike twins, so here are some twins.', 3200);
-  return kfcSample(base.map(function(k){ return {k:k, w:kjWeight(k.k) * kfcSeenW(k.k)}; }), Math.min(n, base.length));
+  if(base.length < 3){ base = KANJI.filter(function(k){ return klookOf(k.k); }); note = !!pool; }
+  if(note) toast('Only a few of your kanji have look-alike twins, so here are some more twins.', 3200);
+  /* 26.11.128: one kanji per twin group in a round, so each question shows different tiles */
+  var order = kfcSample(base.map(function(k){ return {k:k, w:kjWeight(k.k) * kfcSeenW(k.k) + 0.05}; }), base.length), used = [], out = [];
+  order.forEach(function(k){ var g = klookOf(k.k); if(out.length < n && used.indexOf(g) < 0){ used.push(g); out.push(k); } });
+  return out;
 }
 function kfcOptions(k){
   var g = klookOf(k.k), opts = [k.k];
   if(g){ (g.a + g.d).split('').forEach(function(c){ if(opts.indexOf(c) < 0) opts.push(c); }); }
   var pool = shuffle(kjRecent().concat(KANJI.map(function(x){ return x.k; })), Math.random);
-  for(var i = 0; i < pool.length && opts.length < 4; i++){ if(opts.indexOf(pool[i]) < 0 && (!g || KFC.mode === 'pick')) opts.push(pool[i]); }
+  for(var i = 0; i < pool.length && opts.length < 4; i++){ if(opts.indexOf(pool[i]) < 0) opts.push(pool[i]); }
   if(opts.length > 4){ var rest = shuffle(opts.slice(1), Math.random).slice(0, 3); opts = [k.k].concat(rest); }
   if(opts.length < 2){ var p2 = shuffle(KANJI, Math.random); for(var j = 0; j < p2.length && opts.length < 4; j++){ if(opts.indexOf(p2[j].k) < 0) opts.push(p2[j].k); } }
   return shuffle(opts, Math.random);
@@ -14126,6 +14313,8 @@ function kfcShow(){
     h += '<button class="btn kfcm" data-kfc="mode:recall"><b>💭 Remember it</b><small>See the meaning, think of the kanji</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:pick"><b>🔍 Find the kanji</b><small>Pick the right one from four</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:look"><b>👯 Look-alikes</b><small>Tell tricky twins apart</small></button>';
+    h += '<div class="kfch">Test</div>';
+    h += '<button class="btn kfcm" data-kt="open"><b>📝 Kanji test</b><small>Listen, write on paper, check</small></button>';
     h += '<div class="kfch">Kanji combos</div>';
     h += '<button class="btn kfcm" data-kcb="mode:build"><b>🧩 Build the word</b><small>Drag two kanji together</small></button>';
     h += '<button class="btn kfcm" data-kcb="mode:miss"><b>🔎 Missing kanji</b><small>Which kanji fits in the gap?</small></button>';
@@ -14306,6 +14495,7 @@ function showKanjiParent(){
   h += '</div><div class="hint" style="margin-top:6px">Now on: <b>3年'+h0.vol+' p.'+h0.page+'</b>. Tap the page she is on at hoshuko.</div>';
   h += '<div class="row" style="margin-top:6px"><button class="btn small" data-kjp="next">Next page ▶</button></div>';
 
+  h += ktParentHTML();
   h += '<h3>📝 Saturday test</h3>';
   h += '<div class="row" style="gap:6px"><button class="btn small '+(s.tab === 'miss' ? 'primary' : '')+'" data-kjp="tab:miss">After the test: what she missed</button><button class="btn small '+(s.tab === 'focus' ? 'primary' : '')+'" data-kjp="tab:focus">Before: what is coming up</button></div>';
   h += '<div class="hint" style="margin:6px 0">'+(s.tab === 'miss' ? 'Tap the kanji she missed, pick the kind of mistake, then save. These show up more in her practice. Kanji from the coming-up list that she got right ease off.' : 'Tap the kanji that will be on this Saturday\u2019s test. They show up more this week.')+'</div>';
@@ -14359,11 +14549,11 @@ document.addEventListener('click', function(e){
   if(a === 'hz'){ h0.on = !h0.on; save(); render(); }
   else if(a === 'kid'){ h0.kid = (h0.kid === false); save(); render(); }
   else if(a.indexOf('vol:') === 0){ s.vol = a.slice(4); }
-  else if(a.indexOf('pg:') === 0){ var p = a.split(':'); h0.vol = p[1]; h0.page = +p[2]; h0.by = 'parent'; s.vol = p[1]; save(); render(); }
+  else if(a.indexOf('pg:') === 0){ var p = a.split(':'); h0.vol = p[1]; h0.page = +p[2]; h0.pages = null; h0.by = 'parent'; s.vol = p[1]; save(); render(); }
   else if(a === 'next'){
     var pgs = kbPages(h0.vol), nx = null;
     for(var i = 0; i < pgs.length; i++){ if(pgs[i].p > h0.page){ nx = pgs[i]; break; } }
-    if(nx){ h0.page = nx.p; h0.by = 'parent'; s.vol = h0.vol; save(); render(); } else toast('That is the last kanji page of this book.');
+    if(nx){ h0.page = nx.p; h0.pages = null; h0.by = 'parent'; s.vol = h0.vol; save(); render(); } else toast('That is the last kanji page of this book.');
   }
   else if(a.indexOf('tab:') === 0){ s.tab = a.slice(4); s.sel = {}; }
   else if(a.indexOf('sel:') === 0){ var c = a.slice(4); if(s.sel[c]) delete s.sel[c]; else s.sel[c] = 1; }
