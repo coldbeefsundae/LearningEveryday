@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.129', errs = [], shown = false;
+  var V = '26.11.138', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -252,7 +252,7 @@ h1,h2,h3,p{margin:0}
 .sec h2{font-size:22px;font-weight:900;letter-spacing:-.3px}
 .sec .count{font-weight:800;color:var(--muted);font-size:14px}
 
-.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.129: cards keep their own height, so a timer card next door no longer pushes a tick down */
+.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.138: cards keep their own height, so a timer card next door no longer pushes a tick down */
 .quest{--tile:#ece9ff;background:#fff;border-radius:24px;border:2px solid var(--line);box-shadow:var(--shadow-1);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .2s,background .3s,border-color .3s;display:flex;flex-direction:column;gap:12px;justify-content:center;min-height:104px;position:relative}
 .quest:active{transform:scale(.975)}
 .p0{--tile:#ffe4ef}.p1{--tile:#dff2ff}.p2{--tile:#fff0d2}.p3{--tile:#ece6ff}.p4{--tile:#ffe6dd}.p5{--tile:#d9f6ef}
@@ -1535,7 +1535,7 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .panel{bor
   body[data-skin=atlas] #view-home .qgrid{grid-template-columns:minmax(0,1fr);gap:12px}
   body:is([data-skin=gallery],[data-skin=aurora]) .quest{min-height:78px;padding:10px 16px;border-radius:22px}
   body:is([data-skin=gallery],[data-skin=aurora]) .tile{width:48px;height:48px;border-radius:15px;font-size:26px}
-  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.129: was 36px in landscape only */
+  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.138: was 36px in landscape only */
   body:is([data-skin=gallery],[data-skin=aurora]) .q-name{font-size:18px;font-weight:700}
 }
 @media (max-width:820px){
@@ -1685,7 +1685,7 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill{height:50px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill .v{font-size:20px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .tile{width:52px;height:52px;font-size:28px}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.129: same size in both orientations */
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.138: same size in both orientations */
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .page{padding:14px}
   /*[MENU]*/body[data-skin=atlas] .rail{height:62px;padding:0 8px;gap:2px}
   /*[MENU]*/body[data-skin=atlas] .logo{display:none}
@@ -3020,6 +3020,11 @@ body[data-calm=on] .aursky i{opacity:.8}
 .ktrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:12px;background:rgba(0,0,0,.04)}
 .ktn{width:28px;font-weight:800;text-align:center}
 .ktw{flex:1;font-size:1.4em;display:flex;flex-direction:column}.ktw small{font-size:.55em;opacity:.7}
+.kttree{text-align:center;margin:10px 0;padding:10px;border-radius:16px;background:linear-gradient(#fff8d6,#e9f6dd);animation:ktpop .6s ease-out}
+@keyframes ktpop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+.ktoku{color:#999}
+.ktbar{flex:1;height:10px;border-radius:6px;background:rgba(0,0,0,.08);overflow:hidden}.ktbar i{display:block;height:100%;background:#7bc96f;border-radius:6px}
+.kttime{margin-top:10px}.kttime summary{cursor:pointer;font-weight:700}
 .kthit{color:#e0559a}
 </style>
 </head>
@@ -6940,11 +6945,28 @@ function helpData(){
     {q:'What are the Weekly Star Awards?', a:'Every Sunday evening Kit holds a little award ceremony just for you! It shows the quests you did, the new cards you found, what you learned and how you felt this week.'},
     {q:'Why can\u2019t I close it?', a:'It\u2019s your special moment, and it only takes about a minute. Tap <b>Next</b> to go through your awards.'},
     {q:'Can I watch it again?', a:'Yes! Go to <b>Me</b> and look for <b>My Star Awards</b>. Tap any week to watch it again.'},
-    {q:'What if I had a quiet week?', a:'Quiet weeks are okay too. Kit only shows what you did, and rest is part of being strong.'}
+    {q:'What if I had a quiet week?', a:'Quiet weeks are okay too. Kit only shows what you did, and rest is part of being strong.'},
+    {q:'Do my kanji tests show up?', a:'Yes! If you did a kanji test that week you get a \ud83d\udcdd Kanji Test Award, and a perfect score gets a special \ud83d\udcaf Perfect Test Award.'}
+  ]});
+  kid.push({t:'\ud83d\udcdd Kanji test', i:[
+    {q:'How do I do a kanji test?', a:li(['Go to <b>Kanji \u2192 \ud83c\udfaf Practice \u2192 \ud83d\udcdd Kanji test</b>.','Tick the pages for your test and pick 5, 10 or all.','Get a pencil and paper and write the numbers 1, 2, 3\u2026 down the side.','Kit reads each kanji out loud. Write it on your paper, then tap <b>Next</b>.','At the end, check your paper and tap \u2705 or \u274c for each one. Remember to check the okurigana too!'])},
+    {q:'What do the buttons do?', a:li(['\ud83d\udd01 <b>Say it again</b> reads the kanji again.','\ud83d\udc40 <b>Show hint</b> shows the meaning and the reading.','\ud83d\udd0a <b>\u8a13 Kun</b>, <b>\u97f3 On</b> and <b>\u4f8b Example</b> read those out loud for you.'])},
+    {q:'Why does Kit sometimes say a word first?', a:'Some kanji sound the same, like \u6b6f and \u8449 (both \u306f). Then Kit says a word first, like your teacher does, so you know which one to write.'},
+    {q:'What does a test do for my kanji tree?', a:'Every test grows a big \ud83c\udf4e apple on your tree. Every kanji you get right turns into a \u2728 golden leaf. After 5 tests, a \u2b50 appears on top!'},
+    {q:'What happens if I get a perfect score?', a:'Kit celebrates with you on the Kanji page for two days, and it shows up in your Weekly Star Awards!'},
+    {q:'What if I get some wrong?', a:'That is what tests are for! Kit shows the ones you missed more often in practice, and you can tap \ud83c\udccf <b>Practise these</b> right away.'}
+  ]});
+  par.push({t:'\ud83d\udcdd Kanji test', i:[
+    {q:'How does it work?', a:li(['Like her hoshuko test: Kit reads a kanji, she writes it on paper, then she checks her own answers.','She picks the pages (several pages, either book) and 5, 10 or all of the kanji. The order is random.','It reads the first kun reading (\u9f3b \u2192 \u306f\u306a). If the kanji has no kun reading, or another kanji in the same test sounds the same, it says a word first, like a teacher (\u533b \u2192 \u3044\u3057\u3083 \u306e \u3044).','The check screen shows the answer with okurigana in grey (\u60b2\u3057\u3044).'])},
+    {q:'Who marks it?', a:'She does, on purpose: honest self-checking builds good habits. Sitting with her for the check is a great way to help.'},
+    {q:'What is the timer?', a:'It is invisible during the test. On the results screen, open <b>\u23f1\ufe0f Time for each kanji</b> to see how long each one took, slowest first. Orange bars took much longer than her usual. \ud83d\udd01 means she replayed it, \ud83d\udc40 she used the hint, \ud83d\udd0a she used kun/on/example. Slow but \u2705 usually means almost there; slow with \u274c is the one to practise. If she closes the test mid-question, that time keeps counting.'},
+    {q:'What does it change?', a:li(['Missed kanji show up more in practice and Kanji of the Day.','+2 \u2b50 once a day for finishing a test, whatever the score.','Her kanji tree gets a \ud83c\udf4e for every test and a \u2728 golden leaf for every kanji she gets right.','A perfect test (3 or more kanji) makes Kit celebrate on the Kanji tab for 2 days, and gives a \ud83d\udcaf award in the Weekly Star Awards.'])},
+    {q:'Where can I see her results?', a:'Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko shows her last 8 tests: date, score, pages, missed kanji, slowest 3 and total time.'},
+    {q:'The voice sounds robotic', a:'Install a better Japanese voice. iPad: Settings \u2192 Accessibility \u2192 Spoken Content \u2192 Voices \u2192 Japanese (Kyoko Enhanced or Premium). Android: Settings \u2192 Text-to-speech \u2192 Speech Services by Google \u2192 Install voice data \u2192 Japanese. Then close and reopen StarQuest.'}
   ]});
   par.push({t:'🏆 Weekly Star Awards', i:[
     {q:'When does it show?', a:'On Sunday from the time you set (5 PM by default), the first time she is on the Quests page with nothing else open and no quest timer running. If the app is not opened on Sunday, it shows next time, still about the week that just ended. It shows once per week.'},
-    {q:'What does it include?', a:'Quest Hero (days and quests done, rest days shown kindly), Explorer (new cards, worded as people met, places visited, stories heard), Brain Power (kanji, writing practice, quiz answers), Best Moment (plus points earned, never spending), Feelings (only the icons she picked) and an optional note from you. Awards with nothing to show are left out. No points or packs are given.'},
+    {q:'What does it include?', a:'Quest Hero (days and quests done, rest days shown kindly), Explorer (new cards, worded as people met, places visited, stories heard), Brain Power (kanji, kanji tests with a \ud83d\udcaf award for a perfect score, writing practice, quiz answers), Best Moment (plus points earned, never spending), Feelings (only the icons she picked) and an optional note from you. Awards with nothing to show are left out. No points or packs are given.'},
     {q:'Can it be skipped?', a:'She cannot close it. The \ud83d\udd12 in the corner skips it with your PIN, for the days it does not fit. Turn it off or change the awards in Parent \u2192 Weekly Star Awards.'},
     {q:'What stays private?', a:'Her journal words are never read. Only the feeling icons she picked are used. If at least 3 days that week were worried, sad or angry (and that was at least half of her feelings), Kit gently suggests talking to a grown-up, and Parent \u2192 Today shows a quiet note for about a week. This is a pattern, not a diagnosis, just a nudge to check in.'},
     {q:'Why is the first one short?', a:'Quiz answers and writing practice are counted from version 26.11.126 onward, so early ceremonies may show less in Brain Power. Quests, points, cards, kanji and feelings were already recorded.'}
@@ -7043,6 +7065,17 @@ function awCollect(wk){
   Object.keys(cd).forEach(function(id){ if(cd[id] >= days[0] && cd[id] <= days[6] && BY_ID[id]) out.cards.push(id); });
   out.cards.sort(function(x, y){ return RAR_ORDER.indexOf(BY_ID[x].k) - RAR_ORDER.indexOf(BY_ID[y].k); });
   try{ var ks = kanjiState(); Object.keys(ks.log || {}).forEach(function(ch){ var dk = ks.log[ch]; if(dk >= days[0] && dk <= days[6] && !(ks.auto && ks.auto[ch])) out.kanji.push(ch); }); }catch(_){}
+  /* 26.11.138: kanji tests this week */
+  out.tests = []; out.gold = 0;
+  try{
+    var before = {}, wkGold = {};
+    ktLog().forEach(function(x){
+      var inWk = x.d >= days[0] && x.d <= days[6], right = (x.tm || []).map(function(t){ return t[0]; }).filter(function(c){ return x.miss.indexOf(c) < 0; });
+      if(x.d < days[0]) right.forEach(function(c){ before[c] = 1; });
+      if(inWk){ out.tests.push({n:x.n, ok:x.ok}); right.forEach(function(c){ if(!before[c]) wkGold[c] = 1; }); }
+    });
+    out.gold = Object.keys(wkGold).length;
+  }catch(_){}
   out.show = JSON.parse(JSON.stringify(sh));
   out.rest = restDay || null;
   return out;
@@ -7060,6 +7093,8 @@ function awBest(D){
   var school = wd.filter(function(d){ var g = parseKey(d.k).getDay(); return g >= 1 && g <= 5; });
   if(school.length){ var b = school.sort(function(x, y){ return y.n - x.n; })[0]; return 'On '+b.dn+' you finished every quest, even on a busy school day. Kit noticed!'; }
   if(wd.length) return 'On '+wd[0].dn+' you finished every single quest!';
+  var pf = (D.tests || []).filter(function(x){ return x.n >= 3 && x.ok === x.n; });
+  if(pf.length) return 'You got a perfect score on your kanji test! '+pf[0].ok+' out of '+pf[0].n+'!';
   if(D.cards.length) return awCardLine(D.cards[0])+'. What a find!';
   if(D.kanji.length) return 'You learned '+esc(D.kanji[0])+' this week!';
   if(D.quests) return 'You kept going, one quest at a time.';
@@ -7086,6 +7121,16 @@ function awSlides(D, replay){
     if(D.wr) b += '<p>✏️ You did '+D.wr+' writing practice'+(D.wr === 1 ? '' : 's')+'.</p>';
     if(D.quiz) b += '<p>✅ You got '+D.quiz+' quiz question'+(D.quiz === 1 ? '' : 's')+' right.</p>';
     S.push({award:'🧠 Brain Power Award', h:b});
+  }
+  var T = D.tests || [];
+  if(sh.brain !== false && T.length){
+    var perf = T.filter(function(x){ return x.n >= 3 && x.ok === x.n; }), top = T.slice().sort(function(a, b){ return (b.ok / b.n) - (a.ok / a.n) || b.n - a.n; })[0];
+    var apples = T.slice(0, 8).map(function(x, i){ return '<span style="--i:'+i+'">\ud83c\udf4e</span>'; }).join('');
+    var t2 = '<div class="aw-lanterns">'+apples+'</div><p>You did <b>'+T.length+' kanji test'+(T.length === 1 ? '' : 's')+'</b> this week, just like at hoshuko!</p>';
+    if(perf.length) t2 += '<p class="aw-big">\ud83d\udcaf PERFECT score'+(perf.length > 1 ? ' '+perf.length+' times' : '')+'! '+perf[0].ok+' out of '+perf[0].n+'!</p>';
+    else t2 += '<p>Your best test: <b>'+top.ok+' out of '+top.n+'</b>. Every test shows you what to practise next.</p>';
+    if(D.gold) t2 += '<p>\u2728 '+D.gold+' new golden '+(D.gold === 1 ? 'leaf' : 'leaves')+' on your kanji tree!</p>';
+    S.push({award:perf.length ? '\ud83d\udcaf Perfect Test Award' : '\ud83d\udcdd Kanji Test Award', cls:perf.length ? 'aw-spot' : '', h:t2});
   }
   var best = sh.best !== false ? awBest(D) : '';
   var ptsLn = (sh.pts !== false && D.pts > 0) ? '<p class="aw-pts">...and you earned <b>'+D.pts+' ⭐</b> along the way!</p>' : '';
@@ -8398,7 +8443,7 @@ function sqSpeechVoice(lang){
   for(var i=0;i<vs.length;i++){
     var got = String(vs[i].lang || '').toLowerCase().replace(/_/g,'-');
     if(aliases.indexOf(got) < 0) continue;
-    /* 26.11.129: pick the most natural voice the device has */
+    /* 26.11.138: pick the most natural voice the device has */
     var nm = String(vs[i].name || ''), sc = 0;
     if(/premium/i.test(nm)) sc += 40;
     if(/enhanced|natural|neural|online/i.test(nm)) sc += 30;
@@ -12721,11 +12766,26 @@ document.addEventListener('input', function(e){ if(e.target && e.target.id === '
 var KJT = {say:null, n:0};
 function kjExtra(){ var ks = kanjiState(); if(!ks.feel) ks.feel = {}; if(!ks.taught) ks.taught = {}; if(!ks.prac || ks.prac.d !== dateKey()) ks.prac = {d:dateKey(), n:0}; return ks; }
 function kjDoneToday(){ return kanjiState().date === dateKey(); }
+/* 26.11.138: a perfect kanji test (the latest one, in the last 2 days) makes Kit celebrate on the Kanji tab */
+function ktPerfect(){
+  var log = []; try{ log = ktLog(); }catch(e){ return null; }
+  var x = log[log.length - 1];
+  if(!x || !x.n || x.ok !== x.n || x.n < 3) return null;
+  if(Date.now() - (x.at || 0) > 2 * 86400000) return null;
+  return x;
+}
 function kjKitLine(){
   if(KJT.say) return KJT.say;
   if(kjSub() === 'koto' && kjExtra().feel[dateKey()] !== 'hard') return kotoKitLine();
   var ks = kjExtra(), k = kanjiToday(), f = ks.feel[dateKey()], hh = hz(), dow = parseKey(dateKey()).getDay();
   if(f === 'hard') return 'Hard days are okay. Even looking at one kanji counts. Want to just say hi to today\u2019s kanji together?';
+  var pf = ktPerfect();
+  if(pf){
+    var nm = esc(state.name || 'star');
+    return ['\ud83c\udf89 PERFECT! '+pf.n+' out of '+pf.n+' on your kanji test, '+nm+'! I am doing a happy dance! \ud83e\udd8a\ud83d\udc83',
+            '\ud83c\udfc6 Every single kanji right! '+nm+', all that practice really paid off. I am so proud of you!',
+            '\u2b50 '+pf.n+'/'+pf.n+'! Your kanji tree is shining with golden leaves. You did that, '+nm+'!'][(pf.at / 1000 | 0) % 3];
+  }
   if(ks.prac.n >= 4) return 'You practised '+ks.prac.n+' times today! Your brain saves new kanji while you rest and sleep. Go play, I will be here tomorrow. 💤';
   if(hh.on && kjKidPage() && (dow === 6 || dow === 0) && kjHzStale()) return 'Hoshuko weekend! 🏫 Did your class start a new page? Tell me in My Book.';
   if(!kjDoneToday()) return 'Today\u2019s kanji is <b lang="ja">'+k.k+'</b> ('+kjEsc(k.m)+'). Let\u2019s meet it!';
@@ -13775,7 +13835,7 @@ function renderKanjiTab(){
   var v = $('view-kanji'); if(!v) return;
   if(state.eco.kanjiOn === false){ v.innerHTML = ''; return; }
   try{ kanjiBackfill(); }catch(e){}
-  var sub = kjSub(), mood = kjDoneToday() ? 'cheer' : 'happy';
+  var sub = kjSub(), mood = (kjDoneToday() || ktPerfect()) ? 'cheer' : 'happy';
   var h = '<div class="kjtab">';
   h += '<div class="panel kjhead"><button class="kjkit" aria-label="Tap Kit">'+kitSVG(mood, 'hero')+'</button><div class="kjsay"><div class="kjbub">'+kjKitLine()+'</div><small>Tap Kit for a thought</small></div></div>';
   h += '<div class="kjseg" role="tablist">';
@@ -13848,8 +13908,27 @@ function kjTreeSVG(n, b){
     var c2 = C[j % 4], a2 = rnd() * 6.283, r2 = Math.sqrt(rnd()) * (c2[2] - 6), x2 = (c2[0] + Math.cos(a2) * r2).toFixed(1), y2 = (c2[1] + Math.sin(a2) * r2).toFixed(1);
     h += '<circle cx="'+x2+'" cy="'+y2+'" r="3.4" fill="#ffb3cf"/><circle cx="'+x2+'" cy="'+y2+'" r="1.2" fill="#fff3a0"/>';
   }
+  /* 26.11.138: kanji tests grow the tree in a big way: gold leaves for kanji right on a test, a big apple for every test */
+  var tt = ktTreeStats();
+  seed = 313;
+  for(var gi = 0; gi < Math.min(tt.gold, 200); gi++){
+    var c3 = C[gi % 4], a3 = rnd() * 6.283, r3 = Math.sqrt(rnd()) * (c3[2] - 4), x3 = (c3[0] + Math.cos(a3) * r3).toFixed(1), y3 = (c3[1] + Math.sin(a3) * r3).toFixed(1);
+    h += '<ellipse cx="'+x3+'" cy="'+y3+'" rx="5" ry="2.9" fill="#ffd23f" stroke="#e8a800" stroke-width=".5" transform="rotate('+Math.round(rnd() * 180)+' '+x3+' '+y3+')"/>';
+  }
+  seed = 777;
+  for(var ai = 0; ai < Math.min(tt.tests, 30); ai++){
+    var c4 = C[ai % 4], a4 = rnd() * 6.283, r4 = Math.sqrt(rnd()) * (c4[2] - 9), x4 = (c4[0] + Math.cos(a4) * r4).toFixed(1), y4 = (c4[1] + Math.sin(a4) * r4).toFixed(1);
+    h += '<circle cx="'+x4+'" cy="'+y4+'" r="6.5" fill="#e53935" stroke="#a31515" stroke-width=".8"/><circle cx="'+(x4 - 2)+'" cy="'+(y4 - 2)+'" r="1.8" fill="#ffffff" opacity=".7"/><path d="M'+x4+' '+(y4 - 6)+'l2 -4" stroke="#5d3a1a" stroke-width="1.4"/>';
+  }
+  if(tt.tests >= 5) h += '<text x="110" y="20" text-anchor="middle" font-size="22">\u2b50</text>';
   if(!n) h += '<path d="M110 160q-2-10 0-16M110 150q-8-6-12-2 4 6 12 2zM110 146q8-6 12-2-4 6-12 2z" stroke="#4caf50" stroke-width="2" fill="#7bc96f"/>';
   return h + '</svg>';
+}
+function ktTreeStats(){
+  var log = []; try{ log = ktLog(); }catch(e){}
+  var gold = {};
+  log.forEach(function(x){ (x.tm || []).forEach(function(t){ if(x.miss.indexOf(t[0]) < 0) gold[t[0]] = 1; }); });
+  return {tests:log.length, gold:Object.keys(gold).length, goldSet:gold};
 }
 function kjGrowHTML(){
   var ks = kjExtra(), n = kanjiCount(), pg = kbPagesDone(), ink = {}, h = '';
@@ -13857,9 +13936,10 @@ function kjGrowHTML(){
   var written = Object.keys(ink).filter(function(c){ return ink[c] && ink[c].length; }).length;
   var taught = Object.keys(ks.taught).length, days = (state.stats && state.stats.kanjiDays) || 0;
   h += '<div class="panel kjgrow"><div class="ptitle">🌳 My kanji tree</div>'+kjTreeSVG(n, pg);
-  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
+  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Every kanji test grows a big \ud83c\udf4e, and every kanji you get right on a test turns into a \u2728 golden leaf. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
   h += '<div class="panel"><div class="ptitle">What I have grown</div><div class="kjstats">';
-  [['🍃', n, 'kanji in my book'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
+  var tts = ktTreeStats();
+  [['🍃', n, 'kanji in my book'], ['🍎', tts.tests, 'kanji tests done'], ['\u2728', tts.gold, 'golden leaves'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
     h += '<div class="kjst"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>';
   });
   h += '</div><div class="kjmiles">';
@@ -13961,7 +14041,7 @@ function showKjWhere(){
   openModal(h);
   setTimeout(function(){ var on = document.querySelector('.kjwgrid .kjpg.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest'}); }, 30);
 }
-/* 26.11.129: tap pages on and off. The furthest ticked page becomes "where she is". */
+/* 26.11.138: tap pages on and off. The furthest ticked page becomes "where she is". */
 function kjTogglePage(v, p){
   var hh = hz(), l = (kjPagesOn() || []).slice(), at = -1;
   l.forEach(function(x, i){ if(x.v === v && x.p === p) at = i; });
@@ -14003,10 +14083,44 @@ document.addEventListener('click', function(e){
     kjSetPage(nx.v, nx.p);
   }
 }, true);
-/* ---------- 26.11.129: Kanji test (like the hoshuko test: listen, write on paper, check) ---------- */
+/* ---------- 26.11.138: Kanji test (like the hoshuko test: listen, write on paper, check) ---------- */
 var KT = null;
 function ktLog(){ var ks = kanjiState(); if(!ks.tests) ks.tests = []; return ks.tests; }
-function ktSay(k){ try{ speakText(k.wr, 'ja-JP'); }catch(e){} }
+/* 26.11.138: say just this one kanji, like the teacher: first kun reading with okurigana (鼻 → はな, 悲 → かなしい); on reading if it has no kun */
+function ktReading(k){
+  var kun = String(k.kun || '').split(/[,、]/)[0].trim().replace(/[()（）]/g, '').replace(/^-+|-+$/g, '');
+  if(kun) return kun;
+  return String(k.on || '').split(/[,、]/)[0].trim();
+}
+/* 26.11.138: like the teacher, give a word when the sound alone is not enough (no kun reading, or two kanji in this test sound the same) */
+function ktHasKun(k){ return !!String(k.kun || '').replace(/-/g, '').trim(); }
+function ktNeedsWord(k){ return !ktHasKun(k) || !!(KT && KT.amb && KT.amb[k.k]); }
+function ktHira(x){ return String(x || '').replace(/[\u30a1-\u30f6]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0x60); }); }
+function ktSpoken(k){
+  var r = ktReading(k); if(!ktNeedsWord(k)) return r;
+  /* use a reading that is really inside the example word, so it sounds right (実: じつりょく の じつ) */
+  var w = k.wr || '', all = String(k.kun || '').split(/[,、]/).concat(String(k.on || '').split(/[,、]/));
+  for(var i = 0; i < all.length; i++){
+    var x = all[i].trim().replace(/[(（].*$/, '').replace(/-/g, ''), hx = ktHira(x);
+    if(hx && w.indexOf(hx) > -1) return w+' \u306e '+hx;
+  }
+  return w;
+}
+function ktSay(k){ try{ speakText(ktSpoken(k), 'ja-JP'); }catch(e){} }
+function ktAmb(cards){
+  var by = {}, amb = {};
+  cards.forEach(function(k){ var r = ktReading(k); (by[r] = by[r] || []).push(k.k); });
+  Object.keys(by).forEach(function(r){ if(by[r].length > 1) by[r].forEach(function(c){ amb[c] = 1; }); });
+  return amb;
+}
+/* full answer with okurigana: 悲 + かな(しい) -> 悲<span>しい</span> */
+function ktAnswerHTML(k){
+  var oku = '';
+  if(ktHasKun(k)){ var m = String(k.kun).split(/[,、]/)[0].match(/[(（]([^)）]+)[)）]/); if(m) oku = m[1]; }
+  return '<b class="kthit">'+k.k+'</b>'+(oku ? '<span class="ktoku">'+esc(oku)+'</span>' : '');
+}
+function ktTick(){ var s = KT; if(!s || s.stage !== 'play' || !s.t0) return; s.tm[s.i] = (s.tm[s.i] || 0) + (Date.now() - s.t0); s.t0 = 0; }
+function ktSecs(ms){ var x = Math.round((ms || 0) / 1000); return x < 60 ? x+'s' : Math.floor(x/60)+'m '+(x%60)+'s'; }
 function ktOpen(){
   var hh = hz();
   KT = {stage:'setup', vol:hh.vol, pages:(kjPagesOn() || [{v:hh.vol, p:hh.page}]).map(function(x){ return {v:x.v, p:x.p}; }), n:10, cards:[], i:0, mark:{}};
@@ -14020,7 +14134,7 @@ function ktShow(){
   if(s.stage === 'setup'){
     var nk = kjPagesKanji(s.pages).length;
     h += '<h2 style="margin:0 0 4px">\ud83d\udcdd Kanji test</h2>';
-    h += '<div class="hint">Just like hoshuko! Kit reads a word out loud. You write it on paper. Then you check your answers.</div>';
+    h += '<div class="hint">Just like hoshuko! Kit reads a kanji out loud. You write it on paper. Then you check your answers.</div>';
     h += '<div class="kfch" style="margin:10px 0 4px">1. Which pages are on the test?</div><div class="row" style="gap:8px;flex-wrap:wrap">';
     ['\u4e0a','\u4e0b'].forEach(function(x){ h += '<button class="btn small '+(s.vol === x ? 'primary' : '')+'" data-kt="vol:'+x+'"><span lang="ja">3\u5e74'+x+'</span></button>'; });
     h += '</div><div class="kjpgs kjwgrid" style="margin-top:6px">';
@@ -14038,22 +14152,23 @@ function ktShow(){
   if(s.stage === 'play'){
     var k = s.cards[s.i], num = s.i + 1;
     h += '<div class="hint" style="text-align:center">Question '+num+' of '+s.cards.length+'</div>';
-    h += '<div class="kfccard" style="cursor:default"><span class="kfcbig">'+num+'</span><small>Listen, then write the word on your paper.</small></div>';
-    if(s.hint) h += '<div class="kfctip" style="text-align:center"><span lang="ja" style="font-size:1.4em">'+esc(k.wr)+'</span><br><small>'+esc(k.wm)+'</small><br><small lang="ja">\u97f3 '+esc(k.on)+' \u00b7 \u8a13 '+esc(k.kun)+'</small></div>';
-    h += '<div class="row kfcbtns" style="flex-wrap:wrap"><button class="btn" data-kt="say">\ud83d\udd01 Say it again</button>'+(s.hint ? '' : '<button class="btn" data-kt="hint">\ud83d\udc40 Show hint</button>')+'<button class="btn primary" data-kt="next">'+(num < s.cards.length ? 'Next \u25b6' : 'I\u2019m done writing \u2714')+'</button></div>';
+    h += '<div class="kfccard" style="cursor:default"><span class="kfcbig">'+num+'</span><small>Listen, then write the kanji on your paper.</small></div>';
+    if(s.hint) h += '<div class="kfctip" style="text-align:center"><b>'+esc(k.m)+'</b><br><span lang="ja" style="font-size:1.3em">'+esc(ktSpoken(k))+'</span><br><small lang="ja">\u97f3 '+esc(k.on)+' \u00b7 \u8a13 '+esc(k.kun)+'</small></div>';
+    h += '<div class="row kfcbtns" style="flex-wrap:wrap"><button class="btn" data-kt="say">\ud83d\udd01 Say it again</button>'+(s.hint ? '' : '<button class="btn" data-kt="hint">\ud83d\udc40 Show hint</button>')+[['kun','\u8a13 Kun'],['on','\u97f3 On'],['ex','\u4f8b Example']].map(function(b){ return '<button class="btn" data-kt="rd:'+b[0]+'" lang="ja">\ud83d\udd0a '+b[1]+'</button>'; }).join('')+'<button class="btn primary" data-kt="next">'+(num < s.cards.length ? 'Next \u25b6' : 'I\u2019m done writing \u2714')+'</button></div>';
     h += '<div class="row" style="margin-top:10px;justify-content:space-between">'+(s.i ? '<button class="btn small" data-kt="prev">\u25c0 Back</button>' : '<span></span>')+'<button class="btn small" data-kt="quit">Stop the test</button></div></div>';
     openModal(h);
+    if(!s.t0) s.t0 = Date.now();
     if(!s.spoke[s.i]){ s.spoke[s.i] = 1; setTimeout(function(){ ktSay(k); }, 350); }
     return;
   }
   if(s.stage === 'check'){
     var left = s.cards.filter(function(k){ return s.mark[k.k] == null; }).length;
     h += '<h2 style="margin:0 0 4px">\u2714 Check your answers</h2>';
-    h += '<div class="hint">Look at your paper. Tap \u2705 if you got it, or \u274c if it needs more practice. Every stroke counts, just like at school!</div>';
+    h += '<div class="hint">Look at your paper. Tap \u2705 if you got it, or \u274c if it needs more practice. Check the okurigana (the grey hiragana after the kanji) too. Every stroke counts, just like at school!</div>';
     h += '<div class="ktlist">';
     s.cards.forEach(function(k, i){
-      var m = s.mark[k.k], w = esc(k.w).split(k.k).join('<b class="kthit">'+k.k+'</b>');
-      h += '<div class="ktrow"><span class="ktn">'+(i + 1)+'</span><span class="ktw" lang="ja">'+w+'<small>'+esc(k.wr)+'</small></span>';
+      var m = s.mark[k.k];
+      h += '<div class="ktrow"><span class="ktn">'+(i + 1)+'</span><span class="ktw" lang="ja"><span>'+ktAnswerHTML(k)+'</span><small>'+esc(ktSpoken(k))+' \u00b7 '+esc(k.m)+'</small></span>';
       h += '<button class="btn small'+(m === 1 ? ' primary' : '')+'" data-kt="ok:'+k.k+'">\u2705</button><button class="btn small'+(m === 0 ? ' primary' : '')+'" data-kt="no:'+k.k+'">\u274c</button></div>';
     });
     h += '</div><div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn small" data-kt="allok">All \u2705</button><button class="btn primary" data-kt="finish"'+(left ? ' disabled' : '')+'>'+(left ? left+' left to check' : 'Finish \u2714')+'</button></div></div>';
@@ -14065,6 +14180,8 @@ function ktShow(){
     h += '<div style="text-align:center;font-size:2em;font-weight:800">'+ok.length+' / '+s.cards.length+'</div>';
     h += '<div class="hint" style="text-align:center">'+(miss.length ? (miss.length <= 2 ? 'So close! A little practice and these will stick.' : 'Tests show us what to practise next. That is their job!') : 'Every single one! Your practice is paying off.')+'</div>';
     if(s.got) h += '<div class="hint" style="text-align:center">\u2b50 +'+s.got+' for doing a test</div>';
+    if(s.grow) h += '<div class="kttree"><div style="font-size:2.4em">\ud83c\udf33\ud83c\udf4e'+(s.grow.gold ? '\u2728' : '')+'</div><b>Your kanji tree grew!</b><br>+1 big \ud83c\udf4e apple'+(s.grow.gold ? ' \u00b7 +'+s.grow.gold+' new \u2728 golden '+(s.grow.gold === 1 ? 'leaf' : 'leaves') : '')+'<br><small>'+s.grow.tests+' test'+(s.grow.tests === 1 ? '' : 's')+' done'+(s.grow.tests === 5 ? ' \u00b7 \u2b50 a star on top of your tree!' : '')+'</small><div class="row" style="justify-content:center;margin-top:6px"><button class="btn small" data-kt="tree">\ud83c\udf33 See my tree</button></div></div>';
+    h += ktTimeHTML(s);
     if(miss.length) h += '<div class="kfcres">\ud83d\udd01 <span>'+miss.map(function(k){ return '<b lang="ja">'+k.k+'</b>'; }).join(' ')+'</span><small>Kit will show these more often.</small></div>';
     h += '<div class="row" style="margin-top:14px;justify-content:space-between;flex-wrap:wrap;gap:8px"><button class="btn" data-x="1">Done</button>';
     if(miss.length) h += '<button class="btn" data-kt="practise">\ud83c\udccf Practise these</button>';
@@ -14072,20 +14189,35 @@ function ktShow(){
     openModal(h); return;
   }
 }
+function ktTimeHTML(s){
+  var rows = s.cards.map(function(k, i){ return {k:k, i:i, ms:(s.tm && s.tm[i]) || 0, u:(s.used && s.used[i]) || ''}; });
+  var tot = rows.reduce(function(a, r){ return a + r.ms; }, 0);
+  if(!tot) return '';
+  var sorted = rows.map(function(r){ return r.ms; }).sort(function(a, b){ return a - b; }), med = sorted[Math.floor(sorted.length / 2)] || 1;
+  var h = '<details class="kttime"><summary>\u23f1\ufe0f Time for each kanji \u00b7 total '+ktSecs(tot)+'</summary><div class="ktlist">';
+  rows.slice().sort(function(a, b){ return b.ms - a.ms; }).forEach(function(r){
+    var slow = r.ms > med * 1.6 && r.ms > 8000, pct = Math.max(4, Math.round(100 * r.ms / (sorted[sorted.length - 1] || 1)));
+    var mk = s.mark[r.k.k] === 1 ? '\u2705' : (s.mark[r.k.k] === 0 ? '\u274c' : '');
+    h += '<div class="ktrow"><span class="ktn">'+(r.i + 1)+'</span><b lang="ja" style="font-size:1.3em">'+r.k.k+'</b><span class="ktbar"><i style="width:'+pct+'%'+(slow ? ';background:#f0a040' : '')+'"></i></span><span style="min-width:52px;text-align:right">'+ktSecs(r.ms)+'</span><span>'+mk+r.u+'</span></div>';
+  });
+  h += '</div><div class="hint">Orange = took a lot longer than the others. \ud83d\udd01 heard again \u00b7 \ud83d\udc40 used the hint \u00b7 \ud83d\udd0a used kun/on/example. Slow but \u2705 often means "almost there".</div></details>';
+  return h;
+}
 function ktFinish(){
-  var s = KT, wk = kwk(), miss = [], ok = 0;
+  var s = KT, wk = kwk(), miss = [], ok = 0, before = ktTreeStats();
   s.cards.forEach(function(k){
     var e = wk[k.k] = wk[k.k] || {};
-    if(s.mark[k.k] === 1){ e.g = (e.g || 0) + 1; ok++; } else { e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; miss.push(k.k); }
+    if(s.mark[k.k] === 1){ e.g = (e.g || 0) + 1; if(e.m) e.m = Math.max(0, e.m - 1); ok++; } else { e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; miss.push(k.k); }
     e.t = Date.now(); try{ kjMeet(k.k); }catch(_){}
   });
   var log = ktLog();
-  log.push({d:dateKey(), at:Date.now(), pages:s.pages.map(function(x){ return x.v+x.p; }), n:s.cards.length, ok:ok, miss:miss});
+  log.push({d:dateKey(), at:Date.now(), pages:s.pages.map(function(x){ return x.v+x.p; }), n:s.cards.length, ok:ok, miss:miss, tm:s.cards.map(function(k, i){ return [k.k, Math.round(((s.tm && s.tm[i]) || 0) / 1000), (s.used && s.used[i]) || '']; })});
   if(log.length > 60) log.splice(0, log.length - 60);
   kjStat('kanjiTests');
   s.got = 0;
   var ks = kanjiState();
   if(ks.testPtsDay !== dateKey()){ ks.testPtsDay = dateKey(); try{ s.got = addPoints(2, 'Did a kanji test', true) || 0; }catch(_){} }
+  var after = ktTreeStats(); s.grow = {gold:after.gold - before.gold, tests:after.tests};
   save(); s.stage = 'end'; render(); checkBadgesX(); ktShow();
 }
 document.addEventListener('click', function(e){
@@ -14106,17 +14238,27 @@ document.addEventListener('click', function(e){
     var all = kjPagesKanji(s.pages).map(function(c){ return KJ_BY[c]; });
     if(!all.length) return;
     all = shuffle(all, Math.random);
-    s.cards = s.n ? all.slice(0, s.n) : all; s.i = 0; s.mark = {}; s.spoke = {}; s.hint = false; s.stage = 'play'; ktShow(); return;
+    s.cards = s.n ? all.slice(0, s.n) : all; s.amb = ktAmb(s.cards); s.tm = {}; s.used = {}; s.t0 = 0; s.i = 0; s.mark = {}; s.spoke = {}; s.hint = false; s.stage = 'play'; ktShow(); return;
   }
-  if(a === 'say'){ ktSay(s.cards[s.i]); return; }
-  if(a === 'hint'){ s.hint = true; ktShow(); return; }
-  if(a === 'next'){ try{ stopSpeak(); }catch(_){} s.hint = false; if(s.i < s.cards.length - 1){ s.i++; } else s.stage = 'check'; ktShow(); return; }
-  if(a === 'prev'){ try{ stopSpeak(); }catch(_){} s.hint = false; if(s.i) s.i--; s.spoke[s.i] = 0; ktShow(); return; }
-  if(a === 'quit'){ try{ stopSpeak(); }catch(_){} s.stage = 'setup'; ktShow(); return; }
+  if(a === 'say'){ s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udd01','') + '\ud83d\udd01'; ktSay(s.cards[s.i]); return; }
+  if(a === 'hint'){ s.hint = true; s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udc40','') + '\ud83d\udc40'; ktShow(); return; }
+  if(a.indexOf('rd:') === 0){
+    /* 26.11.138: just read it aloud, no panel */
+    s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udd0a','') + '\ud83d\udd0a';
+    var w = a.slice(3), kk = s.cards[s.i], lst = function(str){ return String(str || '').split(/[,、]/).map(function(x){ return x.trim().replace(/[()（）]/g, ''); }).filter(function(x){ return x && x !== '-'; }); };
+    var say = w === 'ex' ? kk.wr : lst(w === 'kun' ? kk.kun : kk.on).join('\u3001 ');
+    if(!say){ toast(w === 'kun' ? 'This kanji has no kun reading.' : 'This kanji has no on reading.', 1800); return; }
+    try{ speakText(say, 'ja-JP'); }catch(_){} return;
+  }
+  if(a.indexOf('sayr:') === 0){ try{ speakText(a.slice(5), 'ja-JP'); }catch(_){} return; }
+  if(a === 'next'){ ktTick(); try{ stopSpeak(); }catch(_){} s.hint = false; s.rd = false; if(s.i < s.cards.length - 1){ s.i++; } else s.stage = 'check'; ktShow(); return; }
+  if(a === 'prev'){ ktTick(); try{ stopSpeak(); }catch(_){} s.hint = false; s.rd = false; if(s.i) s.i--; s.spoke[s.i] = 0; ktShow(); return; }
+  if(a === 'quit'){ ktTick(); try{ stopSpeak(); }catch(_){} s.stage = 'setup'; ktShow(); return; }
   if(a.indexOf('ok:') === 0){ s.mark[a.slice(3)] = 1; ktShow(); return; }
   if(a.indexOf('no:') === 0){ s.mark[a.slice(3)] = 0; ktShow(); return; }
   if(a === 'allok'){ s.cards.forEach(function(k){ if(s.mark[k.k] == null) s.mark[k.k] = 1; }); ktShow(); return; }
   if(a === 'finish'){ ktFinish(); return; }
+  if(a === 'tree'){ try{ closeModal(); }catch(_){} state.ui = state.ui || {}; state.ui.kjTab = 'grow'; save(); try{ if(typeof setTab === 'function') setTab('kanji'); else render(); }catch(_){} return; }
   if(a === 'again'){ var pg = s.pages, nn = s.n; ktOpen(); KT.pages = pg; KT.n = nn; ktShow(); return; }
   if(a === 'practise'){
     var sl = kfcSel(); sl.src = 'own'; sl.own = s.cards.filter(function(k){ return s.mark[k.k] === 0; }).map(function(k){ return k.k; }); save();
@@ -14129,7 +14271,7 @@ function ktParentHTML(){
   if(!log.length) return h + '<div class="hint">No tests yet. She can do one in Kanji \u2192 Practice \u2192 \ud83d\udcdd Kanji test.</div>';
   h += '<div class="ktlist">';
   log.slice(-8).reverse().forEach(function(x){
-    h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d)+'</span><span class="ktw"><b>'+x.ok+' / '+x.n+'</b><small>p. '+esc(x.pages.join(', '))+'</small></span><span lang="ja">'+(x.miss.length ? '\ud83d\udd01 '+x.miss.join(' ') : '\u2b50')+'</span></div>';
+    h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d)+'</span><span class="ktw"><b>'+x.ok+' / '+x.n+'</b><small>p. '+esc(x.pages.join(', '))+'</small></span><span lang="ja">'+(x.miss.length ? '\ud83d\udd01 '+x.miss.join(' ') : '\u2b50')+(x.tm && x.tm.length ? '<br><small>\u23f1\ufe0f slowest: '+x.tm.slice().sort(function(a, b){ return b[1] - a[1]; }).slice(0, 3).map(function(t){ return t[0]+' '+t[1]+'s'; }).join(', ')+' \u00b7 total '+ktSecs(1000 * x.tm.reduce(function(a, t){ return a + t[1]; }, 0))+'</small>' : '')+'</span></div>';
   });
   return h + '</div>';
 }
@@ -14268,7 +14410,7 @@ function kfcLookPick(n){
   var base = (pool || KANJI).filter(function(k){ return klookOf(k.k); });
   if(base.length < 3){ base = KANJI.filter(function(k){ return klookOf(k.k); }); note = !!pool; }
   if(note) toast('Only a few of your kanji have look-alike twins, so here are some more twins.', 3200);
-  /* 26.11.129: one kanji per twin group in a round, so each question shows different tiles */
+  /* 26.11.138: one kanji per twin group in a round, so each question shows different tiles */
   var order = kfcSample(base.map(function(k){ return {k:k, w:kjWeight(k.k) * kfcSeenW(k.k) + 0.05}; }), base.length), used = [], out = [];
   order.forEach(function(k){ var g = klookOf(k.k); if(out.length < n && used.indexOf(g) < 0){ used.push(g); out.push(k); } });
   return out;
