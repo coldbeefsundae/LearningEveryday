@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.139', errs = [], shown = false;
+  var V = '26.11.140', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -252,7 +252,7 @@ h1,h2,h3,p{margin:0}
 .sec h2{font-size:22px;font-weight:900;letter-spacing:-.3px}
 .sec .count{font-weight:800;color:var(--muted);font-size:14px}
 
-.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.139: cards keep their own height, so a timer card next door no longer pushes a tick down */
+.qgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}   /* 26.11.140: cards keep their own height, so a timer card next door no longer pushes a tick down */
 .quest{--tile:#ece9ff;background:#fff;border-radius:24px;border:2px solid var(--line);box-shadow:var(--shadow-1);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .2s,background .3s,border-color .3s;display:flex;flex-direction:column;gap:12px;justify-content:center;min-height:104px;position:relative}
 .quest:active{transform:scale(.975)}
 .p0{--tile:#ffe4ef}.p1{--tile:#dff2ff}.p2{--tile:#fff0d2}.p3{--tile:#ece6ff}.p4{--tile:#ffe6dd}.p5{--tile:#d9f6ef}
@@ -1535,7 +1535,7 @@ body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .panel{bor
   body[data-skin=atlas] #view-home .qgrid{grid-template-columns:minmax(0,1fr);gap:12px}
   body:is([data-skin=gallery],[data-skin=aurora]) .quest{min-height:78px;padding:10px 16px;border-radius:22px}
   body:is([data-skin=gallery],[data-skin=aurora]) .tile{width:48px;height:48px;border-radius:15px;font-size:26px}
-  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.139: was 36px in landscape only */
+  body:is([data-skin=gallery],[data-skin=aurora]) .check{width:48px;height:48px;font-size:24px}   /* 26.11.140: was 36px in landscape only */
   body:is([data-skin=gallery],[data-skin=aurora]) .q-name{font-size:18px;font-weight:700}
 }
 @media (max-width:820px){
@@ -1685,7 +1685,7 @@ body[data-skin=atlas] .btn.primary{background:var(--accent)}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill{height:50px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .pill .v{font-size:20px}
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .tile{width:52px;height:52px;font-size:28px}
-  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.139: same size in both orientations */
+  body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .check{width:48px;height:48px}   /* 26.11.140: same size in both orientations */
   body:is(:is([data-skin=hybrid],[data-skin=night]),[data-skin=arcade]) .page{padding:14px}
   /*[MENU]*/body[data-skin=atlas] .rail{height:62px;padding:0 8px;gap:2px}
   /*[MENU]*/body[data-skin=atlas] .logo{display:none}
@@ -3028,6 +3028,15 @@ body[data-calm=on] .aursky i{opacity:.8}
 .ktmaru,.ktbatsu{font-weight:900;color:#d32f2f;font-size:1.15em;line-height:1}
 .btn.primary .ktmaru,.btn.primary .ktbatsu{color:#fff}
 .kttree,.kttree b,.kttree small,.kttree .hint{color:#3b2f00 !important}
+.ktcheck{max-height:none;overflow:visible}
+.kttm{font-size:.8em;text-align:center;min-width:48px;padding:2px 6px;border-radius:8px;background:rgba(0,0,0,.06);line-height:1.3}
+.kttm.slow{background:#ffe0b2;color:#8a4b00}
+.ktbtns .btn[data-kt^="rd:"]{white-space:normal;font-size:.9em;line-height:1.15;overflow:hidden}
+.ktend{padding-top:22px}
+.ktend .btn{background:#efeaff !important;color:#2a2340 !important;border:1px solid #cfc6f0 !important}
+.ktend .btn *{color:#2a2340 !important}
+.ktend .btn.primary{background:#6c4ee0 !important;color:#fff !important;border-color:#6c4ee0 !important}
+.ktend .btn.primary *{color:#fff !important}
 .ktend{background:#fffdf7;color:#2a2340;border-radius:18px;padding:14px}
 .ktend h2,.ktend .hint,.ktend small,.ktend summary,.ktend b,.ktend span{color:#2a2340}
 .ktend .btn.primary,.ktend .btn.primary *{color:#fff}
@@ -7077,7 +7086,7 @@ function awCollect(wk){
   Object.keys(cd).forEach(function(id){ if(cd[id] >= days[0] && cd[id] <= days[6] && BY_ID[id]) out.cards.push(id); });
   out.cards.sort(function(x, y){ return RAR_ORDER.indexOf(BY_ID[x].k) - RAR_ORDER.indexOf(BY_ID[y].k); });
   try{ var ks = kanjiState(); Object.keys(ks.log || {}).forEach(function(ch){ var dk = ks.log[ch]; if(dk >= days[0] && dk <= days[6] && !(ks.auto && ks.auto[ch])) out.kanji.push(ch); }); }catch(_){}
-  /* 26.11.139: kanji tests this week */
+  /* 26.11.140: kanji tests this week */
   out.tests = []; out.gold = 0;
   try{
     var before = {}, wkGold = {};
@@ -8455,7 +8464,7 @@ function sqSpeechVoice(lang){
   for(var i=0;i<vs.length;i++){
     var got = String(vs[i].lang || '').toLowerCase().replace(/_/g,'-');
     if(aliases.indexOf(got) < 0) continue;
-    /* 26.11.139: pick the most natural voice the device has */
+    /* 26.11.140: pick the most natural voice the device has */
     var nm = String(vs[i].name || ''), sc = 0;
     if(/premium/i.test(nm)) sc += 40;
     if(/enhanced|natural|neural|online/i.test(nm)) sc += 30;
@@ -12778,7 +12787,7 @@ document.addEventListener('input', function(e){ if(e.target && e.target.id === '
 var KJT = {say:null, n:0};
 function kjExtra(){ var ks = kanjiState(); if(!ks.feel) ks.feel = {}; if(!ks.taught) ks.taught = {}; if(!ks.prac || ks.prac.d !== dateKey()) ks.prac = {d:dateKey(), n:0}; return ks; }
 function kjDoneToday(){ return kanjiState().date === dateKey(); }
-/* 26.11.139: a perfect kanji test (the latest one, in the last 2 days) makes Kit celebrate on the Kanji tab */
+/* 26.11.140: a perfect kanji test (the latest one, in the last 2 days) makes Kit celebrate on the Kanji tab */
 function ktPerfect(){
   var log = []; try{ log = ktLog(); }catch(e){ return null; }
   var x = log[log.length - 1];
@@ -13920,7 +13929,7 @@ function kjTreeSVG(n, b){
     var c2 = C[j % 4], a2 = rnd() * 6.283, r2 = Math.sqrt(rnd()) * (c2[2] - 6), x2 = (c2[0] + Math.cos(a2) * r2).toFixed(1), y2 = (c2[1] + Math.sin(a2) * r2).toFixed(1);
     h += '<circle cx="'+x2+'" cy="'+y2+'" r="3.4" fill="#ffb3cf"/><circle cx="'+x2+'" cy="'+y2+'" r="1.2" fill="#fff3a0"/>';
   }
-  /* 26.11.139: kanji tests grow the tree in a big way: gold leaves for kanji right on a test, a big apple for every test */
+  /* 26.11.140: kanji tests grow the tree in a big way: gold leaves for kanji right on a test, a big apple for every test */
   var tt = ktTreeStats();
   seed = 313;
   for(var gi = 0; gi < Math.min(tt.gold, 200); gi++){
@@ -14053,7 +14062,7 @@ function showKjWhere(){
   openModal(h);
   setTimeout(function(){ var on = document.querySelector('.kjwgrid .kjpg.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest'}); }, 30);
 }
-/* 26.11.139: tap pages on and off. The furthest ticked page becomes "where she is". */
+/* 26.11.140: tap pages on and off. The furthest ticked page becomes "where she is". */
 function kjTogglePage(v, p){
   var hh = hz(), l = (kjPagesOn() || []).slice(), at = -1;
   l.forEach(function(x, i){ if(x.v === v && x.p === p) at = i; });
@@ -14095,16 +14104,16 @@ document.addEventListener('click', function(e){
     kjSetPage(nx.v, nx.p);
   }
 }, true);
-/* ---------- 26.11.139: Kanji test (like the hoshuko test: listen, write on paper, check) ---------- */
+/* ---------- 26.11.140: Kanji test (like the hoshuko test: listen, write on paper, check) ---------- */
 var KT = null;
 function ktLog(){ var ks = kanjiState(); if(!ks.tests) ks.tests = []; return ks.tests; }
-/* 26.11.139: say just this one kanji, like the teacher: first kun reading with okurigana (鼻 → はな, 悲 → かなしい); on reading if it has no kun */
+/* 26.11.140: say just this one kanji, like the teacher: first kun reading with okurigana (鼻 → はな, 悲 → かなしい); on reading if it has no kun */
 function ktReading(k){
   var kun = String(k.kun || '').split(/[,、]/)[0].trim().replace(/[()（）]/g, '').replace(/^-+|-+$/g, '');
   if(kun) return kun;
   return String(k.on || '').split(/[,、]/)[0].trim();
 }
-/* 26.11.139: like the teacher, give a word when the sound alone is not enough (no kun reading, or two kanji in this test sound the same) */
+/* 26.11.140: like the teacher, give a word when the sound alone is not enough (no kun reading, or two kanji in this test sound the same) */
 function ktHasKun(k){ return !!String(k.kun || '').replace(/-/g, '').trim(); }
 function ktNeedsWord(k){ return !ktHasKun(k) || !!(KT && KT.amb && KT.amb[k.k]); }
 function ktHira(x){ return String(x || '').replace(/[\u30a1-\u30f6]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0x60); }); }
@@ -14130,6 +14139,18 @@ function ktAnswerHTML(k){
   var oku = '';
   if(ktHasKun(k)){ var m = String(k.kun).split(/[,、]/)[0].match(/[(（]([^)）]+)[)）]/); if(m) oku = m[1]; }
   return '<b class="kthit">'+k.k+'</b>'+(oku ? '<span class="ktoku">'+esc(oku)+'</span>' : '');
+}
+/* 26.11.140: change the marks in place so the page never jumps to the top */
+function ktMarkUI(){
+  var s = KT; if(!s) return;
+  s.cards.forEach(function(k){
+    var row = document.querySelector('[data-ktrow="'+k.k+'"]'); if(!row) return;
+    var o = row.querySelector('[data-kt^="ok:"]'), x = row.querySelector('[data-kt^="no:"]');
+    if(o) o.classList.toggle('primary', s.mark[k.k] === 1);
+    if(x) x.classList.toggle('primary', s.mark[k.k] === 0);
+  });
+  var left = s.cards.filter(function(k){ return s.mark[k.k] == null; }).length, f = document.querySelector('[data-kt="finish"]');
+  if(f){ f.disabled = !!left; f.textContent = left ? left+' left to check' : 'Finish \u2714'; }
 }
 function ktTick(){ var s = KT; if(!s || s.stage !== 'play' || !s.t0) return; s.tm[s.i] = (s.tm[s.i] || 0) + (Date.now() - s.t0); s.t0 = 0; }
 function ktSecs(ms){ var x = Math.round((ms || 0) / 1000); return x < 60 ? x+'s' : Math.floor(x/60)+'m '+(x%60)+'s'; }
@@ -14165,7 +14186,7 @@ function ktShow(){
     var k = s.cards[s.i], num = s.i + 1;
     h += '<div class="hint" style="text-align:center">Question '+num+' of '+s.cards.length+'</div>';
     h += '<div class="kfccard" style="cursor:default"><span class="kfcbig">'+num+'</span><small>Listen, then write the kanji on your paper.</small></div>';
-    /* 26.11.139: fixed button grid, hint space reserved underneath, so nothing moves */
+    /* 26.11.140: fixed button grid, hint space reserved underneath, so nothing moves */
     h += '<div class="ktbtns"><button class="btn" data-kt="say">\ud83d\udd01 Say it again</button><button class="btn'+(s.hint ? ' primary' : '')+'" data-kt="hint">\ud83d\udc40 '+(s.hint ? 'Hide hint' : 'Show hint')+'</button>';
     h += [['kun','\u8a13 Kun'],['on','\u97f3 On'],['ex','\u4f8b Example']].map(function(b){ return '<button class="btn" data-kt="rd:'+b[0]+'" lang="ja">\ud83d\udd0a '+b[1]+'</button>'; }).join('');
     h += '<button class="btn primary ktnext" data-kt="next">'+(num < s.cards.length ? 'Next \u25b6' : 'I\u2019m done writing \u2714')+'</button></div>';
@@ -14180,10 +14201,13 @@ function ktShow(){
     var left = s.cards.filter(function(k){ return s.mark[k.k] == null; }).length;
     h += '<h2 style="margin:0 0 4px">\u2714 Check your answers</h2>';
     h += '<div class="hint">Look at your paper. Tap \u3007 (maru) if you got it, or \u00d7 (batsu) if it needs more practice, just like your teacher. Check the okurigana (the grey hiragana after the kanji) too. Every stroke counts, just like at school!</div>';
-    h += '<div class="ktlist">';
+    h += '<div class="hint" style="margin-top:4px">\u23f1\ufe0f = how long each one took. <span class="kttm slow" style="display:inline-block">Orange</span> = much longer than usual. \ud83d\udd01 heard again \u00b7 \ud83d\udc40 hint \u00b7 \ud83d\udd0a kun/on/example.</div>';
+    var tms = s.cards.map(function(k, i){ return (s.tm && s.tm[i]) || 0; }), srt = tms.slice().sort(function(a, b){ return a - b; }), med = srt[Math.floor(srt.length / 2)] || 1;
+    h += '<div class="ktlist ktcheck">';
     s.cards.forEach(function(k, i){
-      var m = s.mark[k.k];
-      h += '<div class="ktrow"><span class="ktn">'+(i + 1)+'</span><span class="ktw" lang="ja"><span>'+ktAnswerHTML(k)+'</span><small>'+esc(ktSpoken(k))+' \u00b7 '+esc(k.m)+'</small></span>';
+      var m = s.mark[k.k], ms = tms[i], slow = ms > med * 1.6 && ms > 8000, u = (s.used && s.used[i]) || '';
+      h += '<div class="ktrow" data-ktrow="'+k.k+'"><span class="ktn">'+(i + 1)+'</span><span class="ktw" lang="ja"><span>'+ktAnswerHTML(k)+'</span><small>'+esc(ktSpoken(k))+' \u00b7 '+esc(k.m)+'</small></span>';
+      h += '<span class="kttm'+(slow ? ' slow' : '')+'">\u23f1\ufe0f '+ktSecs(ms)+(u ? '<br>'+u : '')+'</span>';
       h += '<button class="btn small'+(m === 1 ? ' primary' : '')+'" data-kt="ok:'+k.k+'"><span class="ktmaru">\u3007</span></button><button class="btn small'+(m === 0 ? ' primary' : '')+'" data-kt="no:'+k.k+'"><span class="ktbatsu">\u00d7</span></button></div>';
     });
     h += '</div><div class="row" style="margin-top:12px;justify-content:space-between"><button class="btn small" data-kt="allok">All <span class="ktmaru">\u3007</span></button><button class="btn primary" data-kt="finish"'+(left ? ' disabled' : '')+'>'+(left ? left+' left to check' : 'Finish \u2714')+'</button></div></div>';
@@ -14192,12 +14216,11 @@ function ktShow(){
   if(s.stage === 'end'){
     h = '<div class="kjmodal kfc ktend">';
     var ok = s.cards.filter(function(k){ return s.mark[k.k] === 1; }), miss = s.cards.filter(function(k){ return s.mark[k.k] === 0; });
-    h += '<h2 style="margin:0 0 6px;text-align:center">\ud83c\udf1f You finished the test!</h2>';
+    h += '<h2 style="margin:0 0 6px;text-align:center;padding:0 40px">\ud83c\udf1f You finished the test!</h2>';
     h += '<div style="text-align:center;font-size:2em;font-weight:800">'+ok.length+' / '+s.cards.length+'</div>';
     h += '<div class="hint" style="text-align:center">'+(miss.length ? (miss.length <= 2 ? 'So close! A little practice and these will stick.' : 'Tests show us what to practise next. That is their job!') : 'Every single one! Your practice is paying off.')+'</div>';
     if(s.got) h += '<div class="hint" style="text-align:center">\u2b50 +'+s.got+' for doing a test</div>';
     if(s.grow) h += '<div class="kttree"><div style="font-size:2.4em">\ud83c\udf33\ud83c\udf4e'+(s.grow.gold ? '\u2728' : '')+'</div><b>Your kanji tree grew!</b><br>+1 big \ud83c\udf4e apple'+(s.grow.gold ? ' \u00b7 +'+s.grow.gold+' new \u2728 golden '+(s.grow.gold === 1 ? 'leaf' : 'leaves') : '')+'<br><small>'+s.grow.tests+' test'+(s.grow.tests === 1 ? '' : 's')+' done'+(s.grow.tests === 5 ? ' \u00b7 \u2b50 a star on top of your tree!' : '')+'</small><div class="row" style="justify-content:center;margin-top:6px"><button class="btn small" data-kt="tree">\ud83c\udf33 See my tree</button></div></div>';
-    h += ktTimeHTML(s);
     if(miss.length) h += '<div class="kfcres">\ud83d\udd01 <span>'+miss.map(function(k){ return '<b lang="ja">'+k.k+'</b>'; }).join(' ')+'</span><small>Kit will show these more often.</small></div>';
     h += '<div class="row" style="margin-top:14px;justify-content:space-between;flex-wrap:wrap;gap:8px"><button class="btn" data-x="1">Done</button>';
     if(miss.length) h += '<button class="btn" data-kt="practise">\ud83c\udccf Practise these</button>';
@@ -14259,7 +14282,7 @@ document.addEventListener('click', function(e){
   if(a === 'say'){ s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udd01','') + '\ud83d\udd01'; ktSay(s.cards[s.i]); return; }
   if(a === 'hint'){ s.hint = !s.hint; if(s.hint) s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udc40','') + '\ud83d\udc40'; ktShow(); return; }
   if(a.indexOf('rd:') === 0){
-    /* 26.11.139: just read it aloud, no panel */
+    /* 26.11.140: just read it aloud, no panel */
     s.used[s.i] = (s.used[s.i] || '').replace('\ud83d\udd0a','') + '\ud83d\udd0a';
     var w = a.slice(3), kk = s.cards[s.i], lst = function(str){ return String(str || '').split(/[,、]/).map(function(x){ return x.trim().replace(/[()（）]/g, ''); }).filter(function(x){ return x && x !== '-'; }); };
     var say = w === 'ex' ? kk.wr : lst(w === 'kun' ? kk.kun : kk.on).join('\u3001 ');
@@ -14270,9 +14293,8 @@ document.addEventListener('click', function(e){
   if(a === 'next'){ ktTick(); try{ stopSpeak(); }catch(_){} s.hint = false; s.rd = false; if(s.i < s.cards.length - 1){ s.i++; } else s.stage = 'check'; ktShow(); return; }
   if(a === 'prev'){ ktTick(); try{ stopSpeak(); }catch(_){} s.hint = false; s.rd = false; if(s.i) s.i--; s.spoke[s.i] = 0; ktShow(); return; }
   if(a === 'quit'){ ktTick(); try{ stopSpeak(); }catch(_){} s.stage = 'setup'; ktShow(); return; }
-  if(a.indexOf('ok:') === 0){ s.mark[a.slice(3)] = 1; ktShow(); return; }
-  if(a.indexOf('no:') === 0){ s.mark[a.slice(3)] = 0; ktShow(); return; }
-  if(a === 'allok'){ s.cards.forEach(function(k){ if(s.mark[k.k] == null) s.mark[k.k] = 1; }); ktShow(); return; }
+  if(a.indexOf('ok:') === 0 || a.indexOf('no:') === 0){ var kc = a.slice(3); s.mark[kc] = a.charAt(0) === 'o' ? 1 : 0; ktMarkUI(); return; }
+  if(a === 'allok'){ s.cards.forEach(function(k){ if(s.mark[k.k] == null) s.mark[k.k] = 1; }); ktMarkUI(); return; }
   if(a === 'finish'){ ktFinish(); return; }
   if(a === 'tree'){ try{ closeModal(); }catch(_){} state.ui = state.ui || {}; state.ui.kjTab = 'grow'; save(); try{ if(typeof setTab === 'function') setTab('kanji'); else render(); }catch(_){} return; }
   if(a === 'again'){ var pg = s.pages, nn = s.n; ktOpen(); KT.pages = pg; KT.n = nn; ktShow(); return; }
@@ -14426,7 +14448,7 @@ function kfcLookPick(n){
   var base = (pool || KANJI).filter(function(k){ return klookOf(k.k); });
   if(base.length < 3){ base = KANJI.filter(function(k){ return klookOf(k.k); }); note = !!pool; }
   if(note) toast('Only a few of your kanji have look-alike twins, so here are some more twins.', 3200);
-  /* 26.11.139: one kanji per twin group in a round, so each question shows different tiles */
+  /* 26.11.140: one kanji per twin group in a round, so each question shows different tiles */
   var order = kfcSample(base.map(function(k){ return {k:k, w:kjWeight(k.k) * kfcSeenW(k.k) + 0.05}; }), base.length), used = [], out = [];
   order.forEach(function(k){ var g = klookOf(k.k); if(out.length < n && used.indexOf(g) < 0){ used.push(g); out.push(k); } });
   return out;
