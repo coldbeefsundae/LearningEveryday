@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StarQuest · Mythical awakening demo · Pegasus</title>
+<style>
+:root{--gold:#d9bb72;--gold2:#f3dfa6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#efe7d2}
+body{display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage{position:relative;width:min(100vw,calc(100vh*0.5625));height:min(100vh,calc(100vw*1.7778));overflow:hidden;background:#02040a;--W:min(100vw,calc(100vh*0.5625))}
+.stage>*{position:absolute}
+.fade{transition-property:opacity,transform;transition-timing-function:ease-in-out}
+#skyT{inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06)}
+#moonGlow{left:50%;top:9%;width:110%;aspect-ratio:1;transform:translate(-50%,-20%);border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.20) 0%,rgba(200,215,255,.07) 35%,transparent 62%);opacity:0}
+#moonW{left:50%;top:13%;width:46%;aspect-ratio:1;transform:translate(-50%,320%);opacity:0}
+#moonW img{width:100%;height:100%;object-fit:contain;display:block}
+#seal{left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%);overflow:visible;opacity:0;touch-action:none}
+#art{left:0;width:100%;aspect-ratio:3/4;top:47%;transform:translateY(-50%)}
+#art>*{position:absolute;inset:0;width:100%;height:100%}
+#art img{object-fit:cover;display:block;pointer-events:none}
+#neb,#cre,#lines,#stars,#glows{opacity:0}
+#lines{overflow:visible}
+.star{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);transition:transform .7s cubic-bezier(.2,1.6,.4,1),opacity .7s}
+.star i{position:absolute;inset:0;border-radius:50%;animation:tw var(--d) ease-in-out var(--dl) infinite}
+.star.soft i{animation-name:tws}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.62}}
+@keyframes tws{0%,100%{opacity:1}50%{opacity:.86}}
+.star .x{position:absolute;left:50%;top:50%;width:420%;height:6%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);border-radius:50%}
+.star .x.v{transform:translate(-50%,-50%) rotate(90deg)}
+.glow{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(0);opacity:0;background:radial-gradient(circle,rgba(235,240,255,.55) 0%,rgba(190,210,255,.22) 30%,rgba(255,200,140,.08) 55%,transparent 70%)}
+#glint{position:absolute;width:9%;aspect-ratio:1;transform:translate(-50%,-50%) scale(0) rotate(0deg);opacity:0;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.6) 12%,transparent 40%),linear-gradient(90deg,transparent 46%,rgba(255,255,255,.9) 50%,transparent 54%),linear-gradient(0deg,transparent 46%,rgba(255,255,255,.9) 50%,transparent 54%);border-radius:50%}
+.dust{position:absolute;width:1.1%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff 0%,#ffe9b0 35%,transparent 70%);transform:translate(-50%,-50%);opacity:0;pointer-events:none}
+#flash{inset:0;background:radial-gradient(circle at 50% 24%,rgba(255,246,220,.85),rgba(255,230,170,.25) 30%,transparent 60%);opacity:0;pointer-events:none}
+#txt{left:6%;right:6%;bottom:6.5%;text-align:center;pointer-events:none}
+.en{font-family:"Cormorant Garamond","Palatino Linotype",Palatino,Georgia,serif;font-style:italic;color:#fff6dc;font-size:calc(var(--W)*0.064);line-height:1.18;text-shadow:0 0 18px rgba(255,220,150,.45),0 2px 4px #000}
+.en.small{font-size:calc(var(--W)*0.05)}
+.ja{margin-top:.7em;font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;color:var(--gold);font-size:calc(var(--W)*0.036);line-height:1.5;text-shadow:0 2px 4px #000;opacity:0;transition:opacity 1.2s}
+.w{display:inline-block;opacity:0;transform:translateY(.25em);transition:opacity .9s ease,transform .9s ease;margin-right:.22em}
+.w.on{opacity:1;transform:none}
+.tap{margin-top:1em;font-size:calc(var(--W)*0.03);color:#cdbf98;opacity:0;transition:opacity .8s;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{transform:translateY(-3px)}}
+#prompt{left:0;right:0;top:63%;text-align:center;opacity:0;pointer-events:none}
+#prompt .en{font-size:calc(var(--W)*0.05)}
+#cardW{left:50%;top:45%;width:78%;aspect-ratio:2/3;transform:translate(-50%,-50%) scale(1.5);opacity:0;pointer-events:none}
+#cardW>*{position:absolute}
+.win{left:11.33%;top:20.05%;width:77.34%;height:54.56%;overflow:hidden;border-radius:6%;background:#02040a}
+.cart{position:absolute;left:0;width:100%;aspect-ratio:3/4;top:50%;transform:translateY(-50%)}
+.cart>*{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.frame{inset:0;width:100%;height:100%}
+.ct{left:0;right:0;text-align:center;color:var(--gold2);font-family:"Cormorant Garamond","Palatino Linotype",Palatino,Georgia,serif;line-height:1;text-shadow:0 1px 2px #000}
+.c1{top:79.6%;font-size:calc(var(--W)*0.78*0.052);letter-spacing:.08em}
+.c2{top:86.4%;font-size:calc(var(--W)*0.78*0.031);font-family:"Noto Serif JP","Hiragino Mincho ProN",serif;color:var(--gold)}
+.c3{top:89.2%;font-size:calc(var(--W)*0.78*0.022);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+#award{left:0;right:0;top:82%;text-align:center;opacity:0}
+#award .en{font-style:normal;letter-spacing:.12em;font-size:calc(var(--W)*0.05)}
+#start,#done{left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+.btn{font-family:"Cormorant Garamond",Georgia,serif;font-size:calc(var(--W)*0.06);color:#1b1407;background:linear-gradient(#f6e4ad,#cfa755);border:0;border-radius:999px;padding:.45em 1.4em;box-shadow:0 0 30px rgba(246,214,140,.45);letter-spacing:.06em}
+.sub{margin-top:1em;font-size:calc(var(--W)*0.032);color:#bfb391}
+#skip{right:4%;top:2.5%;font-size:calc(var(--W)*0.034);background:rgba(20,26,42,.6);color:#f3dfa6;border:1px solid #6b5a2e;border-radius:999px;padding:.35em .9em;display:none;z-index:5}
+#done{opacity:0;pointer-events:none;top:auto;bottom:5%;transform:translateX(-50%)}
+.link{background:none;border:0;color:#9f9578;text-decoration:underline;font-size:calc(var(--W)*0.028);margin-top:1em}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <img id="skyT" class="fade" src="assets/skytall.webp" alt="">
+  <div id="moonGlow" class="fade"></div>
+  <div id="moonW" class="fade"><img src="assets/moon.webp" alt="">
+    <svg id="seal" viewBox="-60 -60 120 120"></svg>
+  </div>
+  <div id="art">
+    <img id="neb" class="fade" src="assets/nebula.webp" alt="">
+    <div id="glows"></div>
+    <img id="cre" class="fade" src="assets/creature.webp" alt="">
+    <svg id="lines" viewBox="0 0 300 400" preserveAspectRatio="none"></svg>
+    <div id="stars"></div>
+    <div id="glintW" style="pointer-events:none"><div id="glint" class="fade"></div></div>
+  </div>
+  <div id="dustL" style="inset:0;pointer-events:none"></div>
+  <div id="flash" class="fade"></div>
+  <div id="prompt" class="fade"><div class="en">Trace the seal to awaken…</div><div class="ja" style="opacity:1">封印をなぞって、めざめさせよう</div></div>
+  <div id="cardW" class="fade">
+    <div class="win"><div class="cart"><img src="assets/sky.webp" alt=""><img id="cNeb" class="fade" src="assets/nebula.webp" alt="" style="opacity:.25"><img id="cCre" class="fade" src="assets/creature.webp" alt=""><svg id="cLines" viewBox="0 0 300 400" preserveAspectRatio="none" style="opacity:0" class="fade"></svg><div id="cStars"></div></div></div>
+    <img class="frame" src="assets/frame.webp" alt="">
+    <div class="ct c1">Pegasus</div><div class="ct c2">ペガスス座</div><div class="ct c3">Greece · Mythical · Constellation</div>
+  </div>
+  <div id="award" class="fade"><div class="en">Awakened · 1 of 12</div><div class="ja" style="opacity:1">めざめた　1 / 12</div></div>
+  <div id="txt"></div>
+  <div id="start"><button class="btn" id="go">✦ Unseal ✦</button><div class="sub">封印をとく</div><div class="sub" id="nameNote"></div><button class="link" id="reset">Reset “first time” (demo)</button></div>
+  <div id="done"><button class="btn" id="doneB">Done</button><div class="sub">Added to your collection · コレクションに入ったよ</div></div>
+  <button id="skip">Skip ▸</button>
+</div>
+<script>
+(function(){
+var D={"stars":[{"n":"Alpheratz","x":0.3021,"y":0.6838,"mag":2.06,"c":"#cfe0ff"},{"n":"Scheat","x":0.3213,"y":0.4674,"mag":2.42,"c":"#ffc8a0"},{"n":"Markab","x":0.566,"y":0.4708,"mag":2.49,"c":"#cfe0ff"},{"n":"Algenib","x":0.5664,"y":0.7,"mag":2.83,"c":"#cfe0ff"},{"n":"Homam","x":0.6491,"y":0.3928,"mag":3.4,"c":"#cfe0ff"},{"n":"Biham","x":0.7372,"y":0.2881,"mag":3.53,"c":"#eef3ff"},{"n":"Enif","x":0.6673,"y":0.201,"mag":2.38,"c":"#ffd9a8"},{"n":"Matar","x":0.2807,"y":0.3979,"mag":2.94,"c":"#fff1d6"},{"n":"Pi","x":0.2245,"y":0.2874,"mag":4.29,"c":"#fffaf0"},{"n":"Sadalbari","x":0.3874,"y":0.4213,"mag":3.48,"c":"#ffd9a8"},{"n":"Lambda","x":0.4071,"y":0.4097,"mag":3.95,"c":"#fff1d6"},{"n":"Iota","x":0.3733,"y":0.2774,"mag":3.77,"c":"#fffaf0"},{"n":"Kappa","x":0.3676,"y":0.2025,"mag":4.13,"c":"#fffaf0"}],"lines":[["Alpheratz","Scheat"],["Scheat","Markab"],["Markab","Algenib"],["Algenib","Alpheratz"],["Markab","Homam"],["Homam","Biham"],["Biham","Enif"],["Scheat","Matar"],["Matar","Pi"],["Scheat","Sadalbari"],["Sadalbari","Lambda"],["Lambda","Iota"],["Iota","Kappa"]]};
+var Q=function(id){return document.getElementById(id)};
+var stage=Q('stage');
+/* her name: from the app (here ?name=), never invented; fallback "star" */
+var NAME=(new URLSearchParams(location.search).get('name')||'').trim()||'star';
+Q('nameNote').textContent='Name used: '+NAME+'  (demo: add ?name=… to the link)';
+var SEEN_KEY='sqMythPegasusSeen';
+var skipping=false,timers=[];
+function wait(ms){return new Promise(function(r){if(skipping)return r();var t=setTimeout(r,ms);timers.push(t)})}
+function css(el,o,ms){if(ms!=null)el.style.transitionDuration=(skipping?0:ms)+'ms';for(var k in o)el.style[k]=o[k]}
+function tap(){return new Promise(function(r){if(skipping)return r();var h=function(){stage.removeEventListener('pointerup',h);r()};setTimeout(function(){stage.addEventListener('pointerup',h)},250)})}
+/* ---------- constellation (same data as card) ---------- */
+var byN={};D.stars.forEach(function(s){byN[s.n]=s});
+function hexA(c,a){var n=parseInt(c.slice(1),16);return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'}
+var brightest=D.stars.slice().sort(function(a,b){return a.mag-b.mag}).slice(0,2).map(function(s){return s.n});
+function buildStars(host,svg,withGlows){
+  var h='';D.lines.forEach(function(l,i){var a=byN[l[0]],b=byN[l[1]],len=Math.hypot((a.x-b.x)*300,(a.y-b.y)*400);
+    h+='<line x1="'+a.x*300+'" y1="'+a.y*400+'" x2="'+b.x*300+'" y2="'+b.y*400+'" stroke="rgba(220,230,255,.6)" stroke-width=".8" stroke-linecap="round" stroke-dasharray="'+len+'" stroke-dashoffset="'+len+'" style="transition:stroke-dashoffset 1.4s ease '+(i*0.08)+'s"/>'});
+  svg.innerHTML=h;var els=[];
+  D.stars.forEach(function(s,i){var size=Math.max(1.6,6.2*Math.pow(10,-0.2*(s.mag-2)));var e=document.createElement('div');e.className='star'+(s.mag>3.6?' soft':'');
+    e.style.cssText='left:'+s.x*100+'%;top:'+s.y*100+'%;width:'+size+'%;aspect-ratio:1';
+    var dur=(3+((i*7919)%400)/100).toFixed(2),dl=(-((i*3301)%700)/100).toFixed(2);
+    e.innerHTML='<i style="--d:'+dur+'s;--dl:'+dl+'s;background:radial-gradient(circle,#fff 0%,#fff 9%,'+s.c+' 20%,'+hexA(s.c,.35)+' 38%,transparent 70%)"></i>'+(brightest.indexOf(s.n)>=0?'<div class="x"></div><div class="x v"></div>':'');
+    host.appendChild(e);els.push(e)});
+  return els;
+}
+var starEls=buildStars(Q('stars'),Q('lines'));
+var cStarEls=buildStars(Q('cStars'),Q('cLines'));cStarEls.forEach(function(e){e.style.transform='translate(-50%,-50%) scale(1)'});
+var glows=D.stars.map(function(s){var g=document.createElement('div');g.className='glow';g.style.left=s.x*100+'%';g.style.top=s.y*100+'%';Q('glows').appendChild(g);return g});
+var enif=byN.Enif;Q('glint').style.left=enif.x*100+'%';Q('glint').style.top=enif.y*100+'%';
+/* ---------- Greek key (meander) seal ---------- */
+/* authentic square meander spiral, framed by a running-key border band */
+var seal=Q('seal'),u=7;
+var key=[[0,6],[0,0],[6,0],[6,6],[2,6],[2,2],[4,2],[4,4]].map(function(p){return [(p[0]-3)*u*1.6,(p[1]-3)*u*1.6]});
+var keyD='M'+key.map(function(p){return p.join(',')}).join(' L');
+function band(){ /* small running meander units along a square, static ornament */
+  var d='',s=4.2,R=52;
+  for(var side=0;side<4;side++){for(var k=0;k<6;k++){var x0=-R+k*(2*R/6)+3,y0=-R-2;
+    var pts=[[0,s*2],[0,0],[s*2,0],[s*2,s*1.4],[s*0.8,s*1.4],[s*0.8,s*0.7],[s*1.4,s*0.7]].map(function(p){return [x0+p[0],y0+p[1]]});
+    var a=side*Math.PI/2,c=Math.cos(a),sn=Math.sin(a);
+    d+='M'+pts.map(function(p){return (p[0]*c-p[1]*sn).toFixed(2)+','+(p[0]*sn+p[1]*c).toFixed(2)}).join(' L')}}
+  return d}
+seal.innerHTML=
+ '<rect x="-56" y="-56" width="112" height="112" fill="none" stroke="rgba(217,187,114,.55)" stroke-width=".6"/>'+
+ '<rect x="-44" y="-44" width="88" height="88" fill="none" stroke="rgba(217,187,114,.45)" stroke-width=".5"/>'+
+ '<path d="'+band()+'" fill="none" stroke="rgba(217,187,114,.55)" stroke-width=".9" stroke-linejoin="miter"/>'+
+ '<path id="sGuide" d="'+keyD+'" fill="none" stroke="rgba(246,224,160,.95)" stroke-width="4.2" stroke-linecap="square" stroke-linejoin="miter"/>'+
+ '<path id="sGlow" d="'+keyD+'" fill="none" stroke="rgba(255,230,160,.35)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<path id="sLit" d="'+keyD+'" fill="none" stroke="#fff3c8" stroke-width="4.4" stroke-linecap="square" stroke-linejoin="miter"/>'+
+ '<circle id="sStart" r="4.5" fill="#fff3c8" cx="'+key[0][0]+'" cy="'+key[0][1]+'"><animate attributeName="r" values="3.5;6;3.5" dur="1.4s" repeatCount="indefinite"/></circle>';
+var guide=Q('sGuide'),lit=Q('sLit'),sglow=Q('sGlow'),L=lit.getTotalLength();
+[guide,lit,sglow].forEach(function(p){p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+var samples=[];for(var i=0;i<=200;i++){var pt=lit.getPointAtLength(L*i/200);samples.push([pt.x,pt.y])}
+function setLit(f){var o=L*(1-f);lit.style.strokeDashoffset=o;sglow.style.strokeDashoffset=o}
+function trace(){return new Promise(function(done){
+  if(skipping){setLit(1);return done()}
+  var prog=0,down=false;Q('sStart').style.display='';
+  function local(e){var r=seal.getBoundingClientRect();return [(e.clientX-r.left)/r.width*120-60,(e.clientY-r.top)/r.height*120-60]}
+  function move(e){if(!down)return;var p=local(e),best=-1,bd=1e9;
+    for(var j=prog;j<Math.min(samples.length,prog+14);j++){var d=Math.hypot(samples[j][0]-p[0],samples[j][1]-p[1]);if(d<bd){bd=d;best=j}}
+    if(best>=0&&bd<11){prog=Math.max(prog,best);setLit(prog/200);var sp=samples[prog];Q('sStart').setAttribute('cx',sp[0]);Q('sStart').setAttribute('cy',sp[1])}
+    if(prog>=197){cleanup();setLit(1);done()}}
+  function dn(e){down=true;move(e)}function up(){down=false}
+  function cleanup(){seal.removeEventListener('pointerdown',dn);window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);Q('sStart').style.display='none'}
+  seal.style.pointerEvents='auto';seal.addEventListener('pointerdown',dn);window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);
+})}
+/* ---------- text ---------- */
+function words(en,ja,small){var t=Q('txt');t.innerHTML='';var e=document.createElement('div');e.className='en'+(small?' small':'');
+  en.split(' ').forEach(function(w){var s=document.createElement('span');s.className='w';s.textContent=w;e.appendChild(s)});
+  var j=document.createElement('div');j.className='ja';j.textContent=ja;var tp=document.createElement('div');tp.className='tap';tp.textContent='tap ▸';
+  t.appendChild(e);t.appendChild(j);t.appendChild(tp);
+  var ws=e.querySelectorAll('.w');return (async function(){for(var i=0;i<ws.length;i++){ws[i].classList.add('on');await wait(small?230:330)}
+    await wait(300);j.style.opacity=1;await wait(900);tp.style.opacity=1;await tap();
+    e.style.transition='opacity .6s';e.style.opacity=0;j.style.opacity=0;tp.style.opacity=0;await wait(650)})()}
+/* ---------- the sequence ---------- */
+async function run(){
+  var first=!localStorage.getItem(SEEN_KEY);skipping=false;
+  Q('start').style.display='none';Q('skip').style.display=first?'none':'block';
+  /* 1 night falls */
+  css(Q('skyT'),{opacity:1,transform:'scale(1)'},2600);await wait(3000);
+  /* 2 moon rises */
+  css(Q('moonW'),{opacity:1,transform:'translate(-50%,0)'},4200);css(Q('moonGlow'),{opacity:1},4200);await wait(4400);
+  /* 3 seal appears: draws itself, dims to a guide */
+  css(seal,{opacity:1},600);guide.style.transition='stroke-dashoffset 2.6s ease-in-out';guide.style.strokeDashoffset=0;await wait(2800);
+  guide.style.transition='stroke 1s';guide.style.stroke='rgba(246,224,160,.32)';css(Q('prompt'),{opacity:1},900);await wait(700);
+  /* 4 she traces (no fail state, no timer) */
+  await trace();css(Q('prompt'),{opacity:0},500);
+  /* 5 seal breaks into stardust */
+  css(Q('flash'),{opacity:1},250);await wait(260);
+  var r=seal.getBoundingClientRect(),sr=stage.getBoundingClientRect(),dust=[];
+  for(var i=0;i<56;i++){var s=samples[(i*37)%201],d=document.createElement('div');d.className='dust fade';
+    d.style.left=((r.left-sr.left)+(s[0]+60)/120*r.width)/sr.width*100+'%';d.style.top=((r.top-sr.top)+(s[1]+60)/120*r.height)/sr.height*100+'%';
+    d.style.opacity=1;Q('dustL').appendChild(d);dust.push(d)}
+  css(seal,{opacity:0},400);css(Q('flash'),{opacity:0},1400);
+  await wait(60);
+  dust.forEach(function(d,i){var dx=((i*53)%100-50)*0.9,dy=-(120+((i*29)%140));d.style.transitionDuration=(2200+((i*71)%900))+'ms';d.style.transform='translate(calc(-50% + '+dx+'%),calc(-50% + '+dy+'%)) scale('+(0.6+((i*13)%10)/10)+')';d.style.opacity=0});
+  await wait(1300);
+  /* 6 the dust gathers into the nebula */
+  var neb=Q('neb');neb.style.transform='scale(1.08)';css(neb,{opacity:.9,transform:'scale(1)'},3200);
+  css(Q('moonW'),{opacity:.45,transform:'translate(-50%,-14%)'},3200);css(Q('moonGlow'),{opacity:.5},3200);await wait(3400);
+  dust.forEach(function(d){d.remove()});
+  /* 7 stars ignite one by one, then lines draw in */
+  Q('stars').style.opacity=1;var order=D.stars.map(function(s,i){return i}).sort(function(a,b){return D.stars[a].mag-D.stars[b].mag});
+  for(var k=0;k<order.length;k++){starEls[order[k]].style.transform='translate(-50%,-50%) scale(1)';await wait(260)}
+  Q('lines').style.opacity=.45;Q('lines').querySelectorAll('line').forEach(function(l){l.style.strokeDashoffset=0});await wait(2400);
+  /* 8 the awakening: light spreads out from the stars, Pegasus forms, eye glint */
+  Q('glows').style.opacity=1;
+  glows.forEach(function(g,i){var del=Math.max(0,(D.stars[i].mag-2)*220);g.style.transition='transform 2.6s ease-out '+del+'ms, opacity 2.6s ease-in-out '+del+'ms';g.style.transform='translate(-50%,-50%) scale(2.4)';g.style.opacity=.9});
+  await wait(900);
+  var cre=Q('cre');cre.style.transform='scale(.97)';css(cre,{opacity:1,transform:'scale(1)'},2800);css(neb,{opacity:.28},2800);
+  Q('lines').style.transition='opacity 2s';Q('lines').style.opacity=.12;
+  await wait(1700);glows.forEach(function(g){g.style.opacity=0});await wait(1200);
+  css(Q('glint'),{opacity:1,transform:'translate(-50%,-50%) scale(1) rotate(45deg)'},500);await wait(550);css(Q('glint'),{opacity:0,transform:'translate(-50%,-50%) scale(.4) rotate(90deg)'},700);await wait(700);
+  /* 9 the words */
+  await words('I have flown across the heavens to meet you, '+NAME+'.',NAME+'、天をかけて会いに来たよ。');
+  /* 10 the legend, over a slow push-in */
+  css(Q('art'),{transform:'translateY(-50%) scale(1.12)'},26000);
+  await words('When the hero Perseus defeated Medusa, I sprang into the world.','英雄ペルセウスがメドゥーサをたおしたとき、ぼくは生まれた。',true);
+  await words('With the hero Bellerophon, I defeated the fire-breathing Chimera.','英雄ベレロフォンといっしょに、火をはく怪物キマイラをたおした。',true);
+  await words('But when he tried to fly to the home of the gods, he fell. I flew on, and Zeus placed me among the stars.','でも、神々の山へ行こうとして、彼は落ちてしまった。ぼくは飛びつづけ、ゼウスがぼくを星にした。',true);
+  /* 11 pull back, the frame closes in, the card forms */
+  css(Q('art'),{opacity:0,transform:'translateY(-50%) scale(.62)'},1600);css(Q('moonW'),{opacity:0},1600);css(Q('moonGlow'),{opacity:0},1600);
+  css(Q('cardW'),{opacity:1,transform:'translate(-50%,-50%) scale(1)'},1900);await wait(2100);
+  css(Q('award'),{opacity:1},900);await wait(2600);
+  /* 12 Pegasus fades back into his stars on the card; card goes to her collection */
+  css(Q('cCre'),{opacity:0},2600);css(Q('cNeb'),{opacity:.85},2600);Q('cLines').style.transition='opacity 2.6s';Q('cLines').style.opacity=.32;
+  Q('cLines').querySelectorAll('line').forEach(function(l){l.style.strokeDashoffset=0});
+  await wait(2800);
+  /* 13 done */
+  localStorage.setItem(SEEN_KEY,'1');Q('skip').style.display='none';
+  css(Q('done'),{opacity:1},800);Q('done').style.pointerEvents='auto';
+}
+function resetAll(){location.reload()}
+Q('go').onclick=function(e){e.stopPropagation();run()};
+Q('doneB').onclick=function(e){e.stopPropagation();resetAll()};
+Q('reset').onclick=function(e){e.stopPropagation();localStorage.removeItem(SEEN_KEY);this.textContent='Reset ✓ (next run is a first viewing)'};
+Q('skip').onclick=function(e){e.stopPropagation();skipping=true;timers.forEach(clearTimeout);this.style.display='none';
+  /* jump to the finished card */
+  ['skyT','cardW','award'].forEach(function(id){Q(id).style.transitionDuration='0ms'});
+  Q('skyT').style.opacity=1;Q('art').style.opacity=0;Q('moonW').style.opacity=0;Q('moonGlow').style.opacity=0;Q('txt').innerHTML='';Q('prompt').style.opacity=0;
+  Q('cardW').style.opacity=1;Q('cardW').style.transform='translate(-50%,-50%) scale(1)';Q('award').style.opacity=1;
+  Q('cCre').style.opacity=0;Q('cNeb').style.opacity=.85;Q('cLines').style.opacity=.32;Q('cLines').querySelectorAll('line').forEach(function(l){l.style.transition='none';l.style.strokeDashoffset=0});
+  Q('done').style.opacity=1;Q('done').style.pointerEvents='auto'};
+})();
+</script>
+</body>
+</html>
