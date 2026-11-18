@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StarQuest · Mythical card demo · Pegasus</title>
+<style>
+:root{--gold:#d9bb72;--gold2:#f3dfa6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#05070d;color:#e9e3d2;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:14px;overflow:hidden;touch-action:none}
+.stage{perspective:1400px}
+.card{position:relative;width:min(88vw,calc((100vh - 170px)*0.6667));aspect-ratio:2/3;transform-style:preserve-3d;will-change:transform;border-radius:3.2%/2.1%}
+.card>*{position:absolute}
+/* window = transparent area of frame.webp (1024x1536 coords) */
+.win{left:11.33%;top:20.05%;width:77.34%;height:54.56%;overflow:hidden;border-radius:6%;background:#02040a}
+.art{position:absolute;left:0;width:100%;aspect-ratio:3/4;top:50%;transform:translateY(-50%)}
+.art>*{position:absolute;inset:0;width:100%;height:100%}
+.art img{display:block;object-fit:cover;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.sky{will-change:transform}
+.nebOuter,.creature,.glows,.cons,.sheen{will-change:opacity,transform}
+.nebInner{width:100%;height:100%;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.82}50%{opacity:1}}
+.creature{opacity:0}
+.cons svg{width:100%;height:100%;overflow:visible}
+.star{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.star i{position:absolute;inset:0;border-radius:50%;animation:tw var(--d) ease-in-out var(--dl) infinite}
+.star.soft i{animation-name:tws}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.62}}
+@keyframes tws{0%,100%{opacity:1}50%{opacity:.86}}
+.star .x{position:absolute;left:50%;top:50%;width:420%;height:6%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);border-radius:50%}
+.star .x.v{transform:translate(-50%,-50%) rotate(90deg)}
+.glow{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:radial-gradient(circle,rgba(235,240,255,.55) 0%,rgba(190,210,255,.22) 30%,rgba(255,200,140,.08) 55%,transparent 70%)}
+.sheen{inset:-30% !important;width:160% !important;height:160% !important;background:linear-gradient(115deg,transparent 38%,rgba(255,226,160,.16) 47%,rgba(255,246,220,.28) 50%,rgba(255,226,160,.16) 53%,transparent 62%);opacity:.0}
+.ring{left:50%;top:50%;width:92%;aspect-ratio:1;transform:translate(-50%,-50%);will-change:transform;pointer-events:none}
+.frame{inset:0;width:100%;height:100%;pointer-events:none;user-select:none}
+.txt{left:0;right:0;text-align:center;color:var(--gold2);text-shadow:0 1px 2px #000,0 0 10px rgba(217,187,114,.25);font-family:"Cormorant Garamond","Palatino Linotype",Palatino,Georgia,serif;pointer-events:none;line-height:1}
+.t1{top:79.6%;font-size:calc(var(--cw)*0.052);letter-spacing:.08em}
+.t2{top:86.4%;font-size:calc(var(--cw)*0.031);font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;color:var(--gold)}
+.t3{top:89.2%;font-size:calc(var(--cw)*0.022);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ui{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;max-width:640px;font-size:13px}
+.ui button{background:#141a2a;color:#f3dfa6;border:1px solid #6b5a2e;border-radius:999px;padding:8px 14px;font-size:13px}
+.ui label{display:flex;gap:8px;align-items:center;opacity:.85}
+.ui input[type=range]{width:160px}
+.hint{font-size:12px;opacity:.6;text-align:center;max-width:560px}
+</style>
+</head>
+<body>
+<div class="stage"><div class="card" id="card">
+  <div class="win"><div class="art" id="art">
+    <img class="sky" id="sky" src="assets/sky.webp" alt="">
+    <div class="nebOuter" id="neb"><img class="nebInner" src="assets/nebula.webp" alt=""></div>
+    <div class="glows" id="glows"></div>
+    <img class="creature" id="cre" src="assets/creature.webp" alt="">
+    <div class="cons" id="cons"><svg viewBox="0 0 300 400" preserveAspectRatio="none" id="lines"></svg></div>
+    <div class="sheen" id="sheen"></div>
+  </div>
+  <svg class="ring" id="ring" viewBox="-100 -100 200 200"></svg>
+  </div>
+  <img class="frame" src="assets/frame.webp" alt="">
+  <div class="txt t1">Pegasus</div>
+  <div class="txt t2">ペガスス座</div>
+  <div class="txt t3">Greece · Mythical · Constellation</div>
+</div></div>
+<div class="ui">
+  <button id="motion">📱 Use tilt</button>
+  <button id="cal">🎯 Re-centre</button>
+  <label>Manual tilt <input type="range" id="man" min="0" max="100" value="0"></label>
+</div>
+<div class="hint">Tilt the device, drag on the card, or use the slider. Demo only: constellation positions are real but placed by eye on the art; the tick ring is a stand-in.</div>
+<script>
+(function(){
+var D={"stars":[{"n":"Alpheratz","x":0.3021,"y":0.6838,"mag":2.06,"c":"#cfe0ff"},{"n":"Scheat","x":0.3213,"y":0.4674,"mag":2.42,"c":"#ffc8a0"},{"n":"Markab","x":0.566,"y":0.4708,"mag":2.49,"c":"#cfe0ff"},{"n":"Algenib","x":0.5664,"y":0.7,"mag":2.83,"c":"#cfe0ff"},{"n":"Homam","x":0.6491,"y":0.3928,"mag":3.4,"c":"#cfe0ff"},{"n":"Biham","x":0.7372,"y":0.2881,"mag":3.53,"c":"#eef3ff"},{"n":"Enif","x":0.6673,"y":0.201,"mag":2.38,"c":"#ffd9a8"},{"n":"Matar","x":0.2807,"y":0.3979,"mag":2.94,"c":"#fff1d6"},{"n":"Pi","x":0.2245,"y":0.2874,"mag":4.29,"c":"#fffaf0"},{"n":"Sadalbari","x":0.3874,"y":0.4213,"mag":3.48,"c":"#ffd9a8"},{"n":"Lambda","x":0.4071,"y":0.4097,"mag":3.95,"c":"#fff1d6"},{"n":"Iota","x":0.3733,"y":0.2774,"mag":3.77,"c":"#fffaf0"},{"n":"Kappa","x":0.3676,"y":0.2025,"mag":4.13,"c":"#fffaf0"}],"lines":[["Alpheratz","Scheat"],["Scheat","Markab"],["Markab","Algenib"],["Algenib","Alpheratz"],["Markab","Homam"],["Homam","Biham"],["Biham","Enif"],["Scheat","Matar"],["Matar","Pi"],["Scheat","Sadalbari"],["Sadalbari","Lambda"],["Lambda","Iota"],["Iota","Kappa"]]};
+var art=document.getElementById('art'),card=document.getElementById('card');
+var byN={};D.stars.forEach(function(s){byN[s.n]=s});
+/* faint lines */
+var svg=document.getElementById('lines'),h='';
+D.lines.forEach(function(l){var a=byN[l[0]],b=byN[l[1]];h+='<line x1="'+a.x*300+'" y1="'+a.y*400+'" x2="'+b.x*300+'" y2="'+b.y*400+'" stroke="rgba(220,230,255,.55)" stroke-width=".7" stroke-linecap="round"/>'});
+svg.innerHTML=h;
+/* stars + reveal glows */
+var cons=document.getElementById('cons'),glows=document.getElementById('glows'),gl=[],brightest=D.stars.slice().sort(function(a,b){return a.mag-b.mag}).slice(0,2).map(function(s){return s.n});
+D.stars.forEach(function(s,i){
+  var size=Math.max(1.6,6.2*Math.pow(10,-0.2*(s.mag-2)));            /* % of art width */
+  var e=document.createElement('div');e.className='star'+(s.mag>3.6?' soft':'');
+  e.style.cssText='left:'+s.x*100+'%;top:'+s.y*100+'%;width:'+size+'%;aspect-ratio:1';
+  var dur=(3+((i*7919)%400)/100).toFixed(2),dl=(-((i*3301)%700)/100).toFixed(2);
+  e.innerHTML='<i style="--d:'+dur+'s;--dl:'+dl+'s;background:radial-gradient(circle,#fff 0%,#fff 9%,'+s.c+' 20%,'+hexA(s.c,.35)+' 38%,transparent 70%)"></i>'+(brightest.indexOf(s.n)>=0?'<div class="x"></div><div class="x v"></div>':'');
+  cons.appendChild(e);s.el=e;
+  var g=document.createElement('div');g.className='glow';g.style.left=s.x*100+'%';g.style.top=s.y*100+'%';glows.appendChild(g);
+  gl.push({el:g,delay:(1-Math.min(1,(4.4-s.mag)/2.4))*0.25,mag:s.mag});
+});
+function hexA(c,a){var n=parseInt(c.slice(1),16);return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'}
+/* tick ring (stand-in) */
+var r='<circle r="96" fill="none" stroke="rgba(217,187,114,.35)" stroke-width=".5"/><circle r="91" fill="none" stroke="rgba(217,187,114,.22)" stroke-width=".35"/>';
+for(var k=0;k<120;k++){var L=k%10==0?7:(k%5==0?4.5:2.6),an=k*3*Math.PI/180,c=Math.cos(an),sn=Math.sin(an);r+='<line x1="'+(96*c).toFixed(2)+'" y1="'+(96*sn).toFixed(2)+'" x2="'+((96-L)*c).toFixed(2)+'" y2="'+((96-L)*sn).toFixed(2)+'" stroke="rgba(230,205,140,'+(k%10==0?.55:.3)+')" stroke-width="'+(k%10==0?.6:.35)+'"/>'}
+var ring=document.getElementById('ring');ring.innerHTML=r;
+var sky=document.getElementById('sky'),neb=document.getElementById('neb'),cre=document.getElementById('cre'),sheen=document.getElementById('sheen');
+function sizeVars(){card.style.setProperty('--cw',card.getBoundingClientRect().width+'px')}
+addEventListener('resize',sizeVars);sizeVars();
+/* tilt input */
+var tx=0,ty=0,cx=0,cy=0,base=null,manual=0,dragging=false,dx0=0,dy0=0,src='none';
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function ss(a,b,v){v=clamp((v-a)/(b-a),0,1);return v*v*(3-2*v)}
+function onOri(e){if(e.beta==null)return;src='device';var b=e.beta,g=e.gamma,ang=(screen.orientation&&screen.orientation.angle)||window.orientation||0;if(ang==90){var q=b;b=-g;g=q}else if(ang==-90||ang==270){var q2=b;b=g;g=-q2}else if(ang==180){b=-b;g=-g}if(!base)base={b:b,g:g};tx=clamp((g-base.g)/22,-1,1);ty=clamp((b-base.b)/22,-1,1)}
+document.getElementById('motion').onclick=function(){
+  if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){DeviceOrientationEvent.requestPermission().then(function(p){if(p==='granted')addEventListener('deviceorientation',onOri)})}
+  else addEventListener('deviceorientation',onOri);
+  this.textContent='📱 Tilt on';
+};
+if(typeof DeviceOrientationEvent!=='undefined'&&!DeviceOrientationEvent.requestPermission)addEventListener('deviceorientation',onOri);
+document.getElementById('cal').onclick=function(){base=null;tx=ty=0};
+document.getElementById('man').oninput=function(){manual=this.value/100;src='manual'};
+card.addEventListener('pointerdown',function(e){dragging=true;dx0=e.clientX;dy0=e.clientY;src='drag';card.setPointerCapture(e.pointerId)});
+card.addEventListener('pointermove',function(e){if(!dragging)return;tx=clamp((e.clientX-dx0)/140,-1,1);ty=clamp((e.clientY-dy0)/140,-1,1)});
+function endDrag(){dragging=false;if(src==='drag'){tx=0;ty=0}}
+card.addEventListener('pointerup',endDrag);card.addEventListener('pointercancel',endDrag);
+/* render loop: only transform + opacity */
+var last=-1;
+function frame(){
+  var gx=tx,gy=ty;
+  if(src==='manual'){gx=manual*0.8;gy=-manual*0.6}
+  cx+=(gx-cx)*0.12;cy+=(gy-cy)*0.12;
+  var t=clamp(Math.hypot(cx,cy),0,1);
+  card.style.transform='rotateY('+(cx*10).toFixed(2)+'deg) rotateX('+(-cy*8).toFixed(2)+'deg)';
+  sky.style.transform='translate('+(-cx*1.6).toFixed(2)+'%,'+(-cy*1.6).toFixed(2)+'%) scale(1.05)';
+  neb.style.opacity=(0.92-0.78*ss(0.15,0.9,t)).toFixed(3);
+  neb.style.transform='translate('+(-cx*0.8).toFixed(2)+'%,'+(-cy*0.8).toFixed(2)+'%) scale(1.03)';
+  var reveal=ss(0.28,0.92,t);
+  cre.style.opacity=reveal.toFixed(3);
+  cre.style.transform='scale('+(0.97+0.03*reveal).toFixed(4)+')';
+  for(var i=0;i<gl.length;i++){var g=gl[i],p=clamp((t-0.06-g.delay)/0.55,0,1);
+    g.el.style.transform='translate(-50%,-50%) scale('+(p*2.2).toFixed(3)+')';
+    g.el.style.opacity=(Math.sin(Math.PI*Math.min(1,p*1.05))*0.85).toFixed(3)}
+  svg.style.opacity=(1-ss(0.1,0.6,t))*0.32;
+  for(var j=0;j<D.stars.length;j++){D.stars[j].el.style.transform='translate(-50%,-50%) scale('+(1+0.45*ss(0.05,0.5,t)-0.15*reveal).toFixed(3)+')'}
+  sheen.style.opacity=(0.25+0.75*t).toFixed(3);
+  sheen.style.transform='translate('+(cx*22).toFixed(2)+'%,'+(cy*14).toFixed(2)+'%)';
+  ring.style.transform='translate(-50%,-50%) rotate('+(cx*10+cy*4).toFixed(2)+'deg)';
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
