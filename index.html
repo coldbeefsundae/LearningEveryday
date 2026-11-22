@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.146', errs = [], shown = false;
+  var V = '26.11.147', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -646,10 +646,25 @@ textarea:focus{outline:none;border-color:var(--accent)}
 .z-S .llx-top,.z-S .llx-tag,.z-S .llx-foot,.z-S .llx-fade,.z-O .llx-top,.z-O .llx-tag,.z-O .llx-foot,.z-O .llx-fade,.z-O .llx-rar{display:none}
 
 /* ---------- read aloud ---------- */
+/* 26.11.147 name check */
+.ncvoices{display:flex;flex-wrap:wrap;gap:6px}
+.ncchip{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-weight:800;font-size:14px}
+.ncchip.no{border-color:var(--bad)}
+.ncrow{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:10px 12px;margin-top:8px}
+.ncname{margin-bottom:6px}
+.ncbtns{display:flex;flex-wrap:wrap;gap:6px}
+.ncb.on{outline:3px solid var(--good);outline-offset:1px}
+.ncpick{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:800}
+.ncin{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:14px;font-size:16px;background:var(--surface);color:var(--ink);font-family:inherit;margin-bottom:8px}
+.ncfix{margin-top:8px}
+.ncfx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 10px;margin-top:6px}
+.ncfx span{flex:1 1 180px}
 .say{cursor:pointer}
 .say .spk{font-size:.6em;opacity:.55}
 .say:active{opacity:.7}
 .say.speaking{color:var(--accent);animation:speakpulse .9s ease-in-out infinite}
+.dt .story.say.speaking{color:inherit;animation:none;outline:3px solid var(--accent);outline-offset:5px;border-radius:10px}
+.dt .fun.say.speaking{color:#6b4a00;animation:none;outline:3px solid #d99a00;outline-offset:2px}
 @keyframes speakpulse{50%{opacity:.55}}
 button.tag{border:0;font-family:inherit}
 .dt .tagline{font-weight:800;font-size:16px;color:var(--muted);margin-bottom:8px}
@@ -6168,7 +6183,7 @@ function llgCarry(tok, buf, a, t0){
     var p = LLTRK.play; if(LLTRK.tok !== tok || !p) return;
     try{
       var now = a.currentTime, off = buf.duration*.25, s = a.createBufferSource(), g = a.createGain();
-      s.buffer = buf; g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(.65, now + 1.5); s.connect(g); g.connect(sfxOut || a.destination); s.start(now, off);
+      s.buffer = buf; g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(.65 * (LLTRK.vol || 1), now + 1.5); s.connect(g); g.connect(sfxOut || a.destination); s.start(now, off);
       p.g.gain.cancelScheduledValues(now); p.g.gain.setValueAtTime(p.g.gain.value, now); p.g.gain.linearRampToValueAtTime(0, now + 1.5); p.s.stop(now + 1.6);
       LLTRK.play = {s: s, g: g, a: a};
       s.onended = function(){ if(LLTRK.play && LLTRK.play.s === s) LLTRK.play = null; };
@@ -6317,18 +6332,20 @@ window.LL_HOST = {
 /* tap Watch the story / the card's play button */
 /* ---- the card's music: starts at the tap and runs through the zoom, the story and the return ---- */
 var TRACK_URLS = {"kowloon": "./assets/music/kowloon.f029d70b.mp3", "carp": "./assets/music/carp.dcdee5af.mp3", "wave": "./assets/music/wave.e713f0cb.mp3", "nian": "./assets/music/nian.dd4c9f31.mp3", "halley": "./assets/music/halley.020da985.mp3", "kaguya": "./assets/music/kaguya.5fe1462b.mp3", "cpr": "./assets/music/cpr.14b1bfe7.mp3", "hangul": "./assets/music/hangul.faae859a.mp3", "insulin": "./assets/music/insulin.0bb3517c.mp3"};
-var LLTRK = {play:null, bytes:{}, tok:null};
+var LLTRK = {play:null, bytes:{}, tok:null, vol:1};
+/* 26.11.147: some story songs are louder than the rest */
+var LL_TRACK_VOL = {nian:0.5, insulin:0.7, cpr:0.7};
 function llTrackPrefetch(){ Object.keys(TRACK_URLS).forEach(function(k){ if(LLTRK.bytes[k]) return; fetch(TRACK_URLS[k]).then(function(r){ return r.arrayBuffer(); }).then(function(b){ LLTRK.bytes[k] = b; }).catch(function(){}); }); }
 function llTrackStart(id){
   var inf = LL_INFO[id], key = inf && inf.key, url = key && TRACK_URLS[key];
   llTrackStop(0);
   if(!url || state.mute) return;
   var a = audio(); if(!a) return;
-  var tok = {}; LLTRK.tok = tok;
+  var tok = {}; LLTRK.tok = tok; LLTRK.vol = LL_TRACK_VOL[key] || 1;
   function go(buf){
     if(!buf || LLTRK.tok !== tok) return;
     var g = a.createGain(), s = a.createBufferSource();
-    s.buffer = buf; g.gain.value = 1; s.connect(g); g.connect(sfxOut || a.destination); s.start(0);
+    s.buffer = buf; g.gain.value = LLTRK.vol; s.connect(g); g.connect(sfxOut || a.destination); s.start(0);
     LLTRK.play = {s:s, g:g, a:a}; llgCarry(tok, buf, a, a.currentTime);
     s.onended = function(){ if(LLTRK.play && LLTRK.play.s === s) LLTRK.play = null; };
   }
@@ -7716,6 +7733,7 @@ function parNav(active){
   h += parNavBtn('💵', 'Allowance money', 'data-bkp="1"', ea === 'e:bk');
   h += parNavBtn('🎯', 'Goal cards', 'data-glparent="1"', ea === 'e:gl');
   h += parNavBtn('🔎', 'Card viewer', 'data-act="pcards"', ea === 'e:cards');
+  h += parNavBtn('🔊', 'Name check', 'data-act="pnames"', ea === 'e:names');
   h += parNavBtn('👪', 'Family pack', 'data-fp="1"', ea === 'e:fp');
   h += sc('safe', '💾', 'Backup &amp; log');
   h += '<div class="pngrp">More</div>' + v('more', '🧰', 'Tools &amp; help');
@@ -7727,7 +7745,7 @@ window.__parCtx = false; window.__parEmb = null;
 function parIn(key, html){
   if(!(window.__parCtx && parentUnlocked)){ openModal(html); return false; }
   var keep = (window.__parEmb === key && $('pmain')) ? $('pmain').scrollTop : 0;
-  var title = ({cards:'🔎 Card viewer'})[key] || key, m = html.match(/<h2([^>]*)>([\s\S]*?)<\/h2>/);
+  var title = ({cards:'🔎 Card viewer', names:'🔊 Name check'})[key] || key, m = html.match(/<h2([^>]*)>([\s\S]*?)<\/h2>/);
   if(m){
     title = m[2].replace(/<[^>]+>/g, '');
     var at = /class="/.test(m[1]) ? m[1].replace('class="', 'class="pemb-h ') : m[1] + ' class="pemb-h"';
@@ -8074,6 +8092,7 @@ function parentClick(e){
     case 'chkupdate': checkForUpdate(); break;
     case 'pnewslist': showNewsList(); break;
     case 'pcards': showParentCards(0); break;
+    case 'pnames': showNameCheck(); break;
     case 'pcvown': PCV.own = b.getAttribute('data-v'); showParentCards(st); break;
     case 'pcvtyp': PCV.typ = b.getAttribute('data-v'); showParentCards(st); break;
     case 'pcvrar': PCV.rar = b.getAttribute('data-v'); showParentCards(st); break;
@@ -8535,6 +8554,9 @@ function sqSpeechVoice(lang){
   var want = String(lang || '').toLowerCase().replace(/_/g,'-'), vs = sqSpeechVoices(), aliases = [want];
   if(want === 'zh-hk') aliases = ['zh-hk','zh-hant-hk','yue-hk','yue'];
   else if(want === 'ja-jp') aliases = ['ja-jp','ja'];
+  else if(want === 'zh-cn') aliases = ['zh-cn','cmn-cn','zh-hans-cn','cmn-hans-cn','zh'];
+  else if(want === 'ko-kr') aliases = ['ko-kr','ko'];
+  else if(want === 'en-us') aliases = ['en-us','en'];
   var best = null, bestS = -1;
   for(var i=0;i<vs.length;i++){
     var got = String(vs[i].lang || '').toLowerCase().replace(/_/g,'-');
@@ -8588,6 +8610,7 @@ function nativeCap(){
   return null;
 }
 function stopSpeak(keepNative){
+  try{ SAYQ.tok++; clearTimeout(SAYQ.t); }catch(e){}
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
   if(!keepNative){ try{ var c = nativeCap(); if(c) c.nativePromise('TextToSpeech', 'stop', {}).catch(function(){}); }catch(e){} }
   if(speakingEl){ speakingEl.classList.remove('speaking'); speakingEl = null; }
@@ -8632,15 +8655,163 @@ function speakText(txt, lang, el){
   }
   webSpeak(txt, lang, el);
 }
+/* ===== 26.11.147: names said the way people say them; each card part reads exactly its own text ===== */
+var SAYL = {ja:'ja-JP', zh:'zh-CN', ko:'ko-KR'};
+/* Group A: [text, lang] parts; no lang = English voice. Japanese names in the order shown on the card. */
+var NATSAY = {
+  cn01:[['秦始皇','zh']], cn03:[['老子','zh']], cn04:[['孙子','zh']], cn07:[['蔡伦','zh']], cn08:[['张衡','zh']],
+  cn09:[['祖冲之','zh']], cn10:[['张骞','zh']], cn11:[['诸葛亮','zh']], cn12:[['花木兰','zh']], cn13:[['Empress'],['武则天','zh']],
+  cn14:[['李白','zh']], cn15:[['杜甫','zh']], cn16:[['玄奘','zh']], cn17:[['毕昇','zh']], cn20:[['郑和','zh']],
+  cn24:[['嫦娥','zh'],['and the Moon']], cn25:[['袁隆平','zh']], cn26:[['屠呦呦','zh']], cn27:[['杨利伟','zh']], cn28:[['王贞仪','zh']],
+  cn29:[['华佗','zh']], cn30:[['鲁班','zh']], cn31:[['嫦娥','zh'],['4 Moon Landing']], cn33:[['李时珍','zh']], cn34:[['屈原','zh'],['and the Dragon Boats']],
+  cn37:[['曹操','zh']], cn38:[['刘备','zh']], cn39:[['关羽','zh']], cn40:[['孙权','zh']], cn41:[['张飞','zh']], cn42:[['赵云','zh']],
+  cn47:[['庄子','zh']], cn48:[['司马迁','zh']], cn49:[['刘邦','zh']], cn50:[['Emperor'],['唐太宗','zh']], cn51:[['岳飞','zh']],
+  cn52:[['苏轼，苏东坡','zh']], cn53:[['康熙','zh'],['Emperor']], cn54:[['孙悟空','zh'],['the Monkey King']], cn55:[['女娲','zh']],
+  cn56:[['禹','zh'],['the Great']], cn57:[['仓颉','zh']], cn60:[['习近平','zh']], cn61:[['天宫','zh'],['Space Station']], ll04:[['年','zh']],
+  jp01:[['Queen'],['ひみこ','ja']], jp02:[['Prince'],['しょうとく','ja']], jp03:[['へいあんきょう','ja'],['Kyoto Founded']],
+  jp04:[['むらさき しきぶ','ja']], jp05:[['せい しょうなごん','ja']], jp06:[['みなもとの よりとも','ja']], jp07:[['ともえ ごぜん','ja']],
+  jp08:[['おだ のぶなが','ja']], jp09:[['とよとみ ひでよし','ja']], jp10:[['とくがわ いえやす','ja']], jp11:[['みやもと むさし','ja']],
+  jp12:[['はっとり はんぞう','ja']], jp13:[['だて まさむね','ja']], jp14:[['せんの りきゅう','ja']], jp15:[['まつお ばしょう','ja']],
+  jp16:[['かつしか ほくさい','ja']], jp17:[['いのう ただたか','ja']], jp18:[['さかもと りょうま','ja']], jp20:[['めいじ','ja'],['Restoration']],
+  jp21:[['ふくざわ ゆきち','ja']], jp22:[['つだ うめこ','ja']], jp23:[['Tokyo 1964: Olympics and'],['しんかんせん','ja']],
+  jp24:[['あきら よしざわ','ja']], jp25:[['おさむ てづか','ja']], jp26:[['むかい ちあき','ja']], jp27:[['はやぶさツー','ja'],['Brings Home Space Rocks']],
+  jp28:[['とうだいじ','ja'],['Great Buddha']], jp29:[['ひめじ','ja'],['Castle']], jp30:[['ゆかわ ひでき','ja']], jp31:[['にのみや きんじろう','ja']],
+  jp32:[['ももたろう','ja']], jp33:[['のぐち ひでよ','ja']], jp34:[['The'],['てんしょう','ja'],['Boys Visit Europe']], jp35:[['さなえ たかいち','ja']],
+  jp36:[['みなもとの よしつね','ja']], jp37:[['べんけい','ja']], jp38:[['たけだ しんげん','ja']], jp39:[['うえすぎ けんしん','ja']],
+  jp40:[['Battle of'],['せきがはら','ja']], jp41:[['あまてらす','ja']], jp42:[['うらしま たろう','ja']], jp43:[['たなばた','ja'],['Legend']],
+  jp44:[['ひらがな','ja'],['and'],['カタカナ','ja']], jp45:[['しぶさわ えいいち','ja']], jp46:[['かわごえ','ja'],['Little'],['えど','ja']],
+  jp47:[['さだこ ささき','ja']], jp48:[['はやお みやざき','ja']], jp49:[['しげる みやもと','ja']], jp50:[['ももふく あんどう','ja']],
+  jp51:[['しんや やまなか','ja']], jp52:[['しょうへい おおたに','ja']], jp54:[['Emperor'],['なるひと','ja'],['and'],['れいわ','ja']],
+  jp55:[['こうへい うちむら','ja']], jp56:[['だいき はしもと','ja']], jp57:[['さやま','ja']], ll02:[['Princess'],['かぐや','ja']],
+  kr01:[['King'],['세종','ko'],['the Great']], kr02:[['Admiral'],['이순신','ko']], kr03:[['장영실','ko']], kr04:[['Queen'],['선덕','ko']],
+  kr05:[['유관순','ko']], kr06:[['직지','ko'],['the Oldest Metal-Type Book']], kr08:[['허준','ko']], kr09:[['신사임당','ko']],
+  kr11:[['단군','ko']], ll08:[['한글','ko']]
+};
+var SAY_EMO = null;
+try{ SAY_EMO = new RegExp('[\\p{Extended_Pictographic}\\u{1F1E6}-\\u{1F1FF}\\u{FE0F}\\u{200D}\\u{20E3}]', 'gu'); }catch(e){ SAY_EMO = null; }
+function sayClean(s){
+  s = String(s == null ? '' : s).replace(/<[^>]+>/g, ' ');
+  if(SAY_EMO) s = s.replace(SAY_EMO, '');
+  s = s.replace(/&amp;/g, '&').replace(/\s*&\s*/g, ' and ')
+       .replace(/\bevery\s*~\s*(\d)/g, 'about every $1').replace(/~\s*/g, 'about ');
+  return s.replace(/\s+/g, ' ').trim();
+}
+function sayFixList(){ return (state.sayFix || []).filter(function(f){ return f && f.w && f.say; }).sort(function(a, b){ return b.w.length - a.w.length; }); }
+function sayFixApply(s){
+  sayFixList().forEach(function(f){
+    var re = new RegExp('(^|[^0-9A-Za-z\\u00C0-\\u024F])' + f.w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=$|[^0-9A-Za-z\\u00C0-\\u024F])', 'g');
+    s = s.replace(re, function(m, p){ return p + f.say; });
+  });
+  return s;
+}
+function sayEN(s){ return sayFixApply(sayClean(s)); }
+var SAY_NATIVE_OK = {};
+function sayLangOK(lang, cb){
+  if(/^en/i.test(lang)){ cb(true); return; }
+  var cap = nativeCap();
+  if(cap){
+    if(lang in SAY_NATIVE_OK){ cb(SAY_NATIVE_OK[lang]); return; }
+    var done = false, fin = function(v, keep){ if(done) return; done = true; if(keep) SAY_NATIVE_OK[lang] = v; cb(v); };
+    try{ cap.nativePromise('TextToSpeech', 'isLanguageSupported', {lang:lang}).then(function(r){ fin(!(r && r.supported === false), true); }, function(){ fin(true, false); }); }catch(e){ fin(true, false); }
+    setTimeout(function(){ fin(true, false); }, 1500);
+    return;
+  }
+  var vs = sqSpeechVoices(); if(!vs.length){ cb(true); return; }
+  cb(!!sqSpeechVoice(lang));
+}
+var SAYQ = {tok:0, t:null};
+function sayWebOK(){ return ('speechSynthesis' in window) && typeof SpeechSynthesisUtterance !== 'undefined'; }
+function sayOne(txt, lang, done){
+  var fin = false, end = function(){ if(fin) return; fin = true; clearTimeout(SAYQ.t); done(); };
+  function webOne(){
+    try{
+      var u = new SpeechSynthesisUtterance(txt), v = sqSpeechVoice(lang);
+      u.lang = v ? v.lang : lang; if(v) u.voice = v;
+      u.rate = 0.92; u.pitch = 1.05; u.volume = 1; u.onend = end; u.onerror = end;
+      window.speechSynthesis.speak(u);
+    }catch(e){ end(); }
+  }
+  clearTimeout(SAYQ.t);
+  SAYQ.t = setTimeout(end, Math.min(90000, 5000 + String(txt).length * 130));
+  var cap = nativeCap();
+  if(cap){
+    try{ cap.nativePromise('TextToSpeech', 'speak', {text:txt, lang:lang, rate:0.92, pitch:1.05, volume:1.0, queueStrategy:0}).then(end, function(){ if(sayWebOK()) webOne(); else end(); }); }
+    catch(e){ if(sayWebOK()) webOne(); else end(); }
+    return;
+  }
+  webOne();
+}
+/* parts: [{t:text, lang:'ja-JP', el:element to glow, gap:ms after}] */
+function saySeq(parts, el){
+  if(state.mute){ toast('🔇 Sound is off. Tap the speaker button to turn it on.'); return; }
+  if(!nativeCap() && !sayWebOK()){ toast('This device can\'t read aloud.'); return; }
+  stopSpeak();
+  var tok = ++SAYQ.tok, i = 0, lit = null;
+  function light(e){
+    if(lit && lit !== e) lit.classList.remove('speaking');
+    lit = e || null; speakingEl = lit;
+    if(lit) lit.classList.add('speaking');
+  }
+  function next(){
+    if(tok !== SAYQ.tok) return;
+    if(i >= parts.length){ light(null); return; }
+    var p = parts[i++];
+    if(!p || !p.t){ next(); return; }
+    light(p.el || el || null);
+    sayOne(p.t, p.lang || 'en-US', function(){ if(tok !== SAYQ.tok) return; setTimeout(next, p.gap == null ? 380 : p.gap); });
+  }
+  next();
+}
+/* the card's name, with the native-voice parts when this device has that voice */
+function sayNameParts(c, el, cb){
+  var en = sayEN(c.n), np = NATSAY[c.id];
+  var fixed = sayFixList().some(function(f){ return sayClean(c.n).indexOf(f.w) > -1; });
+  var plain = function(){ cb([{t:en, lang:'en-US', el:el}]); };
+  if(!np || fixed){ plain(); return; }
+  var langs = {}; np.forEach(function(p){ if(p[1]) langs[SAYL[p[1]]] = 1; });
+  var ks = Object.keys(langs), left = ks.length, ok = true, sent = false;
+  if(!left){ plain(); return; }
+  ks.forEach(function(L){
+    sayLangOK(L, function(v){
+      if(!v) ok = false;
+      if(--left === 0 && !sent){
+        sent = true;
+        if(!ok){ plain(); return; }
+        cb(np.map(function(p){ return {t:p[0], lang:p[1] ? SAYL[p[1]] : 'en-US', el:el, gap:140}; }));
+      }
+    });
+  });
+}
+function cardEraLabel(c){ return c.t === 'P' ? 'Years:' : (c.t === 'K' ? 'Where:' : 'When:'); }
+function sayCardEls(el, id){
+  var box = el && el.closest ? (el.closest('.dt') || el.closest('.detail') || el.closest('#modal')) : null;
+  return function(k){ return box ? box.querySelector('[data-say="' + k + ':' + id + '"]') : null; };
+}
 function sayCard(kind, id, el){
   var c = BY_ID[id]; if(!c) return;
-  if(kind === 'name') speakText(c.n, 'en-US', el);
-  else if(kind === 'nat') speakText(c.nat, natLang(c), el);
-  else if(kind === 'place') speakText(REGIONS[c.r].name.replace('&','and'), 'en-US', el);
-  else if(kind === 'year') speakText(spokenYear(c.y), 'en-US', el);
-  else if(kind === 'tag') speakText(c.s, 'en-US', el);
-  else if(kind === 'story') speakText(c.n+'. '+spokenYear(c.y)+(c.t === 'K' ? '. ' : ' ')+c.d+' Fun fact. '+c.f, 'en-US', el);
-  else if(kind === 'stop') stopSpeak();
+  if(kind === 'stop'){ stopSpeak(); return; }
+  if(kind === 'name'){ sayNameParts(c, el, function(p){ saySeq(p, el); }); return; }
+  if(kind === 'nat'){ speakText(c.nat, natLang(c), el); return; }
+  if(kind === 'place'){ saySeq([{t:sayEN(REGIONS[c.r].name)}], el); return; }
+  if(kind === 'year'){
+    var lab = el && el.closest && el.closest('.era') ? cardEraLabel(c) + ' ' : '';
+    saySeq([{t:sayEN(lab + spokenYear(c.y))}], el); return;
+  }
+  if(kind === 'tag'){ saySeq([{t:sayEN(c.s)}], el); return; }
+  if(kind === 'story'){ saySeq([{t:sayEN(c.d)}], el); return; }
+  if(kind === 'fun'){ saySeq([{t:sayEN('Fun fact: ' + c.f)}], el); return; }
+  if(kind === 'all'){
+    var q = sayCardEls(el, id);
+    sayNameParts(c, q('name'), function(np){
+      np[np.length - 1].gap = 420;
+      saySeq(np.concat([
+        {t:sayEN(cardEraLabel(c) + ' ' + spokenYear(c.y)), el:q('year')},
+        {t:sayEN(c.s), el:q('tag')},
+        {t:sayEN(c.d), el:q('story')},
+        {t:sayEN('Fun fact: ' + c.f), el:q('fun')}
+      ]), el);
+    });
+  }
 }
 document.addEventListener('click', function(e){
   var el = e.target.closest('[data-say]'); if(!el) return;
@@ -8663,9 +8834,11 @@ function showCardDetail(id, fromParent){
   h += '<div class="era say" data-say="year:'+id+'"><b>'+lbl+'</b> '+esc(c.y)+' <span class="spk">🔊</span></div>';
   h += '<div class="tagline say" data-say="tag:'+id+'">'+esc(c.s)+' <span class="spk">🔊</span></div>';
   if(c.k === 'LL') h += '<div class="row" style="margin:10px 0 4px"><button class="btn llwatch" data-llplay="'+id+'">▶ Watch the story</button></div>';
-  h += '<div class="story">'+esc(c.d)+'</div><div class="fun">💡 <b>Fun fact:</b> '+esc(c.f)+'</div>'+llFactsHTML(c.id)+cardQuoteHTML(c.id);
-  h += '<div class="row" style="margin-top:14px"><button class="btn good" data-say="story:'+id+'">🔊 Read it aloud</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div>';
-  h += '<div class="hint" style="margin-top:8px">Tip: tap the name, place or year to hear it.</div>';
+  /* 26.11.147: story and fun fact each read aloud on their own; Read it all reads the parts in screen order */
+  var sayRow = '<div class="row" style="margin-top:14px"><button class="btn good" data-say="all:'+id+'">🔊 Read it all</button><button class="btn small" data-say="stop:'+id+'">⏹ Stop</button></div><div class="hint" style="margin-top:8px">Tip: tap any part with 🔊 to hear just that part.</div>';
+  h += '<div class="story say" data-say="story:'+id+'">'+esc(c.d)+' <span class="spk">🔊</span></div><div class="fun say" data-say="fun:'+id+'">💡 <b>Fun fact:</b> '+esc(c.f)+' <span class="spk">🔊</span></div>';
+  if(c.k === 'LL') h += sayRow + llFactsHTML(c.id) + cardQuoteHTML(c.id);
+  else h += cardQuoteHTML(c.id) + sayRow;
   h += promoDetailHTML(c); /* 26.11.115: Promoted line moved to the very bottom of the card */
   h += '</div></div>';
   h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(fromParent ? '<button class="btn primary" data-pback="1">← Back to card viewer</button>' : '<button class="btn primary" data-x="1">Close</button>')+'</div>';
@@ -8722,6 +8895,123 @@ function showParentCards(scrollTop){
   $('modal').onclick = parentClick; $('modal').onchange = null;
   $('modal').oninput = function(e){
     if(e.target && e.target.id === 'pcvq'){ PCV.q = e.target.value; $('pcvgrid').innerHTML = pcvGridHTML(); $('pcvcount').textContent = pcvList().length+' of '+CARDS.length+' cards'; }
+  };
+}
+/* ===== 26.11.147: Parent → Name check (try spellings on this device, pick the best, fix any name) ===== */
+var NCHK = [
+  ['ll02','Princess Kah-goo-yah','Princess Kah goo yah','Princess Kahgooyah'],
+  ['cn11','Joo-guh Lyahng','Joo guh Lyahng','Jooguh Lyahng'],
+  ['cn16','Shwen-dzahng','Shwen dzahng','Shwendzahng'],
+  ['cn01','Chin Shur Hwahng','Chin Shir Hwahng','Cheen Shurr Hwong'],
+  ['cn24','Chahng-uh and the Moon','Chahng uh and the Moon','Chahnguh and the Moon'],
+  ['cn54','Soon Woo-kong, the Monkey King','Soon Woo kong, the Monkey King','Soon Wookong, the Monkey King'],
+  ['jp48','Hah-yah-oh Mee-yah-zah-kee','Hah yah oh Mee yah zah kee','Hahyahoh Meeyahzahkee'],
+  ['jp06','Mee-nah-moh-toh noh Yoh-ree-toh-moh','Mee nah moh toh noh Yoh ree toh moh','Meenahmohtoh noh Yohreetohmoh'],
+  ['kr02','Admiral Ee Soon-sheen','Admiral Ee Soon sheen','Admiral Ee Soonsheen'],
+  ['kr04','Queen Sun-dok','Queen Sun dok','Queen Sundok'],
+  ['af12','Hat-shep-soot','Hat shep soot','Hatshepsoot'],
+  ['af05','Wan-gah-ree Mah-tie','Wan gah ree Mah tie','Wangahree Mahtie'],
+  ['as03','Al Kwah-riz-mee','Al Kwah riz mee','Al Kwahrizmee'],
+  ['eu24','Nah-dee-ah Koh-mah-netch','Nah dee ah Koh mah netch','Nahdeeah Kohmahnetch'],
+  ['am03','Chee-chen Eet-sah and the Maya','Chee chen Eet sah and the Maya','Cheechen Eetsah and the Maya'],
+  ['sa01','Mah-choo Peek-choo','Mah choo Peek choo','Mahchoo Peekchoo'],
+  ['ca17','Teh-kum-seh','Teh kum seh','Tehkumseh'],
+  ['ca15','Loo-ee Ree-ell','Loo ee Ree ell','Looey Reeyell'],
+  ['cn23','Soon Yut-sen','Soon Yut sen','Soon Yutsen'],
+  ['cn63','Bay-jing','Bay jing','Bayjing']
+];
+var NCV = {pick:null};
+function ncPicks(){ state.sayPicks = state.sayPicks || {}; return state.sayPicks; }
+function ncDevice(){
+  var ua = navigator.userAgent || '';
+  if(nativeCap()) return 'Android app';
+  if(/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'iPad/iPhone';
+  if(/Android/.test(ua)) return 'Android browser';
+  return 'Computer browser';
+}
+function ncVoicesHTML(){
+  var L = [['en-US','English'],['ja-JP','Japanese'],['zh-CN','Mandarin'],['ko-KR','Korean'],['zh-HK','Cantonese']];
+  var h = '<div class="ncvoices" id="ncvoices">';
+  L.forEach(function(x){ h += '<span class="ncchip" data-ncl="'+x[0]+'">… '+x[1]+'</span>'; });
+  return h + '</div><div class="hint" id="ncvnames" style="margin-top:4px"></div>';
+}
+function ncVoicesFill(){
+  var box = $('ncvoices'); if(!box) return;
+  var names = [];
+  [].forEach.call(box.querySelectorAll('[data-ncl]'), function(ch){
+    var L = ch.getAttribute('data-ncl'), lab = ch.textContent.replace(/^\S+\s/, '');
+    sayLangOK(L, function(ok){
+      ch.textContent = (ok ? '✅ ' : '❌ ') + lab; ch.classList.toggle('no', !ok);
+      if(!nativeCap()){ var v = sqSpeechVoice(L); if(v) names.push(lab + ': ' + v.name); var n = $('ncvnames'); if(n) n.textContent = names.join(' · '); }
+    });
+  });
+}
+function ncRowHTML(r, i){
+  var c = BY_ID[r[0]]; if(!c) return '';
+  var pk = ncPicks()[r[0]], b = function(k, label){ return '<button class="btn small ncb'+(pk === k ? ' on' : '')+'" data-nc="play:'+i+':'+k+'">'+label+'</button>'; };
+  var h = '<div class="ncrow"><div class="ncname"><b>'+esc(c.n)+'</b> <span class="hint">'+esc(REGIONS[c.r].name)+'</span></div><div class="ncbtns">';
+  h += b('now', '🔊 Now');
+  if(NATSAY[r[0]]) h += b('nat', '🔊 Native');
+  h += b('s1', '🔊 '+esc(r[1])) + b('s2', '🔊 '+esc(r[2])) + b('s3', '🔊 '+esc(r[3]));
+  h += '</div><div class="ncpick">👍 Best: ';
+  [['now','Now'],['nat','Native'],['s1','1'],['s2','2'],['s3','3']].forEach(function(o){
+    if(o[0] === 'nat' && !NATSAY[r[0]]) return;
+    h += '<button class="segbtn'+(pk === o[0] ? ' on' : '')+'" data-nc="pick:'+i+':'+o[0]+'">'+o[1]+'</button>';
+  });
+  return h + '</div></div>';
+}
+function ncFixHTML(){
+  var h = '<h3 style="margin:18px 0 6px">✏️ Fix a name</h3><div class="hint">Type a word or name exactly as it is written on the cards, then how the English voice should say it. It is used everywhere the English voice reads cards: names, stories and fun facts.</div>';
+  h += '<div class="ncfix"><input id="ncw" class="ncin" list="ncnames" placeholder="As written, e.g. Kaguya" autocomplete="off"><datalist id="ncnames">'+CARDS.map(function(c){ return '<option value="'+esc(c.n)+'">'; }).join('')+'</datalist>';
+  h += '<input id="ncs" class="ncin" placeholder="How it sounds, e.g. Kah-goo-yah" autocomplete="off">';
+  h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn small" data-nc="test">🔊 Test</button><button class="btn small primary" data-nc="save">Save</button></div></div>';
+  var L = sayFixList();
+  if(L.length){
+    h += '<div class="ncfixes">';
+    (state.sayFix || []).forEach(function(f, i){ if(f && f.w) h += '<div class="ncfx"><span><b>'+esc(f.w)+'</b> → '+esc(f.say)+'</span><button class="btn small" data-nc="fplay:'+i+'">🔊</button><button class="btn small" data-nc="fdel:'+i+'">Reset</button></div>'; });
+    h += '</div>';
+  }
+  return h;
+}
+function showNameCheck(){
+  var h = '<h2>🔊 Name check</h2><div class="hint" style="margin-bottom:8px">Parents only. Tap the buttons to hear each version on this device, then tap 👍 on the one that sounds right. Try it on each device she uses.</div>';
+  h += '<h3 style="margin:10px 0 6px">Voices on this device ('+esc(ncDevice())+')</h3>' + ncVoicesHTML();
+  h += '<h3 style="margin:16px 0 6px">Test names</h3><div class="hint">Now = how the app says it today · Native = the name in its own language’s voice · 1, 2, 3 = sound-it-out spellings for the English voice.</div>';
+  h += '<div class="nclist">' + NCHK.map(ncRowHTML).join('') + '</div>';
+  h += '<div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn good" data-nc="copy">📋 Copy my picks</button><button class="btn small" data-nc="stop">⏹ Stop</button></div><textarea id="nccopy" class="ncin" readonly style="display:none;height:120px;margin-top:8px"></textarea>';
+  h += ncFixHTML();
+  h += '<div class="row" style="margin-top:16px"><button class="btn" data-act="pcvclose">← Back to Parent</button></div>';
+  var keep = parScroller() ? parScroller().scrollTop : 0;
+  parIn('names', h);
+  try{ parScroller().scrollTop = keep; }catch(e){}
+  ncVoicesFill();
+  $('modal').onchange = null; $('modal').oninput = null;
+  $('modal').onclick = function(e){
+    var b = e.target.closest('[data-nc]'); if(!b){ parentClick(e); return; }
+    var a = b.getAttribute('data-nc').split(':'), r = NCHK[+a[1]], c = r && BY_ID[r[0]];
+    if(a[0] === 'stop'){ stopSpeak(); return; }
+    if(a[0] === 'play' && c){
+      if(a[2] === 'now'){ saySeq([{t:sayClean(c.n)}], b); return; }
+      if(a[2] === 'nat'){ var np = NATSAY[c.id]; saySeq(np.map(function(p){ return {t:p[0], lang:p[1] ? SAYL[p[1]] : 'en-US', gap:140}; }), b); return; }
+      saySeq([{t:r[+a[2].slice(1)]}], b); return;
+    }
+    if(a[0] === 'pick' && c){ var P = ncPicks(); if(P[c.id] === a[2]) delete P[c.id]; else P[c.id] = a[2]; save(); showNameCheck(); return; }
+    if(a[0] === 'copy'){
+      var P2 = ncPicks(), out = ['StarQuest 26.11.147 name check · ' + ncDevice()];
+      NCHK.forEach(function(x){ var cc = BY_ID[x[0]]; if(!cc) return; var k = P2[x[0]]; out.push(cc.n + ': ' + (!k ? '(no pick)' : k === 'now' ? 'Now' : k === 'nat' ? 'Native' : k.slice(1) + ' (' + x[+k.slice(1)] + ')')); });
+      var txt = out.join('\n'), ta = $('nccopy');
+      if(ta){ ta.value = txt; ta.style.display = 'block'; }
+      try{ navigator.clipboard.writeText(txt).then(function(){ toast('📋 Copied. Paste it in your message.'); }, function(){ if(ta){ ta.select(); } toast('Select the text below and copy it.'); }); }catch(err){ if(ta) ta.select(); toast('Select the text below and copy it.'); }
+      return;
+    }
+    if(a[0] === 'test'){ var w = ($('ncw').value || '').trim(), sy = ($('ncs').value || '').trim(); if(!sy){ toast('Type how it should sound first.'); return; } saySeq([{t:sy}], b); return; }
+    if(a[0] === 'save'){
+      var w2 = ($('ncw').value || '').trim(), s2 = ($('ncs').value || '').trim();
+      if(!w2 || !s2){ toast('Fill in both boxes first.'); return; }
+      state.sayFix = (state.sayFix || []).filter(function(f){ return f && f.w !== w2; }); state.sayFix.push({w:w2, say:s2}); save(); toast('✅ Saved: ' + w2); showNameCheck(); return;
+    }
+    if(a[0] === 'fplay'){ var f = (state.sayFix || [])[+a[1]]; if(f) saySeq([{t:f.say}], b); return; }
+    if(a[0] === 'fdel'){ (state.sayFix || []).splice(+a[1], 1); save(); showNameCheck(); return; }
   };
 }
 function showRates(){
