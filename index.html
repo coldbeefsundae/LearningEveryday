@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.144', errs = [], shown = false;
+  var V = '26.11.146', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3085,7 +3085,10 @@ body[data-calm=on] .aursky i{opacity:.8}
 .htmark .htms{flex:1;font-size:17px;line-height:2}
 .htmark .htms b{color:var(--bad);font-size:1.15em}
 .htmark .htink{display:flex;gap:2px}
-.htmark .htink span{width:38px;height:38px;border:1px solid #bbb;background:#fff;position:relative;display:inline-block}
+.htmark .htink{flex-wrap:wrap;align-items:flex-start}
+.htmark .htink span{width:38px;height:38px;border:1px solid #bbb;background:#fff;position:relative;display:inline-block;margin-bottom:14px}
+.htsec{position:absolute;left:0;right:0;top:100%;font:700 11px var(--font);font-style:normal;color:var(--muted);text-align:center}
+.htqt{width:100%;font:700 12px var(--font);color:var(--muted)}
 .htmark .htink svg{position:absolute;inset:0;width:100%;height:100%}
 .htmark .htmb{display:flex;flex-direction:column;gap:4px}
 .htmark .htmb button{width:44px;height:34px;border-radius:8px;border:1.5px solid #ccc;background:#fff;font-size:18px}
@@ -3097,6 +3100,29 @@ body[data-calm=on] .aursky i{opacity:.8}
 .htcard .ans{font-size:52px;line-height:1.3;color:var(--bad);font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
 .htnext{background:var(--surface);color:var(--ink);border:2px solid var(--gold);border-radius:14px;padding:12px}
 .htnext h3{margin:0 0 2px}
+
+/* 26.11.146 this week */
+.wkcard .wkdots{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.wkk{display:flex;flex-direction:column;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px 8px;min-width:44px}
+.wkk b{font-size:26px;line-height:1.2;color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+.wkk i{display:flex;gap:3px;margin-top:2px}
+.wkk em{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted);display:inline-block}
+.wkk em.on{background:var(--gold);border-color:var(--gold)}
+.wkgo{width:100%;font-size:18px;padding:14px 10px;margin-top:4px}
+.kqplan{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.kqplan label{display:flex;align-items:center;gap:6px;color:var(--ink)}
+.kqplan label span{width:34px;font-weight:700}
+.kqplan select{flex:1;min-width:0}
+.wktree{width:100%;max-width:420px;display:block;margin:0 auto}
+.wkbranch{margin-top:6px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink)}
+.wkbk{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.wkb{width:44px;height:44px;border-radius:10px;font-size:24px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+.wkb.gold{background:#fff3c4;border-color:#d4a017;color:#1e2142}
+.wkb.green{background:#e3f4e4;border-color:#43a047;color:#1e2142}
+.wkb.bud{opacity:.55}
+.kqbreath{width:90px;height:90px;border-radius:50%;margin:10px auto;background:radial-gradient(circle,#ffd6e7,#f8bbd0);animation:kqb 8s ease-in-out infinite}
+@keyframes kqb{0%,100%{transform:scale(.7)}50%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.kqbreath{animation:none}}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -3399,6 +3425,7 @@ function uid(){ return 't'+Date.now().toString(36)+Math.floor(Math.random()*1000
 
 function isActive(t){
   if(t.id in state.overrides) return !!state.overrides[t.id];
+  if(t.kq){ try{ return kqStep() !== 'off'; }catch(_){ return false; } }
   return t.days.indexOf(new Date().getDay()) !== -1;
 }
 function activeTasks(){ return state.tasks.filter(isActive); }
@@ -6564,7 +6591,7 @@ function questPtsHTML(t){
 function questHTML(t, i){
   var done = !!state.done[t.id];
   var h = '<div class="quest p'+(i%PALETTES)+(done?' done':'')+(t.calm?' calm':'')+'" data-id="'+esc(t.id)+'" role="button" aria-pressed="'+done+'">';
-  h += '<div class="q-main"><div class="tile">'+esc(t.emoji)+'</div><div class="q-name">'+esc(t.name)+gQuestBadge(t)+questPtsHTML(t)+'</div><div class="check">'+(done?'✓':'')+'</div></div>';
+  h += '<div class="q-main"><div class="tile">'+esc(t.emoji)+'</div><div class="q-name">'+esc(t.kq ? kqName() : t.name)+gQuestBadge(t)+questPtsHTML(t)+'</div><div class="check">'+(done?'✓':'')+'</div></div>';
   if(t.minutes > 0){
     var tm = state.timers[t.id], running = tm && tm.running, rem = timerRemaining(t);
     h += '<div class="timer"><div class="ring'+(running?' running':'')+'"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" id="ring-'+esc(t.id)+'" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><div class="t" id="tt-'+esc(t.id)+'">'+mmss(rem)+'</div></div>';
@@ -7019,20 +7046,19 @@ function helpData(){
     {q:'What if I had a quiet week?', a:'Quiet weeks are okay too. Kit only shows what you did, and rest is part of being strong.'},
     {q:'Do my kanji tests show up?', a:'Yes! If you did a kanji test that week you get a \ud83d\udcdd Kanji Test Award, and a perfect score gets a special \ud83d\udcaf Perfect Test Award.'}
   ]});
-  kid.push({t:'\ud83d\udcdd Kanji tests', i:[
-    {q:'How do I do a test?', a:li(['Go to <b>Kanji \u2192 \ud83c\udfaf Practice \u2192 \ud83d\udcdd \u307b\u3057\u3085\u3046\u3053\u3046\u30c6\u30b9\u30c8</b>. Your next test is at the top.','It is the same test as your booklet, with the same number and the same questions.','Read the sentence. Write the kanji for the furigana in the big box, one box at a time. Tap <b>Next box</b> for the next kanji. For \u3014 \u3015 write the okurigana too!','At the end, look at each answer next to your writing and tap \u2b55 or \u274c. Be honest, it helps you!'])},
-    {q:'What is Try my misses?', a:'Every question you miss goes into \ud83d\udd01 Try my misses. Get it right on two different days and it becomes a solid word \ud83d\udcaa.'},
-    {q:'What does a test do for my kanji tree?', a:'Each booklet test has one apple. The first time you finish it, a \ud83c\udf4f green apple grows. The first time you get 100 on it, it turns \ud83c\udf4e red. Doing the same test again never adds another apple, so keep going for red! Every new kanji you get right turns into a \u2728 golden leaf (each kanji gives one leaf, and a miss never takes one away). Apples from your old tests are in the \ud83e\uddfa basket under the tree. After 5 tests, a \u2b50 appears on top!'},
+  kid.push({t:'\ud83d\udcd8 This week\u2019s kanji', i:[
+    {q:'What is my kanji quest?', a:li(['Every day your Quests list has one kanji quest. Tap it and it takes you straight to today\u2019s step. When you finish, it ticks itself!','<b>Mon:</b> meet this week\u2019s new kanji. <b>Tue:</b> booklet questions. <b>Wed:</b> quick kanji (piano night!). <b>Thu:</b> practice round. <b>Fri:</b> Show Kit \ud83e\udd8a. <b>Sat:</b> how did it feel? <b>Sun:</b> weekend review.','Everything uses only this week\u2019s kanji, the same ones as your hoshuko test.'])},
+    {q:'What if I don\u2019t know one?', a:'That\u2019s okay! It becomes a practice word \ud83c\udf31 and Kit brings it back so you can grow it. In Show Kit you can skip one and come back to it. And if you need a break, tap \ud83d\ude2e\u200d\ud83d\udca8 any time.'},
+    {q:'What are the dots under my kanji?', a:'Each kanji this week has 3 dots: met, right once, and solid. Try to fill them before Saturday!'},
+    {q:'What is my tree?', a:'Every branch is one booklet test and every leaf is one kanji. Buds turn green when you meet them and gold \u2728 when you write them right. Each test grows an apple: \ud83c\udf4f green when you try it, \ud83c\udf4e red at 100. Tap a branch to see its kanji.'},
     {q:'What happens if I get a perfect score?', a:'Kit celebrates with you on the Kanji page for two days, and it shows up in your Weekly Star Awards!'},
-    {q:'What if I get some wrong?', a:'That is what tests are for! Kit shows the ones you missed more often in practice, and you can tap \ud83c\udccf <b>Practise these</b> right away.'}
   ]});
-  par.push({t:'\ud83d\udcdd Hoshuko booklet tests', i:[
-    {q:'How does it work?', a:li(['The tests are her real \u5149\u6751 \u304b\u3093\u307a\u304d\u30c6\u30b9\u30c8 booklets (3\u5e74\u4e0a and 3\u5e74\u4e0b): same test numbers, same 10 questions (20 for \u305f\u3057\u304b\u3081 and \u4e0a Test 15), same sentences and furigana, 10 points each.','One question per screen, laid out like the booklet (vertical). She writes each kanji in a big box with a cross guide, one box at a time. \u3014 \u3015 questions need okurigana too.','\ud83d\udcc4 Paper mode shows the whole test like the booklet page, she writes on paper, then checks.','No sound during the test, just like at hoshuko.'])},
-    {q:'Which test is next?', a:'It follows the page picker (the \u304b\u3093\u307a\u304d\u304f\u3093 page she is on). Pages 23\u201325 of 3\u4e0b means \u30c6\u30b9\u30c8\u2465\u30fb3\u4e0b. You can pick a different one and set a test date in Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko.'},
-    {q:'Who marks it?', a:'She does: the answer shows next to her own writing and she taps \u2b55 or \u274c. You can review it afterwards in Parent and change any mark.'},
-    {q:'What is the timer?', a:'It is invisible during the test. Her results page shows the total time and her time last time on the same test.'},
-    {q:'What does it change?', a:li(['One apple per test: \ud83c\udf4f green the first time she finishes it, \ud83c\udf4e red the first time she gets 100. Retakes never add apples (28 apples = every test in both books). \u3067\u304d\u308b\u304b\u306a gives no apple.','A \u2728 golden leaf for each different kanji she gets right (max 200). Apples from the old listening tests moved into a \ud83e\uddfa basket under the tree.','A missed question becomes a practice word (\ud83d\udd01 Try my misses) until she gets it right again. It is solid after two right answers on different days. Her red-pen misses from 3\u4e0a Tests 1\u201310 are already in the list.','+2 \u2b50 once a day for finishing a test. A perfect score gets Kit\u2019s celebration and the \ud83d\udcaf Weekly Star Award.'])},
-    {q:'Where is the old listening test?', a:'Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko \u2192 turn on \u201cAlso show the old listening test\u201d.'}
+  par.push({t:'\ud83d\udcd8 This week\u2019s kanji', i:[
+    {q:'How does the week work?', a:li(['In Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko, tap this week\u2019s pages (or tap Next week \u25b6). The app shows which Saturday test that is, for example \u30c6\u30b9\u30c8\u2465\u30fb3\u4e0b. Only you can change the pages.','Her daily kanji quest follows the Kanji week plan (Mon meet \u00b7 Tue booklet \u00b7 Wed quick, piano night \u00b7 Thu practice round \u00b7 Fri Show Kit \u00b7 Sat how did it feel \u00b7 Sun weekend review). You can change any day or turn it off. It ticks itself when she finishes; she can\u2019t tick it by hand, but you can from the Parent quest list.','Everything in her Kanji tab (practice, cards, games, word of the day) uses only this week\u2019s kanji.'])},
+    {q:'What does she see, and what do I see?', a:li(['She never sees a timer or a \u70b9 score. She sees \u201cYou knew 8! \ud83c\udf1f 2 practice words to grow \ud83c\udf31\u201d.','You see scores, total time and seconds per kanji, her writing next to the answers, her marks (tap to change), her Saturday feeling and her \ud83d\ude0a/\ud83e\udd14/\ud83c\udf31 lists, and gentle notes (break taken, rough session).'])},
+    {q:'How is it made less scary?', a:li(['Sessions are short and start and end with a word she knows.','After 3 misses in a row Kit eases off with easier words and a shorter session.','The \ud83d\ude2e\u200d\ud83d\udca8 break button is always there, with no penalty.','Friday\u2019s Show Kit starts with a feelings tap and Kit\u2019s breath; she can skip and come back. If she felt \ud83d\ude1f and did it anyway she gets a \ud83d\udcaa Brave star.','If she isn\u2019t ready by Friday (dots not filled), Show Kit is a shorter round of just this week\u2019s kanji.'])},
+    {q:'What about review and the big March test?', a:li(['Sunday review brings back her Saturday \ud83c\udf31/\ud83e\udd14 words, recent misses, words due again (7/14/30 days) and a little 3\u4e0a. Tue and Thu also slip in 1\u20132 review words.','\ud83d\udcd6 Study with Mom lists the same words for doing together.','Set the big test date in Parent (placeholder March 14). About 6 weeks before, Sunday becomes a 20-question mock test (10 \u25a1 + 10 \u3014\u3015). Tap \u201cHoshuko finished new pages\u201d when there are no more weekly pages.'])},
+    {q:'The tree and apples?', a:'Each branch is a booklet test and each leaf a kanji (bud \u2192 green when met \u2192 gold when written right; gold never goes back). One apple per test: \ud83c\udf4f green when tried, \ud83c\udf4e red at 100. The \u2b50 appears when all 12 3\u4e0b apples are red. Old apples are in the \ud83e\uddfa basket.'}
   ]});
   par.push({t:'🏆 Weekly Star Awards', i:[
     {q:'When does it show?', a:'On Sunday from the time you set (5 PM by default), the first time she is on the Quests page with nothing else open and no quest timer running. If the app is not opened on Sunday, it shows next time, still about the week that just ended. It shows once per week.'},
@@ -7746,7 +7772,7 @@ function parToday(){
   if(!act.length) h += '<div class="hint">Nothing assigned. Use Quests to assign some.</div>';
   act.forEach(function(t){
     var on = !!state.done[t.id], q = d.q && d.q[t.id];
-    h += '<div class="prow'+(on ? '' : ' off')+'"><div class="pe">'+(on ? '✅' : '⬜')+'</div><div class="pn">'+esc(t.emoji)+' '+esc(t.name)+'<small>'+(on ? 'Done'+(q ? ' at '+fmt12(parHm(q[0]))+(q[1] ? ' · #'+q[1] : '') : '') : 'Not yet')+'</small></div><button class="btn small" data-act="ptask" data-id="'+esc(t.id)+'">'+(on ? '↩️ Undo' : '✔ Mark done')+'</button></div>';
+    h += '<div class="prow'+(on ? '' : ' off')+'"><div class="pe">'+(on ? '✅' : '⬜')+'</div><div class="pn">'+esc(t.emoji)+' '+esc(t.kq ? kqName() : t.name)+'<small>'+(on ? 'Done'+(q ? ' at '+fmt12(parHm(q[0]))+(q[1] ? ' · #'+q[1] : '') : '') : 'Not yet')+'</small></div><button class="btn small" data-act="ptask" data-id="'+esc(t.id)+'">'+(on ? '↩️ Undo' : '✔ Mark done')+'</button></div>';
   });
   var rts = [];
   ['m','n'].forEach(function(w){
@@ -9284,6 +9310,8 @@ $('view-home').addEventListener('click', function(e){
   var quest = e.target.closest('.quest'); if(!quest) return;
   if(quest.getAttribute('data-bonus')){ bonusCardClick(); return; }
   if(e.target.closest('.timer')) return;
+  var kqT = findTask(quest.getAttribute('data-id'));
+  if(kqT && kqT.kq){ Sound.tap(); if(state.done[kqT.id]) toast('Kanji done for today! \ud83c\udf1f'); else kqOpen(); return; }
   toggleTask(quest.getAttribute('data-id'), quest);
 });
 
@@ -13909,7 +13937,7 @@ function renderKanjiTab(){
   var h = '<div class="kjtab">';
   h += '<div class="panel kjhead"><button class="kjkit" aria-label="Tap Kit">'+kitSVG(mood, 'hero')+'</button><div class="kjsay"><div class="kjbub">'+kjKitLine()+'</div><small>Tap Kit for a thought</small></div></div>';
   h += '<div class="kjseg" role="tablist">';
-  [['today','☀️ Today'], ['book','📖 My Book'], ['practice','🎯 Practice'], ['koto','🗣️ ことわざ'], ['grow','🌳 Growing']].forEach(function(x){
+  [['today','📘 This week'], ['practice','⭐ For fun'], ['book','📖 My Book'], ['koto','🗣️ ことわざ'], ['grow','🌳 Growing']].forEach(function(x){
     h += '<button role="tab" class="'+(sub === x[0] ? 'on' : '')+'" data-kjtab="'+x[0]+'">'+x[1]+'</button>';
   });
   h += '</div>';
@@ -13952,7 +13980,7 @@ function kjPracticeHTML(){
   if(ks.prac.n >= 3) h += '<div class="kjbreak">🧃 <b>Brain break idea:</b> '+['10 star jumps','a glass of water','look out the window for 20 seconds','a big stretch up to the sky','3 slow breaths'][ks.prac.n % 5]+'. Then come back if you want!</div>';
   h += '<div class="kjpgrid">';
   [['Kanji cards', [['data-kfc="mode:read"','👀 Read it','See the kanji, flip for the reading'], ['data-kfc="mode:recall"','💭 Remember it','See the meaning, think of the kanji'], ['data-kfc="mode:pick"','🔍 Find the kanji','Pick the right one from four'], ['data-kfc="mode:look"','👯 Look-alikes','Tell tricky twins apart']]],
-   ['Test', [['data-ht="open"','📝 ほしゅうこうテスト','Your booklet tests, same numbers'], ['data-ht="go:miss"','🔁 Try my misses','Words you missed on tests']].concat(kanjiState().oldKT ? [['data-kt="open"','👂 Listening test','Kit reads, you write on paper']] : [])],
+   ['Tests', [['data-ht="earlier"','📚 Earlier tests','Any booklet test, extra credit'], ['data-ht="momopen"','📖 Study with Mom','Go over words together']].concat(kanjiState().oldKT ? [['data-kt="open"','👂 Listening test','Kit reads, you write on paper']] : [])],
    ['Kanji combos', [['data-kcb="mode:build"','🧩 Build the word','Put two kanji together'], ['data-kcb="mode:miss"','🔎 Missing kanji','Which kanji fits the gap?'], ['data-kcb="mode:readw"','📖 Read the word','Pick the right reading'], ['data-kcb="fam:today"','🔗 Word family','All the words with one kanji']]],
    ['Writing', [['data-kw-open="today"','✍️ Write it','Stroke order and neat writing'], ['data-kwalbum="1"','📓 My writing','See how it has grown']]]
   ].forEach(function(g){
@@ -14036,8 +14064,7 @@ function htMain(x){ return x && (x.k === 't' || x.k === 'r' || x.k === 'f'); }
 /* next test: from the page picker (the kanpeki page she is on), unless Parent picked one */
 function htNext(){
   var st = htSt();
-  if(st.next && HTI[st.next]) return HTI[st.next];
-  var h = hz(), v = h.vol || '下', p = h.page || 1, pl = kjPagesOn();
+  var h = hz(), v = h.vol || '下', p = h.page || 1, pl = wkPages();
   if(pl && pl.length){ v = pl[pl.length - 1].v; p = 0; pl.forEach(function(o){ if(o.v === v && o.p > p) p = o.p; }); }
   var ts = HTB.filter(function(x){ return x.v === v && x.k === 't' && x.kp; });
   for(var i = 0; i < ts.length; i++) if(ts[i].kp >= p) return ts[i];
@@ -14085,20 +14112,248 @@ function htColHTML(q, num, ink, act, showAns){
 function htQ(s, i){ var r = s.qs[i]; return HTI[r[0]].q[r[1]]; }
 function htNum(s, i){ return s.set.k === 'm' ? HT_NUM[i] : HT_NUM[s.qs[i][1]]; }
 /* ---- open ---- */
+/* ===== 26.11.146: THIS WEEK'S KANJI =====
+   Parent sets this week's pages. The Saturday test is the booklet test for those pages.
+   One smart daily kanji quest: Mon meet · Tue booklet · Wed quick (piano) · Thu practice round · Fri Show Kit · Sat how did it feel · Sun weekend review.
+   Built for test anxiety: no timer or score shown to her, ends on a win, eases off after 3 misses, break button, skip button, Kit's breath. */
 function htOpen(){ HT = {stage:'home'}; htSt(); htShow(); }
-function htStart(id, mode){
-  var x = id === 'miss' ? null : HTI[id], qs;
-  if(id === 'miss' || id === 'warm'){
-    var ml = htMissList().slice(0, id === 'warm' ? 3 : 10);
-    if(!ml.length){ toast('No misses to practise right now! 🎉'); return; }
-    qs = ml.map(function(k){ var p = k.split(':'); return [p[0], +p[1]]; });
-    x = {id:'miss', k:'m', n:0, t:id === 'warm' ? 'Warm-up' : 'Try my misses', v:'', q:[], pts:0};
-  } else qs = x.q.map(function(_, i){ return [x.id, i]; });
-  HT = {stage:mode === 'paper' ? 'paper' : 'q', set:x, qs:qs, i:0, ci:-1, ink:qs.map(function(){ return []; }), ms:qs.map(function(){ return 0; }), t0:Date.now(), paper:mode === 'paper', marks:qs.map(function(){ return null; }), warm:id === 'warm'};
+function wkPages(){ var l = kjPagesOn(); if(l) return l; var h = hz(); return (h.on && h.page) ? [{v:h.vol, p:h.page}] : []; }
+function htPicked(){ var set = {}; try{ var pl = wkPages(); KBOOK.forEach(function(b){ if(pl.some(function(o){ return o.v === b.v && o.p === b.p; })) b.ks.forEach(function(k){ set[k] = 1; }); }); }catch(_){} return set; }
+function wkKanji(){ return Object.keys(htPicked()).filter(function(c){ return !!KJ_BY[c]; }); }
+function wkHas(){ return wkKanji().length > 0; }
+function wkId(){ return wkPages().map(function(o){ return o.v + o.p; }).join(','); }
+function htPart(x){
+  if(!x || !x.q) return null;
+  var pk = htPicked(), idx = [];
+  x.q.forEach(function(q, i){ if(q[1].split('').some(function(c){ return pk[c]; })) idx.push(i); });
+  return idx.length && idx.length < x.q.length ? idx : null;
+}
+function wkTest(){ return wkHas() ? htNext() : null; }
+function wkSt(){
+  var ks = kanjiState(), id = wkId();
+  if(!ks.wk || ks.wk.id !== id){
+    if(ks.wk && ks.wk.id) ks.wkHist = (ks.wkHist || []).concat([ks.wk]).slice(-8);
+    var t = id ? htNext() : null;
+    ks.wk = {id:id, test:t ? t.id : '', set:dateKey(), dots:{}, rd:{}, meet:{}, did:{}, sat:null, notes:[]};
+  }
+  return ks.wk;
+}
+function wkAddDays(d, n){ var x = parseKey(d); x.setDate(x.getDate() + n); return dateKey(x); }
+/* booklet items for this week: [setId, qIndex] */
+function wkItems(kind){
+  var t = wkTest(); if(!t) return [];
+  var pk = htPicked(), dk = htDek(t), out = [];
+  function has(q){ return q[1].split('').some(function(c){ return pk[c]; }); }
+  if(kind === 'all') return t.q.map(function(_, i){ return [t.id, i]; });
+  t.q.forEach(function(q, i){ if(kind === 'story' ? !has(q) : has(q)) out.push([t.id, i]); });
+  if(kind === 'sec' && dk) dk.q.forEach(function(q, i){ if(has(q)) out.push([dk.id, i]); });
+  return out;
+}
+function wkQ(r){ return HTI[r[0]].q[r[1]]; }
+function wkKnown(r){ var e = htSt().q[htKey(r[0], r[1])]; return !!(e && e.l === 1); }
+function wkDot(c){ var w = wkSt(); return w.dots[c] || 0; }
+function wkReady(){ var ks = wkKanji(); return ks.length && ks.every(function(c){ return wkDot(c) >= 2; }); }
+function wkUnmet(){ var w = wkSt(); return wkKanji().filter(function(c){ return !w.meet[c]; }); }
+/* start with one she knows, hardest in the middle, end with one she knows */
+function wkArrange(items){
+  var kn = items.filter(wkKnown), un = items.filter(function(r){ return !wkKnown(r); });
+  if(!kn.length) return items;
+  var first = kn.shift(), last = kn.length ? kn.pop() : null;
+  var mid = un.concat(kn);
+  return [first].concat(mid, last ? [last] : []);
+}
+function wkInsertMid(items, extra){ if(!extra.length) return items; var m = Math.max(1, Math.floor(items.length / 2)); return items.slice(0, m).concat(extra, items.slice(m)); }
+/* review words: Saturday 🌱/🤔 first, then misses from this past week, then older misses and due words, then 3上 rotation. 〔〕 count double. */
+function wkReviewPick(n, opts){
+  opts = opts || {};
+  var st = htSt(), today = dateKey(), now = Date.now(), cur = {}, out = [];
+  if(opts.notThisWeek){ wkItems('all').concat(wkItems('sec')).forEach(function(r){ cur[htKey(r[0], r[1])] = 1; }); }
+  var cand = [];
+  Object.keys(st.q).forEach(function(k){
+    if(cur[k]) return; var e = st.q[k], p = k.split(':'), x = HTI[p[0]]; if(!x || !x.q[+p[1]]) return;
+    var sc = 0;
+    if(e.sat && e.l !== 1) sc = 6;
+    else if(e.l === 0 && e.t && now - e.t < 8 * 864e5) sc = 5;
+    else if(e.l === 0) sc = 3;
+    else if(e.due && e.due <= today) sc = 2;
+    if(!sc) return;
+    if(x.q[+p[1]][4] === 'k') sc *= 2;
+    cand.push({r:[p[0], +p[1]], sc:sc + Math.random()});
+  });
+  cand.sort(function(a, b){ return b.sc - a.sc; });
+  out = cand.slice(0, n).map(function(o){ return o.r; });
+  if(opts.rot && out.length < n){
+    var ks = kanjiState(), all = []; HTB.forEach(function(x){ if(x.v === '上') x.q.forEach(function(_, i){ all.push([x.id, i]); }); });
+    var p0 = ks.rot || 0, add = 0, tries = 0, want = Math.min(opts.rot, n - out.length);
+    while(add < want && tries < all.length){ var r = all[(p0 + tries) % all.length]; tries++; if(htLevel(htKey(r[0], r[1])) !== 'solid' && !out.some(function(o){ return o[0] === r[0] && o[1] === r[1]; })){ out.push(r); add++; } }
+    ks.rot = (p0 + tries) % all.length;
+  }
+  return out;
+}
+/* ---- the daily plan ---- */
+var KQ_STEPS = {meet:['🌱','Meet your new kanji','10 min'], booklet:['📖','Booklet questions','10 min'], quick:['🎹','Quick kanji','3–5 min'], round:['🔁','Practice round','10 min'], show:['🦊','Show Kit','10–15 min'], feel:['💭','How did it feel?','1–2 min'], review:['🔄','Weekend review','10 min'], mock:['🎓','Show what you learned','15 min'], mixed:['🎓','Show what you learned','10 min'], off:['','Off','']};
+var KQ_DEF = ['review','meet','booklet','quick','round','show','feel'];
+function kqPlan(){ var ks = kanjiState(); if(!ks.kplan || ks.kplan.length !== 7) ks.kplan = KQ_DEF.slice(); return ks.kplan; }
+function kqBigDate(){ return kanjiState().bigDate || '2027-03-14'; }
+function kqSeason(){ var ks = kanjiState(), m = ks.bigMode || 'auto', t = dateKey(), d = kqBigDate(); if(m === 'off') return false; if(m === 'on') return t <= d; return t >= wkAddDays(d, -42) && t <= d; }
+function kqStep(){
+  var ks = kanjiState(), st = kqPlan()[new Date().getDay()] || 'off';
+  if(st === 'off') return 'off';
+  if(kqSeason()){
+    if(st === 'review') return 'mock';
+    if(ks.noNew){ if(st === 'show') return 'mock'; if(st === 'meet' || st === 'booklet' || st === 'round') return 'mixed'; return st; }
+  }
+  if(!wkHas() && st !== 'review') return 'off';
+  return st;
+}
+function kqTask(){ return state.tasks.filter(function(t){ return t.kq; })[0] || null; }
+function kqEnsure(){
+  if(kqTask()) return;
+  var t = findTask('t3') || state.tasks.filter(function(x){ return /kanji|漢字/i.test(x.name || ''); })[0];
+  if(t){ t.kq = true; t.days = [0,1,2,3,4,5,6]; }
+}
+function kqName(){ var x = KQ_STEPS[kqStep()] || KQ_STEPS.off; return 'Kanji: ' + x[1] + (x[2] ? ' (' + x[2] + ')' : ''); }
+function kqDone(){
+  var w = wkSt(); w.did[dateKey()] = kqStep();
+  var t = kqTask(); if(t && isActive(t) && !state.done[t.id]){ try{ toggleTask(t.id); }catch(_){} }
+}
+/* ---- start today's practice ---- */
+function kqOpen(){
+  var step = kqStep(); wkSt();
+  if(step === 'off'){ if(!wkHas()) toast('Ask a grown-up to set this week\u2019s pages \ud83d\udcd8', 3000); else toast('No kanji quest today. Enjoy! \ud83c\udf1f'); return; }
+  if(step === 'feel'){ HT = {stage:'sat', quest:true, feel:null, sat:{}}; htShow(); return; }
+  var un = wkUnmet();
+  if(step === 'meet' || ((step === 'booklet' || step === 'round' || step === 'show') && un.length)){ kqMeetStart(step === 'meet' ? null : step); return; }
+  kqRun(step);
+}
+function kqRun(step){
+  var items = [], g = 1, title = (KQ_STEPS[step] || ['',''])[1], mode = 'prac', w = wkSt(), dow = new Date().getDay();
+  if(step === 'booklet' || step === 'round' || step === 'mixed'){
+    if(step === 'mixed') items = wkReviewPick(8, {rot:3});
+    else {
+      var sec = wkItems('sec');
+      if(step === 'round'){
+        var notYet = sec.filter(function(r){ return wkQ(r)[1].split('').some(function(c){ return htPicked()[c] && wkDot(c) < 2; }); });
+        items = notYet.concat(sec.filter(function(r){ return notYet.indexOf(r) < 0; }), wkItems('story'));
+      } else items = sec.concat(dow >= 3 ? wkItems('story') : []);
+      items = wkArrange(items.slice(0, step === 'round' ? 9 : 8));
+      items = wkInsertMid(items, wkReviewPick(2, {notThisWeek:true}));
+    }
+    g = step === 'round' ? 5 : 1;
+  } else if(step === 'quick'){
+    var words = wkItems('sec').filter(function(r){ return r[0] === w.test; }).concat(dow >= 3 ? wkItems('story') : []).slice(0, 6);
+    HT = {stage:'cards', quest:true, set:HTI[w.test], idx:words.map(function(r){ return r[1]; }), i:0, flip:false, after:'quick'}; htShow(); return;
+  } else if(step === 'show' || step === 'peek'){
+    var t = wkTest(); if(!t) return;
+    mode = step;
+    items = (step === 'peek' || wkReady()) ? wkItems('all') : wkItems('sec').filter(function(r){ return r[0] === t.id; });
+    g = items.length; title = step === 'peek' ? 'Sneak peek' : 'Show Kit';
+    htSession(items, {title:title, group:g, mode:mode, step:step, quest:step === 'show', set:t, gentle:step === 'show' && items.length < t.q.length, pre:step === 'show'});
+    return;
+  } else if(step === 'review'){
+    items = wkReviewPick(10, {rot:3});
+    if(!items.length){ toast('Nothing to review this week. Amazing! \ud83c\udf1f'); kqDone(); return; }
+    items = wkArrange(items);
+  } else if(step === 'mock'){
+    items = kqMockItems(); g = items.length; mode = 'mock'; title = 'Show what you learned \ud83c\udf93';
+  }
+  if(!items.length){ toast('Nothing to practise yet. Ask a grown-up to set this week\u2019s pages \ud83d\udcd8', 3000); return; }
+  htSession(items, {title:title, group:g, mode:mode, step:step, quest:true});
+}
+function kqMockItems(){
+  var st = htSt(), box = [], br = [], t = wkTest(), lim = t ? t : null;
+  HTB.forEach(function(x){
+    if(x.k === 'r') return;
+    if(x.v === '下' && lim && lim.v === '下' && x.n > lim.n) return;
+    x.q.forEach(function(q, i){ var k = htKey(x.id, i), lv = htLevel(k), wgt = lv === 'solid' ? 1 : 3; (q[4] === 'k' ? br : box).push({r:[x.id, i], w:wgt * Math.random()}); });
+  });
+  function top(a){ return a.sort(function(p, q){ return q.w - p.w; }).slice(0, 10).map(function(o){ return o.r; }); }
+  return top(box).concat(top(br));
+}
+function htSession(items, o){
+  HT = {stage:o.pre ? 'feel0' : 'q', set:o.set || {id:'wk', k:'w', n:0, t:o.title, v:'', q:[], pts:0}, title:o.title, mode:o.mode, step:o.step, quest:!!o.quest, gentle:!!o.gentle,
+    qs:items, group:o.group || 1, gs:0, ge:Math.min(items.length, o.group || 1), i:0, ci:-1,
+    ink:items.map(function(){ return []; }), ms:items.map(function(){ return 0; }), bms:items.map(function(){ return []; }), marks:items.map(function(){ return null; }), t0:Date.now(), skipAsked:false};
   htFirstBox(); htShow();
 }
-function htFirstBox(){ var s = HT, q = htQ(s, s.i); s.ci = -1; for(var c = 0; c < q[1].length; c++){ if(htDraw(q, c)){ s.ci = c; break; } } }
-function htTick(){ var s = HT; if(!s || s.stage !== 'q' && s.stage !== 'paper') return; var now = Date.now(); if(s.stage === 'q') s.ms[s.i] += now - s.t0; else s.ms[0] += now - s.t0; s.t0 = now; }
+/* whole booklet tests from Practice for fun / Earlier tests */
+function htStart(id, mode){
+  var x = HTI[id]; if(!x) return;
+  var qs = x.q.map(function(_, i){ return [x.id, i]; });
+  htSession(qs, {title:htName(x), group:qs.length, mode:'test', step:'test', set:x});
+  if(mode === 'paper'){ HT.paper = true; HT.stage = 'paper'; htShow(); }
+}
+/* ---- Meet: card → trace → write on your own → compare ---- */
+function kqMeetStart(then){
+  var list = wkUnmet(); if(!list.length){ if(then) kqRun(then); else { kqDone(); toast('You already met all of this week\u2019s kanji! \ud83c\udf1f'); } return; }
+  HT = {stage:'meet', quest:!then, then:then, list:list, mi:0, phase:'card', ink:[], mark:null};
+  htShow();
+}
+function kqWordFor(c){
+  var t = wkTest(), dk = t ? htDek(t) : null, sets = [t, dk].filter(Boolean);
+  for(var a = 0; a < sets.length; a++) for(var i = 0; i < sets[a].q.length; i++) if(sets[a].q[i][1].indexOf(c) > -1) return sets[a].q[i];
+  return null;
+}
+function kqMeetHTML(){
+  var s = HT, c = s.list[s.mi], k = KJ_BY[c] || {}, q = kqWordFor(c), h = '';
+  h += '<div style="text-align:center"><b>\ud83c\udf31 Meet your new kanji</b> <span class="hint">'+(s.mi + 1)+' / '+s.list.length+'</span></div>';
+  if(s.phase === 'card'){
+    h += '<div class="htcard" lang="ja"><div class="ans" style="color:var(--ink)">'+esc(c)+'</div><div style="font-size:18px">'+kjReadings(k)+'</div><div class="hint" style="font-size:15px">'+esc(k.m || '')+'</div>';
+    if(q) h += '<div style="margin-top:8px">'+esc(q[0])+'<ruby><span class="hl">'+esc(q[1])+'</span><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div><div class="hint">from your booklet</div>';
+    h += '</div><div class="row" style="justify-content:space-between;margin-top:12px"><button class="btn" data-kw-open="'+esc(c)+'">\u270d\ufe0f Stroke order</button><button class="btn primary" data-ht="mphase:trace">Trace it \u25b6</button></div>';
+  } else if(s.phase === 'trace' || s.phase === 'write'){
+    h += '<div class="hint" style="text-align:center;margin:4px 0">'+(s.phase === 'trace' ? 'Trace over the grey kanji, slow and neat.' : 'Now write it on your own!')+'</div>';
+    h += '<div class="htwrap"><div class="htpadbox"><canvas id="htpad"></canvas><div class="row" style="gap:6px;justify-content:center"><button class="btn small" data-ht="undo">\u21a9 Undo</button><button class="btn small" data-ht="clear">\ud83e\uddfd Clear</button></div></div></div>';
+    h += '<div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn primary" data-ht="'+(s.phase === 'trace' ? 'mphase:write' : 'mphase:cmp')+'">'+(s.phase === 'trace' ? 'Next \u25b6' : 'Check \u2714')+'</button></div>';
+  } else {
+    h += '<div class="row" style="justify-content:center;gap:20px;align-items:center;margin:10px 0"><div style="text-align:center"><div class="htmark" style="border:none"><div class="htink"><span style="width:110px;height:110px">'+htSvg(s.ink[0], 7)+'</span></div></div><div class="hint">yours</div></div><div style="text-align:center"><div style="font-size:96px;line-height:110px;font-family:\'Hiragino Mincho ProN\',\'Yu Mincho\',serif">'+esc(c)+'</div><div class="hint">the kanji</div></div></div>';
+    h += '<div style="text-align:center">Do they match?</div><div class="row" style="justify-content:center;gap:10px;margin-top:8px"><button class="btn primary" data-ht="mok:1">\u2b55 Yes!</button><button class="btn" data-ht="mok:0">\ud83c\udf31 Not yet, trace again</button></div>';
+  }
+  return h;
+}
+/* ---- Saturday: how did it feel + which ones did you know ---- */
+function kqSatHTML(){
+  var s = HT, t = wkTest(), h = '';
+  if(s.feel == null){
+    h += '<div class="htbig">\ud83c\udfeb</div><h2 style="text-align:center;margin:0">How did it feel?</h2><p style="text-align:center" class="hint">Your hoshuko test today</p>';
+    h += '<div class="row" style="justify-content:center;gap:14px;font-size:44px">'+['\ud83d\ude0a','\ud83d\ude10','\ud83d\ude1f'].map(function(f, i){ return '<button class="btn" style="font-size:40px;padding:10px 16px" data-ht="sfeel:'+i+'">'+f+'</button>'; }).join('')+'</div>';
+    return h;
+  }
+  if(s.feelSaid){
+    h += '<div class="htbig">\ud83e\udd8a</div><p style="text-align:center;font-size:18px">'+(['You did it! Remember this feeling, you were ready! \ud83c\udf1f','Thanks for telling Kit. You did it, and that matters! \ud83c\udf1f','Lots of people feel that way. You were brave, and that matters most. \ud83d\udcaa'][s.feel])+'</p>';
+    h += '<div class="row" style="justify-content:center"><button class="btn primary" data-ht="satnext">Next \u25b6</button></div>';
+    return h;
+  }
+  if(!t){ h += '<p>No test this week.</p><button class="btn primary" data-ht="satdone">Done</button>'; return h; }
+  h += '<h2 style="margin:0 0 4px">Which ones did you know?</h2><div class="hint">'+htName(t)+'. Tap one face for each word.</div>';
+  t.q.forEach(function(q, i){
+    var v = s.sat[i];
+    h += '<div class="htmark"><div class="htms" lang="ja">'+HT_NUM[i]+' <ruby><b style="color:var(--ink)">'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby></div><div class="row" style="gap:4px">';
+    [['k','\ud83d\ude0a','knew it'],['u','\ud83e\udd14','not sure'],['n','\ud83c\udf31','not yet']].forEach(function(o){ h += '<button class="btn small'+(v === o[0] ? ' primary' : '')+'" data-ht="sat:'+i+':'+o[0]+'" title="'+o[2]+'">'+o[1]+'</button>'; });
+    h += '</div></div>';
+  });
+  var all = t.q.every(function(_, i){ return s.sat[i]; });
+  h += '<div class="hint" style="margin-top:6px">\ud83d\ude0a knew it \u00b7 \ud83e\udd14 not sure \u00b7 \ud83c\udf31 didn\u2019t know yet</div><div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn primary" data-ht="satdone"'+(all ? '' : ' disabled')+'>'+(all ? 'Done \ud83c\udf1f' : 'Tap a face for each one')+'</button></div>';
+  return h;
+}
+function kqSatSave(){
+  var s = HT, t = wkTest(), w = wkSt(), st = htSt(), today = dateKey();
+  w.sat = {d:today, feel:s.feel, m:s.sat, test:t ? t.id : ''};
+  if(t) t.q.forEach(function(_, i){ var v = s.sat[i], k = htKey(t.id, i); if(v === 'u' || v === 'n'){ var e = st.q[k] = st.q[k] || {r:[], w:0}; e.sat = today; if(e.l === 1 && e.r.length >= 2){ e.due = today; } else e.l = 0; } else if(st.q[k]) delete st.q[k].sat; });
+  if(s.feel === 2) w.notes.push({d:today, t:'Saturday test felt \ud83d\ude1f'});
+  save(); kqDone();
+  HT.stage = 'satend'; htShow();
+}
+/* ---- Study with Mom ---- */
+function kqMomHTML(){
+  var st = htSt(), list = wkReviewPick(15, {rot:3}), today = dateKey(), h = '<h2 style="margin:0 0 2px">\ud83d\udcd6 Study with Mom</h2><div class="hint">For a grown-up to go through together: her \ud83c\udf31/\ud83e\udd14 words from Saturday, recent misses, words due again, and a little 3\u4e0a. Tap \u2713 when you practised one together. It still needs one right answer in the app to count as solid.</div>';
+  if(!list.length) return h + '<p>\ud83c\udf89 Nothing to review right now.</p>';
+  list.forEach(function(r){ var q = wkQ(r), k = htKey(r[0], r[1]), e = st.q[k] || {}, done = e.mom === today;
+    h += '<div class="htmark"><div class="htms" lang="ja"><span class="hint">'+htName(HTI[r[0]])+' '+HT_NUM[r[1]]+'</span><br>'+esc(q[0])+'<ruby><b>'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div><button class="btn small'+(done ? ' primary' : '')+'" data-ht="mom:'+k+'">'+(done ? '\u2713 Done' : '\u2713')+'</button></div>'; });
+  return h;
+}
+function htFirstBox(){ var s = HT; if(!s.qs) return; var q = htQ(s, s.i); s.ci = -1; for(var c = 0; c < q[1].length; c++){ if(htDraw(q, c)){ s.ci = c; break; } } }
+function htTick(){ var s = HT; if(!s || s.stage !== 'q' && s.stage !== 'paper') return; var now = Date.now(); if(s.stage === 'q'){ s.ms[s.i] += now - s.t0; if(s.ci >= 0) s.bms[s.i][s.ci] = (s.bms[s.i][s.ci] || 0) + now - s.t0; } else s.ms[0] += now - s.t0; s.t0 = now; }
 function htFmt(ms){ var t = Math.round(ms / 1000), m = Math.floor(t / 60), sec = t % 60; return m ? m + ' min ' + sec + ' s' : sec + ' s'; }
 function htShow(){
   var s = HT; if(!s) return;
@@ -14110,176 +14365,171 @@ function htShow(){
   else if(s.stage === 'mark') h += htMarkHTML();
   else if(s.stage === 'end') h += htEndHTML();
   else if(s.stage === 'cards') h += htCardsHTML();
+  else if(s.stage === 'meet') h += kqMeetHTML();
+  else if(s.stage === 'sat') h += kqSatHTML();
+  else if(s.stage === 'satend') h += '<div class="htbig">\ud83c\udf1f</div><p style="text-align:center;font-size:18px">Knowing what you know is a superpower! Kit will help with the \ud83c\udf31 and \ud83e\udd14 ones on Sunday.</p><div class="row" style="justify-content:center"><button class="btn primary" data-x="1">Done</button></div>';
+  else if(s.stage === 'mom') h += kqMomHTML();
+  else if(s.stage === 'feel0') h += '<div class="htbig">\ud83e\udd8a</div><h2 style="text-align:center;margin:0">Show Kit what you learned!</h2><p style="text-align:center">How do you feel right now?</p><div class="row" style="justify-content:center;gap:14px">'+['\ud83d\ude0a','\ud83d\ude10','\ud83d\ude1f'].map(function(f, i){ return '<button class="btn" style="font-size:40px;padding:10px 16px" data-ht="f0:'+i+'">'+f+'</button>'; }).join('')+'</div>';
+  else if(s.stage === 'warm') h += kqWarmHTML();
+  else if(s.stage === 'breath') h += '<div style="text-align:center"><p style="font-size:18px">Kit\u2019s breath first \ud83e\udd8a</p><div class="kqbreath"></div><p style="font-size:17px"><b>Smell the flower \ud83c\udf38</b> (breathe in)<br><b>Blow the candle \ud83d\udd6f\ufe0f</b> (breathe out)</p><p class="hint">If you don\u2019t know one, skip it and come back. That\u2019s what smart test-takers do!</p><button class="btn primary" data-ht="breathok">I\u2019m ready \u25b6</button></div>';
+  else if(s.stage === 'skipped') h += '<div class="htbig">\ud83e\udd14</div><p style="text-align:center">You skipped '+s.skipList.map(function(i){ return htNum(s, i); }).join(' ')+'. Want to try them now?</p><div class="row" style="justify-content:center;gap:10px"><button class="btn primary" data-ht="tryskip">Try them</button><button class="btn" data-ht="tomark2">Check answers</button></div>';
   h += '</div>';
   openModal(h);
-  if(s.stage === 'q') htBindPad();
+  if(s.stage === 'q' || (s.stage === 'meet' && (s.phase === 'trace' || s.phase === 'write'))) htBindPad();
 }
-function htRowHTML(x){
-  var st = htSt(), ap = htApple(x.id), b = st.best[x.id];
-  var icon = htMain(x) ? (ap === 'r' ? '🍎' : ap === 'g' ? '🍏' : '⚪') : (b != null ? (b === x.q.length ? '🌟' : '✏️') : '▫️');
-  var sc = b == null ? '' : (x.pts ? (b * x.pts) + '点' : b + '/' + x.q.length);
-  return '<button class="htrow" data-ht="pick:'+x.id+'"><span class="htap">'+icon+'</span><span class="htrt"><b lang="ja">'+htName(x)+'</b><small lang="ja">'+esc(x.t)+'</small></span><span class="htsc">'+sc+'</span></button>';
+function kqWarmHTML(){
+  var s = HT, r = s.warm[s.wi], q = wkQ(r);
+  return '<div style="text-align:center"><b>Two you know \ud83c\udf1f</b> <span class="hint">'+(s.wi + 1)+' / '+s.warm.length+'</span></div><div class="htcard" lang="ja" data-ht="wflip">'+esc(q[0])+'<span class="hl">'+esc(q[2])+'</span>'+esc(q[3])+(s.wflip ? '<div class="ans">'+esc(q[1])+'</div>' : '<div class="hint" style="margin-top:10px">Think of it, then tap</div>')+'</div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn primary" data-ht="wnext">\u25b6</button></div>';
 }
-function htHomeHTML(){
-  var st = htSt(), nx = htNext(), dk = htDek(nx), ml = htMissList(), h = '';
-  h += '<h2 style="margin:0 0 6px" lang="ja">📝 ほしゅうこうテスト</h2>';
-  if(s_sel()){
-    var x = HTI[HT.sel];
-    h += '<div class="htnext"><h3 lang="ja">'+htName(x)+'</h3><div lang="ja">'+esc(x.t)+'</div><div class="htpgref">'+htRefs(x)+'</div>';
-    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" data-ht="go:'+x.id+'">✍️ Start</button><button class="btn" data-ht="paper:'+x.id+'">📄 Paper mode</button>';
-    if(x.k !== 'd') h += '<button class="btn" data-ht="cards:'+x.id+'">🃏 Word cards</button>';
-    h += '<button class="btn" data-ht="unsel">◀ All tests</button></div></div>';
-    return h;
-  }
-  h += '<div class="htnext"><div class="hint">Next test</div><h3 lang="ja">'+htName(nx)+'</h3><div lang="ja">'+esc(nx.t)+'</div><div class="htpgref">'+htRefs(nx)+(st.date ? ' · 🗓 '+esc(st.date.slice(5).replace('-', '/')) : '')+'</div>';
-  h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" data-ht="go:'+nx.id+'">✍️ Practice test</button>';
-  if(dk) h += '<button class="btn" data-ht="go:'+dk.id+'" lang="ja">できるかな'+HT_NUM[dk.n - 1]+'</button>';
-  h += '<button class="btn" data-ht="cards:'+nx.id+'">🃏 Word cards</button><button class="btn" data-ht="paper:'+nx.id+'">📄 Paper mode</button></div>';
-  if(ml.length) h += '<div class="row" style="margin-top:6px"><button class="btn small" data-ht="go:warm">🔥 Warm up with 3 tricky words first</button></div>';
-  h += '</div>';
-  h += '<div class="row" style="margin:10px 0"><button class="btn'+(ml.length ? '' : ' ghost')+'" data-ht="go:miss">🔁 Try my misses'+(ml.length ? ' ('+ml.length+')' : '')+'</button></div>';
-  ['下','上'].forEach(function(v){
-    h += '<h3 style="margin:12px 0 4px">3年'+v+(v === '上' ? ' <small class="hint">(review for the big end-of-year test)</small>' : '')+'</h3><div class="htlist">';
-    HTB.forEach(function(x){ if(x.v === v && x.k !== 'd') h += htRowHTML(x); });
-    h += '</div><div class="hint" style="margin-top:6px" lang="ja">できるかな</div><div class="htchips">';
-    HTB.forEach(function(x){ if(x.v === v && x.k === 'd'){ var b = st.best[x.id]; h += '<button lang="ja" class="'+(b === x.q.length ? 'ok' : '')+'" data-ht="pick:'+x.id+'">'+HT_NUM[x.n - 1]+(b != null ? ' '+b+'/6' : '')+'</button>'; } });
-    h += '</div>';
-  });
-  return h;
-}
-function s_sel(){ return HT && HT.sel && HTI[HT.sel]; }
 function htQHTML(){
-  var s = HT, q = htQ(s, s.i), n = s.qs.length, h = '';
-  h += '<div style="text-align:center"><b lang="ja">'+htName(s.set)+'</b> <span class="hint" lang="ja">'+esc(s.set.k === 'm' ? '' : s.set.t)+'</span></div>';
+  var s = HT, q = htQ(s, s.i), n = s.qs.length, h = '', testy = s.mode === 'show' || s.mode === 'peek' || s.mode === 'mock' || s.mode === 'test';
+  h += '<div class="row" style="justify-content:space-between;align-items:center"><b lang="ja">'+esc(s.title || htName(s.set))+'</b><button class="btn small" data-ht="brk">\ud83d\ude2e\u200d\ud83d\udca8 I need a break</button></div>';
   h += '<div class="htstrip">';
-  for(var i = 0; i < n; i++){ var dn = s.ink[i].some(function(x){ return x && x.length; }); h += '<button class="'+(i === s.i ? 'on' : dn ? 'dn' : '')+'" data-ht="q:'+i+'" lang="ja">'+(s.set.k === 'm' ? i + 1 : s.qs[i][1] + 1)+'</button>'; }
+  for(var i = s.gs; i < s.ge; i++){ var dn = s.ink[i].some(function(x){ return x && x.length; }); h += '<button class="'+(i === s.i ? 'on' : dn ? 'dn' : '')+'" data-ht="q:'+i+'" lang="ja">'+htNumShort(s, i)+'</button>'; }
   h += '</div><div class="htwrap"><div class="htpadbox"><canvas id="htpad"></canvas>';
-  h += '<div class="row" style="gap:6px;flex-wrap:wrap;justify-content:center"><button class="btn small" data-ht="undo">↩ Undo</button><button class="btn small" data-ht="clear">🧽 Clear</button><button class="btn small" data-ht="nbox">Next box ▼</button></div></div>';
+  h += '<div class="row" style="gap:6px;flex-wrap:wrap;justify-content:center"><button class="btn small" data-ht="undo">\u21a9 Undo</button><button class="btn small" data-ht="clear">\ud83e\uddfd Clear</button><button class="btn small" data-ht="nbox">Next box \u25bc</button></div></div>';
   h += '<div class="htcolbox" id="htcolbox">'+htColHTML(q, htNum(s, s.i), s.ink[s.i], s.ci)+'</div></div>';
   h += '<div class="row" style="gap:8px;justify-content:space-between;margin-top:12px">';
-  h += '<button class="btn" data-ht="prev"'+(s.i ? '' : ' disabled')+'>◀ Back</button>';
-  h += s.i < n - 1 ? '<button class="btn primary" data-ht="next">Next ▶</button>' : '<button class="btn primary" data-ht="tomark">✅ Done, let\u2019s check</button>';
+  h += '<button class="btn" data-ht="prev"'+(s.i > s.gs ? '' : ' disabled')+'>\u25c0 Back</button>';
+  if(testy && s.i < s.ge - 1) h += '<button class="btn" data-ht="next">Skip \u2935</button>';
+  h += s.i < s.ge - 1 ? '<button class="btn primary" data-ht="next">Next \u25b6</button>' : '<button class="btn primary" data-ht="tomark">'+(s.group === 1 ? 'Check \u2714' : '\u2705 Done, let\u2019s check')+'</button>';
   return h + '</div>';
 }
+function htNumShort(s, i){ return s.set && s.set.k !== 'w' ? s.qs[i][1] + 1 : i + 1; }
+function htNum(s, i){ return s.set && s.set.k !== 'w' ? HT_NUM[s.qs[i][1]] : HT_NUM[i]; }
 function htPaperHTML(){
-  var s = HT, x = s.set, h = '<div style="text-align:center"><b lang="ja">'+htName(x)+'</b></div><div class="htpgref" lang="ja">'+esc(x.t)+' · '+htRefs(x)+'</div>';
+  var s = HT, x = s.set, h = '<div style="text-align:center"><b lang="ja">'+htName(x)+'</b></div><div class="htpgref" lang="ja">'+esc(x.t)+' \u00b7 '+htRefs(x)+'</div>';
   h += '<div class="hint" style="text-align:center;margin:4px 0">Write your answers on paper, then tap Done to check.</div><div class="htpaper">';
   s.qs.forEach(function(r, i){ h += htColHTML(HTI[r[0]].q[r[1]], htNum(s, i), null, -1); });
-  return h + '</div><div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" data-ht="tomark">✅ Done, let\u2019s check</button></div>';
+  return h + '</div><div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" data-ht="tomark2">\u2705 Done, let\u2019s check</button></div>';
 }
 function htMarkHTML(){
-  var s = HT, n = s.qs.length, done = s.marks.filter(function(m){ return m != null; }).length, ok = s.marks.filter(function(m){ return m === 1; }).length;
-  var h = '<h2 style="margin:0 0 2px" lang="ja">'+htName(s.set)+' · Check it</h2><div class="hint">Look at each answer. Tap ⭕ if yours matches, ❌ if not. Be honest, it helps your practice!</div>';
-  s.qs.forEach(function(r, i){
-    var q = HTI[r[0]].q[r[1]], ink = s.ink[i];
+  var s = HT, done = 0, n = s.ge - s.gs, h = '';
+  h += '<h2 style="margin:0 0 2px">Check it</h2><div class="hint">Look at each answer. Tap \u2b55 if yours matches, \ud83c\udf31 if not yet. Being honest helps Kit help you!</div>';
+  for(var i = s.gs; i < s.ge; i++){
+    var r = s.qs[i], q = HTI[r[0]].q[r[1]], ink = s.ink[i]; if(s.marks[i] != null) done++;
     h += '<div class="htmark"><div class="htms" lang="ja">'+htNum(s, i)+' '+esc(q[0])+'<ruby><b>'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div>';
-    if(!s.paper){
-      h += '<div class="htink">';
-      for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[ci], 8)+'</span>'; }
-      h += '</div>';
-    }
-    h += '<div class="htmb"><button class="'+(s.marks[i] === 1 ? 'on1' : '')+'" data-ht="mk:'+i+':1">⭕</button><button class="'+(s.marks[i] === 0 ? 'on0' : '')+'" data-ht="mk:'+i+':0">❌</button></div></div>';
-  });
-  h += '<div class="row" style="justify-content:space-between;align-items:center;margin-top:10px"><b>'+ok+' / '+n+'</b>';
-  h += '<button class="btn primary" data-ht="finish"'+(done === n ? '' : ' disabled')+'>'+(done === n ? '🏁 Finish' : 'Mark all '+n+' first')+'</button></div>';
+    if(!s.paper){ h += '<div class="htink">'; for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[ci], 8)+'</span>'; } h += '</div>'; }
+    h += '<div class="htmb"><button class="'+(s.marks[i] === 1 ? 'on1' : '')+'" data-ht="mk:'+i+':1">\u2b55</button><button class="'+(s.marks[i] === 0 ? 'on0' : '')+'" data-ht="mk:'+i+':0">\ud83c\udf31</button></div></div>';
+  }
+  var last = s.ge >= s.qs.length;
+  h += '<div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" data-ht="'+(last ? 'finish' : 'gnext')+'"'+(done === n ? '' : ' disabled')+'>'+(done === n ? (last ? '\ud83c\udfc1 Finish' : 'Keep going \u25b6') : 'Mark '+(n === 1 ? 'it' : 'all '+n)+' first')+'</button></div>';
   return h;
+}
+/* after each group: ease off after 3 misses in a row */
+function htGroupNext(){
+  var s = HT, m = s.marks.slice(0, s.ge).filter(function(x){ return x != null; });
+  if(s.mode === 'prac' && m.length >= 3 && m.slice(-3).every(function(x){ return x === 0; }) && !s.eased){
+    s.eased = true;
+    var rest = s.qs.slice(s.ge), kn = rest.filter(wkKnown), un = rest.filter(function(r){ return !wkKnown(r); });
+    if(un.length > 2) un = un.slice(0, un.length - 2);
+    var nr = kn.slice(0, 2).concat(un, kn.slice(2)); var keep = s.qs.length - rest.length;
+    s.qs = s.qs.slice(0, keep).concat(nr); s.ink = s.ink.slice(0, keep).concat(nr.map(function(){ return []; })); s.ms = s.ms.slice(0, keep).concat(nr.map(function(){ return 0; })); s.bms = s.bms.slice(0, keep).concat(nr.map(function(){ return []; })); s.marks = s.marks.slice(0, keep).concat(nr.map(function(){ return null; }));
+    toast('Tricky ones today! Let\u2019s do some you\u2019re great at. \ud83e\udd8a', 3200);
+    var w = wkSt(); w.notes.push({d:dateKey(), t:'Rough patch (3 in a row), Kit eased off'});
+  }
+  s.gs = s.ge; s.ge = Math.min(s.qs.length, s.gs + s.group); s.i = s.gs; s.stage = 'q'; s.t0 = Date.now(); htFirstBox(); htShow();
 }
 function htEndHTML(){
   var s = HT, r = s.res, x = s.set, nm = esc(state.name || 'star'), h = '';
-  var perfect = r.ok === r.n;
-  h += '<div class="htbig">'+(perfect ? '💯' : r.ok >= r.n * .7 ? '🌟' : '🌱')+'</div>';
-  h += '<h2 style="text-align:center;margin:0" lang="ja">'+htName(x)+'</h2>';
-  h += '<div style="text-align:center;font-size:30px;font-weight:800;margin:6px 0">'+(x.pts ? (r.ok * x.pts)+' / '+(r.n * x.pts)+'点' : r.ok+' / '+r.n)+'</div>';
-  h += '<div style="text-align:center" class="hint">⏱ Time: <b>'+htFmt(r.ms)+'</b>'+(r.prevMs ? ' · last time '+htFmt(r.prevMs)+(r.ms < r.prevMs ? ' 🚀 faster!' : '') : '')+'</div>';
-  if(perfect) h += '<p style="text-align:center">Every single one right, '+nm+'! Kit is doing a happy dance! 🦊💃</p>';
-  else if(r.ok >= r.n * .7) h += '<p style="text-align:center">Great work, '+nm+'! The ones you missed are now your practice words.</p>';
-  else h += '<p style="text-align:center">Tests show us what to practise next, '+nm+'. You showed up, and that is how kanji stick. 💪</p>';
-  var g = [];
-  if(r.apple === 'new') g.push('🍏 A new green apple grew for this test! Get 100 on it to turn it red.');
-  if(r.apple === 'red') g.push('🍎 Your apple turned RED! A perfect test!');
-  if(r.gold) g.push('✨ +'+r.gold+(r.gold === 1 ? ' new golden leaf' : ' new golden leaves'));
-  if(g.length) h += '<div class="kttree" style="text-align:center"><div style="font-size:2.2em">🌳</div>'+g.map(function(t){ return '<div>'+t+'</div>'; }).join('')+'</div>';
-  if(r.got) h += '<div class="hint" style="text-align:center">+'+r.got+' ⭐ points</div>';
-  if(r.missQ.length){
-    h += '<h3 style="margin:10px 0 4px">Practice words</h3><div lang="ja" style="font-size:20px;line-height:2">'+r.missQ.map(function(q){ return '<ruby>'+esc(q[1])+'<rt>'+esc(q[2])+'</rt></ruby>'; }).join('　')+'</div>';
+  if(s.mode === 'peek'){
+    h += '<div class="htbig">\ud83d\udc40</div><p style="text-align:center;font-size:20px">You already know <b>'+r.ok+'</b>! \ud83c\udf1f</p><p style="text-align:center">By Friday you\u2019ll know even more, '+nm+'.</p>';
+  } else {
+    h += '<div class="htbig">'+(s.mode === 'show' ? '\ud83e\udd8a' : r.ok === r.n ? '\ud83c\udf1f' : '\ud83c\udf31')+'</div>';
+    if(s.mode === 'show') h += '<h2 style="text-align:center;margin:0">You showed Kit, '+nm+'!</h2>';
+    h += '<p style="text-align:center;font-size:20px">You knew <b>'+r.ok+'</b>! \ud83c\udf1f'+(r.n - r.ok ? '<br><span style="font-size:16px">'+(r.n - r.ok)+' practice word'+(r.n - r.ok === 1 ? '' : 's')+' to grow \ud83c\udf31</span>' : '')+'</p>';
+    if(r.brave) h += '<p style="text-align:center;font-size:18px">\ud83d\udcaa <b>Brave star!</b> You did it even though it felt hard.</p>';
+    r.praise.forEach(function(p){ h += '<p style="text-align:center">'+p+'</p>'; });
   }
-  h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">';
-  if(r.missQ.length) h += '<button class="btn primary" data-ht="go:miss">🔁 Try my misses</button>';
-  if(s.warm) h += '<button class="btn primary" data-ht="go:'+htNext().id+'">✍️ Now the real test</button>';
-  h += '<button class="btn" data-ht="home">📝 All tests</button></div>';
+  var g = [];
+  if(r.apple === 'new') g.push('\ud83c\udf4f A green apple grew on your tree!');
+  if(r.apple === 'red') g.push('\ud83c\udf4e Your apple turned RED!');
+  if(r.gold) g.push('\u2728 +'+r.gold+(r.gold === 1 ? ' golden leaf' : ' golden leaves'));
+  if(g.length) h += '<div style="text-align:center">'+g.map(function(t){ return '<div>'+t+'</div>'; }).join('')+'</div>';
+  if(r.got) h += '<div class="hint" style="text-align:center">+'+r.got+' \u2b50 points</div>';
+  h += '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn primary" data-x="1">Done</button></div>';
   return h;
 }
 function htCardsHTML(){
-  var s = HT, x = s.set, q = x.q[s.i], h = '';
-  h += '<div style="text-align:center"><b lang="ja">'+htName(x)+'</b> · 🃏 Word cards <span class="hint">'+(s.i + 1)+' / '+x.q.length+'</span></div>';
-  h += '<div class="htcard" lang="ja" data-ht="flip">'+esc(q[0])+'<span class="hl">'+(q[4] === 'k' ? '〔'+esc(q[2])+'〕' : esc(q[2]))+'</span>'+esc(q[3]);
-  h += s.flip ? '<div class="ans">'+esc(q[1])+'</div><button class="btn small" data-ht="say">🔊</button>' : '<div class="hint" style="margin-top:10px">Think of the kanji, then tap to check</div>';
-  h += '</div><div class="row" style="justify-content:space-between;margin-top:12px"><button class="btn" data-ht="cprev"'+(s.i ? '' : ' disabled')+'>◀</button><button class="btn" data-ht="home">Done</button><button class="btn primary" data-ht="cnext">'+(s.i < x.q.length - 1 ? '▶' : 'Again 🔄')+'</button></div>';
-  return h;
+  var s = HT, x = s.set, L = s.idx.length, q = x.q[s.idx[s.i]], h = '';
+  h += '<div style="text-align:center"><b lang="ja">'+(s.after === 'quick' ? '\ud83c\udfb9 Quick kanji' : htName(x))+'</b> \u00b7 \ud83c\udccf <span class="hint">'+(s.i + 1)+' / '+L+'</span></div>';
+  h += '<div class="htcard" lang="ja" data-ht="flip">'+esc(q[0])+'<span class="hl">'+(q[4] === 'k' ? '\u3014'+esc(q[2])+'\u3015' : esc(q[2]))+'</span>'+esc(q[3]);
+  h += s.flip ? '<div class="ans">'+esc(q[1])+'</div><button class="btn small" data-ht="say">\ud83d\udd0a</button>' : '<div class="hint" style="margin-top:10px">Think of the kanji, then tap to check</div>';
+  var lastC = s.i >= L - 1;
+  h += '</div><div class="row" style="justify-content:space-between;margin-top:12px"><button class="btn" data-ht="cprev"'+(s.i ? '' : ' disabled')+'>\u25c0</button>';
+  h += lastC && s.after === 'quick' ? '<button class="btn primary" data-ht="quickw">Now write 2 \u270d\ufe0f</button>' : '<button class="btn primary" data-ht="cnext">'+(lastC ? 'Again \ud83d\udd04' : '\u25b6')+'</button>';
+  return h + '</div>';
 }
-/* ---- writing pad: one big box with a cross guide, she writes one kanji at a time ---- */
+/* ---- writing pad ---- */
 function htBindPad(){
   var s = HT, cv = document.getElementById('htpad'); if(!cv) return;
-  var vw = Math.min(window.innerWidth, 700), size = Math.max(200, Math.min(330, vw - 130, window.innerHeight * .46));
+  var vw = Math.min(window.innerWidth, 700), size = Math.max(200, Math.min(330, vw - (s.stage === 'meet' ? 40 : 130), window.innerHeight * .46));
   var dpr = window.devicePixelRatio || 1; cv.style.width = size + 'px'; cv.style.height = size + 'px'; cv.width = size * dpr; cv.height = size * dpr;
   s.pad = {cv:cv, size:size, dpr:dpr, cur:null};
   htPadDraw();
   function pt(e){ var b = cv.getBoundingClientRect(); return [Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)), Math.max(0, Math.min(1, (e.clientY - b.top) / b.height))]; }
-  cv.addEventListener('pointerdown', function(e){ if(s.ci < 0) return; e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(_){} s.pad.cur = [pt(e)]; htPadDraw(); });
+  cv.addEventListener('pointerdown', function(e){ if(s.stage !== 'meet' && s.ci < 0) return; e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(_){} s.pad.cur = [pt(e)]; htPadDraw(); });
   cv.addEventListener('pointermove', function(e){ if(!s.pad.cur) return; e.preventDefault(); var p = pt(e), l = s.pad.cur[s.pad.cur.length - 1]; if(Math.hypot(p[0] - l[0], p[1] - l[1]) > .004){ s.pad.cur.push(p); htPadDraw(); } });
-  function up(){ if(!s.pad.cur) return; var st = s.ink[s.i][s.ci] = s.ink[s.i][s.ci] || []; st.push(s.pad.cur.map(function(p){ return [Math.round(p[0]*1000)/1000, Math.round(p[1]*1000)/1000]; })); s.pad.cur = null; htPadDraw(); htColRefresh(); }
+  function up(){ if(!s.pad.cur) return; var arr = htPadInk(true); arr.push(s.pad.cur.map(function(p){ return [Math.round(p[0]*1000)/1000, Math.round(p[1]*1000)/1000]; })); s.pad.cur = null; htPadDraw(); if(s.stage === 'q') htColRefresh(); }
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
 }
+function htPadInk(make){ var s = HT; if(s.stage === 'meet'){ if(make && !s.ink[0]) s.ink[0] = []; return s.ink[0] || []; } if(make && !s.ink[s.i][s.ci]) s.ink[s.i][s.ci] = []; return s.ink[s.i][s.ci] || []; }
 function htPadDraw(){
   var s = HT, p = s.pad; if(!p) return;
   var c = p.cv.getContext('2d'), W = p.cv.width;
   c.clearRect(0, 0, W, W);
   c.save(); c.strokeStyle = '#e3b7b7'; c.lineWidth = 1.5 * p.dpr; c.setLineDash([6 * p.dpr, 6 * p.dpr]);
   c.beginPath(); c.moveTo(W/2, 0); c.lineTo(W/2, W); c.moveTo(0, W/2); c.lineTo(W, W/2); c.stroke(); c.restore();
-  if(s.ci < 0){ c.fillStyle = '#999'; c.font = (16 * p.dpr) + 'px sans-serif'; c.textAlign = 'center'; c.fillText('No box here', W/2, W/2 - 10); return; }
-  var strokes = (s.ink[s.i][s.ci] || []).concat(p.cur ? [p.cur] : []);
+  if(s.stage === 'meet' && s.phase === 'trace'){ c.save(); c.fillStyle = 'rgba(0,0,0,.13)'; c.font = (W * .82) + 'px "Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(s.list[s.mi], W/2, W/2 + W * .03); c.restore(); }
+  if(s.stage !== 'meet' && s.ci < 0){ c.fillStyle = '#999'; c.font = (16 * p.dpr) + 'px sans-serif'; c.textAlign = 'center'; c.fillText('No box here', W/2, W/2 - 10); return; }
+  var strokes = htPadInk(false).concat(p.cur ? [p.cur] : []);
   c.strokeStyle = '#1d3c8f'; c.lineWidth = W * .045; c.lineCap = 'round'; c.lineJoin = 'round';
   strokes.forEach(function(st){ c.beginPath(); st.forEach(function(q, k){ var x = q[0] * W, y = q[1] * W; if(k) c.lineTo(x, y); else c.moveTo(x, y); }); if(st.length === 1) c.lineTo(st[0][0] * W + .5, st[0][1] * W + .5); c.stroke(); });
 }
 function htColRefresh(){
   var s = HT, el = document.getElementById('htcolbox'); if(!el) return;
   el.innerHTML = htColHTML(htQ(s, s.i), htNum(s, s.i), s.ink[s.i], s.ci);
-  var bs = document.querySelectorAll('.htstrip button'); if(bs[s.i]) bs[s.i].className = 'on';
 }
 function htGo(i){ var s = HT; htTick(); s.i = i; htFirstBox(); htShow(); }
-/* ---- finish: score, word levels, apples, golden leaves, log ---- */
+/* ---- finish ---- */
 function htFinish(){
-  var s = HT, st = htSt(), x = s.set, wk = kwk(), today = dateKey(), ok = 0, rightK = {}, missK = {}, missQ = [];
+  var s = HT, st = htSt(), x = s.set, wk = kwk(), today = dateKey(), ok = 0, rightK = {}, missK = {}, missQ = [], w = wkSt(), pk = htPicked(), praise = [];
   var before = ktTreeStats();
   s.qs.forEach(function(r, i){
-    var k = htKey(r[0], r[1]), q = HTI[r[0]].q[r[1]], e = st.q[k] = st.q[k] || {r:[], w:0}, m = s.marks[i] === 1;
+    var k = htKey(r[0], r[1]), q = HTI[r[0]].q[r[1]], e = st.q[k] = st.q[k] || {r:[], w:0}, m = s.marks[i] === 1, wasMiss = e.l === 0;
     e.t = Date.now();
-    if(m){ ok++; if(e.r.indexOf(today) < 0) e.r.push(today); if(e.r.length > 4) e.r.shift(); e.l = 1; }
-    else { e.w = (e.w || 0) + 1; e.l = 0; e.r = []; missQ.push(q); }
-    q[1].split('').forEach(function(c){ if(KJ_BY[c]){ if(m) rightK[c] = 1; else missK[c] = 1; } });
+    if(m){
+      ok++; if(e.r.indexOf(today) < 0) e.r.push(today); if(e.r.length > 4) e.r.shift(); e.l = 1;
+      if(e.r.length >= 2){ var iv = e.iv ? Math.min(30, e.iv === 7 ? 14 : 30) : 7; e.iv = iv; e.due = wkAddDays(today, iv); if(wasMiss && praise.length < 2) praise.push('<span lang="ja">'+esc(q[1])+'</span> was tricky before. Now it\u2019s solid! \ud83d\udcaa'); }
+      delete e.sat;
+    } else { e.w = (e.w || 0) + 1; e.l = 0; e.r = []; e.iv = 0; missQ.push(q); }
+    q[1].split('').forEach(function(c){
+      if(KJ_BY[c]){ if(m) rightK[c] = 1; else missK[c] = 1; }
+      if(pk[c] && m){ var rd = w.rd[c] = w.rd[c] || []; if(rd.indexOf(today) < 0) rd.push(today); w.dots[c] = Math.max(w.dots[c] || 0, rd.length >= 2 ? 3 : 2); }
+    });
   });
   Object.keys(rightK).forEach(function(c){ st.gold[c] = 1; var e = wk[c] = wk[c] || {}; e.g = (e.g || 0) + 1; if(e.m) e.m = Math.max(0, e.m - 1); e.t = Date.now(); try{ kjMeet(c); }catch(_){} });
   Object.keys(missK).forEach(function(c){ var e = wk[c] = wk[c] || {}; e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; e.t = Date.now(); });
-  var ms = s.ms.reduce(function(a, b){ return a + b; }, 0), res = {ok:ok, n:s.qs.length, ms:ms, missQ:missQ, apple:'', gold:0, got:0};
-  if(x.k !== 'm'){
-    res.prevMs = st.last[x.id] ? st.last[x.id].ms : 0;
-    st.last[x.id] = {ms:ms, ok:ok, d:today};
+  var ms = s.ms.reduce(function(a, b){ return a + b; }, 0), res = {ok:ok, n:s.qs.length, ms:ms, missQ:missQ, apple:'', gold:0, got:0, praise:praise};
+  var whole = htMain(x) && s.qs.length === x.q.length && s.qs.every(function(r){ return r[0] === x.id; });
+  if(whole){
     st.best[x.id] = Math.max(st.best[x.id] || 0, ok);
-    if(htMain(x)){
-      var a = st.apples[x.id];
-      if(ok === s.qs.length && a !== 'r'){ st.apples[x.id] = 'r'; res.apple = 'red'; }
-      else if(!a){ st.apples[x.id] = 'g'; res.apple = 'new'; }
-    }
+    var a = st.apples[x.id];
+    if(ok === s.qs.length && a !== 'r'){ st.apples[x.id] = 'r'; res.apple = 'red'; }
+    else if(!a){ st.apples[x.id] = 'g'; res.apple = 'new'; }
   }
+  if(s.mode === 'show' && s.feel0 === 2){ var ks0 = kanjiState(); ks0.brave = (ks0.brave || 0) + 1; res.brave = true; }
+  if(s.mode === 'prac' && s.qs.length >= 4 && ok / s.qs.length < .5) w.notes.push({d:today, t:'Hard session ('+ok+'/'+s.qs.length+')'});
   var at = Date.now(), log = ktLog();
-  log.push({ht:x.id, d:today, at:at, n:s.qs.length, ok:ok, miss:Object.keys(missK).filter(function(c){ return !rightK[c]; }), tm:Object.keys(rightK).map(function(c){ return [c, 0, '']; }), sec:Math.round(ms / 1000), marks:s.marks.slice(), qs:s.qs, paper:s.paper ? 1 : 0});
+  log.push({ht:x.k === 'w' ? 'wk' : x.id, nm:s.title || '', mode:s.mode, d:today, at:at, n:s.qs.length, ok:ok, miss:Object.keys(missK).filter(function(c){ return !rightK[c]; }), tm:Object.keys(rightK).map(function(c){ return [c, 0, '']; }), sec:Math.round(ms / 1000), marks:s.marks.slice(), qs:s.qs, paper:s.paper ? 1 : 0, qt:s.ms.slice(), bt:s.bms, feel:s.feel0});
   if(log.length > 60) log.splice(0, log.length - 60);
   if(!s.paper) htInkSave(String(at), s.ink);
   kjStat('kanjiTests');
   var ks = kanjiState();
-  if(ks.testPtsDay !== today && x.k !== 'm'){ ks.testPtsDay = today; try{ res.got = addPoints(2, 'Did a kanji test', true) || 0; }catch(_){} }
+  if(ks.testPtsDay !== today && (s.mode === 'show' || s.mode === 'test' || s.mode === 'mock')){ ks.testPtsDay = today; try{ res.got = addPoints(2, 'Showed Kit my kanji', true) || 0; }catch(_){} }
   res.gold = ktTreeStats().gold - before.gold;
   s.res = res; s.stage = 'end';
+  if(s.quest) kqDone();
   save(); render(); checkBadgesX(); htShow();
 }
 document.addEventListener('click', function(e){
@@ -14287,78 +14537,220 @@ document.addEventListener('click', function(e){
   e.preventDefault(); e.stopPropagation();
   try{ Sound.tap(); }catch(_){}
   var a = t.getAttribute('data-ht'), s = HT;
-  if(a === 'open' || !s){ htOpen(); if(a.indexOf('go:') === 0) htStart(a.slice(3)); return; }
+  if(a === 'today'){ kqOpen(); return; }
+  if(a === 'peek'){ kqRun(new Date().getDay() >= 5 || new Date().getDay() === 0 ? 'show' : 'peek'); return; }
+  if(a === 'open' || a === 'earlier'){ htOpen(); return; }
+  if(a === 'momopen'){ HT = {stage:'mom'}; htShow(); return; }
+  if(!s) return;
   if(a === 'home'){ HT = {stage:'home'}; htShow(); return; }
   if(a.indexOf('pick:') === 0){ s.sel = a.slice(5); htShow(); return; }
   if(a === 'unsel'){ s.sel = null; htShow(); return; }
-  if(a.indexOf('go:') === 0){ htStart(a.slice(3)); return; }
+  if(a.indexOf('go:') === 0){ htStart(a.slice(3).replace(/:f$/, '')); return; }
   if(a.indexOf('paper:') === 0){ htStart(a.slice(6), 'paper'); return; }
-  if(a.indexOf('cards:') === 0){ HT = {stage:'cards', set:HTI[a.slice(6)], i:0, flip:false}; htShow(); return; }
+  if(a.indexOf('cards:') === 0){ var cs = HTI[a.slice(6)]; HT = {stage:'cards', set:cs, idx:cs.q.map(function(_, i){ return i; }), i:0, flip:false}; htShow(); return; }
   if(a === 'flip'){ s.flip = !s.flip; htShow(); return; }
-  if(a === 'say'){ try{ var q0 = s.set.q[s.i]; speakText(q0[0] + q0[1] + q0[3], 'ja-JP'); }catch(_){} return; }
-  if(a === 'cnext'){ s.i = s.i < s.set.q.length - 1 ? s.i + 1 : 0; s.flip = false; htShow(); return; }
+  if(a === 'say'){ try{ var q0 = s.set.q[s.idx[s.i]]; speakText(q0[0] + q0[1] + q0[3], 'ja-JP'); }catch(_){} return; }
+  if(a === 'cnext'){ s.i = s.i < s.idx.length - 1 ? s.i + 1 : 0; s.flip = false; htShow(); return; }
   if(a === 'cprev'){ if(s.i){ s.i--; s.flip = false; htShow(); } return; }
-  if(a.indexOf('box:') === 0){ s.ci = +a.slice(4); htPadDraw(); htColRefresh(); return; }
-  if(a === 'undo'){ var u = s.ink[s.i][s.ci]; if(u && u.length){ u.pop(); htPadDraw(); htColRefresh(); } return; }
-  if(a === 'clear'){ s.ink[s.i][s.ci] = []; htPadDraw(); htColRefresh(); return; }
-  if(a === 'nbox'){ var q = htQ(s, s.i); for(var c = s.ci + 1; c < q[1].length; c++){ if(htDraw(q, c)){ s.ci = c; htPadDraw(); htColRefresh(); return; } } if(s.i < s.qs.length - 1) htGo(s.i + 1); return; }
+  if(a === 'quickw'){ var un = wkItems('sec').filter(function(r){ return !wkKnown(r); }), kn = wkItems('sec').filter(wkKnown); var two = un.concat(kn).slice(0, 2); if(!two.length){ kqDone(); closeModal(); return; } htSession(two, {title:'\ud83c\udfb9 Quick kanji', group:1, mode:'prac', step:'quick', quest:true}); return; }
+  if(a.indexOf('mphase:') === 0){ var ph = a.slice(7); if(ph === 'write') s.ink = []; if(ph === 'trace') s.ink = []; s.phase = ph; htShow(); return; }
+  if(a.indexOf('mok:') === 0){
+    var c = s.list[s.mi], w = wkSt();
+    if(a === 'mok:0'){ s.phase = 'trace'; s.ink = []; htShow(); return; }
+    w.meet[c] = 1; w.dots[c] = Math.max(w.dots[c] || 0, 1); try{ kjMeet(c); }catch(_){}
+    save();
+    if(s.mi < s.list.length - 1){ s.mi++; s.phase = 'card'; s.ink = []; htShow(); return; }
+    if(s.then){ kqRun(s.then); return; }
+    kqDone(); HT = {stage:'end', set:{k:'w'}, res:{ok:s.list.length, n:s.list.length, praise:['You met all of this week\u2019s new kanji! \ud83c\udf31'], apple:'', gold:0, got:0}, mode:'meet'}; htShow(); return;
+  }
+  if(a.indexOf('box:') === 0){ htTick(); s.ci = +a.slice(4); htPadDraw(); htColRefresh(); return; }
+  if(a === 'undo'){ var u = htPadInk(false); if(u.length){ u.pop(); htPadDraw(); if(s.stage === 'q') htColRefresh(); } return; }
+  if(a === 'clear'){ if(s.stage === 'meet') s.ink = []; else s.ink[s.i][s.ci] = []; htPadDraw(); if(s.stage === 'q') htColRefresh(); return; }
+  if(a === 'nbox'){ var q = htQ(s, s.i); for(var cc = s.ci + 1; cc < q[1].length; cc++){ if(htDraw(q, cc)){ htTick(); s.ci = cc; htPadDraw(); htColRefresh(); return; } } if(s.i < s.ge - 1) htGo(s.i + 1); return; }
   if(a.indexOf('q:') === 0){ htGo(+a.slice(2)); return; }
-  if(a === 'next'){ htGo(s.i + 1); return; }
-  if(a === 'prev'){ if(s.i) htGo(s.i - 1); return; }
-  if(a === 'tomark'){ htTick(); s.stage = 'mark'; htShow(); return; }
-  if(a.indexOf('mk:') === 0){ var p = a.split(':'); s.marks[+p[1]] = +p[2]; var sc = document.getElementById('modal').scrollTop; htShow(); document.getElementById('modal').scrollTop = sc; return; }
+  if(a === 'next'){ if(s.i < s.ge - 1) htGo(s.i + 1); return; }
+  if(a === 'prev'){ if(s.i > s.gs) htGo(s.i - 1); return; }
+  if(a === 'brk'){ htTick(); var wb = wkSt(); wb.notes.push({d:dateKey(), t:'Took a break \ud83d\ude2e\u200d\ud83d\udca8'}); save(); toast('Good idea! See you later \ud83e\udd8a', 2600); HT = null; closeModal(); return; }
+  if(a === 'tomark' || a === 'tomark2'){
+    htTick();
+    if(a === 'tomark' && s.group > 1 && !s.skipAsked){
+      var sk = []; for(var j = s.gs; j < s.ge; j++){ if(!s.ink[j].some(function(x){ return x && x.length; })) sk.push(j); }
+      if(sk.length && sk.length < s.ge - s.gs){ s.skipAsked = true; s.skipList = sk; s.stage = 'skipped'; htShow(); return; }
+    }
+    s.stage = 'mark'; htShow(); return;
+  }
+  if(a === 'tryskip'){ s.i = s.skipList[0]; s.stage = 'q'; s.t0 = Date.now(); htFirstBox(); htShow(); return; }
+  if(a.indexOf('mk:') === 0){ var p = a.split(':'); s.marks[+p[1]] = +p[2]; var md = document.getElementById('modal'), sc = md ? md.scrollTop : 0; if(s.group === 1){ htGroupNextOrFinish(); return; } htShow(); md = document.getElementById('modal'); if(md) md.scrollTop = sc; return; }
+  if(a === 'gnext'){ htGroupNext(); return; }
   if(a === 'finish'){ if(s.marks.every(function(m){ return m != null; })) htFinish(); return; }
+  if(a.indexOf('f0:') === 0){ s.feel0 = +a.slice(3); if(s.feel0 === 2){ var kn2 = wkItems('all').filter(wkKnown).slice(0, 2); if(kn2.length){ toast('Lots of people feel that way. Let\u2019s start with two you know. \ud83e\udd8a', 3000); s.warm = kn2; s.wi = 0; s.wflip = false; s.stage = 'warm'; htShow(); return; } } s.stage = 'breath'; htShow(); return; }
+  if(a === 'wflip'){ s.wflip = !s.wflip; htShow(); return; }
+  if(a === 'wnext'){ if(s.wi < s.warm.length - 1){ s.wi++; s.wflip = false; } else s.stage = 'breath'; htShow(); return; }
+  if(a === 'breathok'){ s.stage = 'q'; s.t0 = Date.now(); htShow(); return; }
+  if(a.indexOf('sfeel:') === 0){ s.feel = +a.slice(6); s.feelSaid = true; htShow(); return; }
+  if(a === 'satnext'){ s.feelSaid = false; htShow(); return; }
+  if(a.indexOf('sat:') === 0){ var sp = a.split(':'); s.sat[+sp[1]] = sp[2]; var md2 = document.getElementById('modal'), sc2 = md2 ? md2.scrollTop : 0; htShow(); md2 = document.getElementById('modal'); if(md2) md2.scrollTop = sc2; return; }
+  if(a === 'satdone'){ kqSatSave(); return; }
+  if(a.indexOf('mom:') === 0){ var mk = a.slice(4), e2 = htSt().q[mk]; if(e2){ e2.mom = e2.mom === dateKey() ? '' : dateKey(); save(); } var md3 = document.getElementById('modal'), sc3 = md3 ? md3.scrollTop : 0; htShow(); md3 = document.getElementById('modal'); if(md3) md3.scrollTop = sc3; return; }
 }, true);
-/* ---- Kanji tab: next test card (Today) and the list in My Book ---- */
-function htTodayCardHTML(){
+function htGroupNextOrFinish(){ var s = HT; if(s.ge >= s.qs.length) htFinish(); else htGroupNext(); }
+
+function htHomeHTML(){
+  var st = htSt(), h = '';
+  if(HT.sel && HTI[HT.sel]){
+    var x = HTI[HT.sel];
+    h += '<div class="htnext"><h3 lang="ja" style="margin:0">'+htName(x)+'</h3><div lang="ja">'+esc(x.t)+'</div><div class="htpgref">'+htRefs(x)+'</div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" data-ht="go:'+x.id+'">\u270d\ufe0f Start</button><button class="btn" data-ht="paper:'+x.id+'">\ud83d\udcc4 Paper</button>';
+    if(x.k !== 'd') h += '<button class="btn" data-ht="cards:'+x.id+'">\ud83c\udccf Word cards</button>';
+    return h + '<button class="btn" data-ht="unsel">\u25c0 All tests</button></div></div>';
+  }
+  h += '<h2 style="margin:0 0 2px" lang="ja">\ud83d\udcda Earlier tests</h2><div class="hint">Extra credit: any booklet test, whenever you like.</div>';
+  ['下','上'].forEach(function(v){
+    h += '<h3 style="margin:12px 0 4px">3\u5e74'+v+'</h3><div class="htlist">';
+    HTB.forEach(function(x){ if(x.v === v && x.k !== 'd') h += htRowHTML(x); });
+    h += '</div><div class="hint" style="margin-top:6px" lang="ja">\u3067\u304d\u308b\u304b\u306a</div><div class="htchips">';
+    HTB.forEach(function(x){ if(x.v === v && x.k === 'd') h += '<button lang="ja" data-ht="pick:'+x.id+'">'+HT_NUM[x.n - 1]+'</button>'; });
+    h += '</div>';
+  });
+  return h;
+}
+function htRowHTML(x){
+  var ap = htApple(x.id), icon = htMain(x) ? (ap === 'r' ? '\ud83c\udf4e' : ap === 'g' ? '\ud83c\udf4f' : '\u26aa') : '\u25ab\ufe0f';
+  return '<button class="htrow" data-ht="pick:'+x.id+'"><span class="htap">'+icon+'</span><span class="htrt"><b lang="ja">'+htName(x)+'</b><small lang="ja">'+esc(x.t)+'</small></span></button>';
+}
+/* ---- Kanji tab: This week ---- */
+function wkHomeHTML(){
   try{
-    var nx = htNext(), ml = htMissList().length, st = htSt();
-    var q = nx.q[(parseKey(dateKey()).getDate()) % nx.q.length];
-    var h = '<div class="panel htnext"><div class="ptitle">📝 Next hoshuko test</div><b lang="ja">'+htName(nx)+'</b> <span lang="ja" class="hint">'+esc(nx.t)+'</span>';
-    h += '<div class="hint" style="margin-top:6px">Test word of the day:</div><div lang="ja" style="font-size:20px;line-height:2.1">'+esc(q[0])+'<ruby><span style="background:#fff1a8;color:#1e2142;border-radius:4px;padding:0 3px">'+esc(q[1])+'</span><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div>';
-    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn primary small" data-ht="open">✍️ Practice test</button>'+(ml ? '<button class="btn small" data-ht="go:miss">🔁 My misses ('+ml+')</button>' : '')+'</div></div>';
-    return h;
+    kqEnsure();
+    var t = wkTest(), ks = wkKanji(), step = kqStep(), x = KQ_STEPS[step] || KQ_STEPS.off, task = kqTask(), done = task && state.done[task.id], h = '<div class="panel wkcard">';
+    if(!t){ return h + '<div class="ptitle">\ud83d\udcd8 This week</div><p>Ask a grown-up to set this week\u2019s pages in Parent. \ud83d\udcd8</p></div>'; }
+    h += '<div class="ptitle">\ud83d\udcd8 This week</div><div><b lang="ja">'+htName(t)+'</b> <span class="hint">\u00b7 Saturday</span></div><div class="wkdots" lang="ja">';
+    ks.forEach(function(c){ var d = wkDot(c); h += '<span class="wkk"><b>'+esc(c)+'</b><i>'+[1,2,3].map(function(n){ return '<em class="'+(d >= n ? 'on' : '')+'"></em>'; }).join('')+'</i></span>'; });
+    h += '</div>';
+    if(step !== 'off') h += '<button class="btn primary wkgo" data-ht="today"'+(done ? ' style="opacity:.75"' : '')+'>'+(done ? '\u2705 ' : '\u270d\ufe0f ')+'Today: '+x[1]+(x[2] ? ' <small>('+x[2]+')</small>' : '')+'</button>';
+    else h += '<div class="hint" style="margin:8px 0">No kanji quest today. Enjoy! \ud83c\udf1f</div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn small" data-ht="peek">\ud83d\udc40 Try the whole test</button><button class="btn small" data-kjtab="grow">\ud83c\udf33 My tree</button></div>';
+    return h + '</div>';
   }catch(e){ return ''; }
 }
-function htBookHTML(){
-  var st = htSt(), h = '<div class="panel"><div class="ptitle">📝 My test booklets</div><div class="htchips">';
-  HTB.forEach(function(x){ if(!htMain(x)) return; var ap = htApple(x.id); h += '<button lang="ja" data-ht="open" title="'+esc(x.t)+'">'+(ap === 'r' ? '🍎' : ap === 'g' ? '🍏' : '⚪')+' '+(x.k === 'r' ? 'たしかめ' : HT_NUM[x.n - 1])+'·'+x.v+'</button>'; });
-  var sol = 0, prac = 0; Object.keys(st.q).forEach(function(k){ var l = htLevel(k); if(l === 'solid') sol++; else prac++; });
-  return h + '</div><div class="hint">💪 Solid words: <b>'+sol+'</b> · ✏️ Practising: <b>'+prac+'</b> (a word is solid when you get it right on two different days)</div></div>';
+function htTodayCardHTML(){ return wkHomeHTML(); }
+function htBookHTML(){ return ''; }
+function kqFunHTML(){
+  return '<div class="panel"><div class="ptitle">\u2b50 Practice for fun</div><div class="hint">Everything here uses this week\u2019s kanji only.</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-ht="momopen">\ud83d\udcd6 Study with Mom</button><button class="btn" data-ht="earlier">\ud83d\udcda Earlier tests</button></div></div>';
 }
+/* ---- The tree: one branch per booklet test, one leaf per kanji ---- */
+function wkTreeMap(){
+  if(window.__wkTree) return window.__wkTree;
+  var out = [];
+  ['上','下'].forEach(function(v){
+    var ts = HTB.filter(function(x){ return x.v === v && x.k === 't' && x.kp; }).sort(function(a, b){ return a.kp - b.kp; }), prev = 0;
+    ts.forEach(function(t){ var ks = []; KBOOK.forEach(function(b){ if(b.v === v && b.p > prev && b.p < t.kp) b.ks.forEach(function(c){ if(KJ_BY[c] && ks.indexOf(c) < 0) ks.push(c); }); }); out.push({id:t.id, v:v, n:t.n, ks:ks}); prev = t.kp; });
+  });
+  window.__wkTree = out; return out;
+}
+function wkLeaf(c){ var st = htSt(), tt = ktTreeStats(); if(tt.goldSet[c] || st.gold[c]) return 'gold'; return kjInBook(c) ? 'green' : 'bud'; }
+function wkTreeSVG(){
+  var map = wkTreeMap(), st = htSt(), wt = wkTest(), tt = ktTreeStats(), W = 300, H = 340, h = '<svg viewBox="0 0 '+W+' '+H+'" class="wktree" role="img" aria-label="My kanji tree">';
+  h += '<ellipse cx="150" cy="150" rx="140" ry="130" fill="#a5d6a7" opacity=".22"/><ellipse cx="150" cy="330" rx="120" ry="9" fill="#8d6e63" opacity=".35"/>';
+  h += '<path d="M143 330 C146 250 144 120 150 30 C156 120 154 250 157 330 Z" fill="#8d5a3b"/>';
+  map.forEach(function(b, j){
+    var y = 300 - j * 10.2, side = j % 2 ? 1 : -1, len = 62 + (j % 5) * 9 + (j < 4 || j > 22 ? -12 : 0), x2 = 150 + side * len, y2 = y - 22;
+    var hl = wt && wt.id === b.id;
+    h += '<g data-kjb="'+b.id+'" style="cursor:pointer">';
+    if(hl) h += '<path d="M150 '+y+' Q'+(150 + side * len * .5)+' '+(y - 2)+' '+x2+' '+y2+'" stroke="#ffd54f" stroke-width="9" fill="none" opacity=".75" stroke-linecap="round"/>';
+    h += '<path d="M150 '+y+' Q'+(150 + side * len * .5)+' '+(y - 2)+' '+x2+' '+y2+'" stroke="#8d5a3b" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+    b.ks.forEach(function(c, i){
+      var f = (i + 1) / (b.ks.length + 1), lx = 150 + side * len * f, ly = y - 22 * f * f - 1 + (i % 2 ? 5 : -5), lf = wkLeaf(c);
+      if(lf === 'bud') h += '<circle cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="1.9" fill="#c5e1a5"/>';
+      else h += '<ellipse cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" rx="4.6" ry="2.7" transform="rotate('+(i % 2 ? 30 : -30)+' '+lx.toFixed(1)+' '+ly.toFixed(1)+')" fill="'+(lf === 'gold' ? '#f4c430' : '#43a047')+'" stroke="'+(lf === 'gold' ? '#b8860b' : '#2e7d32')+'" stroke-width=".6"/>';
+    });
+    var ap = st.apples[b.id];
+    if(ap) h += '<circle cx="'+x2.toFixed(1)+'" cy="'+(y2 + 4).toFixed(1)+'" r="5.2" fill="'+(ap === 'r' ? '#e53935' : '#8bc34a')+'" stroke="'+(ap === 'r' ? '#a31515' : '#558b2f')+'" stroke-width=".8"/>';
+    h += '<rect x="'+Math.min(150, x2)+'" y="'+(y2 - 8)+'" width="'+len+'" height="34" fill="transparent"/></g>';
+  });
+  var r0 = st.apples['上R'], r15 = st.apples['上T15'];
+  if(r0) h += '<circle cx="168" cy="322" r="5.2" fill="'+(r0 === 'r' ? '#e53935' : '#8bc34a')+'"/>';
+  if(r15) h += '<circle cx="150" cy="26" r="5.6" fill="'+(r15 === 'r' ? '#e53935' : '#8bc34a')+'"/>';
+  var allRed = HTB.filter(function(x){ return x.v === '下' && x.k === 't'; }).every(function(x){ return st.apples[x.id] === 'r'; });
+  if(allRed) h += '<text x="150" y="18" text-anchor="middle" font-size="22">\u2b50</text>';
+  if(tt.basket) h += '<g><path d="M22 314h30l-4 16h-22z" fill="#c68a4a" stroke="#8d5a3b"/><path d="M26 314q11-12 22 0" fill="none" stroke="#8d5a3b" stroke-width="1.6"/><circle cx="31" cy="312" r="4" fill="#e53935"/><circle cx="39" cy="311" r="4" fill="#e53935"/><circle cx="46" cy="313" r="3.6" fill="#e53935"/><text x="37" y="326" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">'+tt.basket+'</text></g>';
+  return h + '</svg>';
+}
+function wkBranchHTML(id){
+  var b = wkTreeMap().filter(function(x){ return x.id === id; })[0]; if(!b) return '';
+  var x = HTI[id], ap = htSt().apples[id], h = '<div class="wkbranch"><b lang="ja">'+htName(x)+'</b> <span class="hint" lang="ja">'+esc(x.t)+'</span> '+(ap === 'r' ? '\ud83c\udf4e' : ap === 'g' ? '\ud83c\udf4f' : '')+'<div class="wkbk" lang="ja">';
+  b.ks.forEach(function(c){ var lf = wkLeaf(c); h += '<button class="wkb '+lf+'" data-k="'+esc(c)+'">'+esc(c)+'</button>'; });
+  return h + '</div><div class="hint">\u2728 gold: written right \u00b7 \ud83c\udf43 green: met \u00b7 \ud83c\udf31 bud: coming soon</div></div>';
+}
+var WKB = '';
+document.addEventListener('click', function(e){
+  var g = e.target.closest && e.target.closest('[data-kjb]'); if(!g) return;
+  WKB = WKB === g.getAttribute('data-kjb') ? '' : g.getAttribute('data-kjb');
+  var el = document.getElementById('wkbranch'); if(el) el.innerHTML = WKB ? wkBranchHTML(WKB) : '<div class="hint" style="text-align:center">Tap a branch to see its kanji.</div>';
+}, true);
 /* ---- Parent ---- */
 var HTP = {view:''};
+function kqParentHTML(){
+  var ks = kanjiState(), plan = kqPlan(), t = wkTest(), w = wkSt(), days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], h = '';
+  h += '<div class="hint" style="margin-top:6px">'+(t ? '\u2192 Saturday: <b lang="ja">'+htName(t)+'</b> <span lang="ja">'+esc(t.t)+'</span>' : 'Pick this week\u2019s pages above.')+'</div>';
+  h += '<h3>\ud83d\uddd3 Kanji week plan</h3><div class="hint">Her daily kanji quest. It ticks itself when she finishes. You can tick it for her from the Parent quest list.</div><div class="kqplan">';
+  [1,2,3,4,5,6,0].forEach(function(d){ h += '<label><span>'+days[d]+'</span><select data-kqd="'+d+'">'+['meet','booklet','quick','round','show','feel','review','off'].map(function(k){ return '<option value="'+k+'"'+(plan[d] === k ? ' selected' : '')+'>'+KQ_STEPS[k][0]+' '+KQ_STEPS[k][1]+'</option>'; }).join('')+'</select></label>'; });
+  h += '</div><div class="row" style="gap:6px;flex-wrap:wrap;margin-top:6px"><button class="btn small" data-kqp="defplan">Reset to default</button></div>';
+  h += '<h3>\ud83c\udf93 Big year-end test</h3><div class="row" style="gap:6px;flex-wrap:wrap;align-items:center"><label class="hint">Date <input type="date" id="kqBig" value="'+esc(kqBigDate())+'"></label><button class="btn small" data-kqp="bigsave">Save</button>';
+  h += '<select id="kqMode">'+[['auto','Season: auto (6 weeks before)'],['on','Season: on now'],['off','Season: off']].map(function(o){ return '<option value="'+o[0]+'"'+((ks.bigMode || 'auto') === o[0] ? ' selected' : '')+'>'+o[1]+'</option>'; }).join('')+'</select>';
+  h += '<button class="btn small '+(ks.noNew ? 'primary' : '')+'" data-kqp="nonew">'+(ks.noNew ? '\u2705' : '\u2b1c')+' Hoshuko finished new pages</button></div><div class="hint">'+(kqSeason() ? '\ud83c\udf93 Big test season is ON.' : 'Big test season starts '+esc(wkAddDays(kqBigDate(), -42))+'.')+'</div>';
+  h += '<h3>\ud83d\udcca This week</h3>';
+  if(t){
+    h += '<div lang="ja" style="font-size:18px">'+wkKanji().map(function(c){ return esc(c)+' '+['\u25cb\u25cb\u25cb','\u25cf\u25cb\u25cb','\u25cf\u25cf\u25cb','\u25cf\u25cf\u25cf'][wkDot(c)]; }).join(' \u00b7 ')+'</div><div class="hint">\u25cf met \u00b7 \u25cf right once \u00b7 \u25cf solid. Ready for Saturday: '+(wkReady() ? '\u2705 yes' : 'not yet')+'</div>';
+    var did = Object.keys(w.did).sort(); h += '<div class="hint">Done: '+(did.length ? did.map(function(d){ return esc(d.slice(5))+' '+((KQ_STEPS[w.did[d]] || [''])[0]); }).join(' \u00b7 ') : 'nothing yet')+'</div>';
+    if(w.sat){ var sl = function(v){ return t.q.map(function(q, i){ return w.sat.m[i] === v ? q[1] : null; }).filter(Boolean).join('\u3001') || '\u2014'; }; h += '<div style="margin-top:4px">Saturday felt: '+['\ud83d\ude0a','\ud83d\ude10','\ud83d\ude1f'][w.sat.feel]+'<br>\ud83d\ude0a <span lang="ja">'+sl('k')+'</span><br>\ud83e\udd14 <span lang="ja">'+sl('u')+'</span><br>\ud83c\udf31 <span lang="ja">'+sl('n')+'</span></div>'; }
+    if(w.notes.length) h += '<div class="hint" style="margin-top:4px">Notes: '+w.notes.slice(-6).map(function(n){ return esc(n.d.slice(5))+' '+esc(n.t); }).join(' \u00b7 ')+'</div>';
+  }
+  h += '<div class="row" style="gap:6px;margin-top:6px"><button class="btn small" data-ht="momopen">\ud83d\udcd6 Study with Mom</button>'+(ks.brave ? '<span class="hint">\ud83d\udcaa Brave stars: '+ks.brave+'</span>' : '')+'</div>';
+  return h;
+}
 function htParentHTML(){
-  var st = htSt(), nx = htNext(), h = '<h3>📝 Hoshuko booklet tests</h3>';
-  h += '<div class="hint">The next test follows the page picker above (the かんぺきくん page she is on). You can also pick one.</div>';
-  h += '<div class="row" style="gap:6px;flex-wrap:wrap;margin:6px 0"><span>Next: <b lang="ja">'+htName(nx)+'</b>'+(st.next ? ' (picked)' : ' (auto)')+'</span>';
-  h += '<select id="htpNext"><option value="">Auto (from page)</option>'+HTB.filter(htMain).map(function(x){ return '<option value="'+x.id+'"'+(st.next === x.id ? ' selected' : '')+'>'+htName(x)+'</option>'; }).join('')+'</select>';
-  h += '<label class="hint">Test date <input type="date" id="htpDate" value="'+esc(st.date || '')+'"></label><button class="btn small" data-htp="savenext">Save</button></div>';
-  var log = ktLog().filter(function(x){ return x && x.ht; }).slice(-10).reverse();
-  if(!log.length) h += '<div class="hint">No booklet tests yet.</div>';
+  var st = htSt(), h = '<h3>\ud83d\udcdd Her sessions (time and scores are only shown here)</h3>';
+  var log = ktLog().filter(function(x){ return x && x.ht; }).slice(-12).reverse();
+  if(!log.length) h += '<div class="hint">Nothing yet.</div>';
   else {
     h += '<div class="ktlist">';
     log.forEach(function(x){
-      var set = HTI[x.ht], nm = set ? htName(set) : 'Try my misses', pts = set && set.pts ? (x.ok * set.pts)+'点' : x.ok+' / '+x.n;
-      h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d.slice(5))+'</span><span class="ktw"><b lang="ja">'+nm+'</b><small>'+pts+' · ⏱ '+htFmt((x.sec || 0) * 1000)+(x.paper ? ' · on paper' : '')+'</small></span><button class="btn small" data-htp="view:'+x.at+'">Review</button></div>';
+      var set = HTI[x.ht], nm = x.nm || (set ? htName(set) : 'Practice'), whole = set && set.pts && x.n === set.q.length, pts = whole ? (x.ok * set.pts)+'\u70b9' : x.ok+' / '+x.n;
+      h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d.slice(5))+'</span><span class="ktw"><b lang="ja">'+esc(nm)+'</b><small>'+pts+' \u00b7 \u23f1 '+htFmt((x.sec || 0) * 1000)+(x.feel === 2 ? ' \u00b7 felt \ud83d\ude1f' : '')+(x.paper ? ' \u00b7 on paper' : '')+'</small></span><button class="btn small" data-htp="view:'+x.at+'">Review</button></div>';
       if(HTP.view === String(x.at)) h += htParentReview(x);
     });
     h += '</div>';
   }
   var ml = htMissList();
-  h += '<div class="hint" style="margin-top:8px">Words she is practising ('+ml.length+'):</div><div lang="ja" style="font-size:17px;line-height:2">'+(ml.length ? ml.slice(0, 40).map(function(k){ var p = k.split(':'), q = HTI[p[0]].q[+p[1]]; return '<ruby>'+esc(q[1])+'<rt>'+esc(q[2])+'</rt></ruby>'; }).join('　') : '🎉 none')+'</div>';
-  h += '<div class="hint" style="margin-top:8px">Real score from hoshuko (optional):</div><div class="row" style="gap:6px;flex-wrap:wrap"><select id="htpSc">'+HTB.filter(htMain).map(function(x){ return '<option value="'+x.id+'">'+htName(x)+(st.school[x.id] != null ? ' ('+st.school[x.id]+'点)' : '')+'</option>'; }).join('')+'</select><input id="htpScV" type="number" min="0" max="100" style="width:70px" placeholder="点"><button class="btn small" data-htp="school">Save</button></div>';
+  h += '<div class="hint" style="margin-top:8px">Practice words ('+ml.length+'):</div><div lang="ja" style="font-size:17px;line-height:2">'+(ml.length ? ml.slice(0, 40).map(function(k){ var p = k.split(':'), q = HTI[p[0]].q[+p[1]]; return '<ruby>'+esc(q[1])+'<rt>'+esc(q[2])+'</rt></ruby>'; }).join('\u3000') : '\ud83c\udf89 none')+'</div>';
+  h += '<div class="hint" style="margin-top:8px">Real Saturday score (optional, only you see it):</div><div class="row" style="gap:6px;flex-wrap:wrap"><select id="htpSc">'+HTB.filter(htMain).map(function(x){ return '<option value="'+x.id+'"'+(wkTest() && wkTest().id === x.id ? ' selected' : '')+'>'+htName(x)+(st.school[x.id] != null ? ' ('+st.school[x.id]+'\u70b9)' : '')+'</option>'; }).join('')+'</select><input id="htpScV" type="number" min="0" max="100" style="width:70px" placeholder="\u70b9"><button class="btn small" data-htp="school">Save</button></div>';
   var ks = kanjiState();
-  h += '<div class="row" style="gap:8px;align-items:center;margin-top:8px"><button class="btn small '+(ks.oldKT ? 'primary' : '')+'" data-htp="old">'+(ks.oldKT ? '✅ On' : '⬜ Off')+'</button><span class="hint">Also show the old listening test (Kit reads the kanji aloud)</span></div>';
+  h += '<div class="row" style="gap:8px;align-items:center;margin-top:8px"><button class="btn small '+(ks.oldKT ? 'primary' : '')+'" data-htp="old">'+(ks.oldKT ? '\u2705 On' : '\u2b1c Off')+'</button><span class="hint">Also show the old listening test in Practice for fun</span></div>';
   return h;
 }
+document.addEventListener('change', function(e){
+  var t = e.target; if(!t || !t.getAttribute) return;
+  var d = t.getAttribute('data-kqd'); if(d != null){ kqPlan()[+d] = t.value; save(); render(); toast('Saved'); return; }
+  if(t.id === 'kqMode'){ kanjiState().bigMode = t.value; save(); render(); showKanjiParent(); }
+}, true);
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-kqp]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  var a = t.getAttribute('data-kqp'), ks = kanjiState(), md = document.getElementById('modal'), sc = md ? md.scrollTop : 0;
+  if(a === 'defplan'){ ks.kplan = KQ_DEF.slice(); save(); render(); }
+  else if(a === 'bigsave'){ var v = (document.getElementById('kqBig') || {}).value; if(v){ ks.bigDate = v; save(); toast('Saved'); } }
+  else if(a === 'nonew'){ ks.noNew = !ks.noNew; save(); render(); }
+  showKanjiParent(); md = document.getElementById('modal'); if(md) md.scrollTop = sc;
+}, true);
+
 function htParentReview(x){
   var ink = htInkAll()[String(x.at)] || [], h = '<div style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;margin:4px 0 8px">';
   (x.qs || []).forEach(function(r, i){
     var set = HTI[r[0]]; if(!set) return; var q = set.q[r[1]];
     h += '<div class="htmark"><div class="htms" lang="ja">'+HT_NUM[r[1]]+' '+esc(q[0])+'<ruby><b>'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div><div class="htink">';
-    for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[i] && ink[i][ci], 8)+'</span>'; }
-    h += '</div><div class="htmb"><button class="'+(x.marks[i] === 1 ? 'on1' : 'on0')+'" data-htp="flip:'+x.at+':'+i+'">'+(x.marks[i] === 1 ? '⭕' : '❌')+'</button></div></div>';
+    for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[i] && ink[i][ci], 8)+(x.bt ? '<em class="htsec">'+Math.round(((x.bt[i] || [])[ci] || 0) / 1000)+'s</em>' : '')+'</span>'; }
+    h += (x.qt ? '<div class="htqt">⏱ '+htFmt(x.qt[i] || 0)+'</div>' : '')+'</div><div class="htmb"><button class="'+(x.marks[i] === 1 ? 'on1' : 'on0')+'" data-htp="flip:'+x.at+':'+i+'">'+(x.marks[i] === 1 ? '⭕' : '❌')+'</button></div></div>';
   });
   return h + '<div class="hint">Her own marks. Tap one to change it if she marked it wrong.</div></div>';
 }
@@ -14385,6 +14777,7 @@ document.addEventListener('click', function(e){
   showKanjiParent(); document.getElementById('modal').scrollTop = sc;
 }, true);
 
+
 function ktTreeStats(){
   var log = []; try{ log = ktLog(); }catch(e){}
   var gold = {};
@@ -14399,11 +14792,11 @@ function kjGrowHTML(){
   try{ ink = kinkLoad(); }catch(e){}
   var written = Object.keys(ink).filter(function(c){ return ink[c] && ink[c].length; }).length;
   var taught = Object.keys(ks.taught).length, days = (state.stats && state.stats.kanjiDays) || 0;
-  h += '<div class="panel kjgrow"><div class="ptitle">🌳 My kanji tree</div>'+kjTreeSVG(n, pg);
-  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Every booklet test grows one apple: \ud83c\udf4f green when you try it, \ud83c\udf4e red when you get 100. Every new kanji you get right on a test turns into a \u2728 golden leaf. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
+  h += '<div class="panel kjgrow"><div class="ptitle">🌳 My kanji tree</div>'+wkTreeSVG()+'<div id="wkbranch">'+(WKB ? wkBranchHTML(WKB) : '<div class="hint" style="text-align:center">Tap a branch to see its kanji.</div>')+'</div>';
+  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every branch is one booklet test, and every leaf is one kanji. Leaves start as little buds, turn green 🍃 when you meet them, and turn gold ✨ when you write them right. Each test grows one apple: 🍏 green when you try it, 🍎 red at 100. This week\u2019s branch glows.</p></div>';
   h += '<div class="panel"><div class="ptitle">What I have grown</div><div class="kjstats">';
   var tts = ktTreeStats();
-  [['🍃', n, 'kanji in my book'], ['🍎', tts.apples.filter(function(a){ return a === 'r'; }).length + ' / ' + tts.apples.length, 'red apples (tests at 100)'], ['\u2728', tts.gold, 'golden leaves'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
+  [['🍃', n, 'kanji in my book'], ['🍎', tts.apples.filter(function(a){ return a === 'r'; }).length + ' / ' + tts.apples.length, 'red apples (tests at 100)'], ['\u2728', tts.gold, 'golden leaves'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
     h += '<div class="kjst"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>';
   });
   h += '</div><div class="kjmiles">';
@@ -14479,7 +14872,7 @@ document.addEventListener('click', function(e){
   if(t.hasAttribute('data-kjbreak')){ KJT.say = 'Good idea. Have some water, stretch, or play. Kanji will wait for you. 💛'; render(); return; }
 }, true);
 /* ---------- She picks her own kanji book page (26.11.20) ---------- */
-function kjKidPage(){ return hz().kid !== false; }
+function kjKidPage(){ return false; /* 26.11.146: only a grown-up sets this week's pages */ }
 function kjWhereChip(){
   var hh = hz(); if(!hh.on || !kjKidPage()) return '';
   return '<button class="kjwhere" data-kjw="open">\ud83d\udcd8 '+kjPagesLabel()+' \u00b7 <u>Change pages</u></button>';
@@ -14829,6 +15222,7 @@ function kjDayOf(str){ var p = String(str).split('-'); return p.length === 3 ? M
 function kanjiToday(){
   var ks0 = kanjiState();
   if(ks0.date === dateKey() && ks0.todayK){ for(var i0 = 0; i0 < KANJI.length; i0++) if(KANJI[i0].k === ks0.todayK) return KANJI[i0]; }
+  if(wkHas()){ var wl = wkKanji(); return KJ_BY[wl[dayNumX() % wl.length]]; }
   if(!hz().on) return kanjiTodayLegacy();
   var ks = kanjiState(), dn = dayNumX(), r = rngFor(dn*7919 + 13), today = dateKey();
   var weak = kjWeak(), focus = kjFocus(), recent = kjRecent(), cand;
@@ -14858,6 +15252,7 @@ function kjRec(ch, ok, wrong){
 function kfcSel(){ var ks = kanjiState(); if(!ks.fcSel) ks.fcSel = {src:'mix', own:[]}; if(!ks.fcSel.own) ks.fcSel.own = []; return ks.fcSel; }
 function kfcTricky(){ return kjUniq(kjFocus().concat(kjWeak())).filter(function(c){ return !!KJ_BY[c]; }); }
 function kfcPool(){
+  if(wkHas()) return wkKanji().map(function(c){ return KJ_BY[c]; }).filter(Boolean);
   var sl = kfcSel(), chars = null;
   if(sl.src === 'recent') chars = kjRecent();
   else if(sl.src === 'tricky') chars = kfcTricky();
@@ -14958,8 +15353,7 @@ function kfcShow(){
     h += '<button class="btn kfcm" data-kfc="mode:pick"><b>🔍 Find the kanji</b><small>Pick the right one from four</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:look"><b>👯 Look-alikes</b><small>Tell tricky twins apart</small></button>';
     h += '<div class="kfch">Test</div>';
-    h += '<button class="btn kfcm" data-ht="open"><b>📝 ほしゅうこうテスト</b><small>Your booklet tests, same numbers</small></button>';
-    h += '<button class="btn kfcm" data-ht="go:miss"><b>🔁 Try my misses</b><small>Words you missed on tests</small></button>';
+    h += '<button class="btn kfcm" data-ht="earlier"><b>📚 Earlier tests</b><small>Any booklet test, extra credit</small></button>';
     if(kanjiState().oldKT) h += '<button class="btn kfcm" data-kt="open"><b>👂 Listening test</b><small>Kit reads, you write on paper</small></button>';
     h += '<div class="kfch">Kanji combos</div>';
     h += '<button class="btn kfcm" data-kcb="mode:build"><b>🧩 Build the word</b><small>Drag two kanji together</small></button>';
@@ -15126,20 +15520,19 @@ function showKanjiParent(){
   if(!KJP) KJP = {tab:'miss', sel:{}, ty:'write', all:false, vol:h0.vol};
   var s = KJP, h = '<div class="kjmodal"><h2 style="margin:0 0 4px">🈴 Kanji &amp; hoshuko</h2>';
   h += '<div class="hint">All optional. She never has to open any of this. It only decides which kanji appear for her.</div>';
-  h += '<h3>📘 Where she is in the book</h3>';
-  h += '<div class="row" style="gap:8px;align-items:center"><button class="btn small '+(h0.on ? 'primary' : '')+'" data-kjp="hz">'+(h0.on ? '✅ On' : '⬜ Off')+'</button><span class="hint">Kanji of the Day follows hoshuko (this and the last 3 kanji pages, plus any weak spots)</span></div>';
-  h += '<div class="row" style="gap:8px;align-items:center;margin-top:6px"><button class="btn small '+(h0.kid !== false ? 'primary' : '')+'" data-kjp="kid">'+(h0.kid !== false ? '✅ On' : '⬜ Off')+'</button><span class="hint">She can change the page herself (from Kanji of the Day and her Kanji Book)'+(h0.by === 'kid' && h0.at ? '. She last moved it to p.'+h0.page+' on '+kjLog(h0.at) : '')+'</span></div>';
+  h += '<h3>📘 This week\u2019s pages</h3><div class="hint">Tap every page she has this week at hoshuko. Everything in her Kanji tab (practice, cards, games, word of the day) uses only these pages. Only you can change them.</div>';
   h += kjFeelParentHTML();
   h += kotoParentHTML();
   h += '<div class="row" style="gap:6px;margin-top:8px"><span class="hint">Book:</span>';
   ['上','下'].forEach(function(v){ h += '<button class="btn small '+(s.vol === v ? 'primary' : '')+'" data-kjp="vol:'+v+'">3年'+v+'</button>'; });
   h += '</div><div class="kjpgs">';
   kbPages(s.vol).forEach(function(x){
-    var on = (h0.vol === s.vol && h0.page === x.p);
+    var on = wkPages().some(function(o){ return o.v === x.v && o.p === x.p; });
     h += '<button class="kjpg'+(on ? ' on' : '')+'" data-kjp="pg:'+x.v+':'+x.p+'"><small>p.'+x.p+'</small><span lang="ja">'+x.ks.join('')+'</span></button>';
   });
-  h += '</div><div class="hint" style="margin-top:6px">Now on: <b>3年'+h0.vol+' p.'+h0.page+'</b>. Tap the page she is on at hoshuko.</div>';
-  h += '<div class="row" style="margin-top:6px"><button class="btn small" data-kjp="next">Next page ▶</button></div>';
+  h += '</div><div class="hint" style="margin-top:6px">This week: <b>'+(wkPages().length ? wkPages().map(function(o){ return '3年'+o.v+' p.'+o.p; }).join(', ') : 'none yet')+'</b></div>';
+  h += '<div class="row" style="gap:6px;margin-top:6px"><button class="btn small" data-kjp="next">Next week ▶ (next test\u2019s pages)</button><button class="btn small" data-kjp="pgclear">Clear</button></div>';
+  h += kqParentHTML();
 
   h += htParentHTML();
   if(kanjiState().oldKT) h += ktParentHTML();
@@ -15197,11 +15590,12 @@ document.addEventListener('click', function(e){
   if(a === 'hz'){ h0.on = !h0.on; save(); render(); }
   else if(a === 'kid'){ h0.kid = (h0.kid === false); save(); render(); }
   else if(a.indexOf('vol:') === 0){ s.vol = a.slice(4); }
-  else if(a.indexOf('pg:') === 0){ var p = a.split(':'); h0.vol = p[1]; h0.page = +p[2]; h0.pages = null; h0.by = 'parent'; s.vol = p[1]; save(); render(); }
+  else if(a.indexOf('pg:') === 0){ var p = a.split(':'), cur = (wkPages() || []).filter(function(o){ return o.v === p[1]; }), ix = -1; cur.forEach(function(o, k){ if(o.p === +p[2]) ix = k; }); if(ix > -1) cur.splice(ix, 1); else cur.push({v:p[1], p:+p[2]}); cur.sort(function(x, y){ return x.p - y.p; }); h0.pages = cur.length ? cur : null; h0.on = true; h0.vol = p[1]; if(cur.length) h0.page = cur[cur.length - 1].p; h0.by = 'parent'; s.vol = p[1]; save(); render(); }
+  else if(a === 'pgclear'){ h0.pages = null; h0.on = false; save(); render(); }
   else if(a === 'next'){
-    var pgs = kbPages(h0.vol), nx = null;
-    for(var i = 0; i < pgs.length; i++){ if(pgs[i].p > h0.page){ nx = pgs[i]; break; } }
-    if(nx){ h0.page = nx.p; h0.pages = null; h0.by = 'parent'; s.vol = h0.vol; save(); render(); } else toast('That is the last kanji page of this book.');
+    var curT = wkTest(), vv = curT ? curT.v : h0.vol, ts = HTB.filter(function(x){ return x.v === vv && x.k === 't' && x.kp; }).sort(function(a, b){ return a.kp - b.kp; }), ni = curT ? ts.indexOf(curT) + 1 : 0;
+    if(ni < ts.length){ var lo = ni ? ts[ni - 1].kp : 0, hi = ts[ni].kp, np = kbPages(vv).filter(function(x){ return x.p > lo && x.p < hi; }).map(function(x){ return {v:vv, p:x.p}; }); if(np.length){ h0.pages = np; h0.on = true; h0.vol = vv; h0.page = np[np.length - 1].p; h0.by = 'parent'; s.vol = vv; save(); render(); toast('This week: '+htName(ts[ni])); } }
+    else toast('That was the last test of this book. Switch the book above.');
   }
   else if(a.indexOf('tab:') === 0){ s.tab = a.slice(4); s.sel = {}; }
   else if(a.indexOf('sel:') === 0){ var c = a.slice(4); if(s.sel[c]) delete s.sel[c]; else s.sel[c] = 1; }
@@ -15825,7 +16219,8 @@ function kcbWeight(wd){
 }
 function kcbPick(n, only2){
   var rec = kjRecent().concat(kjFocus(), kjWeak()), cov = kjCovered();
-  var all = KWORDS.filter(function(x){ return !only2 || x.c; }).map(function(x){ return {x:x, w:kcbWeight(x), pri:x.g.some(function(c){ return rec.indexOf(c) > -1; }) && x.g.every(function(c){ return cov[c]; })}; });
+  var wkS = wkHas() ? htPicked() : null, wkAll = wkS && KWORDS.filter(function(x){ return (!only2 || x.c) && x.g.length && x.g.every(function(c){ return wkS[c]; }); }).length >= n;
+  var all = KWORDS.filter(function(x){ return (!only2 || x.c) && (!wkS || (x.g.length && (wkAll ? x.g.every(function(c){ return wkS[c]; }) : x.g.some(function(c){ return wkS[c]; })))); }).map(function(x){ return {x:x, w:kcbWeight(x), pri:x.g.some(function(c){ return rec.indexOf(c) > -1; }) && x.g.every(function(c){ return cov[c]; })}; });
   var out = [];
   function draw(list, k){
     var items = list.slice();
