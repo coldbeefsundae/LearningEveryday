@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.141', errs = [], shown = false;
+  var V = '26.11.143', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3047,6 +3047,56 @@ body[data-calm=on] .aursky i{opacity:.8}
 .ktbar{flex:1;height:10px;border-radius:6px;background:rgba(0,0,0,.08);overflow:hidden}.ktbar i{display:block;height:100%;background:#7bc96f;border-radius:6px}
 .kttime{margin-top:10px}.kttime summary{cursor:pointer;font-weight:700}
 .kthit{color:#e0559a}
+/* 26.11.143: hoshuko booklet tests */
+.htm .htstrip{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:6px 0 8px;direction:rtl}
+.htm .htstrip button{width:30px;height:30px;border-radius:50%;border:1.5px solid #c9bfa6;background:#fff;font:600 15px/1 var(--font);color:#555;padding:0}
+.htm .htstrip button.dn{background:#e8f4ff;border-color:#7fb3e6}
+.htm .htstrip button.on{background:#ffd23f;border-color:#e8a800;color:#222}
+.htwrap{display:flex;gap:10px;align-items:flex-start;justify-content:center}
+.htpadbox{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px}
+#htpad{background:#fffdf6;border:2px solid #b9ad8f;border-radius:6px;touch-action:none;display:block}
+.htcolbox{flex:0 0 auto;background:#fffdf6;border:1px solid #e0d6bd;border-radius:6px;padding:8px 4px;max-height:62vh;overflow:auto}
+.htcol{writing-mode:vertical-rl;text-orientation:upright;font-size:21px;line-height:1.9;color:#222;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;white-space:nowrap}
+.htcol .htn{font-family:var(--font);font-weight:700;margin-bottom:4px}
+.htcol ruby{ruby-position:over}
+.htcol rt{font-size:11px;font-family:var(--font);color:#333}
+.htb{display:inline-block;width:1.45em;height:1.45em;border:1.5px solid #333;vertical-align:middle;position:relative;background:#fff;line-height:1.45em;text-align:center}
+.htb + .htb{border-top:1px dashed #888}
+.htb.on{background:#fff4c2;box-shadow:0 0 0 2px #e8a800 inset}
+.htb.kana{color:#999;font-size:.8em}
+.htb svg{position:absolute;inset:0;width:100%;height:100%}
+.htk .htb{border:none;background:transparent}
+.htk .htb.on{background:#fff4c2}
+.htk .htbr{color:#333}
+.htpaper{display:flex;flex-direction:row-reverse;gap:6px;overflow-x:auto;background:#fffdf6;border:1px solid #e0d6bd;border-radius:6px;padding:10px 6px;max-height:70vh}
+.htpaper .htcol{font-size:18px}
+.htpaper .htb{width:1.7em;height:1.7em}
+.htpgref{font-size:12px;color:#666;text-align:center;margin:2px 0}
+.htlist{display:flex;flex-direction:column;gap:6px}
+.htrow{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5dcc6;border-radius:10px;padding:8px 10px;text-align:left;width:100%;font:inherit;color:inherit}
+.htrow .htap{font-size:22px;width:28px;text-align:center}
+.htrow .htrt{flex:1;min-width:0}
+.htrow .htrt small{display:block;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htrow .htsc{font-weight:700;white-space:nowrap}
+.htchips{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 10px}
+.htchips button{border:1px solid #d9cfb5;background:#fff;border-radius:14px;padding:4px 9px;font:13px var(--font)}
+.htchips button.ok{background:#e9f7ec;border-color:#8fcf9c}
+.htmark{display:flex;align-items:center;gap:8px;border-bottom:1px solid #eee3cc;padding:8px 0}
+.htmark .htms{flex:1;font-size:17px;line-height:2}
+.htmark .htms b{color:#c62828;font-size:1.15em}
+.htmark .htink{display:flex;gap:2px}
+.htmark .htink span{width:38px;height:38px;border:1px solid #bbb;background:#fff;position:relative;display:inline-block}
+.htmark .htink svg{position:absolute;inset:0;width:100%;height:100%}
+.htmark .htmb{display:flex;flex-direction:column;gap:4px}
+.htmark .htmb button{width:44px;height:34px;border-radius:8px;border:1.5px solid #ccc;background:#fff;font-size:18px}
+.htmark .htmb button.on1{background:#e9f7ec;border-color:#2e9e4f}
+.htmark .htmb button.on0{background:#fdecec;border-color:#d33}
+.htbig{font-size:46px;text-align:center;margin:6px 0}
+.htcard{background:#fffdf6;border:2px solid #e0d6bd;border-radius:14px;padding:22px 14px;text-align:center;font-size:22px;line-height:2;min-height:140px}
+.htcard .hl{background:#fff1a8;padding:0 4px;border-radius:4px}
+.htcard .ans{font-size:52px;line-height:1.3;color:#c62828;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+.htnext{background:linear-gradient(135deg,#fff8e1,#ffeef3);border:1.5px solid #f3d27a;border-radius:14px;padding:12px}
+.htnext h3{margin:0 0 2px}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -6969,21 +7019,20 @@ function helpData(){
     {q:'What if I had a quiet week?', a:'Quiet weeks are okay too. Kit only shows what you did, and rest is part of being strong.'},
     {q:'Do my kanji tests show up?', a:'Yes! If you did a kanji test that week you get a \ud83d\udcdd Kanji Test Award, and a perfect score gets a special \ud83d\udcaf Perfect Test Award.'}
   ]});
-  kid.push({t:'\ud83d\udcdd Kanji test', i:[
-    {q:'How do I do a kanji test?', a:li(['Go to <b>Kanji \u2192 \ud83c\udfaf Practice \u2192 \ud83d\udcdd Kanji test</b>.','Tick the pages for your test and pick 5, 10 or all.','Get a pencil and paper and write the numbers 1, 2, 3\u2026 down the side.','Kit reads each kanji out loud. Write it on your paper, then tap <b>Next</b>.','At the end, check your paper and tap \u3007 (maru) or \u00d7 (batsu) for each one. Remember to check the okurigana too!'])},
-    {q:'What do the buttons do?', a:li(['\ud83d\udd01 <b>Say it again</b> reads the kanji again.','\ud83d\udc40 <b>Show hint</b> shows the meaning and the reading.','\ud83d\udd0a <b>\u8a13 Kun</b>, <b>\u97f3 On</b> and <b>\u4f8b Example</b> read those out loud for you.'])},
-    {q:'Why does Kit sometimes say a word first?', a:'Some kanji sound the same, like \u6b6f and \u8449 (both \u306f). Then Kit says a word first, like your teacher does, so you know which one to write.'},
-    {q:'What does a test do for my kanji tree?', a:'Every test grows a big \ud83c\udf4e apple on your tree. Every kanji you get right turns into a \u2728 golden leaf. After 5 tests, a \u2b50 appears on top!'},
+  kid.push({t:'\ud83d\udcdd Kanji tests', i:[
+    {q:'How do I do a test?', a:li(['Go to <b>Kanji \u2192 \ud83c\udfaf Practice \u2192 \ud83d\udcdd \u307b\u3057\u3085\u3046\u3053\u3046\u30c6\u30b9\u30c8</b>. Your next test is at the top.','It is the same test as your booklet, with the same number and the same questions.','Read the sentence. Write the kanji for the furigana in the big box, one box at a time. Tap <b>Next box</b> for the next kanji. For \u3014 \u3015 write the okurigana too!','At the end, look at each answer next to your writing and tap \u2b55 or \u274c. Be honest, it helps you!'])},
+    {q:'What is Try my misses?', a:'Every question you miss goes into \ud83d\udd01 Try my misses. Get it right on two different days and it becomes a solid word \ud83d\udcaa.'},
+    {q:'What does a test do for my kanji tree?', a:'Each booklet test has one apple. The first time you finish it, a \ud83c\udf4f green apple grows. The first time you get 100 on it, it turns \ud83c\udf4e red. Doing the same test again never adds another apple, so keep going for red! Every new kanji you get right turns into a \u2728 golden leaf (each kanji gives one leaf, and a miss never takes one away). Apples from your old tests are in the \ud83e\uddfa basket under the tree. After 5 tests, a \u2b50 appears on top!'},
     {q:'What happens if I get a perfect score?', a:'Kit celebrates with you on the Kanji page for two days, and it shows up in your Weekly Star Awards!'},
     {q:'What if I get some wrong?', a:'That is what tests are for! Kit shows the ones you missed more often in practice, and you can tap \ud83c\udccf <b>Practise these</b> right away.'}
   ]});
-  par.push({t:'\ud83d\udcdd Kanji test', i:[
-    {q:'How does it work?', a:li(['Like her hoshuko test: Kit reads a kanji, she writes it on paper, then she checks her own answers.','She picks the pages (several pages, either book) and 5, 10 or all of the kanji. The order is random.','It reads the first kun reading (\u9f3b \u2192 \u306f\u306a). If the kanji has no kun reading, or another kanji in the same test sounds the same, it says a word first, like a teacher (\u533b \u2192 \u3044\u3057\u3083 \u306e \u3044).','The check screen shows the answer with okurigana in grey (\u60b2\u3057\u3044).'])},
-    {q:'Who marks it?', a:'She does, on purpose: honest self-checking builds good habits. Sitting with her for the check is a great way to help.'},
-    {q:'What is the timer?', a:'It is invisible during the test. On the results screen, open <b>\u23f1\ufe0f Time for each kanji</b> to see how long each one took, slowest first. Orange bars took much longer than her usual. \ud83d\udd01 means she replayed it, \ud83d\udc40 she used the hint, \ud83d\udd0a she used kun/on/example. Slow but \u3007 usually means almost there; slow with \u00d7 is the one to practise. If she closes the test mid-question, that time keeps counting.'},
-    {q:'What does it change?', a:li(['Missed kanji show up more in practice and Kanji of the Day.','+2 \u2b50 once a day for finishing a test, whatever the score.','Her kanji tree gets a \ud83c\udf4e for every test and a \u2728 golden leaf for every kanji she gets right.','A perfect test (3 or more kanji) makes Kit celebrate on the Kanji tab for 2 days, and gives a \ud83d\udcaf award in the Weekly Star Awards.'])},
-    {q:'Where can I see her results?', a:'Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko shows her last 8 tests: date, score, pages, missed kanji, slowest 3 and total time.'},
-    {q:'The voice sounds robotic', a:'Install a better Japanese voice. iPad: Settings \u2192 Accessibility \u2192 Spoken Content \u2192 Voices \u2192 Japanese (Kyoko Enhanced or Premium). Android: Settings \u2192 Text-to-speech \u2192 Speech Services by Google \u2192 Install voice data \u2192 Japanese. Then close and reopen StarQuest.'}
+  par.push({t:'\ud83d\udcdd Hoshuko booklet tests', i:[
+    {q:'How does it work?', a:li(['The tests are her real \u5149\u6751 \u304b\u3093\u307a\u304d\u30c6\u30b9\u30c8 booklets (3\u5e74\u4e0a and 3\u5e74\u4e0b): same test numbers, same 10 questions (20 for \u305f\u3057\u304b\u3081 and \u4e0a Test 15), same sentences and furigana, 10 points each.','One question per screen, laid out like the booklet (vertical). She writes each kanji in a big box with a cross guide, one box at a time. \u3014 \u3015 questions need okurigana too.','\ud83d\udcc4 Paper mode shows the whole test like the booklet page, she writes on paper, then checks.','No sound during the test, just like at hoshuko.'])},
+    {q:'Which test is next?', a:'It follows the page picker (the \u304b\u3093\u307a\u304d\u304f\u3093 page she is on). Pages 23\u201325 of 3\u4e0b means \u30c6\u30b9\u30c8\u2465\u30fb3\u4e0b. You can pick a different one and set a test date in Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko.'},
+    {q:'Who marks it?', a:'She does: the answer shows next to her own writing and she taps \u2b55 or \u274c. You can review it afterwards in Parent and change any mark.'},
+    {q:'What is the timer?', a:'It is invisible during the test. Her results page shows the total time and her time last time on the same test.'},
+    {q:'What does it change?', a:li(['One apple per test: \ud83c\udf4f green the first time she finishes it, \ud83c\udf4e red the first time she gets 100. Retakes never add apples (28 apples = every test in both books). \u3067\u304d\u308b\u304b\u306a gives no apple.','A \u2728 golden leaf for each different kanji she gets right (max 200). Apples from the old listening tests moved into a \ud83e\uddfa basket under the tree.','A missed question becomes a practice word (\ud83d\udd01 Try my misses) until she gets it right again. It is solid after two right answers on different days. Her red-pen misses from 3\u4e0a Tests 1\u201310 are already in the list.','+2 \u2b50 once a day for finishing a test. A perfect score gets Kit\u2019s celebration and the \ud83d\udcaf Weekly Star Award.'])},
+    {q:'Where is the old listening test?', a:'Parent \u2192 \ud83c\ude34 Kanji &amp; hoshuko \u2192 turn on \u201cAlso show the old listening test\u201d.'}
   ]});
   par.push({t:'🏆 Weekly Star Awards', i:[
     {q:'When does it show?', a:'On Sunday from the time you set (5 PM by default), the first time she is on the Quests page with nothing else open and no quest timer running. If the app is not opened on Sunday, it shows next time, still about the week that just ended. It shows once per week.'},
@@ -13873,7 +13922,7 @@ function renderKanjiTab(){
   if(sub === 'koto') kotoFilter();
 }
 function kjTodayHTML(){
-  var k = kanjiToday(), ks = kjExtra(), h = strongHTML() + kanjiPanelHTML();
+  var k = kanjiToday(), ks = kjExtra(), h = strongHTML() + htTodayCardHTML() + kanjiPanelHTML();
   var think = KJ_HEART[k.k] || KJ_THINK[dayNumX() % KJ_THINK.length].replace(/\{k\}/g, k.k).replace(/\{w\}/g, esc(k.w));
   h += '<div class="panel kjthink"><div class="ptitle">'+(KJ_HEART[k.k] ? '💛 Kanji with heart' : '💭 Think about it')+'</div><p>'+think+'</p></div>';
   h += '<div class="panel"><div class="ptitle">Do one thing, if you like</div><div class="kjacts">';
@@ -13893,6 +13942,7 @@ function kjBookTabHTML(){
     h += '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn primary" data-kjw="step:1">Next page \u25b6</button><button class="btn" data-kjw="open">Pick pages</button></div></div>';
   }
   h += '<div class="panel"><div class="ptitle">📖 My Kanji Book</div><div class="hint">'+kanjiCount()+' of '+KANJI.length+' kanji in your book. Tap one to see it again, or 🃏 to practise a page.</div>'+kjBookBody('none', true)+'</div>';
+  h += htBookHTML();
   return h;
 }
 function kjPracticeHTML(){
@@ -13902,7 +13952,7 @@ function kjPracticeHTML(){
   if(ks.prac.n >= 3) h += '<div class="kjbreak">🧃 <b>Brain break idea:</b> '+['10 star jumps','a glass of water','look out the window for 20 seconds','a big stretch up to the sky','3 slow breaths'][ks.prac.n % 5]+'. Then come back if you want!</div>';
   h += '<div class="kjpgrid">';
   [['Kanji cards', [['data-kfc="mode:read"','👀 Read it','See the kanji, flip for the reading'], ['data-kfc="mode:recall"','💭 Remember it','See the meaning, think of the kanji'], ['data-kfc="mode:pick"','🔍 Find the kanji','Pick the right one from four'], ['data-kfc="mode:look"','👯 Look-alikes','Tell tricky twins apart']]],
-   ['Test', [['data-kt="open"','📝 Kanji test','Listen, write on paper, check']]],
+   ['Test', [['data-ht="open"','📝 ほしゅうこうテスト','Your booklet tests, same numbers'], ['data-ht="go:miss"','🔁 Try my misses','Words you missed on tests']].concat(kanjiState().oldKT ? [['data-kt="open"','👂 Listening test','Kit reads, you write on paper']] : [])],
    ['Kanji combos', [['data-kcb="mode:build"','🧩 Build the word','Put two kanji together'], ['data-kcb="mode:miss"','🔎 Missing kanji','Which kanji fits the gap?'], ['data-kcb="mode:readw"','📖 Read the word','Pick the right reading'], ['data-kcb="fam:today"','🔗 Word family','All the words with one kanji']]],
    ['Writing', [['data-kw-open="today"','✍️ Write it','Stroke order and neat writing'], ['data-kwalbum="1"','📓 My writing','See how it has grown']]]
   ].forEach(function(g){
@@ -13937,19 +13987,412 @@ function kjTreeSVG(n, b){
     h += '<ellipse cx="'+x3+'" cy="'+y3+'" rx="5" ry="2.9" fill="#ffd23f" stroke="#e8a800" stroke-width=".5" transform="rotate('+Math.round(rnd() * 180)+' '+x3+' '+y3+')"/>';
   }
   seed = 777;
-  for(var ai = 0; ai < Math.min(tt.tests, 30); ai++){
-    var c4 = C[ai % 4], a4 = rnd() * 6.283, r4 = Math.sqrt(rnd()) * (c4[2] - 9), x4 = (c4[0] + Math.cos(a4) * r4).toFixed(1), y4 = (c4[1] + Math.sin(a4) * r4).toFixed(1);
-    h += '<circle cx="'+x4+'" cy="'+y4+'" r="6.5" fill="#e53935" stroke="#a31515" stroke-width=".8"/><circle cx="'+(x4 - 2)+'" cy="'+(y4 - 2)+'" r="1.8" fill="#ffffff" opacity=".7"/><path d="M'+x4+' '+(y4 - 6)+'l2 -4" stroke="#5d3a1a" stroke-width="1.4"/>';
+  for(var ai = 0; ai < Math.min(tt.apples.length, 30); ai++){
+    var c4 = C[ai % 4], a4 = rnd() * 6.283, r4 = Math.sqrt(rnd()) * (c4[2] - 9), x4 = (c4[0] + Math.cos(a4) * r4).toFixed(1), y4 = (c4[1] + Math.sin(a4) * r4).toFixed(1), red4 = tt.apples[ai] === 'r';
+    h += '<circle cx="'+x4+'" cy="'+y4+'" r="6.5" fill="'+(red4 ? '#e53935' : '#8bc34a')+'" stroke="'+(red4 ? '#a31515' : '#558b2f')+'" stroke-width=".8"/><circle cx="'+(x4 - 2)+'" cy="'+(y4 - 2)+'" r="1.8" fill="#ffffff" opacity=".7"/><path d="M'+x4+' '+(y4 - 6)+'l2 -4" stroke="#5d3a1a" stroke-width="1.4"/>';
   }
+  if(tt.basket) h += '<g><path d="M22 152h30l-4 16h-22z" fill="#c68a4a" stroke="#8d5a3b" stroke-width="1"/><path d="M26 152q11-12 22 0" fill="none" stroke="#8d5a3b" stroke-width="1.6"/><circle cx="31" cy="150" r="4" fill="#e53935"/><circle cx="39" cy="149" r="4" fill="#e53935"/><circle cx="46" cy="151" r="3.6" fill="#e53935"/><text x="37" y="164" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">'+tt.basket+'</text></g>';
   if(tt.tests >= 5) h += '<text x="110" y="20" text-anchor="middle" font-size="22">\u2b50</text>';
   if(!n) h += '<path d="M110 160q-2-10 0-16M110 150q-8-6-12-2 4 6 12 2zM110 146q8-6 12-2-4 6-12 2z" stroke="#4caf50" stroke-width="2" fill="#7bc96f"/>';
   return h + '</svg>';
 }
+var HTB = [{"id":"下D1","v":"下","k":"d","n":1,"t":"","bp":2,"tb":"13〜24","kp":null,"q":[["ノートに書き","写す","うつす","。","k"],["","真冬","まふゆ","の気温。","b"],["","出血","しゅっけつ","が止まる。","b"],["詩を","暗記","あんき","する。","b"],["大きな","鉄橋","てっきょう","。","b"],["残","暑","しょ","がつづく。","b"]]},{"id":"下T1","v":"下","k":"t","n":1,"t":"ちいちゃんのかげおくり(1)","bp":1,"tb":"13〜24","kp":5,"q":[["本の","感想","かんそう","をつたえる。","b"],["","父さん","とうさん","のかばんを持つ。","b","A"],["","兄さん","にいさん","のかさをかりる。","b","A"],["花の","写真","しゃしん","をかざる。","b"],["","列車","れっしゃ","がえきに着く。","b"],["きず口から","血","ち","がにじむ。","b"],["","暗い","くらい","道にあかりがつく。","k"],["大きな川に","橋","はし","がかかる。","b"],["","深い","ふかい","森にすむ動物。","k"],["","暑い","あつい","夏がすぎる。","k"]]},{"id":"下T2","v":"下","k":"t","n":2,"t":"ちいちゃんのかげおくり(2)・修飾語を使って書こう(1)","bp":3,"tb":"24〜33","kp":10,"q":[["","寒い","さむい","冬が来る。","k"],["","軽い","かるい","はこを持つ。","k"],["人の","命","いのち","を助ける。","b"],["リレーの","第一","だいいち","走者。","b"],["姉にかりたペンを","返す","かえす","。","k"],["文の中の","主語","しゅご","をさがす。","b"],["","本州","ほんしゅう","は晴れのよほうだ。","b"],["","九州","きゅうしゅう","に住む友だち。","b"],["","屋根","やね","に雪がつもる。","b"],["おもい","荷物","にもつ","を運ぶ。","b"]]},{"id":"下D2","v":"下","k":"d","n":2,"t":"","bp":4,"tb":"24〜33","kp":null,"q":[["","軽食","けいしょく","を用意する。","b"],["","運命","うんめい","を感じる。","b"],["立場を","明らか","あきらか","にする。","k"],["","風船","ふうせん","で遊ぶ。","b"],["ビルの","屋上","おくじょう","。","b"],["ゆりの","球根","きゅうこん","。","b"]]},{"id":"下T3","v":"下","k":"t","n":3,"t":"修飾語を使って書こう(2)・秋のくらし・おすすめの一さつを決めよう・すがたをかえる大豆・食べ物のひみつを教えます","bp":5,"tb":"33〜55","kp":15,"q":[["やくそくを","守る","まもる","。","k"],["生活の","役","やく","に立つ道具。","b"],["今年の","新米","しんまい","をたく。","b"],["","大豆","だいず","からみそを作る。","b"],["田んぼのいねが","育つ","そだつ","。","k"],["","消化","しょうか","のよい食事をとる。","b"],["れきしの本を手に","取る","とる","。","k"],["店がいそがしい","時期","じき","になる。","b"],["広い","畑","はたけ","をたがやす。","b"],["国語のテストが","終わる","おわる","。","k"]]},{"id":"下D3","v":"下","k":"d","n":3,"t":"","bp":6,"tb":"33〜55","kp":null,"q":[["","守","しゅ","備をかためる。","b"],["","豆","まめ","まきをする。","b"],["ゆめを","育む","はぐくむ","。","k"],["字を","消す","けす","。","k"],["店を","取","しゅ","材する。","b"],["電車の","終点","しゅうてん","。","b"]]},{"id":"下T4","v":"下","k":"t","n":4,"t":"ことわざ・こじせいご","bp":7,"tb":"56〜59","kp":18,"q":[["のこり物には","福","ふく","がある。","b"],["言葉の","意味","いみ","を考える。","b"],["本の","目次","もくじ","を開く。","b"],["りんごが木から","落ちる","おちる","。","k"],["まち合わせの場所に","急ぐ","いそぐ","。","k"],["朝七時に","起きる","おきる","。","k"],["","苦","く","労して作品を仕上げる。","b"],["学校での","出来事","できごと","を話す。","b"],["教室でしずかに","待つ","まつ","。","k"],["なやみを","相談","そうだん","する。","b"]]},{"id":"下D4","v":"下","k":"d","n":4,"t":"","bp":8,"tb":"56〜59","kp":null,"q":[["","急用","きゅうよう","を思いだす。","b"],["全員が","起","き","立する。","b"],["","苦い","にがい","食べ物。","k"],["水を","多少","たしょう","くわえる。","b"],["","期待","きたい","の新人。","b"],["市長と","対談","たいだん","する。","b"]]},{"id":"下T5","v":"下","k":"t","n":5,"t":"漢字の意味(1)","bp":9,"tb":"60〜61","kp":22,"q":[["ぞうの","鼻","はな","は長い。","b"],["はしを上手に","使う","つかう","。","k"],["食後に","歯","は","をみがく。","b"],["かるたのふだを","交ぜる","まぜる","。","k"],["広場の","中央","ちゅうおう","に集まる。","b"],["","二階","にかい","のまどをしめる。","b"],["日当たりのよい","部屋","へや","。","b"],["","今朝","けさ","も天気がいい。","b"],["図書","委員","いいん","になる。","b"],["","学級","がっきゅう","新聞を作る。","b"]]},{"id":"下D5","v":"下","k":"d","n":5,"t":"","bp":10,"tb":"60〜61","kp":null,"q":[["","鼻血","はなぢ","が止まる。","b"],["","歯科","しか","医院に行く。","b"],["長い","階","かい","だんを下りる。","b"],["","世界","せかい","地図を見る。","b"],["決定を","委ねる","ゆだねる","。","k"],["","同級生","どうきゅうせい","。","b"]]},{"id":"下T6","v":"下","k":"t","n":6,"t":"漢字の意味(2)・たんかを楽しもう","bp":11,"tb":"61〜63","kp":26,"q":[["おじは","昭和","しょうわ","生まれだ。","b"],["","駅","えき","で友だちに会う。","b"],["当時の","様子","ようす","が分かる。","b"],["時計の","仕組み","しくみ","を知る。","k"],["漢字の意味を","教わる","おそわる","。","k"],["みかんの","皮","かわ","をむく。","b"],["食後に","皿","さら","をあらう。","b"],["ピアノを","習う","ならう","。","k"],["思い出を","短歌","たんか","にする。","b"],["","悲しい","かなしい","物語を読む。","k"]]},{"id":"下D6","v":"下","k":"d","n":6,"t":"","bp":12,"tb":"61〜63","kp":null,"q":[["","平和","へいわ","な社会。","b"],["","駅前","えきまえ","の店。","b"],["","皮","ひ","ふに薬をぬる。","b"],["","大皿","おおざら","をならべる。","b"],["","短い","みじかい","詩を書く。","k"],["言葉に","表す","あらわす","。","k"]]},{"id":"下T7","v":"下","k":"t","n":7,"t":"三年とうげ(1)","bp":13,"tb":"65〜70","kp":30,"q":[["","昔","むかし","の話を聞く。","b"],["きせきが","起こる","おこる","。","k"],["大きく","息","いき","をすう。","b"],["","美しい","うつくしい","花がさく。","k"],["雪道ですべって","転ぶ","ころぶ","。","k"],["","暗い","くらい","部屋にあかりをつける。","k"],["","病気","びょうき","をよぼうする。","b"],["","医者","いしゃ","のしんさつをうける。","b"],["とても苦い","薬","くすり","だ。","b"],["温かいお茶を","飲む","のむ","。","k"]]},{"id":"下D7","v":"下","k":"d","n":7,"t":"","bp":14,"tb":"65〜70","kp":null,"q":[["","休息","きゅうそく","する場所。","b"],["町の","美化","びか","活動。","b"],["県外に","転校","てんこう","する。","b"],["顔が","真っ青","まっさお","になる。","b"],["","病","やまい","がなおる。","b"],["","飲食","いんしょく","店ができる。","b"]]},{"id":"下T8","v":"下","k":"t","n":8,"t":"三年とうげ(2)・わたしの町のよいところ・冬のくらし","bp":15,"tb":"70〜87","kp":33,"q":[["","重い","おもい","本をかかえる。","k"],["晴れるかどうか","心配","しんぱい","だ。","b"],["もう","一度","いちど","ためす。","b"],["","幸せ","しあわせ","な気持ちになる。","k"],["休む","理由","りゆう","をつたえる。","b"],["外国人と","交流","こうりゅう","する。","b"],["遠足で","水族館","すいぞくかん","に行く。","b"],["外で元気に","遊ぶ","あそぶ","。","k"],["","具体","ぐたい","的な計画を話す。","b"],["外は雪で","銀世界","ぎんせかい","だ。","b"]]},{"id":"下D8","v":"下","k":"d","n":8,"t":"","bp":16,"tb":"70〜87","kp":null,"q":[["新聞紙を","重ねる","かさねる","。","k"],["画用紙を","配る","くばる","。","k"],["","角度","かくど","をはかる。","b"],["","幸福","こうふく","なくらし。","b"],["音楽が","流れる","ながれる","。","k"],["","高校生","こうこうせい","の姉。","b"]]},{"id":"下T9","v":"下","k":"t","n":9,"t":"四まいの絵を使って・カンジーはかせの音訓かるた(1)・しのくふうを楽しもう","bp":17,"tb":"88〜94","kp":37,"q":[["お気に入りの","詩","し","を読む。","b"],["まっすぐ前に","進む","すすむ","。","k"],["心にのこる","場面","ばめん","。","b"],["新しい","手帳","てちょう","を開く。","b"],["","千代紙","ちよがみ","でつるをおる。","b"],["次のかどを右に","曲がる","まがる","。","k"],["野球チームの","投手","とうしゅ","。","b"],["","石炭","せきたん","をもやす。","b"],["","羊毛","ようもう","でぬのをおる。","b"],["海に近い","宿","やど","にとまる。","b"]]},{"id":"下D9","v":"下","k":"d","n":9,"t":"","bp":18,"tb":"88〜94","kp":null,"q":[["クラスの","代表","だいひょう","。","b"],["ゆるやかな","曲線","きょくせん","。","b"],["さじを","投げる","なげる","。","k"],["","炭","すみ","に火をつける。","b"],["","羊","ひつじ","を育てる。","b"],["昔の","宿場町","しゅくばまち","。","b"]]},{"id":"下T10","v":"下","k":"t","n":10,"t":"カンジーはかせの音訓かるた(2)","bp":19,"tb":"94〜95","kp":41,"q":[["家で","昼食","ちゅうしょく","をとる。","b"],["とうふを","一丁","いっちょう","使う。","b"],["","宮大工","みやだいく","にあこがれる。","b"],["","寺院","じいん","をめぐる。","b"],["お","礼","れい","の手紙を書く。","b"],["","上等","じょうとう","な品をもらう。","b"],["駅と","反対","はんたい","の方向に行く。","b"],["","君","きみ","の意見にさんせいだ。","b"],["はじめてひこうきに","乗る","のる","。","k"],["引き出しの中を","整える","ととのえる","。","k"]]},{"id":"下D10","v":"下","k":"d","n":10,"t":"","bp":20,"tb":"94〜95","kp":null,"q":[["ごうかな","宮","きゅう","でん。","b"],["","朝礼","ちょうれい","の時間。","b"],["","等しい","ひとしい","長さに切る。","k"],["むねを","反らす","そらす","。","k"],["森川","君","くん","の発言。","b"],["バスの","乗客","じょうきゃく","。","b"]]},{"id":"下T11","v":"下","k":"t","n":11,"t":"漢字の広場⑤・ありの行列・つたわる言葉で表そう・たから島のぼうけん・お気に入りの場所、教えます","bp":21,"tb":"96〜120","kp":46,"q":[["時計の","電池","でんち","をかえる。","b"],["","庭","にわ","に花を植える。","b"],["そでのボタンが","外れる","はずれる","。","k"],["高い山が","行く","ゆく","手をさえぎる。","k"],["虫について","細か","こまか","に調べる。","k"],["動物の","研究","けんきゅう","をする。","b"],["二本の道が","交わる","まじわる","。","k"],["板にくぎを","打つ","うつ","。","k"],["算数のテストを","受ける","うける","。","k"],["遠くに","島","しま","が見える。","b"]]},{"id":"下D11","v":"下","k":"d","n":11,"t":"","bp":22,"tb":"96〜120","kp":null,"q":[["","校庭","こうてい","で遊ぶ。","b"],["するどい","打球","だきゅう","。","b"],["メールを","受","じゅ","信する。","b"],["日本","列島","れっとう","。","b"],["","強弱","きょうじゃく","をつける。","b"],["","感想","かんそう","をつたえる。","b"]]},{"id":"下T12","v":"下","k":"t","n":12,"t":"モチモチの木","bp":23,"tb":"121〜136","kp":50,"q":[["先を歩く姉を","追う","おう","。","k"],["りんごの","実","み","がなる。","b"],["妹は三月","二十日","はつか","生まれだ。","b"],["","今夜","こんや","は月がきれいだ。","b"],["サッカーの","神様","かみさま","。","b"],["","薬箱","くすりばこ","を開ける。","b"],["","明かり","あかり","を消してねる。","k"],["やかんから","湯","ゆ","を注ぐ。","b"],["","他人","たにん","に気をつかう。","b"],["じぶん","自身","じしん","を見つめ直す。","b"]]},{"id":"下D12","v":"下","k":"d","n":12,"t":"","bp":24,"tb":"121〜136","kp":null,"q":[["文書に","追記","ついき","する。","b"],["","事実","じじつ","を知る。","b"],["","神社","じんじゃ","のお祭り。","b"],["熱","湯","とう","をさます。","b"],["","他","ほか","のやり方。","b"],["","身近","みぢか","な問題。","b"]]},{"id":"上R","v":"上","k":"r","n":0,"t":"二年生でならった漢字","bp":1,"tb":"2年","kp":null,"q":[["","外","そと","で元気にあそぶ。","b"],["長い文に","点","てん","をうつ。","b"],["空に","雲","くも","がうかぶ。","b"],["","親友","しんゆう","に電話をかける。","b"],["","午後","ごご","から雨がふりだす。","b"],["","図工","ずこう","のじゅんびをする。","b"],["そうじ","当番","とうばん","になる。","b"],["","今週","こんしゅう","のよていを立てる。","b"],["","三万人","さんまんにん","のかんきゃく。","b"],["","画用紙","がようし","に絵をかく。","b"],["妹と","同じ","おなじ","色のぼうしを買う。","k"],["","新しい","あたらしい","えんぴつをつかう。","k"],["おじいさんの家までは","遠い","とおい","。","k"],["大きな声で文を","読む","よむ","。","k"],["手をつないで","歩く","あるく","。","k"],["もうすぐ夜が","明ける","あける","。","k"],["学校からまっすぐ家に","帰る","かえる","。","k"],["校ていを力いっぱい","走る","はしる","。","k"],["えきまでの近道を","教える","おしえる","。","k"],["家に先生が","来る","くる","。","k"]]},{"id":"上T1","v":"上","k":"t","n":1,"t":"よく聞いて、じこしょうかい・どきん・わたしのさいこうの一日・つづけてみよう・春風をたどって(1)","bp":3,"tb":"14〜23","kp":5,"q":[["声に出して","詩","し","を読む。","b","M"],["","言葉","ことば","のいみをしらべる。","b"],["算数の","学習","がくしゅう","をする。","b"],["雲の形に","着目","ちゃくもく","する。","b","M"],["ねる前に","日記","にっき","を書く。","b"],["お話の","登場人物","とうじょうじんぶつ","。","b","M"],["自分の","気持ち","きもち","をつたえる。","k","M"],["兄と","旅","たび","に出かける。","b","M"],["","白一色","しろいっしょく","のけしき。","b"],["月が","黄金","おうごん","にかがやく。","b","M"]]},{"id":"上D1","v":"上","k":"d","n":1,"t":"","bp":4,"tb":"14〜23","kp":null,"q":[["もみじが落","葉","よう","する。","b"],["ダンスを","習う","ならう","。","k"],["妹にふくを","着せる","きせる","。","k"],["さるが木に","登る","のぼる","。","k"],["","作物","さくもつ","をそだてる。","b"],["海外","旅行","りょこう","。","b"]]},{"id":"上T2","v":"上","k":"t","n":2,"t":"春風をたどって(2)・図書館たんていだん","bp":5,"tb":"24〜37","kp":10,"q":[["帰りの会を","始める","はじめる","。","k","M"],["ゴールにむかって","進む","すすむ","。","k","M"],["ロボットが","動く","うごく","。","k","M"],["","深い","ふかい","海にすむ魚。","k","M"],["町の","様子","ようす","がかわる。","b","M"],["","一人","ひとり","で学校に行く。","b"],["出会いの","場面","ばめん","をえがく。","b","M"],["","図書館","としょかん","で本を読む。","b","M"],["電話","番号","ばんごう","をかく。","b","M"],["虫の名前を","調べる","しらべる","。","k","M"]]},{"id":"上D2","v":"上","k":"d","n":2,"t":"","bp":6,"tb":"24〜37","kp":null,"q":[["車が","前進","ぜんしん","する。","b"],["","水深","すいしん","をはかる。","b"],["","今日","きょう","の時間わり。","b"],["","空気","くうき","をすいこむ。","b"],["","物語","ものがたり","を読む。","b"],["","二人","ふたり","で話す。","b"]]},{"id":"上T3","v":"上","k":"t","n":3,"t":"国語辞典を使おう(1)","bp":7,"tb":"38〜39","kp":13,"q":[["国語辞典を","使う","つかう","。","k","M"],["かんたんな","問い","とい","に答える。","k","M"],["言葉の","意味","いみ","を知る。","b","M"],["","湖","みずうみ","のほとりを歩く。","b","M"],["ノートに","漢字","かんじ","をうつす。","b","M"],["","長い","ながい","れつにならぶ。","k"],["前の人の","後","あと","につづく。","b","M"],["丸い","形","かたち","の石をひろう。","b","M"],["兄と","海","うみ","でおよぐ。","b"],["","夜","よる","の空を見る。","b"]]},{"id":"上D3","v":"上","k":"d","n":3,"t":"","bp":8,"tb":"38〜39","kp":null,"q":[["へやを","使用","しよう","する。","b"],["","学問","がくもん","をおさめる。","b"],["","意外","いがい","に思う。","b"],["音楽を","味わう","あじわう","。","k"],["琵琶","湖","こ","。","b"],["","漢数字","かんすうじ","。","b"]]},{"id":"上T4","v":"上","k":"t","n":4,"t":"国語辞典を使おう(2)","bp":9,"tb":"40","kp":17,"q":[["","自由","じゆう","な時間をすごす。","b"],["ボールをまとに","当てる","あてる","。","k","M"],["答えを","考える","かんがえる","。","k"],["","温かい","あたたかい","スープを作る。","k"],["あま","酒","ざけ","を用意する。","b"],["むずかしい","問題","もんだい","をとく。","b","M"],["新しい本が","発売","はつばい","される。","b","M"],["","人形","にんぎょう","であそぶ。","b","M"],["長い","文章","ぶんしょう","を読む。","b","M"],["","平気","へいき","な顔をする。","b","M"]]},{"id":"上D4","v":"上","k":"d","n":4,"t":"","bp":10,"tb":"40","kp":null,"q":[["ことわざの","由来","ゆらい","。","b"],["","気温","きおん","が下がる。","b"],["ぶどう","酒","しゅ","の産地。","b"],["本の","題名","だいめい","。","b"],["英語の","発音","はつおん","。","b"],["","平ら","たいら","な道。","k"]]},{"id":"上T5","v":"上","k":"t","n":5,"t":"春のくらし・もっと知りたい、友だちのこと・きちんとつたえるために・漢字の音と訓(1)","bp":11,"tb":"42〜51","kp":22,"q":[["クラスのかかりを","決める","きめる","。","k","M"],["今日の","出来事","できごと","を話す。","b","M"],["まとの","中心","ちゅうしん","をねらう。","b","M"],["ハンカチを","落とす","おとす","。","k","M"],["","相手","あいて","に考えをつたえる。","b","M"],["自分の","洋服","ようふく","をたたむ。","b","M"],["","母さん","かあさん","の絵をかく。","b","A"],["","次","つぎ","のページをひらく。","b","M"],["毎日","朝食","ちょうしょく","をとる。","b","M"],["高い","所","ところ","に上がる。","b","M"]]},{"id":"上D5","v":"上","k":"d","n":5,"t":"","bp":12,"tb":"42〜51","kp":null,"q":[["","決意","けつい","をかためる。","b"],["","用事","ようじ","をすます。","b"],["","落語","らくご","を聞く。","b"],["","相当","そうとう","なこんきだ。","b","U"],["","目次","もくじ","を見る。","b"],["","早朝","そうちょう","にでかける。","b"]]},{"id":"上T6","v":"上","k":"t","n":6,"t":"漢字の音と訓(2)","bp":13,"tb":"51","kp":26,"q":[["川ぞいの","県道","けんどう","を通る。","b"],["","有名","ゆうめい","な詩を読む。","b","M"],["地面に","日光","にっこう","が当たる。","b"],["コップに","氷","こおり","を入れる。","b"],["あと","一分","いっぷん","でバスが出る。","b"],["","六十秒","ろくじゅうびょう","を数える。","b","M"],["","農家","のうか","のおじさんをたずねる。","b"],["かかりの","仕事","しごと","をてつだう。","b","M"],["","野球","やきゅう","のしあいを見る。","b","M"],["テレビ","局","きょく","ではたらく。","b","M"]]},{"id":"上D6","v":"上","k":"d","n":6,"t":"","bp":14,"tb":"51","kp":null,"q":[["絵画を","所有","しょゆう","する。","b"],["大きな","氷山","ひょうざん","。","b"],["","一秒間","いちびょうかん","。","b"],["","農作物","のうさくぶつ","。","b"],["王様に","仕える","つかえる","。","k"],["テニスの","球","たま","。","b"]]},{"id":"上T7","v":"上","k":"t","n":7,"t":"文様・こまを楽しむ(1)","bp":15,"tb":"53〜57","kp":31,"q":[["クラス","全体","ぜんたい","で話し合う。","b","M"],["弟とこまで","遊ぶ","あそぶ","。","k"],["めずらしい虫を","発見","はっけん","する。","b","M"],["気持ちを言葉で","表す","あらわす","。","k","M"],["はるか","昔","むかし","の出来事。","b"],["","世界","せかい","を旅する。","b","M"],["漢字のテストを","行う","おこなう","。","k"],["本を","元","もと","のたなにもどす。","b","M"],["姉は走るのが","速い","はやい","。","k","M"],["トマトを","横","よこ","に切る。","b","M"]]},{"id":"上D7","v":"上","k":"d","n":7,"t":"","bp":16,"tb":"53〜57","kp":null,"q":[["","全く","まったく","ちがう話。","k"],["","遊園地","ゆうえんち","。","b"],["教科書の","表紙","ひょうし","。","b"],["","世","よ","のうつりかわり。","b"],["","速","そく","度をはかる。","b"],["","横","おう","だんほどう。","b"]]},{"id":"上T8","v":"上","k":"t","n":8,"t":"こまを楽しむ(2)・全体と中心・気持ちをこめて、「来てください」","bp":17,"tb":"58〜69","kp":35,"q":[["字を","指","ゆび","でなぞる。","b"],["兄は歌が","上手","じょうず","だ。","b"],["","鉄","てつ","のとびらをあける。","b"],["いすを","安定","あんてい","させる。","b"],["小学校の","運動会","うんどうかい","。","b"],["あすの","予習","よしゅう","をする。","b"],["五十メートル","走","そう","に出る。","b"],["ピアノ教室に","通う","かよう","。","k"],["はがきを","送る","おくる","。","k"],["","住所","じゅうしょ","を調べる。","b","M"]]},{"id":"上D8","v":"上","k":"d","n":8,"t":"","bp":18,"tb":"58〜69","kp":null,"q":[["議長に","指名","しめい","する。","b"],["野菜が","安い","やすい","。","k"],["ルールを","定める","さだめる","。","k"],["五月","一日","ついたち","。","b"],["つくえを","運ぶ","はこぶ","。","k"],["外国に","住む","すむ","。","k"]]},{"id":"上T9","v":"上","k":"t","n":9,"t":"まいごのかぎ(1)","bp":19,"tb":"71〜83","kp":40,"q":[["赤と青の絵の","具","ぐ","を使う。","b","M"],["ボールを","拾う","ひろう","。","k","M"],["バスでとなり町へ","向かう","むかう","。","k"],["","坂","さか","の多い町に住む。","b","M"],["おどろいて","悲鳴","ひめい","を上げる。","b"],["","緑色","みどりいろ","のかばんを持つ。","b"],["おうだん","歩道","ほどう","をわたる。","b"],["理科の教科書を","開く","ひらく","。","k"],["大きな鳥が","羽","は","ばたく。","b"],["","海岸","かいがん","を走る。","b"]]},{"id":"上D9","v":"上","k":"d","n":9,"t":"","bp":20,"tb":"71〜83","kp":null,"q":[["船が進む","方向","ほうこう","。","b"],["","金物","かなもの","を売る店。","b"],["","丸い","まるい","形のテーブル。","k"],["","悲しい","かなしい","出来事。","k"],["","緑茶","りょくちゃ","をいれる。","b"],["","開会","かいかい","式。","b"]]},{"id":"上T10","v":"上","k":"t","n":10,"t":"まいごのかぎ(2)・俳句を楽しもう","bp":21,"tb":"84〜93","kp":44,"q":[["","路線","ろせん","バスにのる。","b","M"],["心に深く","感じる","かんじる","。","k","M"],["親友に","対","たい","する思い。","b"],["言葉の","調子","ちょうし","を楽しむ。","b","M"],["文を二つに","区切る","くぎる","。","k","M"],["","東","ひがし","の空をながめる。","b"],["","太陽","たいよう","が西にしずむ。","b","M"],["つくえの上を","整える","ととのえる","。","k"],["","歌詞","かし","をおぼえる。","b"],["文の","一部","いちぶ","を直す。","b","M"]]},{"id":"上D10","v":"上","k":"d","n":10,"t":"","bp":22,"tb":"84〜93","kp":null,"q":[["","旅路","たびじ","につく。","b"],["わずかに","感心","かんしん","する。","b"],["市長と","対話","たいわ","する。","b"],["春の","陽気","ようき","。","b"],["持ち物を","整理","せいり","する。","b"],["本を","全部","ぜんぶ","読む。","b"]]},{"id":"上T11","v":"上","k":"t","n":11,"t":"こそあど言葉を使いこなそう・引用するとき・仕事のくふう、見つけたよ","bp":23,"tb":"94〜102","kp":48,"q":[["","近所","きんじょ","の公園で遊ぶ。","b"],["プールで","泳ぐ","およぐ","。","k"],["歌の","練習","れんしゅう","をする。","b"],["姉の","助言","じょげん","を聞く。","b"],["日本の","童話","どうわ","を読む。","b"],["工場に見学を","申し","もうし","こむ。","k"],["文章を","引用","いんよう","する。","b"],["","大人","おとな","に相談する。","b"],["店に","商品","しょうひん","をならべる。","b"],["お","客様","きゃくさま","にお茶を出す。","b"]]},{"id":"上D11","v":"上","k":"d","n":11,"t":"","bp":24,"tb":"94〜102","kp":null,"q":[["","水泳","すいえい","をならう。","b"],["考えを","練る","ねる","。","k"],["弟を","助ける","たすける","。","k"],["とく点を","合計","ごうけい","する。","b"],["八時に","出発","しゅっぱつ","する。","b"],["","品物","しなもの","をわたす。","b"]]},{"id":"上T12","v":"上","k":"t","n":12,"t":"符号など・夏のくらし・本で知ったことをクイズにしよう・鳥になったきょうりゅうの話","bp":25,"tb":"103〜117","kp":53,"q":[["弟の","入学式","にゅうがくしき","。","b"],["","去年","きょねん","のニュース。","b"],["いつもの","二倍","にばい","練習する。","b"],["","毛筆","もうひつ","で字を書く。","b"],["","銀行","ぎんこう","にお金をあずける。","b"],["","植物","しょくぶつ","の名前を知る。","b"],["きれいな貝がらを","集める","あつめる","。","k"],["きょうりゅうの","化石","かせき","。","b"],["小さな虫が","死ぬ","しぬ","。","k"],["先生に","都合","つごう","をたずねる。","b"]]},{"id":"上D12","v":"上","k":"d","n":12,"t":"","bp":26,"tb":"103〜117","kp":null,"q":[["","晴天","せいてん","がつづく。","b"],["","同時","どうじ","に出発する。","b"],["","今年","ことし","のもくひょう。","b"],["","直線","ちょくせん","を引く。","b"],["","二日","ふつか","間の休み。","b"],["","新た","あらた","な発見。","k"]]},{"id":"上T13","v":"上","k":"t","n":13,"t":"わたしと小鳥とすずと・夕日がせなかをおしてくる・こんな係がクラスにほしい・ポスターを読もう・書くことを考えるときは・漢字の組み立て(1)","bp":27,"tb":"118〜131","kp":58,"q":[["","両手","りょうて","を広げる。","b"],["じゃんけんで","負ける","まける","。","k"],["","係","かかり","の仕事にとり組む。","b"],["クラスの","全員","ぜんいん","が集まる。","b"],["町内の","祭り","まつり","にさんかする。","k"],["","農作業","のうさぎょう","をてつだう。","b"],["","鉄板","てっぱん","で肉をやく。","b"],["","電柱","でんちゅう","に鳥が止まる。","b"],["","油田","ゆでん","の開発が進む。","b"],["","空港","くうこう","を見学する。","b"]]},{"id":"上D13","v":"上","k":"d","n":13,"t":"","bp":28,"tb":"118〜131","kp":null,"q":[["","文化祭","ぶんかさい","。","b"],["","板","いた","の間がある家。","b"],["チームの","柱","はしら","。","b"],["","時計","とけい","を見る。","b"],["","休日","きゅうじつ","に出かける。","b"],["ごまを","油","あぶら","であげる。","b"]]},{"id":"上T14","v":"上","k":"t","n":14,"t":"漢字の組み立て(2)・ローマ字","bp":29,"tb":"132〜138","kp":63,"q":[["上を向いて","目薬","めぐすり","をさす。","b"],["","草笛","くさぶえ","を作る。","b"],["","注意","ちゅうい","をよびかける。","b"],["","悪者","わるもの","をこらしめる。","b"],["きけんを","感知","かんち","する。","b","U"],["しんけんに","勝負","しょうぶ","をする。","b"],["トラックを","車庫","しゃこ","に入れる。","b"],["ラジオの","電波","でんぱ","がとどく。","b"],["校内","放送","ほうそう","がながれる。","b"],["国語の","勉強","べんきょう","をする。","b"]]},{"id":"上D14","v":"上","k":"d","n":14,"t":"","bp":30,"tb":"132〜138","kp":null,"q":[["","雲海","うんかい","をながめる。","b"],["山に","新雪","しんせつ","がつもる。","b"],["物を","売買","ばいばい","する。","b"],["","広大","こうだい","な土地。","b"],["","間近","まぢか","にせまる。","b"],["文字を","入力","にゅうりょく","する。","b"]]},{"id":"上T15","v":"上","k":"f","n":15,"t":"この本で習った漢字","bp":31,"tb":"3上ぜんぶ","kp":null,"q":[["カードの","表","おもて","とうら。","b"],["かくし","味","あじ","を入れる。","b"],["","相","あい","づちをうつ。","b"],["向こうがわの","岸","きし","にわたる。","b"],["","電球","でんきゅう","をとりかえる。","b"],["","黒板","こくばん","の文字をけす。","b"],["","銀色","ぎんいろ","のスプーンですくう。","b"],["","東京都","とうきょうと","に住む。","b"],["","図書係","としょがかり","になる。","b"],["","日本酒","にほんしゅ","の名産地。","b"],["スープを","温める","あたためる","。","k"],["ねがいを","全て","すべて","かなえる。","k"],["深いねむりに","落ちる","おちる","。","k"],["つくえといすを","動かす","うごかす","。","k"],["自分のせきに","着く","つく","。","k"],["時計のはりが七時を","指す","さす","。","k"],["せきにんを","負う","おう","。","k"],["へやのまどを","開ける","あける","。","k"],["体の調子を","整える","ととのえる","。","k"],["水そうに魚を","放す","はなす","。","k"]]}];
+/* ===== 26.11.143: hoshuko booklet tests (光村 かんぺきテスト 3年上・3年下) =====
+   Same tests, same numbers, same questions as her paper booklets. One question per screen,
+   she writes in the boxes, then marks herself. A hidden timer shows on her results page. */
+var HTI = {}; HTB.forEach(function(x){ x.pts = x.k === 'd' ? 0 : (x.q.length === 20 ? 5 : 10); HTI[x.id] = x; });
+var HT_NUM = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+var HT = null;
+function htSt(){
+  var ks = kanjiState();
+  if(!ks.ht) ks.ht = {q:{}, apples:{}, gold:{}, next:'', date:'', school:{}, best:{}, last:{}};
+  var st = ks.ht;
+  if(!st.seeded){
+    /* her real 3上 misses (teacher's red marks) start out as words to practise */
+    HTB.forEach(function(x){ x.q.forEach(function(q, i){ if((q[5] || '').indexOf('M') > -1){ st.q[x.id+':'+i] = {r:[], w:1, l:0, s:1}; } }); });
+    try{ st.basket = ktLog().filter(function(x){ return x && x.n != null && !x.ht; }).length; }catch(_){ st.basket = 0; }
+    st.seeded = 1;
+  }
+  return st;
+}
+function htName(x, short){
+  if(!x) return '';
+  var b = '3' + x.v;
+  if(x.k === 'r') return 'たしかめ・' + b;
+  if(x.k === 'd') return 'できるかな' + (HT_NUM[x.n - 1] || x.n) + '・' + b;
+  if(x.k === 'm') return 'Try my misses';
+  return 'テスト' + (HT_NUM[x.n - 1] || x.n) + '・' + b + (short ? '' : '');
+}
+function htRefs(x){
+  var r = [];
+  if(x.tb) r.push('教科書 ' + x.tb + (x.tb.indexOf('年') > -1 ? '' : 'ページ'));
+  if(x.kp) r.push('テストの練習 p.' + x.kp);
+  r.push('booklet p.' + x.bp);
+  return r.join(' · ');
+}
+function htKana(c){ return /[\u3040-\u309f]/.test(c); }
+function htDraw(q, ci){ return q[4] === 'k' || (q[5] || '').indexOf('A') > -1 || !htKana(q[1].charAt(ci)); }
+function htMain(x){ return x && (x.k === 't' || x.k === 'r' || x.k === 'f'); }
+/* next test: from the page picker (the kanpeki page she is on), unless Parent picked one */
+function htNext(){
+  var st = htSt();
+  if(st.next && HTI[st.next]) return HTI[st.next];
+  var h = hz(), v = h.vol || '下', p = h.page || 1, pl = kjPagesOn();
+  if(pl && pl.length){ v = pl[pl.length - 1].v; p = 0; pl.forEach(function(o){ if(o.v === v && o.p > p) p = o.p; }); }
+  var ts = HTB.filter(function(x){ return x.v === v && x.k === 't' && x.kp; });
+  for(var i = 0; i < ts.length; i++) if(ts[i].kp >= p) return ts[i];
+  return v === '上' ? HTI['上T15'] : ts[ts.length - 1];
+}
+function htDek(x){ return x && x.k === 't' ? HTI[x.v + 'D' + x.n] : null; }
+function htKey(id, i){ return id + ':' + i; }
+function htLevel(k){
+  var x = htSt().q[k]; if(!x) return 'new';
+  return (x.l === 1 && x.r.length >= 2) ? 'solid' : 'prac';
+}
+function htMissList(){
+  var st = htSt(), out = [];
+  Object.keys(st.q).forEach(function(k){ var x = st.q[k]; if(x.l === 0){ var p = k.split(':'); if(HTI[p[0]] && HTI[p[0]].q[+p[1]]) out.push({k:k, w:x.w || 1, t:x.t || 0}); } });
+  out.sort(function(a, b){ return (b.t - a.t) || (b.w - a.w); });
+  return out.map(function(o){ return o.k; });
+}
+function htApple(id){ return htSt().apples[id] || ''; }
+/* ---- ink store (separate from state so state stays small) ---- */
+function htInkAll(){ try{ return JSON.parse(localStorage.getItem('sq_htink') || '{}'); }catch(_){ return {}; } }
+function htInkSave(at, data){
+  var all = htInkAll(); all[at] = data;
+  var ks = Object.keys(all).sort(); while(ks.length > 15){ delete all[ks.shift()]; }
+  try{ localStorage.setItem('sq_htink', JSON.stringify(all)); }catch(_){ try{ localStorage.setItem('sq_htink', JSON.stringify({})); }catch(__){} }
+}
+function htSvg(strokes, w){
+  if(!strokes || !strokes.length) return '';
+  var d = strokes.map(function(s){ return s.length ? 'M' + s.map(function(p){ return (p[0]*100).toFixed(1) + ' ' + (p[1]*100).toFixed(1); }).join('L') + (s.length === 1 ? 'l.1 .1' : '') : ''; }).join('');
+  return '<svg viewBox="0 0 100 100"><path d="'+d+'" fill="none" stroke="#1d3c8f" stroke-width="'+(w || 7)+'" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+/* ---- the question column, laid out like the booklet (vertical, furigana on the right) ---- */
+function htColHTML(q, num, ink, act, showAns){
+  var h = '<div class="htcol" lang="ja"><span class="htn">'+num+'</span>'+esc(q[0]);
+  var bx = '';
+  for(var ci = 0; ci < q[1].length; ci++){
+    var c = q[1].charAt(ci);
+    if(showAns) bx += '<span class="htb" style="color:#c62828">'+esc(c)+'</span>';
+    else if(!htDraw(q, ci)) bx += '<span class="htb kana">'+esc(c)+'</span>';
+    else bx += '<span class="htb'+(act === ci ? ' on' : '')+'" data-ht="box:'+ci+'">'+htSvg(ink && ink[ci], 9)+'</span>';
+  }
+  if(q[4] === 'k') h += '<span class="htk"><span class="htbr">〔</span><ruby>'+bx+'<rt>'+esc(q[2])+'</rt></ruby><span class="htbr">〕</span></span>';
+  else h += '<ruby>'+bx+'<rt>'+esc(q[2])+'</rt></ruby>';
+  return h + esc(q[3]) + '</div>';
+}
+function htQ(s, i){ var r = s.qs[i]; return HTI[r[0]].q[r[1]]; }
+function htNum(s, i){ return s.set.k === 'm' ? HT_NUM[i] : HT_NUM[s.qs[i][1]]; }
+/* ---- open ---- */
+function htOpen(){ HT = {stage:'home'}; htSt(); htShow(); }
+function htStart(id, mode){
+  var x = id === 'miss' ? null : HTI[id], qs;
+  if(id === 'miss' || id === 'warm'){
+    var ml = htMissList().slice(0, id === 'warm' ? 3 : 10);
+    if(!ml.length){ toast('No misses to practise right now! 🎉'); return; }
+    qs = ml.map(function(k){ var p = k.split(':'); return [p[0], +p[1]]; });
+    x = {id:'miss', k:'m', n:0, t:id === 'warm' ? 'Warm-up' : 'Try my misses', v:'', q:[], pts:0};
+  } else qs = x.q.map(function(_, i){ return [x.id, i]; });
+  HT = {stage:mode === 'paper' ? 'paper' : 'q', set:x, qs:qs, i:0, ci:-1, ink:qs.map(function(){ return []; }), ms:qs.map(function(){ return 0; }), t0:Date.now(), paper:mode === 'paper', marks:qs.map(function(){ return null; }), warm:id === 'warm'};
+  htFirstBox(); htShow();
+}
+function htFirstBox(){ var s = HT, q = htQ(s, s.i); s.ci = -1; for(var c = 0; c < q[1].length; c++){ if(htDraw(q, c)){ s.ci = c; break; } } }
+function htTick(){ var s = HT; if(!s || s.stage !== 'q' && s.stage !== 'paper') return; var now = Date.now(); if(s.stage === 'q') s.ms[s.i] += now - s.t0; else s.ms[0] += now - s.t0; s.t0 = now; }
+function htFmt(ms){ var t = Math.round(ms / 1000), m = Math.floor(t / 60), sec = t % 60; return m ? m + ' min ' + sec + ' s' : sec + ' s'; }
+function htShow(){
+  var s = HT; if(!s) return;
+  knScreen('ht', htShow);
+  var h = '<div class="kjmodal htm">';
+  if(s.stage === 'home') h += htHomeHTML();
+  else if(s.stage === 'q') h += htQHTML();
+  else if(s.stage === 'paper') h += htPaperHTML();
+  else if(s.stage === 'mark') h += htMarkHTML();
+  else if(s.stage === 'end') h += htEndHTML();
+  else if(s.stage === 'cards') h += htCardsHTML();
+  h += '</div>';
+  openModal(h);
+  if(s.stage === 'q') htBindPad();
+}
+function htRowHTML(x){
+  var st = htSt(), ap = htApple(x.id), b = st.best[x.id];
+  var icon = htMain(x) ? (ap === 'r' ? '🍎' : ap === 'g' ? '🍏' : '⚪') : (b != null ? (b === x.q.length ? '🌟' : '✏️') : '▫️');
+  var sc = b == null ? '' : (x.pts ? (b * x.pts) + '点' : b + '/' + x.q.length);
+  return '<button class="htrow" data-ht="pick:'+x.id+'"><span class="htap">'+icon+'</span><span class="htrt"><b lang="ja">'+htName(x)+'</b><small lang="ja">'+esc(x.t)+'</small></span><span class="htsc">'+sc+'</span></button>';
+}
+function htHomeHTML(){
+  var st = htSt(), nx = htNext(), dk = htDek(nx), ml = htMissList(), h = '';
+  h += '<h2 style="margin:0 0 6px" lang="ja">📝 ほしゅうこうテスト</h2>';
+  if(s_sel()){
+    var x = HTI[HT.sel];
+    h += '<div class="htnext"><h3 lang="ja">'+htName(x)+'</h3><div lang="ja">'+esc(x.t)+'</div><div class="htpgref">'+htRefs(x)+'</div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" data-ht="go:'+x.id+'">✍️ Start</button><button class="btn" data-ht="paper:'+x.id+'">📄 Paper mode</button>';
+    if(x.k !== 'd') h += '<button class="btn" data-ht="cards:'+x.id+'">🃏 Word cards</button>';
+    h += '<button class="btn" data-ht="unsel">◀ All tests</button></div></div>';
+    return h;
+  }
+  h += '<div class="htnext"><div class="hint">Next test</div><h3 lang="ja">'+htName(nx)+'</h3><div lang="ja">'+esc(nx.t)+'</div><div class="htpgref">'+htRefs(nx)+(st.date ? ' · 🗓 '+esc(st.date.slice(5).replace('-', '/')) : '')+'</div>';
+  h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" data-ht="go:'+nx.id+'">✍️ Practice test</button>';
+  if(dk) h += '<button class="btn" data-ht="go:'+dk.id+'" lang="ja">できるかな'+HT_NUM[dk.n - 1]+'</button>';
+  h += '<button class="btn" data-ht="cards:'+nx.id+'">🃏 Word cards</button><button class="btn" data-ht="paper:'+nx.id+'">📄 Paper mode</button></div>';
+  if(ml.length) h += '<div class="row" style="margin-top:6px"><button class="btn small" data-ht="go:warm">🔥 Warm up with 3 tricky words first</button></div>';
+  h += '</div>';
+  h += '<div class="row" style="margin:10px 0"><button class="btn'+(ml.length ? '' : ' ghost')+'" data-ht="go:miss">🔁 Try my misses'+(ml.length ? ' ('+ml.length+')' : '')+'</button></div>';
+  ['下','上'].forEach(function(v){
+    h += '<h3 style="margin:12px 0 4px">3年'+v+(v === '上' ? ' <small class="hint">(review for the big end-of-year test)</small>' : '')+'</h3><div class="htlist">';
+    HTB.forEach(function(x){ if(x.v === v && x.k !== 'd') h += htRowHTML(x); });
+    h += '</div><div class="hint" style="margin-top:6px" lang="ja">できるかな</div><div class="htchips">';
+    HTB.forEach(function(x){ if(x.v === v && x.k === 'd'){ var b = st.best[x.id]; h += '<button lang="ja" class="'+(b === x.q.length ? 'ok' : '')+'" data-ht="pick:'+x.id+'">'+HT_NUM[x.n - 1]+(b != null ? ' '+b+'/6' : '')+'</button>'; } });
+    h += '</div>';
+  });
+  return h;
+}
+function s_sel(){ return HT && HT.sel && HTI[HT.sel]; }
+function htQHTML(){
+  var s = HT, q = htQ(s, s.i), n = s.qs.length, h = '';
+  h += '<div style="text-align:center"><b lang="ja">'+htName(s.set)+'</b> <span class="hint" lang="ja">'+esc(s.set.k === 'm' ? '' : s.set.t)+'</span></div>';
+  h += '<div class="htstrip">';
+  for(var i = 0; i < n; i++){ var dn = s.ink[i].some(function(x){ return x && x.length; }); h += '<button class="'+(i === s.i ? 'on' : dn ? 'dn' : '')+'" data-ht="q:'+i+'" lang="ja">'+(s.set.k === 'm' ? i + 1 : s.qs[i][1] + 1)+'</button>'; }
+  h += '</div><div class="htwrap"><div class="htpadbox"><canvas id="htpad"></canvas>';
+  h += '<div class="row" style="gap:6px;flex-wrap:wrap;justify-content:center"><button class="btn small" data-ht="undo">↩ Undo</button><button class="btn small" data-ht="clear">🧽 Clear</button><button class="btn small" data-ht="nbox">Next box ▼</button></div></div>';
+  h += '<div class="htcolbox" id="htcolbox">'+htColHTML(q, htNum(s, s.i), s.ink[s.i], s.ci)+'</div></div>';
+  h += '<div class="row" style="gap:8px;justify-content:space-between;margin-top:12px">';
+  h += '<button class="btn" data-ht="prev"'+(s.i ? '' : ' disabled')+'>◀ Back</button>';
+  h += s.i < n - 1 ? '<button class="btn primary" data-ht="next">Next ▶</button>' : '<button class="btn primary" data-ht="tomark">✅ Done, let\u2019s check</button>';
+  return h + '</div>';
+}
+function htPaperHTML(){
+  var s = HT, x = s.set, h = '<div style="text-align:center"><b lang="ja">'+htName(x)+'</b></div><div class="htpgref" lang="ja">'+esc(x.t)+' · '+htRefs(x)+'</div>';
+  h += '<div class="hint" style="text-align:center;margin:4px 0">Write your answers on paper, then tap Done to check.</div><div class="htpaper">';
+  s.qs.forEach(function(r, i){ h += htColHTML(HTI[r[0]].q[r[1]], htNum(s, i), null, -1); });
+  return h + '</div><div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn primary" data-ht="tomark">✅ Done, let\u2019s check</button></div>';
+}
+function htMarkHTML(){
+  var s = HT, n = s.qs.length, done = s.marks.filter(function(m){ return m != null; }).length, ok = s.marks.filter(function(m){ return m === 1; }).length;
+  var h = '<h2 style="margin:0 0 2px" lang="ja">'+htName(s.set)+' · Check it</h2><div class="hint">Look at each answer. Tap ⭕ if yours matches, ❌ if not. Be honest, it helps your practice!</div>';
+  s.qs.forEach(function(r, i){
+    var q = HTI[r[0]].q[r[1]], ink = s.ink[i];
+    h += '<div class="htmark"><div class="htms" lang="ja">'+htNum(s, i)+' '+esc(q[0])+'<ruby><b>'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div>';
+    if(!s.paper){
+      h += '<div class="htink">';
+      for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[ci], 8)+'</span>'; }
+      h += '</div>';
+    }
+    h += '<div class="htmb"><button class="'+(s.marks[i] === 1 ? 'on1' : '')+'" data-ht="mk:'+i+':1">⭕</button><button class="'+(s.marks[i] === 0 ? 'on0' : '')+'" data-ht="mk:'+i+':0">❌</button></div></div>';
+  });
+  h += '<div class="row" style="justify-content:space-between;align-items:center;margin-top:10px"><b>'+ok+' / '+n+'</b>';
+  h += '<button class="btn primary" data-ht="finish"'+(done === n ? '' : ' disabled')+'>'+(done === n ? '🏁 Finish' : 'Mark all '+n+' first')+'</button></div>';
+  return h;
+}
+function htEndHTML(){
+  var s = HT, r = s.res, x = s.set, nm = esc(state.name || 'star'), h = '';
+  var perfect = r.ok === r.n;
+  h += '<div class="htbig">'+(perfect ? '💯' : r.ok >= r.n * .7 ? '🌟' : '🌱')+'</div>';
+  h += '<h2 style="text-align:center;margin:0" lang="ja">'+htName(x)+'</h2>';
+  h += '<div style="text-align:center;font-size:30px;font-weight:800;margin:6px 0">'+(x.pts ? (r.ok * x.pts)+' / '+(r.n * x.pts)+'点' : r.ok+' / '+r.n)+'</div>';
+  h += '<div style="text-align:center" class="hint">⏱ Time: <b>'+htFmt(r.ms)+'</b>'+(r.prevMs ? ' · last time '+htFmt(r.prevMs)+(r.ms < r.prevMs ? ' 🚀 faster!' : '') : '')+'</div>';
+  if(perfect) h += '<p style="text-align:center">Every single one right, '+nm+'! Kit is doing a happy dance! 🦊💃</p>';
+  else if(r.ok >= r.n * .7) h += '<p style="text-align:center">Great work, '+nm+'! The ones you missed are now your practice words.</p>';
+  else h += '<p style="text-align:center">Tests show us what to practise next, '+nm+'. You showed up, and that is how kanji stick. 💪</p>';
+  var g = [];
+  if(r.apple === 'new') g.push('🍏 A new green apple grew for this test! Get 100 on it to turn it red.');
+  if(r.apple === 'red') g.push('🍎 Your apple turned RED! A perfect test!');
+  if(r.gold) g.push('✨ +'+r.gold+(r.gold === 1 ? ' new golden leaf' : ' new golden leaves'));
+  if(g.length) h += '<div class="kttree" style="text-align:center"><div style="font-size:2.2em">🌳</div>'+g.map(function(t){ return '<div>'+t+'</div>'; }).join('')+'</div>';
+  if(r.got) h += '<div class="hint" style="text-align:center">+'+r.got+' ⭐ points</div>';
+  if(r.missQ.length){
+    h += '<h3 style="margin:10px 0 4px">Practice words</h3><div lang="ja" style="font-size:20px;line-height:2">'+r.missQ.map(function(q){ return '<ruby>'+esc(q[1])+'<rt>'+esc(q[2])+'</rt></ruby>'; }).join('　')+'</div>';
+  }
+  h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">';
+  if(r.missQ.length) h += '<button class="btn primary" data-ht="go:miss">🔁 Try my misses</button>';
+  if(s.warm) h += '<button class="btn primary" data-ht="go:'+htNext().id+'">✍️ Now the real test</button>';
+  h += '<button class="btn" data-ht="home">📝 All tests</button></div>';
+  return h;
+}
+function htCardsHTML(){
+  var s = HT, x = s.set, q = x.q[s.i], h = '';
+  h += '<div style="text-align:center"><b lang="ja">'+htName(x)+'</b> · 🃏 Word cards <span class="hint">'+(s.i + 1)+' / '+x.q.length+'</span></div>';
+  h += '<div class="htcard" lang="ja" data-ht="flip">'+esc(q[0])+'<span class="hl">'+(q[4] === 'k' ? '〔'+esc(q[2])+'〕' : esc(q[2]))+'</span>'+esc(q[3]);
+  h += s.flip ? '<div class="ans">'+esc(q[1])+'</div><button class="btn small" data-ht="say">🔊</button>' : '<div class="hint" style="margin-top:10px">Think of the kanji, then tap to check</div>';
+  h += '</div><div class="row" style="justify-content:space-between;margin-top:12px"><button class="btn" data-ht="cprev"'+(s.i ? '' : ' disabled')+'>◀</button><button class="btn" data-ht="home">Done</button><button class="btn primary" data-ht="cnext">'+(s.i < x.q.length - 1 ? '▶' : 'Again 🔄')+'</button></div>';
+  return h;
+}
+/* ---- writing pad: one big box with a cross guide, she writes one kanji at a time ---- */
+function htBindPad(){
+  var s = HT, cv = document.getElementById('htpad'); if(!cv) return;
+  var vw = Math.min(window.innerWidth, 700), size = Math.max(200, Math.min(330, vw - 130, window.innerHeight * .46));
+  var dpr = window.devicePixelRatio || 1; cv.style.width = size + 'px'; cv.style.height = size + 'px'; cv.width = size * dpr; cv.height = size * dpr;
+  s.pad = {cv:cv, size:size, dpr:dpr, cur:null};
+  htPadDraw();
+  function pt(e){ var b = cv.getBoundingClientRect(); return [Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)), Math.max(0, Math.min(1, (e.clientY - b.top) / b.height))]; }
+  cv.addEventListener('pointerdown', function(e){ if(s.ci < 0) return; e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(_){} s.pad.cur = [pt(e)]; htPadDraw(); });
+  cv.addEventListener('pointermove', function(e){ if(!s.pad.cur) return; e.preventDefault(); var p = pt(e), l = s.pad.cur[s.pad.cur.length - 1]; if(Math.hypot(p[0] - l[0], p[1] - l[1]) > .004){ s.pad.cur.push(p); htPadDraw(); } });
+  function up(){ if(!s.pad.cur) return; var st = s.ink[s.i][s.ci] = s.ink[s.i][s.ci] || []; st.push(s.pad.cur.map(function(p){ return [Math.round(p[0]*1000)/1000, Math.round(p[1]*1000)/1000]; })); s.pad.cur = null; htPadDraw(); htColRefresh(); }
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+}
+function htPadDraw(){
+  var s = HT, p = s.pad; if(!p) return;
+  var c = p.cv.getContext('2d'), W = p.cv.width;
+  c.clearRect(0, 0, W, W);
+  c.save(); c.strokeStyle = '#e3b7b7'; c.lineWidth = 1.5 * p.dpr; c.setLineDash([6 * p.dpr, 6 * p.dpr]);
+  c.beginPath(); c.moveTo(W/2, 0); c.lineTo(W/2, W); c.moveTo(0, W/2); c.lineTo(W, W/2); c.stroke(); c.restore();
+  if(s.ci < 0){ c.fillStyle = '#999'; c.font = (16 * p.dpr) + 'px sans-serif'; c.textAlign = 'center'; c.fillText('No box here', W/2, W/2 - 10); return; }
+  var strokes = (s.ink[s.i][s.ci] || []).concat(p.cur ? [p.cur] : []);
+  c.strokeStyle = '#1d3c8f'; c.lineWidth = W * .045; c.lineCap = 'round'; c.lineJoin = 'round';
+  strokes.forEach(function(st){ c.beginPath(); st.forEach(function(q, k){ var x = q[0] * W, y = q[1] * W; if(k) c.lineTo(x, y); else c.moveTo(x, y); }); if(st.length === 1) c.lineTo(st[0][0] * W + .5, st[0][1] * W + .5); c.stroke(); });
+}
+function htColRefresh(){
+  var s = HT, el = document.getElementById('htcolbox'); if(!el) return;
+  el.innerHTML = htColHTML(htQ(s, s.i), htNum(s, s.i), s.ink[s.i], s.ci);
+  var bs = document.querySelectorAll('.htstrip button'); if(bs[s.i]) bs[s.i].className = 'on';
+}
+function htGo(i){ var s = HT; htTick(); s.i = i; htFirstBox(); htShow(); }
+/* ---- finish: score, word levels, apples, golden leaves, log ---- */
+function htFinish(){
+  var s = HT, st = htSt(), x = s.set, wk = kwk(), today = dateKey(), ok = 0, rightK = {}, missK = {}, missQ = [];
+  var before = ktTreeStats();
+  s.qs.forEach(function(r, i){
+    var k = htKey(r[0], r[1]), q = HTI[r[0]].q[r[1]], e = st.q[k] = st.q[k] || {r:[], w:0}, m = s.marks[i] === 1;
+    e.t = Date.now();
+    if(m){ ok++; if(e.r.indexOf(today) < 0) e.r.push(today); if(e.r.length > 4) e.r.shift(); e.l = 1; }
+    else { e.w = (e.w || 0) + 1; e.l = 0; e.r = []; missQ.push(q); }
+    q[1].split('').forEach(function(c){ if(KJ_BY[c]){ if(m) rightK[c] = 1; else missK[c] = 1; } });
+  });
+  Object.keys(rightK).forEach(function(c){ st.gold[c] = 1; var e = wk[c] = wk[c] || {}; e.g = (e.g || 0) + 1; if(e.m) e.m = Math.max(0, e.m - 1); e.t = Date.now(); try{ kjMeet(c); }catch(_){} });
+  Object.keys(missK).forEach(function(c){ var e = wk[c] = wk[c] || {}; e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; e.t = Date.now(); });
+  var ms = s.ms.reduce(function(a, b){ return a + b; }, 0), res = {ok:ok, n:s.qs.length, ms:ms, missQ:missQ, apple:'', gold:0, got:0};
+  if(x.k !== 'm'){
+    res.prevMs = st.last[x.id] ? st.last[x.id].ms : 0;
+    st.last[x.id] = {ms:ms, ok:ok, d:today};
+    st.best[x.id] = Math.max(st.best[x.id] || 0, ok);
+    if(htMain(x)){
+      var a = st.apples[x.id];
+      if(ok === s.qs.length && a !== 'r'){ st.apples[x.id] = 'r'; res.apple = 'red'; }
+      else if(!a){ st.apples[x.id] = 'g'; res.apple = 'new'; }
+    }
+  }
+  var at = Date.now(), log = ktLog();
+  log.push({ht:x.id, d:today, at:at, n:s.qs.length, ok:ok, miss:Object.keys(missK).filter(function(c){ return !rightK[c]; }), tm:Object.keys(rightK).map(function(c){ return [c, 0, '']; }), sec:Math.round(ms / 1000), marks:s.marks.slice(), qs:s.qs, paper:s.paper ? 1 : 0});
+  if(log.length > 60) log.splice(0, log.length - 60);
+  if(!s.paper) htInkSave(String(at), s.ink);
+  kjStat('kanjiTests');
+  var ks = kanjiState();
+  if(ks.testPtsDay !== today && x.k !== 'm'){ ks.testPtsDay = today; try{ res.got = addPoints(2, 'Did a kanji test', true) || 0; }catch(_){} }
+  res.gold = ktTreeStats().gold - before.gold;
+  s.res = res; s.stage = 'end';
+  save(); render(); checkBadgesX(); htShow();
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-ht]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  try{ Sound.tap(); }catch(_){}
+  var a = t.getAttribute('data-ht'), s = HT;
+  if(a === 'open' || !s){ htOpen(); if(a.indexOf('go:') === 0) htStart(a.slice(3)); return; }
+  if(a === 'home'){ HT = {stage:'home'}; htShow(); return; }
+  if(a.indexOf('pick:') === 0){ s.sel = a.slice(5); htShow(); return; }
+  if(a === 'unsel'){ s.sel = null; htShow(); return; }
+  if(a.indexOf('go:') === 0){ htStart(a.slice(3)); return; }
+  if(a.indexOf('paper:') === 0){ htStart(a.slice(6), 'paper'); return; }
+  if(a.indexOf('cards:') === 0){ HT = {stage:'cards', set:HTI[a.slice(6)], i:0, flip:false}; htShow(); return; }
+  if(a === 'flip'){ s.flip = !s.flip; htShow(); return; }
+  if(a === 'say'){ try{ var q0 = s.set.q[s.i]; speakText(q0[0] + q0[1] + q0[3], 'ja-JP'); }catch(_){} return; }
+  if(a === 'cnext'){ s.i = s.i < s.set.q.length - 1 ? s.i + 1 : 0; s.flip = false; htShow(); return; }
+  if(a === 'cprev'){ if(s.i){ s.i--; s.flip = false; htShow(); } return; }
+  if(a.indexOf('box:') === 0){ s.ci = +a.slice(4); htPadDraw(); htColRefresh(); return; }
+  if(a === 'undo'){ var u = s.ink[s.i][s.ci]; if(u && u.length){ u.pop(); htPadDraw(); htColRefresh(); } return; }
+  if(a === 'clear'){ s.ink[s.i][s.ci] = []; htPadDraw(); htColRefresh(); return; }
+  if(a === 'nbox'){ var q = htQ(s, s.i); for(var c = s.ci + 1; c < q[1].length; c++){ if(htDraw(q, c)){ s.ci = c; htPadDraw(); htColRefresh(); return; } } if(s.i < s.qs.length - 1) htGo(s.i + 1); return; }
+  if(a.indexOf('q:') === 0){ htGo(+a.slice(2)); return; }
+  if(a === 'next'){ htGo(s.i + 1); return; }
+  if(a === 'prev'){ if(s.i) htGo(s.i - 1); return; }
+  if(a === 'tomark'){ htTick(); s.stage = 'mark'; htShow(); return; }
+  if(a.indexOf('mk:') === 0){ var p = a.split(':'); s.marks[+p[1]] = +p[2]; var sc = document.getElementById('modal').scrollTop; htShow(); document.getElementById('modal').scrollTop = sc; return; }
+  if(a === 'finish'){ if(s.marks.every(function(m){ return m != null; })) htFinish(); return; }
+}, true);
+/* ---- Kanji tab: next test card (Today) and the list in My Book ---- */
+function htTodayCardHTML(){
+  try{
+    var nx = htNext(), ml = htMissList().length, st = htSt();
+    var q = nx.q[(parseKey(dateKey()).getDate()) % nx.q.length];
+    var h = '<div class="panel htnext"><div class="ptitle">📝 Next hoshuko test</div><b lang="ja">'+htName(nx)+'</b> <span lang="ja" class="hint">'+esc(nx.t)+'</span>';
+    h += '<div class="hint" style="margin-top:6px">Test word of the day:</div><div lang="ja" style="font-size:20px;line-height:2.1">'+esc(q[0])+'<ruby><span style="background:#fff1a8;border-radius:4px;padding:0 3px">'+esc(q[1])+'</span><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div>';
+    h += '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn primary small" data-ht="open">✍️ Practice test</button>'+(ml ? '<button class="btn small" data-ht="go:miss">🔁 My misses ('+ml+')</button>' : '')+'</div></div>';
+    return h;
+  }catch(e){ return ''; }
+}
+function htBookHTML(){
+  var st = htSt(), h = '<div class="panel"><div class="ptitle">📝 My test booklets</div><div class="htchips">';
+  HTB.forEach(function(x){ if(!htMain(x)) return; var ap = htApple(x.id); h += '<button lang="ja" data-ht="open" title="'+esc(x.t)+'">'+(ap === 'r' ? '🍎' : ap === 'g' ? '🍏' : '⚪')+' '+(x.k === 'r' ? 'たしかめ' : HT_NUM[x.n - 1])+'·'+x.v+'</button>'; });
+  var sol = 0, prac = 0; Object.keys(st.q).forEach(function(k){ var l = htLevel(k); if(l === 'solid') sol++; else prac++; });
+  return h + '</div><div class="hint">💪 Solid words: <b>'+sol+'</b> · ✏️ Practising: <b>'+prac+'</b> (a word is solid when you get it right on two different days)</div></div>';
+}
+/* ---- Parent ---- */
+var HTP = {view:''};
+function htParentHTML(){
+  var st = htSt(), nx = htNext(), h = '<h3>📝 Hoshuko booklet tests</h3>';
+  h += '<div class="hint">The next test follows the page picker above (the かんぺきくん page she is on). You can also pick one.</div>';
+  h += '<div class="row" style="gap:6px;flex-wrap:wrap;margin:6px 0"><span>Next: <b lang="ja">'+htName(nx)+'</b>'+(st.next ? ' (picked)' : ' (auto)')+'</span>';
+  h += '<select id="htpNext"><option value="">Auto (from page)</option>'+HTB.filter(htMain).map(function(x){ return '<option value="'+x.id+'"'+(st.next === x.id ? ' selected' : '')+'>'+htName(x)+'</option>'; }).join('')+'</select>';
+  h += '<label class="hint">Test date <input type="date" id="htpDate" value="'+esc(st.date || '')+'"></label><button class="btn small" data-htp="savenext">Save</button></div>';
+  var log = ktLog().filter(function(x){ return x && x.ht; }).slice(-10).reverse();
+  if(!log.length) h += '<div class="hint">No booklet tests yet.</div>';
+  else {
+    h += '<div class="ktlist">';
+    log.forEach(function(x){
+      var set = HTI[x.ht], nm = set ? htName(set) : 'Try my misses', pts = set && set.pts ? (x.ok * set.pts)+'点' : x.ok+' / '+x.n;
+      h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d.slice(5))+'</span><span class="ktw"><b lang="ja">'+nm+'</b><small>'+pts+' · ⏱ '+htFmt((x.sec || 0) * 1000)+(x.paper ? ' · on paper' : '')+'</small></span><button class="btn small" data-htp="view:'+x.at+'">Review</button></div>';
+      if(HTP.view === String(x.at)) h += htParentReview(x);
+    });
+    h += '</div>';
+  }
+  var ml = htMissList();
+  h += '<div class="hint" style="margin-top:8px">Words she is practising ('+ml.length+'):</div><div lang="ja" style="font-size:17px;line-height:2">'+(ml.length ? ml.slice(0, 40).map(function(k){ var p = k.split(':'), q = HTI[p[0]].q[+p[1]]; return '<ruby>'+esc(q[1])+'<rt>'+esc(q[2])+'</rt></ruby>'; }).join('　') : '🎉 none')+'</div>';
+  h += '<div class="hint" style="margin-top:8px">Real score from hoshuko (optional):</div><div class="row" style="gap:6px;flex-wrap:wrap"><select id="htpSc">'+HTB.filter(htMain).map(function(x){ return '<option value="'+x.id+'">'+htName(x)+(st.school[x.id] != null ? ' ('+st.school[x.id]+'点)' : '')+'</option>'; }).join('')+'</select><input id="htpScV" type="number" min="0" max="100" style="width:70px" placeholder="点"><button class="btn small" data-htp="school">Save</button></div>';
+  var ks = kanjiState();
+  h += '<div class="row" style="gap:8px;align-items:center;margin-top:8px"><button class="btn small '+(ks.oldKT ? 'primary' : '')+'" data-htp="old">'+(ks.oldKT ? '✅ On' : '⬜ Off')+'</button><span class="hint">Also show the old listening test (Kit reads the kanji aloud)</span></div>';
+  return h;
+}
+function htParentReview(x){
+  var ink = htInkAll()[String(x.at)] || [], h = '<div style="background:#fffdf6;border:1px solid #e0d6bd;border-radius:8px;padding:6px 8px;margin:4px 0 8px">';
+  (x.qs || []).forEach(function(r, i){
+    var set = HTI[r[0]]; if(!set) return; var q = set.q[r[1]];
+    h += '<div class="htmark"><div class="htms" lang="ja">'+HT_NUM[r[1]]+' '+esc(q[0])+'<ruby><b>'+esc(q[1])+'</b><rt>'+esc(q[2])+'</rt></ruby>'+esc(q[3])+'</div><div class="htink">';
+    for(var ci = 0; ci < q[1].length; ci++){ if(htDraw(q, ci)) h += '<span>'+htSvg(ink[i] && ink[i][ci], 8)+'</span>'; }
+    h += '</div><div class="htmb"><button class="'+(x.marks[i] === 1 ? 'on1' : 'on0')+'" data-htp="flip:'+x.at+':'+i+'">'+(x.marks[i] === 1 ? '⭕' : '❌')+'</button></div></div>';
+  });
+  return h + '<div class="hint">Her own marks. Tap one to change it if she marked it wrong.</div></div>';
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest && e.target.closest('[data-htp]'); if(!t) return;
+  e.preventDefault(); e.stopPropagation();
+  var a = t.getAttribute('data-htp'), st = htSt(), ks = kanjiState(), sc = document.getElementById('modal').scrollTop;
+  if(a === 'savenext'){ st.next = (document.getElementById('htpNext') || {}).value || ''; st.date = (document.getElementById('htpDate') || {}).value || ''; save(); toast('Saved'); }
+  else if(a === 'school'){ var id = document.getElementById('htpSc').value, v = document.getElementById('htpScV').value; if(v !== ''){ st.school[id] = Math.max(0, Math.min(100, +v)); save(); toast('Saved'); } }
+  else if(a === 'old'){ ks.oldKT = !ks.oldKT; save(); render(); }
+  else if(a.indexOf('view:') === 0){ HTP.view = HTP.view === a.slice(5) ? '' : a.slice(5); }
+  else if(a.indexOf('flip:') === 0){
+    var p = a.split(':'), x = ktLog().filter(function(y){ return String(y.at) === p[1]; })[0], i = +p[2];
+    if(x && x.marks){
+      x.marks[i] = x.marks[i] === 1 ? 0 : 1;
+      var r = x.qs[i], k = htKey(r[0], r[1]), e2 = st.q[k] = st.q[k] || {r:[], w:0};
+      if(x.marks[i] === 1){ e2.l = 1; if(e2.r.indexOf(x.d) < 0) e2.r.push(x.d); if(e2.w) e2.w--; } else { e2.l = 0; e2.r = []; e2.w = (e2.w || 0) + 1; }
+      x.ok = x.marks.filter(function(m){ return m === 1; }).length;
+      var set = HTI[x.ht];
+      if(set && x.qs.length === set.q.length){ var best = 0; ktLog().forEach(function(y){ if(y.ht === x.ht) best = Math.max(best, y.ok); }); st.best[x.ht] = best; if(htMain(set)) st.apples[x.ht] = best === set.q.length ? 'r' : 'g'; }
+      save();
+    }
+  }
+  showKanjiParent(); document.getElementById('modal').scrollTop = sc;
+}, true);
+
 function ktTreeStats(){
   var log = []; try{ log = ktLog(); }catch(e){}
   var gold = {};
   log.forEach(function(x){ (x.tm || []).forEach(function(t){ if(x.miss.indexOf(t[0]) < 0) gold[t[0]] = 1; }); });
-  return {tests:log.length, gold:Object.keys(gold).length, goldSet:gold};
+  var ap = [], basket = 0;
+  try{ var hs = htSt(); Object.keys(hs.gold).forEach(function(c){ gold[c] = 1; }); basket = hs.basket || 0; HTB.forEach(function(x){ var a = hs.apples[x.id]; if(a) ap.push(a); }); }catch(e){}
+  /* 26.11.143: one apple per booklet test (green when tried, red at 100); older tests sit in the basket */
+  return {tests:ap.length + basket, apples:ap, basket:basket, gold:Object.keys(gold).length, goldSet:gold};
 }
 function kjGrowHTML(){
   var ks = kjExtra(), n = kanjiCount(), pg = kbPagesDone(), ink = {}, h = '';
@@ -13957,10 +14400,10 @@ function kjGrowHTML(){
   var written = Object.keys(ink).filter(function(c){ return ink[c] && ink[c].length; }).length;
   var taught = Object.keys(ks.taught).length, days = (state.stats && state.stats.kanjiDays) || 0;
   h += '<div class="panel kjgrow"><div class="ptitle">🌳 My kanji tree</div>'+kjTreeSVG(n, pg);
-  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Every kanji test grows a big \ud83c\udf4e, and every kanji you get right on a test turns into a \u2728 golden leaf. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
+  h += '<p class="hint" style="text-align:center;margin:4px 0 0">Every kanji is a leaf and every finished page is a blossom. Every booklet test grows one apple: \ud83c\udf4f green when you try it, \ud83c\udf4e red when you get 100. Every new kanji you get right on a test turns into a \u2728 golden leaf. Your tree grows because you keep showing up, not because you are perfect.</p></div>';
   h += '<div class="panel"><div class="ptitle">What I have grown</div><div class="kjstats">';
   var tts = ktTreeStats();
-  [['🍃', n, 'kanji in my book'], ['🍎', tts.tests, 'kanji tests done'], ['\u2728', tts.gold, 'golden leaves'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
+  [['🍃', n, 'kanji in my book'], ['🍎', tts.apples.filter(function(a){ return a === 'r'; }).length + ' / ' + tts.apples.length, 'red apples (tests at 100)'], ['\u2728', tts.gold, 'golden leaves'], ['🌸', pg, 'pages finished'], ['📅', days, 'days I met a kanji'], ['✍️', written, 'kanji I have written'], ['🧑‍🏫', taught, 'times I taught someone'], ['🗣️', Object.keys(kotoSt().met).length, 'Japanese sayings I met'], ['⭐', Object.keys(kotoSt().usedDay).length, 'days I used a saying']].forEach(function(x){
     h += '<div class="kjst"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>';
   });
   h += '</div><div class="kjmiles">';
@@ -14263,6 +14706,7 @@ function ktFinish(){
   var log = ktLog();
   log.push({d:dateKey(), at:Date.now(), pages:s.pages.map(function(x){ return x.v+x.p; }), n:s.cards.length, ok:ok, miss:miss, tm:s.cards.map(function(k, i){ return [k.k, Math.round(((s.tm && s.tm[i]) || 0) / 1000), (s.used && s.used[i]) || '']; })});
   if(log.length > 60) log.splice(0, log.length - 60);
+  try{ var hb = kanjiState().ht; if(hb && hb.seeded) hb.basket = (hb.basket || 0) + 1; }catch(_){}
   kjStat('kanjiTests');
   s.got = 0;
   var ks = kanjiState();
@@ -14316,10 +14760,10 @@ document.addEventListener('click', function(e){
 }, true);
 function ktParentHTML(){
   var log = ktLog();
-  var h = '<h3>\ud83d\udcdd Her practice tests in StarQuest</h3>';
+  var h = '<h3>\ud83d\udc42 Old listening tests</h3>';
   if(!log.length) return h + '<div class="hint">No tests yet. She can do one in Kanji \u2192 Practice \u2192 \ud83d\udcdd Kanji test.</div>';
   h += '<div class="ktlist">';
-  log.filter(function(x){ return x && x.n != null; }).slice(-8).reverse().forEach(function(x){ x.miss = x.miss || []; x.pages = x.pages || [];
+  log.filter(function(x){ return x && x.n != null && !x.ht; }).slice(-8).reverse().forEach(function(x){ x.miss = x.miss || []; x.pages = x.pages || [];
     h += '<div class="ktrow"><span class="ktn" style="width:auto">'+esc(x.d)+'</span><span class="ktw"><b>'+x.ok+' / '+x.n+'</b><small>p. '+esc(x.pages.join(', '))+'</small></span><span lang="ja">'+(x.miss.length ? '\ud83d\udd01 '+x.miss.join(' ') : '\u2b50')+(x.tm && x.tm.length ? '<br><small>\u23f1\ufe0f slowest: '+x.tm.slice().sort(function(a, b){ return b[1] - a[1]; }).slice(0, 3).map(function(t){ return t[0]+' '+t[1]+'s'; }).join(', ')+' \u00b7 total '+ktSecs(1000 * x.tm.reduce(function(a, t){ return a + t[1]; }, 0))+'</small>' : '')+'</span></div>';
   });
   return h + '</div>';
@@ -14514,7 +14958,9 @@ function kfcShow(){
     h += '<button class="btn kfcm" data-kfc="mode:pick"><b>🔍 Find the kanji</b><small>Pick the right one from four</small></button>';
     h += '<button class="btn kfcm" data-kfc="mode:look"><b>👯 Look-alikes</b><small>Tell tricky twins apart</small></button>';
     h += '<div class="kfch">Test</div>';
-    h += '<button class="btn kfcm" data-kt="open"><b>📝 Kanji test</b><small>Listen, write on paper, check</small></button>';
+    h += '<button class="btn kfcm" data-ht="open"><b>📝 ほしゅうこうテスト</b><small>Your booklet tests, same numbers</small></button>';
+    h += '<button class="btn kfcm" data-ht="go:miss"><b>🔁 Try my misses</b><small>Words you missed on tests</small></button>';
+    if(kanjiState().oldKT) h += '<button class="btn kfcm" data-kt="open"><b>👂 Listening test</b><small>Kit reads, you write on paper</small></button>';
     h += '<div class="kfch">Kanji combos</div>';
     h += '<button class="btn kfcm" data-kcb="mode:build"><b>🧩 Build the word</b><small>Drag two kanji together</small></button>';
     h += '<button class="btn kfcm" data-kcb="mode:miss"><b>🔎 Missing kanji</b><small>Which kanji fits in the gap?</small></button>';
@@ -14695,7 +15141,8 @@ function showKanjiParent(){
   h += '</div><div class="hint" style="margin-top:6px">Now on: <b>3年'+h0.vol+' p.'+h0.page+'</b>. Tap the page she is on at hoshuko.</div>';
   h += '<div class="row" style="margin-top:6px"><button class="btn small" data-kjp="next">Next page ▶</button></div>';
 
-  h += ktParentHTML();
+  h += htParentHTML();
+  if(kanjiState().oldKT) h += ktParentHTML();
   h += '<h3>📝 Saturday test</h3>';
   h += '<div class="row" style="gap:6px"><button class="btn small '+(s.tab === 'miss' ? 'primary' : '')+'" data-kjp="tab:miss">After the test: what she missed</button><button class="btn small '+(s.tab === 'focus' ? 'primary' : '')+'" data-kjp="tab:focus">Before: what is coming up</button></div>';
   h += '<div class="hint" style="margin:6px 0">'+(s.tab === 'miss' ? 'Tap the kanji she missed, pick the kind of mistake, then save. These show up more in her practice. Kanji from the coming-up list that she got right ease off.' : 'Tap the kanji that will be on this Saturday\u2019s test. They show up more this week.')+'</div>';
