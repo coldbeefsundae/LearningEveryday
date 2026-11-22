@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.148', errs = [], shown = false;
+  var V = '26.11.149', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -8665,7 +8665,11 @@ var SAYL = {ja:'ja-JP', zh:'zh-CN', ko:'ko-KR', yue:'zh-HK', es:'es-MX', pt:'pt-
 /* 26.11.148: if the exact accent isn't on the device, try these */
 var SAYALT = {'es-MX':['es-US','es-ES'], 'pt-BR':['pt-PT'], 'fr-CA':['fr-FR'], 'ar-SA':['ar-EG','ar-AE','ar'], 'ro-RO':[], 'hi-IN':[], 'ja-JP':[], 'zh-CN':[], 'ko-KR':[], 'zh-HK':[]};
 /* 26.11.148: built-in spellings for the English voice (stories, and names when the native voice is missing). Parent fixes win. */
-var SAY_SPELL = [['Al-Khwarizmi','Al Kwah riz mee'], ['Nadia Comaneci','Nahdeeah Kohmahnetch'], ['Comaneci','Kohmahnetch'], ['Chichén Itzá','Cheechen Eetsah'], ['Kaguya','Kahgooyah']];
+var SAY_SPELL = [['Al-Khwarizmi','Al Kwah riz mee'], ['Nadia Comaneci','Nahdeeah Kohmahnetch'], ['Comaneci','Kohmahnetch'], ['Chichén Itzá','Cheechen Eetsah'], ['Kaguya','Kahgooyah'],
+  /* 26.11.149: round 2 winners (Android) */
+  ['Hikoboshi','Heekohbohshee'], ['Cheomseongdae','Chumsungday'], ['Xochimilco','Socheemeelko'], ['Mosi-oa-Tunya','Moh-see oh-ah Toon-yah'],
+  ['Gaudí','Gow-dee'], ['Yamatai','Yah-mah-tie'], ['Dongui Bogam','Dongee Bohgahm'], ['Hokusai','Hoh-koo-sigh'], ['Kanagawa','Kah-nah-gah-wah'],
+  ['Wukong','Woo-kong'], ['Tenochtitlan','Tehnochteetlahn']];
 /* Group A: [text, lang] parts; no lang = English voice. Japanese names in the order shown on the card. */
 var NATSAY = {
   cn01:[['秦始皇','zh']], cn03:[['老子','zh']], cn04:[['孙子','zh']], cn07:[['蔡伦','zh']], cn08:[['张衡','zh']],
@@ -8702,7 +8706,8 @@ var NATSAY = {
   ca12:[['Samuel de Champlain','fr']], ca13:[['Jacques Cartier','fr']], ca15:[['Louis Riel','fr']],
   eu24:[['Nadia Comăneci','ro']],
   as03:[['الخوارزمي','ar']], af06:[['ابن بطوطة','ar']], as08:[['ابن سينا','ar'],['Avicenna']],
-  as05:[['Emperor'],['अशोक','hi']], as10:[['Buddha'],['सिद्धार्थ गौतम','hi']]
+  as05:[['Emperor'],['अशोक','hi']], as10:[['Buddha'],['सिद्धार्थ गौतम','hi']],
+  cn23:[['孫逸仙','yue']]
 };
 var SAY_EMO = null;
 try{ SAY_EMO = new RegExp('[\\p{Extended_Pictographic}\\u{1F1E6}-\\u{1F1FF}\\u{FE0F}\\u{200D}\\u{20E3}]', 'gu'); }catch(e){ SAY_EMO = null; }
