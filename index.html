@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.149', errs = [], shown = false;
+  var V = '26.11.150', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -2936,6 +2936,7 @@ iframe.llstory{transition:opacity .45s ease}
 .iomap th{font-weight:800;color:var(--muted);text-align:center;min-width:34px;line-height:1.15}
 .iomap .q{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;font-weight:800;padding-right:8px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iomap td.c{width:34px;height:34px;text-align:center;border-radius:9px;font-weight:900}
+.iomap td.c.u{background:var(--surface);color:var(--ink);border:1px dashed var(--line)}
 .iomap td.e{background:rgba(127,127,170,.08)}
 .iomap td.x{background:#fde2e2;color:#b42318}
 .ifw{display:flex;align-items:center;gap:10px;margin:6px 0}
@@ -4190,17 +4191,60 @@ function dlNames(){
   if(!state.dnames) state.dnames = {};
   state.tasks.forEach(function(t){ state.dnames[t.id] = String(t.name || t.title || t.id).slice(0, 40); });
 }
-function dlTask(id, on){
+function dlTask(id, on, atMs){
   try{
     var d = dlDay(), k = dateKey();
     d.a = dlActive(k); dlNames();
+    /* 26.11.150: a timer that ran out is logged at the moment it ended (even if the app was opened later) */
+    var when = (atMs && dateKey(new Date(atMs)) === k && atMs <= Date.now()) ? new Date(atMs) : new Date();
+    var tmin = when.getHours()*60 + when.getMinutes();
     if(on){
       var o = 0; for(var x in d.q) o = Math.max(o, d.q[x][1]);
-      d.q[id] = [dlNow(), o + 1];
+      d.q[id] = [tmin, o + 1];
+      if(atMs){   /* keep the order true to the clock */
+        var ids = Object.keys(d.q).filter(function(i){ return d.q[i][0] != null; });
+        ids.sort(function(a, b){ return (d.q[a][0] - d.q[b][0]) || (d.q[a][1] - d.q[b][1]); });
+        ids.forEach(function(i, n){ d.q[i][1] = n + 1; });
+      }
+      if(d.tp) delete d.tp[id];
     } else delete d.q[id];
     var all = d.a.length > 0 && d.a.every(function(i){ return d.q[i]; });
-    if(all && !d.f){ d.f = dlNow(); try{ d.e = new Date() < deadlineDate() ? 1 : 0; }catch(e){} }
-    else if(!all){ delete d.f; delete d.e; }
+    if(all && !d.f && !d.fx){ var fin = 0; d.a.forEach(function(i){ if(d.q[i][0] != null) fin = Math.max(fin, d.q[i][0]); }); d.f = fin || tmin; try{ var dd = new Date(when); dd.setHours(Math.floor(d.f/60), d.f%60, 0, 0); d.e = dd < deadlineDate() ? 1 : 0; }catch(e){} }
+    else if(!all){ delete d.f; delete d.e; delete d.fx; }
+  }catch(e){}
+}
+/* 26.11.150: a timer started but stopped before the end: keep how far she got (parent info only) */
+function dlTimerPart(t, remainingMs){
+  try{
+    var total = (+t.minutes || 0)*60000; if(!total) return;
+    var used = Math.round(Math.max(0, total - Math.max(0, remainingMs))/60000);
+    if(used < 1 || state.done[t.id]) return;
+    var d = dlDay(); d.tp = d.tp || {};
+    var prev = d.tp[t.id]; if(!prev || used > prev[0]) d.tp[t.id] = [used, +t.minutes];
+  }catch(e){}
+}
+function dlTimerNote(t){
+  var tm = state.timers && state.timers[t.id];
+  if(tm && tm.running && tm.endsAt){ var u = Math.max(0, Math.round(((+t.minutes)*60000 - Math.max(0, tm.endsAt - Date.now()))/60000)); return '⏱ timer running · '+u+' of '+t.minutes+' min so far'; }
+  var d = state.dlog && state.dlog[dateKey()], p = d && d.tp && d.tp[t.id];
+  return p ? '⏸ timer stopped at '+p[0]+' of '+p[1]+' min' : '';
+}
+/* 26.11.150 (runs once): days marked done whose timed quests never reached the log get them back.
+   Their finish time is unknown, so they count as done but stay out of time and order averages. */
+function dlBackfill150(){
+  if(state.dlFix150) return;
+  try{
+    var dl = state.dlog || {}, H = state.history || {}, today = dateKey();
+    Object.keys(dl).forEach(function(k){
+      var d = dl[k]; if(!d || !d.q) return;
+      if(k === today) d.a = dlActive(k);
+      if(!d.a || !d.a.length) return;
+      var ids = k === today ? d.a.filter(function(id){ return state.done[id]; }) : (H[k] === 'done' ? d.a : []);
+      var added = 0;
+      ids.forEach(function(id){ if(!d.q[id]){ d.q[id] = [null, 0]; added++; } });
+      if(added && !d.f && d.a.every(function(i){ return d.q[i]; })) d.fx = 1;
+    });
+    state.dlFix150 = 1; save();
   }catch(e){}
 }
 function dlRoutine(w){
@@ -4276,12 +4320,13 @@ function dlClose(k){
   }catch(e){}
 }
 function dlCSV(from, to){
-  var ks = Object.keys(state.dlog || {}).sort().filter(function(k){ return (!from || k >= from) && (!to || k <= to); }), rows = ['date,weekday,quests_active,quests_done,finished_at,on_time,order,morning_routine,evening_routine,points_earned,points_spent,app_opened'];
+  var ks = Object.keys(state.dlog || {}).sort().filter(function(k){ return (!from || k >= from) && (!to || k <= to); }), rows = ['date,weekday,quests_active,quests_done,finished_at,on_time,order,morning_routine,evening_routine,points_earned,points_spent,app_opened,timers_stopped'];
   var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], hm = function(m){ return m ? pad(Math.floor(m/60)) + ':' + pad(m%60) : ''; };
   ks.forEach(function(k){
-    var d = state.dlog[k], ord = Object.keys(d.q || {}).sort(function(a, b){ return d.q[a][1] - d.q[b][1]; }).map(function(i){ return ((state.dnames && state.dnames[i]) || i).replace(/[,"]/g, ' ') + '@' + hm(d.q[i][0]); }).join(' > ');
+    var d = state.dlog[k], ord = Object.keys(d.q || {}).sort(function(a, b){ return (d.q[a][1] || 999) - (d.q[b][1] || 999); }).map(function(i){ return ((state.dnames && state.dnames[i]) || i).replace(/[,"]/g, ' ') + '@' + (d.q[i][0] != null ? hm(d.q[i][0]) : '?'); }).join(' > ');
+    var tps = Object.keys(d.tp || {}).filter(function(i){ return !(d.q && d.q[i]); }).map(function(i){ return ((state.dnames && state.dnames[i]) || i).replace(/[,"]/g, ' ') + ' ' + d.tp[i][0] + '/' + d.tp[i][1] + 'min'; }).join(' ; ');
     var rt = function(w){ var r = d.r && d.r[w]; if(!r) return d.rs && d.rs.indexOf(w) > -1 ? 'missed' : ''; return r.c ? (r.ok ? 'on time ' : 'late ') + hm(r.c) : (r.t.length ? 'partial ' + r.t.length + '/' + r.n : 'missed'); };
-    rows.push([k, wd[d.w], (d.a || []).length, Object.keys(d.q || {}).length, hm(d.f), d.f ? (d.e ? 'yes' : 'no') : '', '"' + ord + '"', rt('m'), rt('n'), d.p || 0, d.s || 0, d.g ? 'no' : 'yes'].join(','));
+    rows.push([k, wd[d.w], (d.a || []).length, Object.keys(d.q || {}).length, hm(d.f), d.f ? (d.e ? 'yes' : 'no') : '', '"' + ord + '"', rt('m'), rt('n'), d.p || 0, d.s || 0, d.g ? 'no' : 'yes', '"' + tps + '"'].join(','));
   });
   rows.push(''); rows.push('parent changes: date,time,what,before,after');
   (state.dmark || []).filter(function(m){ return (!from || m.d >= from) && (!to || m.d <= to); }).forEach(function(m){ rows.push([m.d, hm(m.t), '"' + String(m.l).replace(/"/g, "'") + '"', '"' + String(m.a).replace(/"/g, "'") + '"', '"' + String(m.b).replace(/"/g, "'") + '"'].join(',')); });
@@ -4364,7 +4409,7 @@ function insRange(from, to){   /* days from..to (to not included), rest and birt
     var d = state.dlog && state.dlog[k], h = state.history && state.history[k];
     if(h === 'rest' || h === 'bday') continue;
     var rec = {k:k, wd:parseKey(k).getDay(), wk:weekKeyOf(k), d:null, full:null};
-    if(d && d.x && !d.g && d.a && d.a.length){ rec.d = d; rec.full = d.f ? 1 : 0; }
+    if(d && d.x && !d.g && d.a && d.a.length){ rec.d = d; rec.full = (d.f || d.fx) ? 1 : 0; }
     else if(h === 'done') rec.full = 1;
     else if(h === 'miss') rec.full = 0;
     else if(d && d.g) rec.full = 0;
@@ -4395,7 +4440,7 @@ function insMarks(){
 }
 /* one day's finished quests, ranked 1..n by the order they were ticked (gaps from unticking do not matter) */
 function insRanks(d){
-  var ids = Object.keys(d.q || {}).filter(function(id){ return (d.a || []).indexOf(id) >= 0; });
+  var ids = Object.keys(d.q || {}).filter(function(id){ return (d.a || []).indexOf(id) >= 0 && d.q[id][0] != null; });
   ids.sort(function(a, b){ return d.q[a][1] - d.q[b][1]; });
   var out = {}; ids.forEach(function(id, i){ out[id] = [i + 1, ids.length]; }); return out;
 }
@@ -4410,7 +4455,8 @@ function insQuests(logged){
         q.done++; q.times.push(d.q[id][0]);
         var x = rk[id];
         if(x[1] >= 2){ q.multi++; q.pos.push((x[0] - 1)/(x[1] - 1)); if(x[0] === 1) q.first++; if(x[0] === x[1]) q.last++; }
-      } else q.wd[r.wd].m++;
+      } else if(d.q[id]) q.done++;   /* done, time not recorded */
+      else q.wd[r.wd].m++;
     });
   });
   return Object.keys(Q).map(function(k){ var q = Q[k]; q.p = q.pos.length ? q.pos.reduce(function(a, b){ return a + b; }, 0)/q.pos.length : null; return q; });
@@ -4433,7 +4479,7 @@ function insOrderMap(){
   cols.forEach(function(c){ if(!c.d) return; rk[c.k] = insRanks(c.d); c.d.a.forEach(function(id){ rows[id] = rows[id] || {id:id, ps:[]}; var x = rk[c.k][id]; if(x && x[1] >= 2) rows[id].ps.push((x[0]-1)/(x[1]-1)); }); });
   var list = Object.keys(rows).map(function(id){ var r = rows[id]; r.p = r.ps.length ? r.ps.reduce(function(a, b){ return a + b; }, 0)/r.ps.length : 2; return r; })
     .sort(function(a, b){ return a.p - b.p; });
-  var h = '<h3>Quest order, last 14 days</h3><div class="hint">Each square is the order she did that quest in. Darker means earlier. \u2715 means not finished. Blank means not on that day, a rest day, or no record.</div>';
+  var h = '<h3>Quest order, last 14 days</h3><div class="hint">Each square is the order she did that quest in. Darker means earlier. \u2715 means not finished. \u2713 means done, time not recorded. Blank means not on that day, a rest day, or no record.</div>';
   h += '<div class="iomap"><table><thead><tr><th class="q"></th>';
   cols.forEach(function(c){ var dt = parseKey(c.k); h += '<th>'+DAY_NAMES[dt.getDay()].slice(0, 2)+'<br>'+dt.getDate()+'</th>'; });
   h += '</tr></thead><tbody>';
@@ -4442,6 +4488,7 @@ function insOrderMap(){
     cols.forEach(function(c){
       if(!c.d || c.d.a.indexOf(r.id) < 0){ h += '<td class="c e"></td>'; return; }
       var x = rk[c.k][r.id];
+      if(!x && c.d.q && c.d.q[r.id]){ h += '<td class="c u" title="Done, time not recorded">\u2713</td>'; return; }
       if(!x){ h += '<td class="c x" title="Not finished">\u2715</td>'; return; }
       var p = x[1] >= 2 ? (x[0]-1)/(x[1]-1) : 0, mix = Math.round(100 - 68*p);
       h += '<td class="c" style="background:color-mix(in srgb,var(--accent) '+mix+'%,#fff);color:'+(mix >= 60 ? '#fff' : 'var(--ink)')+'">'+x[0]+'</td>';
@@ -4684,9 +4731,11 @@ function startTimer(t){
 function pauseTimer(t){
   var tm = timerOf(t);
   tm.remaining = Math.max(0, tm.endsAt - Date.now()); tm.running = false; tm.endsAt = null;
+  dlTimerPart(t, tm.remaining);
   save(); renderGrid(); afterTimerStop(t, 'pause');
 }
 function resetTimer(t){
+  try{ var old = state.timers[t.id]; if(old) dlTimerPart(t, old.running && old.endsAt ? old.endsAt - Date.now() : old.remaining); }catch(e){}
   state.timers[t.id] = {running:false, endsAt:null, remaining:t.minutes*60000};
   save(); renderGrid(); afterTimerStop(t, 'reset');
 }
@@ -4695,11 +4744,12 @@ function tickTimers(){
   state.tasks.forEach(function(t){
     var tm = state.timers[t.id];
     if(tm && tm.running && Date.now() >= tm.endsAt){
+      var endAt = tm.endsAt;
       tm.running = false; tm.endsAt = null; tm.remaining = 0; changed = true;
       afterTimerStop(t, 'done');
       if(t.calm && Sound.soft) Sound.soft(); else Sound.alarm();
       toast('⏰ '+t.minutes+' minutes done! Awesome!', 4000);
-      if(isActive(t) && !state.done[t.id]){ state.done[t.id] = true; }
+      if(isActive(t) && !state.done[t.id]){ state.done[t.id] = true; dlTask(t.id, true, endAt); }
       afterProgressChange();
     }
   });
@@ -7790,7 +7840,7 @@ function parToday(){
   if(!act.length) h += '<div class="hint">Nothing assigned. Use Quests to assign some.</div>';
   act.forEach(function(t){
     var on = !!state.done[t.id], q = d.q && d.q[t.id];
-    h += '<div class="prow'+(on ? '' : ' off')+'"><div class="pe">'+(on ? '✅' : '⬜')+'</div><div class="pn">'+esc(t.emoji)+' '+esc(t.kq ? kqName() : t.name)+'<small>'+(on ? 'Done'+(q ? ' at '+fmt12(parHm(q[0]))+(q[1] ? ' · #'+q[1] : '') : '') : 'Not yet')+'</small></div><button class="btn small" data-act="ptask" data-id="'+esc(t.id)+'">'+(on ? '↩️ Undo' : '✔ Mark done')+'</button></div>';
+    h += '<div class="prow'+(on ? '' : ' off')+'"><div class="pe">'+(on ? '✅' : '⬜')+'</div><div class="pn">'+esc(t.emoji)+' '+esc(t.kq ? kqName() : t.name)+'<small>'+(on ? 'Done'+(q && q[0] != null ? ' at '+fmt12(parHm(q[0]))+(q[1] ? ' · #'+q[1] : '') : '') : 'Not yet'+(t.minutes ? (function(n){ return n ? ' · '+n : ''; })(dlTimerNote(t)) : ''))+'</small></div><button class="btn small" data-act="ptask" data-id="'+esc(t.id)+'">'+(on ? '↩️ Undo' : '✔ Mark done')+'</button></div>';
   });
   var rts = [];
   ['m','n'].forEach(function(w){
@@ -16807,6 +16857,7 @@ setTimeout(kitLoop, 5000);
 state = load();
 if(FAMPACK && FAMPACK.bday && FAMPACK.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:FAMPACK.bday.y, m:FAMPACK.bday.m, d:FAMPACK.bday.d}; }
 try{ checkNewDay(); }catch(e){ try{ console.error('newday', e); }catch(_){} }
+try{ dlBackfill150(); }catch(e){}
 setTimeout(godPackCheck, 1500);
 setTimeout(auroraCheckUnlock, 9000);   /* 26.11.121: if she already has enough full quest days */
 save();
