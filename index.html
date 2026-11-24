@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.150', errs = [], shown = false;
+  var V = '26.11.151', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -527,6 +527,10 @@ h1,h2,h3,p{margin:0}
 .overlay.ovstage{z-index:calc(var(--z-celebrate) + 5)}
 .overlay{position:fixed;inset:0;background:rgba(24,22,60,.55);backdrop-filter:blur(4px);z-index:var(--z-panel);display:none;align-items:center;justify-content:center;padding:16px}
 .overlay.show{display:flex}
+/* 26.11.151: the page behind stays still while a menu or full-screen layer is open */
+html.sqlock,html.sqlock body{overflow:hidden}
+html.sqlock body{position:fixed;left:0;right:0;width:100%}
+.overlay,.modal,.stage,.aw,.tfs,.kw,.jw,#kbc,#ksay,.cbig,#llfx{overscroll-behavior:contain}
 .modal{background:#fff;border-radius:30px;max-width:760px;width:100%;max-height:94vh;overflow:auto;padding:24px;box-shadow:var(--shadow-2);animation:rise .3s cubic-bezier(.2,1.3,.4,1)}
 @keyframes rise{from{transform:translateY(34px) scale(.94);opacity:0}}
 .modal h2{margin:0 0 12px;font-size:25px;letter-spacing:-.3px}
@@ -16858,6 +16862,42 @@ state = load();
 if(FAMPACK && FAMPACK.bday && FAMPACK.bday.y && !(state.bday && state.bday.y)){ state.bday = {y:FAMPACK.bday.y, m:FAMPACK.bday.m, d:FAMPACK.bday.d}; }
 try{ checkNewDay(); }catch(e){ try{ console.error('newday', e); }catch(_){} }
 try{ dlBackfill150(); }catch(e){}
+
+/* 26.11.151: page scroll lock. Any open menu / full-screen layer freezes the page behind it;
+   when the last one closes the page is put back exactly where it was. */
+(function(){
+  var SEL = '#overlay.show, #stage.show, .tfs, .kw, .jw, .aw, #kbc, #ksay, .cbig, #llfx';
+  var locked = false, y = 0, raf = 0, de = document.documentElement;
+  var nativeScrollTo = window.scrollTo.bind(window);
+  /* code that scrolls the page while it is frozen (e.g. "go to Journal" from a menu) gets its wish on unlock */
+  window.scrollTo = function(a, b){
+    if(locked){ y = (a && typeof a === 'object') ? (+a.top || 0) : (+b || 0); return; }
+    return nativeScrollTo.apply(window, arguments);
+  };
+  function shown(el){
+    if(!el || !el.isConnected) return false;
+    var cs = getComputedStyle(el);
+    return cs.display !== 'none' && cs.visibility !== 'hidden' && el.getClientRects().length > 0;
+  }
+  function check(){
+    raf = 0;
+    var L = document.querySelectorAll(SEL), any = false;
+    for(var i = 0; i < L.length; i++){ if(shown(L[i])){ any = true; break; } }
+    if(any && !locked){
+      y = window.pageYOffset || de.scrollTop || 0; locked = true;
+      document.body.style.top = (-y) + 'px'; de.classList.add('sqlock');
+    } else if(!any && locked){
+      locked = false; de.classList.remove('sqlock'); document.body.style.top = '';
+      nativeScrollTo(0, y);
+    }
+  }
+  window.sqScrollCheck = function(){ if(!raf) raf = requestAnimationFrame(check); };
+  try{
+    new MutationObserver(window.sqScrollCheck).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['class','style']});
+  }catch(e){}
+  window.sqScrollCheck();
+})();
+
 setTimeout(godPackCheck, 1500);
 setTimeout(auroraCheckUnlock, 9000);   /* 26.11.121: if she already has enough full quest days */
 save();
