@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.151', errs = [], shown = false;
+  var V = '26.11.153', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -259,6 +259,37 @@ h1,h2,h3,p{margin:0}
 .q-main{display:flex;align-items:center;gap:14px}
 .tile{width:68px;height:68px;border-radius:20px;background:var(--tile);font-size:36px;display:grid;place-items:center;flex:none}
 .q-name{flex:1;font-weight:800;font-size:19px;line-height:1.22}
+/* 26.11.153 Practice Makes Permanent + Kanji of the day in quest card */
+.pmpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.pmpc{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center;min-width:0}
+.pmpc:has(.pmppad){grid-column:1/-1}
+.pmpk{font-size:58px;line-height:1.1;font-weight:700}
+.pmpw b{font-size:20px}
+.pmpw small{display:block;color:var(--muted);font-size:14px}
+.pmpb{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.pmpok{font-size:13px;margin-top:6px;color:var(--ink);font-weight:700}
+.pmppad canvas{width:100%;max-width:300px;aspect-ratio:1/1;touch-action:none;border-radius:12px;border:2px solid #c9cfe0;background:#ffffff;display:block;margin:8px auto 0}
+.kqtip{background:#fff7dc;color:#1e2142;border:1px solid #e8d9a8;border-radius:12px;padding:8px 12px;margin:6px 0;font-weight:700;line-height:1.35}
+.kqday{display:flex;align-items:center;gap:10px;width:100%;margin-top:8px;background:#fff7dc;color:#1e2142;border:1px solid #e8d9a8;border-radius:14px;padding:6px 12px;text-align:left;font:inherit;cursor:pointer}
+.kqdk{font-size:34px;font-weight:800;line-height:1}
+.kqdt small{display:block;font-size:12px;color:#5a5f7a;font-weight:700}
+.kqdt b{font-size:18px;color:#1e2142}
+/* 26.11.152: in narrow (landscape two-column) cards the name squeezes and wraps instead of pushing the tick out of the box */
+.quest{min-width:0;container-type:inline-size}
+.q-main{min-width:0}
+.q-name{min-width:0;overflow-wrap:break-word;hyphens:auto}
+.q-name .gqbadge{white-space:normal;max-width:100%}
+.timer{min-width:0}
+@container (max-width:300px){
+  .q-main{gap:10px}
+  .tile{width:54px;height:54px;font-size:29px;border-radius:16px}
+  .q-name{font-size:17px}
+  .check{width:46px;height:46px;font-size:24px}
+  .timer{gap:10px}
+  .ring,.ring>svg{width:74px;height:74px}
+  .ring .t{font-size:17px}
+  .tbtn{min-width:54px;padding:0 10px}
+}
 .check{width:54px;height:54px;border-radius:50%;border:3px solid #d5d9ea;display:grid;place-items:center;color:#fff;font-size:28px;font-weight:900;flex:none;transition:all .25s;background:#fff}
 .quest.done{background:var(--good-soft);border-color:#b8ecd2}
 .quest.done .check{background:var(--good);border-color:var(--good);animation:pop .55s cubic-bezier(.2,1.8,.4,1)}
@@ -6663,6 +6694,7 @@ function questHTML(t, i){
   var done = !!state.done[t.id];
   var h = '<div class="quest p'+(i%PALETTES)+(done?' done':'')+(t.calm?' calm':'')+'" data-id="'+esc(t.id)+'" role="button" aria-pressed="'+done+'">';
   h += '<div class="q-main"><div class="tile">'+esc(t.emoji)+'</div><div class="q-name">'+esc(t.kq ? kqName() : t.name)+gQuestBadge(t)+questPtsHTML(t)+'</div><div class="check">'+(done?'✓':'')+'</div></div>';
+  if(t.kq){ try{ var kd = kanjiToday(); if(kd) h += '<button class="kqday" data-kj="today"><span class="kqdk" lang="ja">'+esc(kd.k)+'</span><span class="kqdt"><small>Kanji of the day'+(kjDoneToday() ? ' \u2713' : '')+'</small><b lang="ja">'+esc(kd.w || '')+'</b></span></button>'; }catch(_){} }
   if(t.minutes > 0){
     var tm = state.timers[t.id], running = tm && tm.running, rem = timerRemaining(t);
     h += '<div class="timer"><div class="ring'+(running?' running':'')+'"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" id="ring-'+esc(t.id)+'" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><div class="t" id="tt-'+esc(t.id)+'">'+mmss(rem)+'</div></div>';
@@ -7478,6 +7510,7 @@ function render(){
 }
 function setTab(t){
   if(DR) drClose(true);   /* 26.11.101 */
+  if(t === 'kanji' && tab !== 'kanji'){ try{ state.ui = state.ui || {}; state.ui.kjTab = 'today'; }catch(_){} }   /* 26.11.153 */
   if(t === 'money' && !bankOn()) t = 'home';
   tab = t;
   ['home','kanji','write','cards','shop','money','journal','profile'].forEach(function(x){ $('view-'+x).classList.toggle('show', x === t); }); window.__SQ_OTHERTAB = (t !== 'home');
@@ -12855,7 +12888,39 @@ var STRONG = [
  ['Learning is not a race. Everyone blooms at their own time.','','Remember 大器晩成: great things take time.'],
  ['Being yourself is the bravest thing you can be.','','Do something today that is totally, happily you.'],
  ['When you don’t know, say “Let’s find out!”','','Ask a “why” question today and find the answer together.'],
- ['Sleep, water, food, play and hugs: that is the recipe for a strong mind.','','Which part of the recipe do you need most today?',1]
+ ['Sleep, water, food, play and hugs: that is the recipe for a strong mind.','','Which part of the recipe do you need most today?',1],
+ ["Everyone falls down. Champions get back up and try again. 💪", "", "Think of a time you fell (on a bike, in a game) and got back up. You can do it again!", 0, "g"],
+ ["A mistake means you tried. Try again!", "", "Find one mistake from this week and fix it. Fixing it is winning.", 0, "g"],
+ ["Finishing is a superpower.", "", "Pick one thing today and finish it all the way to the end.", 0, "g"],
+ ["Hard is not the same as impossible.", "", "Do one hard thing for just 5 minutes. Then you can stop.", 0, "g"],
+ ["Brave isn’t never failing. Brave is trying again.", "", "Try again at something that didn’t work yesterday.", 0, "g"],
+ ["Tell the truth, even when it’s hard. That’s strong too.", "", "If something went wrong today, say so. Kit is proud of honest kids.", 0, "g"],
+ ["Slow and steady still gets there. 🐢", "The Tortoise and the Hare", "Do your work slowly and carefully today. No rushing.", 0, "g"],
+ ["Do your best, then do it again tomorrow.", "", "Tonight, think of one thing you did your best at.", 0, "g"],
+ ["Your brain grows when things feel hard. 🌱", "", "When something feels hard today, say: “My brain is growing!”", 0, "g"],
+ ["Don’t quit on a bad day. Rest, then keep going.", "", "If you feel tired, take 5 slow breaths, then do one more thing.", 0, "g"],
+ ["Fall down seven times, stand up eight.", "Japanese proverb (七転び八起き)", "Every time something goes wrong today, stand up one more time.", 0, "g"],
+ ["It always seems impossible until it’s done.", "Nelson Mandela", "Finish one thing that looked too big this morning.", 0, "g"],
+ ["I didn’t fail. I found ways that don’t work yet.", "Thomas Edison (in kid words)", "If something didn’t work, try it a different way.", 0, "g"],
+ ["Practice makes permanent.", "", "Practise one kanji three times, slowly and neatly.", 0, "g"],
+ ["Neat and finished beats perfect and stuck.", "", "Write neatly, then keep going. Don’t erase too much!", 0, "g"],
+ ["Little by little, a little becomes a lot.", "Tanzanian proverb", "Do a tiny bit of something every day this week.", 0, "g"],
+ ["Champions aren’t the ones who never lose. They’re the ones who never give up.", "", "When you lose a game today, say “good game” and play again.", 0, "g"],
+ ["Mistakes are proof that you are trying.", "", "Look at a mistake and say: “This shows I tried!”", 0, "g"],
+ ["Keep going. The hard part is how you get strong.", "", "Do one more question than you planned.", 0, "g"],
+ ["When you want to stop, do just one more.", "", "Next time you want to stop, do just one more, then decide.", 0, "g"],
+ ["Being honest is braver than being perfect.", "", "If you are not sure, say “I’m not sure.” That’s honest!", 0, "g"],
+ ["A river cuts through rock by never stopping.", "", "Do a little practice every day, like the river.", 0, "g"],
+ ["You don’t have to be great to start. You have to start to be great.", "", "Start the thing you have been putting off. Just the first step.", 0, "g"],
+ ["Every expert was once a beginner.", "", "Ask a grown-up about something they were bad at when they were little.", 0, "g"],
+ ["Try, fail, learn, try again. That’s how everyone gets good.", "", "Teach someone something you learned from a mistake.", 0, "g"],
+ ["Willpower is a muscle. Every time you use it, it grows. 💪", "", "Choose the hard thing first today, then the fun thing.", 0, "g"],
+ ["The best way out is always through.", "Robert Frost", "When something is hard, go through it one small step at a time.", 0, "g"],
+ ["Strong is getting up one more time than you fall.", "", "If you fall today, count it, then get up and count again!", 0, "g"],
+ ["Do it right, not just fast.", "", "Today, choose careful over quick.", 0, "g"],
+ ["Winners finish what they start.", "", "Look at your quest list. Finish every one you started.", 0, "g"],
+ ["Hard work beats talent when talent doesn’t work hard.", "Tim Notke", "Practise something even if you are already good at it.", 0, "g"],
+ ["Your best today is enough. Tomorrow’s best can be even better.", "", "Before bed, think: what did I do my best on today?", 0, "g"]
 ];
 
 /* One famous quote per history card (not every card has one). Shown in italics with a 🔊 button; tap for a kid-friendly pop-up.
@@ -13005,7 +13070,9 @@ function kotoUsedToday(){ var ko = kotoSt(); return ko.usedDay[dateKey()] != nul
 function strongIdx(){
   var ks = kjExtra(), d = kotoDay();
   if(ks.feel[dateKey()] === 'hard'){ var c = []; STRONG.forEach(function(s, i){ if(s[3]) c.push(i); }); return c[d % c.length]; }
-  return (d * 7) % STRONG.length;
+  /* 26.11.153: normal days focus on finishing, getting back up, willpower, hard work, honesty */
+  var pool = []; STRONG.forEach(function(x, i){ if(x[4] === 'g' || (!x[3] && /mistake|again|try|tried|brave|hard|finish|practi|quit|fail|grow|not yet|step|keep|strong|stuck/i.test(x[0]))) pool.push(i); });
+  return pool.length ? pool[(d * 5 + 3) % pool.length] : (d * 7) % STRONG.length;
 }
 function strongHTML(){
   kotoSt();
@@ -13258,7 +13325,10 @@ function kjKitLine(){
   }
   if(ks.prac.n >= 4) return 'You practised '+ks.prac.n+' times today! Your brain saves new kanji while you rest and sleep. Go play, I will be here tomorrow. 💤';
   if(hh.on && kjKidPage() && (dow === 6 || dow === 0) && kjHzStale()) return 'Hoshuko weekend! 🏫 Did your class start a new page? Tell me in My Book.';
-  if(!kjDoneToday()) return 'Today\u2019s kanji is <b lang="ja">'+k.k+'</b> ('+kjEsc(k.m)+'). Let\u2019s meet it!';
+  /* 26.11.153: practice-test days → finish-first reminder; otherwise today's kanji + a tip */
+  var stp = ''; try{ stp = kqStep(); }catch(_){}
+  if(['booklet','round','show','mock','mixed'].indexOf(stp) > -1 && wkSt().did[dateKey()] == null) return KIT_FINISH;
+  return 'Today\u2019s kanji is <b lang="ja">'+k.k+'</b> ('+kjEsc(k.m)+'). '+KIT_TIPS[kotoDay() % KIT_TIPS.length];
   return 'You learned <b lang="ja">'+k.k+'</b> today. Your brain grew a tiny bit stronger! 🌱';
 }
 function kjHzStale(){ var hh = hz(); if(!hh.at) return true; return daysBetween(dateFromKey(hh.at), dateFromKey(dateKey())) >= 2; }
@@ -14301,28 +14371,146 @@ function hhParentHTML(e){
   return h;
 }
 
+/* ===== 26.11.153: Practice Makes Permanent zone + week kanji layers ===== */
+var KIT_FINISH = 'Finish them all, write them neat, and don\u2019t worry about perfect. We\u2019ll fix mistakes after! \ud83e\udd8a';
+var KIT_TIPS = [
+  'Write slowly and neatly. Neat now means remembering later.',
+  'Stuck on one? Skip it, finish the rest, then come back.',
+  'Say the reading out loud as you write. Your ears help your brain!',
+  'Check the little parts: \u306f\u306d, \u3068\u3081, \u306f\u3089\u3044.',
+  'Five minutes every day beats one hour once a week.',
+  'Mistakes are how kanji stick in your brain. Keep going!',
+  'Count the strokes as you write. 1, 2, 3\u2026',
+  'Practice makes permanent. Do it neat, do it again.',
+  'Finish first, then check. That\u2019s how champions do tests.',
+  'If one kanji is tricky, write it three times, slowly.'
+];
+function wkTestKanji(){
+  var t = null; try{ t = wkTest(); }catch(_){}
+  if(!t) return [];
+  var o = []; t.q.forEach(function(q){ String(q[1]).split('').forEach(function(c){ if(KJ_BY[c]) o.push(c); }); });
+  return kjUniq(o);
+}
+function wkExtras(){ var sl = kfcSel(); return kjUniq(sl.own || []).filter(function(c){ return !!KJ_BY[c]; }); }
+/* new kanji first, then older kanji that appear in this test's words, then her own picks */
+function wkPlus(){
+  var n = wkKanji(), t = wkTestKanji().filter(function(c){ return n.indexOf(c) < 0; });
+  var x = wkExtras().filter(function(c){ return n.indexOf(c) < 0 && t.indexOf(c) < 0; });
+  return {n:n, t:t, x:x, all:n.concat(t, x)};
+}
+function pmpSt(){ var ks = kanjiState(); if(!ks.pmp) ks.pmp = {}; return ks.pmp; }
+function pmpChars(word){ return kjUniq(String(word || '').split('').filter(function(c){ return !!KJ_BY[c]; })); }
+function pmpMiss(word, reading, src){
+  pmpChars(word).forEach(function(c){
+    var P = pmpSt(), e = P[c] || (P[c] = {n:0, ok:[]});
+    e.n++; e.t = Date.now(); e.w = word; e.r = reading || ''; e.ok = []; e.src = src || 'prac';
+  });
+}
+function pmpRight(c){
+  var P = pmpSt(), e = P[c]; if(!e) return false;
+  var d = dateKey(); if(e.ok.indexOf(d) < 0) e.ok.push(d);
+  if(e.ok.length >= 2){ delete P[c]; return true; }
+  return false;
+}
+function pmpUndo(word, src){ var P = pmpSt(); pmpChars(word).forEach(function(c){ if(P[c] && P[c].w === word && (!src || P[c].src === src)) delete P[c]; }); }
+function pmpList(){
+  var P = pmpSt();
+  return Object.keys(P).filter(function(c){ return !!KJ_BY[c]; }).sort(function(a, b){ return (P[b].t - P[a].t) || (P[b].n - P[a].n); });
+}
+/* all practice perfect → the kanji that took her longest (she never sees times) */
+function pmpSlow(){
+  var t = null; try{ t = wkTest(); }catch(_){}
+  if(!t) return [];
+  var st = htSt(), best = {};
+  t.q.forEach(function(q, i){
+    var e = st.q[htKey(t.id, i)]; if(!e || e.l !== 1 || !e.ms) return;
+    var cs = pmpChars(q[1]); if(!cs.length) return;
+    var per = e.ms / cs.length;
+    cs.forEach(function(c){ if(!best[c] || per > best[c].s) best[c] = {s:per, w:q[1], r:q[2]}; });
+  });
+  return Object.keys(best).sort(function(a, b){ return best[b].s - best[a].s; }).slice(0, 3).map(function(c){ return {c:c, w:best[c].w, r:best[c].r}; });
+}
+function pmpHTML(){
+  var P = pmpSt(), L = pmpList(), items, slow = false;
+  if(L.length) items = L.slice(0, 6).map(function(c){ return {c:c, w:P[c].w, r:P[c].r, ok:P[c].ok.length}; });
+  else { items = pmpSlow(); slow = true; }
+  var h = '<div class="panel pmp"><div class="ptitle">\u2728 Practice Makes Permanent</div>';
+  if(!items.length) return h + '<div class="hint">Nothing here right now. After your practice tests, Kit puts kanji here to make them strong. \ud83e\udd8a</div></div>';
+  h += '<div class="hint">Practice makes permanent. Let\u2019s make these strong!</div><div class="pmpgrid">';
+  items.forEach(function(it){
+    var k = KJ_BY[it.c] || {};
+    h += '<div class="pmpc" data-pmpc="'+it.c+'"><div class="pmpk" lang="ja">'+esc(it.c)+'</div>';
+    h += '<div class="pmpw" lang="ja"><b>'+esc(it.w || '')+'</b>'+(it.r ? '<small>'+esc(it.r)+'</small>' : '')+'</div>';
+    h += '<div class="pmpb"><button class="btn small" data-pmp="say:'+it.c+'" aria-label="Hear it">\ud83d\udd0a</button><button class="btn small" data-pmp="pad:'+it.c+'">\u270f\ufe0f Write it</button></div>';
+    if(!slow && it.ok) h += '<div class="pmpok">\ud83c\udf31 1 more day to go</div>';
+    h += '</div>';
+  });
+  return h + '</div></div>';
+}
+function pmpPadOpen(card, c){
+  var old = card.querySelector('.pmppad'); if(old){ old.remove(); return; }
+  [].forEach.call(document.querySelectorAll('.pmppad'), function(x){ x.remove(); });
+  var pad = document.createElement('div'); pad.className = 'pmppad';
+  pad.innerHTML = '<canvas width="440" height="440"></canvas><div class="pmpb"><button class="btn small" data-pmp="clr:'+c+'">\ud83e\uddfd Clear</button><button class="btn small good" data-pmp="done:'+c+'">\u2705 I wrote it neatly</button></div>';
+  card.appendChild(pad);
+  var cv = pad.querySelector('canvas'), g = cv.getContext('2d');
+  function guide(){
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, 440, 440);
+    g.strokeStyle = '#e3e6f0'; g.lineWidth = 2; g.setLineDash([10, 10]);
+    g.beginPath(); g.moveTo(220, 0); g.lineTo(220, 440); g.moveTo(0, 220); g.lineTo(440, 220); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#dfe3ee'; g.font = '340px "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(c, 220, 236);
+  }
+  guide(); pad._guide = guide;
+  var drawing = false;
+  function pt(e){ var r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 440 / r.width, (e.clientY - r.top) * 440 / r.height]; }
+  cv.addEventListener('pointerdown', function(e){ e.preventDefault(); drawing = true; try{ cv.setPointerCapture(e.pointerId); }catch(_){} var p = pt(e); g.strokeStyle = '#1e2142'; g.lineWidth = 16; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(p[0] + 0.1, p[1] + 0.1); g.stroke(); });
+  cv.addEventListener('pointermove', function(e){ if(!drawing) return; e.preventDefault(); var p = pt(e); g.lineTo(p[0], p[1]); g.stroke(); });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(n){ cv.addEventListener(n, function(){ drawing = false; }); });
+}
+document.addEventListener('click', function(e){
+  var b = e.target.closest && e.target.closest('[data-pmp]'); if(!b) return;
+  e.preventDefault(); e.stopPropagation();
+  var p = b.getAttribute('data-pmp').split(':'), c = p[1], card = b.closest('.pmpc'), P = pmpSt();
+  if(p[0] === 'say'){ var e2 = P[c], it = e2 ? e2 : (pmpSlow().filter(function(x){ return x.c === c; })[0] || {}); speakText(it.r || it.w || c, 'ja-JP', b); return; }
+  if(p[0] === 'pad' && card){ pmpPadOpen(card, c); return; }
+  if(p[0] === 'clr' && card){ var pad = card.querySelector('.pmppad'); if(pad && pad._guide) pad._guide(); return; }
+  if(p[0] === 'done'){
+    var gone = pmpRight(c); save();
+    toast(gone ? '\ud83c\udf1f '+c+' is strong now! Practice made it permanent.' : '\ud83c\udf31 Nice and neat! Getting stronger.');
+    if(typeof sfx === 'function'){ try{ sfx('good'); }catch(_){} }
+    render(); return;
+  }
+}, true);
+
 function renderKanjiTab(){
   var v = $('view-kanji'); if(!v) return;
   if(state.eco.kanjiOn === false){ v.innerHTML = ''; return; }
   try{ kanjiBackfill(); }catch(e){}
   var sub = kjSub(), mood = (kjDoneToday() || ktPerfect()) ? 'cheer' : 'happy';
+  if(sub === 'grow') sub = 'practice';
   var h = '<div class="kjtab">';
   h += '<div class="panel kjhead"><button class="kjkit" aria-label="Tap Kit">'+kitSVG(mood, 'hero')+'</button><div class="kjsay"><div class="kjbub">'+kjKitLine()+'</div><small>Tap Kit for a thought</small></div></div>';
   h += '<div class="kjseg" role="tablist">';
-  [['today','📘 This week'], ['practice','⭐ For fun'], ['book','📖 My Book'], ['koto','🗣️ ことわざ'], ['grow','🌳 Growing']].forEach(function(x){
+  [['today','📘 This week'], ['koto','🗣️ ことわざ'], ['practice','⭐ For fun'], ['book','📖 My Book']].forEach(function(x){
     h += '<button role="tab" class="'+(sub === x[0] ? 'on' : '')+'" data-kjtab="'+x[0]+'">'+x[1]+'</button>';
   });
   h += '</div>';
   if(sub === 'today') h += kjTodayHTML();
   else if(sub === 'book') h += kjBookTabHTML();
-  else if(sub === 'practice') h += kjPracticeHTML();
+  else if(sub === 'practice') h += kjThinkHTML() + kjPracticeHTML() + kjGrowHTML();
   else if(sub === 'koto') h += kotoTabHTML();
   else h += kjGrowHTML();
   v.innerHTML = h + '</div>';
   if(sub === 'koto') kotoFilter();
 }
 function kjTodayHTML(){
-  var k = kanjiToday(), ks = kjExtra(), h = strongHTML() + htTodayCardHTML() + kanjiPanelHTML();
+  var h = strongHTML() + htTodayCardHTML() + pmpHTML();
+  h += kotoTodayHTML();
+  return h;
+}
+function kjThinkHTML(){
+  var k = kanjiToday(), ks = kjExtra(), h = '';
   var think = KJ_HEART[k.k] || KJ_THINK[dayNumX() % KJ_THINK.length].replace(/\{k\}/g, k.k).replace(/\{w\}/g, esc(k.w));
   h += '<div class="panel kjthink"><div class="ptitle">'+(KJ_HEART[k.k] ? '💛 Kanji with heart' : '💭 Think about it')+'</div><p>'+think+'</p></div>';
   h += '<div class="panel"><div class="ptitle">Do one thing, if you like</div><div class="kjacts">';
@@ -14331,7 +14519,6 @@ function kjTodayHTML(){
   var taught = ks.taught[dateKey()];
   h += '<button class="btn'+(taught ? ' did' : '')+'" data-kjteach="1"><b>🧑‍🏫 I taught it</b><small>'+(taught ? 'Thank you for sharing!' : 'to someone at home')+'</small></button>';
   h += '</div></div>';
-  h += kotoTodayHTML();
   return h;
 }
 function kjBookTabHTML(){
@@ -14352,7 +14539,7 @@ function kjPracticeHTML(){
   if(ks.prac.n >= 3) h += '<div class="kjbreak">🧃 <b>Brain break idea:</b> '+['10 star jumps','a glass of water','look out the window for 20 seconds','a big stretch up to the sky','3 slow breaths'][ks.prac.n % 5]+'. Then come back if you want!</div>';
   h += '<div class="kjpgrid">';
   [['Kanji cards', [['data-kfc="mode:read"','👀 Read it','See the kanji, flip for the reading'], ['data-kfc="mode:recall"','💭 Remember it','See the meaning, think of the kanji'], ['data-kfc="mode:pick"','🔍 Find the kanji','Pick the right one from four'], ['data-kfc="mode:look"','👯 Look-alikes','Tell tricky twins apart']]],
-   ['Tests', [['data-ht="earlier"','📚 Earlier tests','Any booklet test, extra credit'], ['data-ht="momopen"','📖 Study with Mom','Go over words together']].concat(kanjiState().oldKT ? [['data-kt="open"','👂 Listening test','Kit reads, you write on paper']] : [])],
+   ['Tests', [['data-ht="earlier"','📚 Earlier tests','Any booklet test, extra credit']].concat(kanjiState().oldKT ? [['data-kt="open"','👂 Listening test','Kit reads, you write on paper']] : [])],
    ['Kanji combos', [['data-kcb="mode:build"','🧩 Build the word','Put two kanji together'], ['data-kcb="mode:miss"','🔎 Missing kanji','Which kanji fits the gap?'], ['data-kcb="mode:readw"','📖 Read the word','Pick the right reading'], ['data-kcb="fam:today"','🔗 Word family','All the words with one kanji']]],
    ['Writing', [['data-kw-open="today"','✍️ Write it','Stroke order and neat writing'], ['data-kwalbum="1"','📓 My writing','See how it has grown']]]
   ].forEach(function(g){
@@ -14712,6 +14899,7 @@ function kqSatSave(){
   var s = HT, t = wkTest(), w = wkSt(), st = htSt(), today = dateKey();
   w.sat = {d:today, feel:s.feel, m:s.sat, test:t ? t.id : ''};
   if(t) t.q.forEach(function(_, i){ var v = s.sat[i], k = htKey(t.id, i); if(v === 'u' || v === 'n'){ var e = st.q[k] = st.q[k] || {r:[], w:0}; e.sat = today; if(e.l === 1 && e.r.length >= 2){ e.due = today; } else e.l = 0; } else if(st.q[k]) delete st.q[k].sat; });
+  try{ if(t) t.q.forEach(function(q, i){ var v = s.sat[i]; if(v === 'u' || v === 'n') pmpMiss(q[1], q[2], 'sat'); }); }catch(_){}
   if(s.feel === 2) w.notes.push({d:today, t:'Saturday test felt \ud83d\ude1f'});
   save(); kqDone();
   HT.stage = 'satend'; htShow();
@@ -14756,6 +14944,7 @@ function kqWarmHTML(){
 function htQHTML(){
   var s = HT, q = htQ(s, s.i), n = s.qs.length, h = '', testy = s.mode === 'show' || s.mode === 'peek' || s.mode === 'mock' || s.mode === 'test';
   h += '<div class="row" style="justify-content:space-between;align-items:center"><b lang="ja">'+esc(s.title || htName(s.set))+'</b><button class="btn small" data-ht="brk">\ud83d\ude2e\u200d\ud83d\udca8 I need a break</button></div>';
+  if(s.i === s.gs && s.gs === 0 && !s.marks.some(function(m){ return m != null; })) h += '<div class="kqtip">\ud83e\udd8a '+KIT_FINISH.replace(' \ud83e\udd8a','')+'</div>';
   h += '<div class="htstrip">';
   for(var i = s.gs; i < s.ge; i++){ var dn = s.ink[i].some(function(x){ return x && x.length; }); h += '<button class="'+(i === s.i ? 'on' : dn ? 'dn' : '')+'" data-ht="q:'+i+'" lang="ja">'+htNumShort(s, i)+'</button>'; }
   h += '</div><div class="htwrap"><div class="htpadbox"><canvas id="htpad"></canvas>';
@@ -14882,6 +15071,11 @@ function htFinish(){
   });
   Object.keys(rightK).forEach(function(c){ st.gold[c] = 1; var e = wk[c] = wk[c] || {}; e.g = (e.g || 0) + 1; if(e.m) e.m = Math.max(0, e.m - 1); e.t = Date.now(); try{ kjMeet(c); }catch(_){} });
   Object.keys(missK).forEach(function(c){ var e = wk[c] = wk[c] || {}; e.a = (e.a || 0) + 1; e.m = (e.m || 0) + 1; e.t = Date.now(); });
+  /* 26.11.153: misses (incl. older kanji inside compound words) → Practice Makes Permanent; right answers keep their time */
+  try{
+    s.qs.forEach(function(r, i){ var q = HTI[r[0]].q[r[1]], k = htKey(r[0], r[1]); if(s.marks[i] === 1){ if(st.q[k]) st.q[k].ms = s.ms[i] || 0; } else pmpMiss(q[1], q[2], 'prac'); });
+    Object.keys(rightK).forEach(function(c){ if(!missK[c]) pmpRight(c); });
+  }catch(_){}
   var ms = s.ms.reduce(function(a, b){ return a + b; }, 0), res = {ok:ok, n:s.qs.length, ms:ms, missQ:missQ, apple:'', gold:0, got:0, praise:praise};
   var whole = htMain(x) && s.qs.length === x.q.length && s.qs.every(function(r){ return r[0] === x.id; });
   if(whole){
@@ -15008,7 +15202,7 @@ function wkHomeHTML(){
 function htTodayCardHTML(){ return wkHomeHTML(); }
 function htBookHTML(){ return ''; }
 function kqFunHTML(){
-  return '<div class="panel"><div class="ptitle">\u2b50 Practice for fun</div><div class="hint">Everything here uses this week\u2019s kanji only.</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-ht="momopen">\ud83d\udcd6 Study with Mom</button><button class="btn" data-ht="earlier">\ud83d\udcda Earlier tests</button></div></div>';
+  return '<div class="panel"><div class="ptitle">\u2b50 Practice for fun</div><div class="hint">Everything here uses this week\u2019s test kanji, plus any you picked.</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-ht="momopen">\ud83d\udcd6 Study with Mom</button><button class="btn" data-ht="earlier">\ud83d\udcda Earlier tests</button></div></div>';
 }
 /* ---- The tree: one branch per booklet test, one leaf per kanji ---- */
 function wkTreeMap(){
@@ -15078,7 +15272,18 @@ function kqParentHTML(){
     if(w.sat){ var sl = function(v){ return t.q.map(function(q, i){ return w.sat.m[i] === v ? q[1] : null; }).filter(Boolean).join('\u3001') || '\u2014'; }; h += '<div style="margin-top:4px">Saturday felt: '+['\ud83d\ude0a','\ud83d\ude10','\ud83d\ude1f'][w.sat.feel]+'<br>\ud83d\ude0a <span lang="ja">'+sl('k')+'</span><br>\ud83e\udd14 <span lang="ja">'+sl('u')+'</span><br>\ud83c\udf31 <span lang="ja">'+sl('n')+'</span></div>'; }
     if(w.notes.length) h += '<div class="hint" style="margin-top:4px">Notes: '+w.notes.slice(-6).map(function(n){ return esc(n.d.slice(5))+' '+esc(n.t); }).join(' \u00b7 ')+'</div>';
   }
-  h += '<div class="row" style="gap:6px;margin-top:6px"><button class="btn small" data-ht="momopen">\ud83d\udcd6 Study with Mom</button>'+(ks.brave ? '<span class="hint">\ud83d\udcaa Brave stars: '+ks.brave+'</span>' : '')+'</div>';
+  if(ks.brave) h += '<div class="hint" style="margin-top:6px">\ud83d\udcaa Brave stars: '+ks.brave+'</div>';
+  /* 26.11.153 */
+  if(t){
+    var wp = wkPlus();
+    h += '<div class="hint" style="margin-top:6px">Practice pool this week: new <b lang="ja">'+(wp.n.join('') || '\u2014')+'</b> \u00b7 from the test <b lang="ja">'+(wp.t.join('') || '\u2014')+'</b> \u00b7 her extras <b lang="ja">'+(wp.x.join('') || '\u2014')+'</b></div>';
+    var RR = ks.pmpReal = ks.pmpReal || {}, rr = RR[t.id] = RR[t.id] || {};
+    h += '<h3>\ud83d\udcdd Real Saturday test</h3><div class="hint">After the teacher marks it, tap the words marked wrong. Their kanji (and older kanji in the same word) go to her Practice Makes Permanent zone. Tap again to undo.</div><div class="row" style="gap:6px;flex-wrap:wrap;margin-top:6px">';
+    t.q.forEach(function(q, i){ h += '<button class="btn small '+(rr[i] ? 'primary' : '')+'" lang="ja" data-kqp="real:'+i+'">'+(rr[i] ? '\u274c ' : '')+esc(q[1])+'</button>'; });
+    h += '</div>';
+  }
+  var PL = pmpList();
+  h += '<div class="hint" style="margin-top:8px">\u2728 Practice Makes Permanent: '+(PL.length ? '<b lang="ja">'+PL.join(' ')+'</b> ('+Math.min(6, PL.length)+' shown to her at a time)' : 'empty')+'</div>';
   return h;
 }
 function htParentHTML(){
@@ -15113,6 +15318,12 @@ document.addEventListener('click', function(e){
   if(a === 'defplan'){ ks.kplan = KQ_DEF.slice(); save(); render(); }
   else if(a === 'bigsave'){ var v = (document.getElementById('kqBig') || {}).value; if(v){ ks.bigDate = v; save(); toast('Saved'); } }
   else if(a === 'nonew'){ ks.noNew = !ks.noNew; save(); render(); }
+  else if(a.indexOf('real:') === 0){
+    var tt = wkTest(), ii = +a.slice(5);
+    if(tt && tt.q[ii]){ var RR = ks.pmpReal = ks.pmpReal || {}, rr = RR[tt.id] = RR[tt.id] || {}, qq = tt.q[ii];
+      if(rr[ii]){ delete rr[ii]; pmpUndo(qq[1], 'real'); } else { rr[ii] = 1; pmpMiss(qq[1], qq[2], 'real'); }
+      save(); render(); }
+  }
   showKanjiParent(); md = document.getElementById('modal'); if(md) md.scrollTop = sc;
 }, true);
 
@@ -15140,6 +15351,7 @@ document.addEventListener('click', function(e){
       x.marks[i] = x.marks[i] === 1 ? 0 : 1;
       var r = x.qs[i], k = htKey(r[0], r[1]), e2 = st.q[k] = st.q[k] || {r:[], w:0};
       if(x.marks[i] === 1){ e2.l = 1; if(e2.r.indexOf(x.d) < 0) e2.r.push(x.d); if(e2.w) e2.w--; } else { e2.l = 0; e2.r = []; e2.w = (e2.w || 0) + 1; }
+      try{ var q2 = HTI[r[0]].q[r[1]]; if(x.marks[i] === 1) pmpUndo(q2[1], 'prac'); else pmpMiss(q2[1], q2[2], 'prac'); }catch(_){}
       x.ok = x.marks.filter(function(m){ return m === 1; }).length;
       var set = HTI[x.ht];
       if(set && x.qs.length === set.q.length){ var best = 0; ktLog().forEach(function(y){ if(y.ht === x.ht) best = Math.max(best, y.ok); }); st.best[x.ht] = best; if(htMain(set)) st.apples[x.ht] = best === set.q.length ? 'r' : 'g'; }
@@ -15624,7 +15836,7 @@ function kjRec(ch, ok, wrong){
 function kfcSel(){ var ks = kanjiState(); if(!ks.fcSel) ks.fcSel = {src:'mix', own:[]}; if(!ks.fcSel.own) ks.fcSel.own = []; return ks.fcSel; }
 function kfcTricky(){ return kjUniq(kjFocus().concat(kjWeak())).filter(function(c){ return !!KJ_BY[c]; }); }
 function kfcPool(){
-  if(wkHas()) return wkKanji().map(function(c){ return KJ_BY[c]; }).filter(Boolean);
+  if(wkHas()) return wkPlus().all.map(function(c){ return KJ_BY[c]; }).filter(Boolean);
   var sl = kfcSel(), chars = null;
   if(sl.src === 'recent') chars = kjRecent();
   else if(sl.src === 'tricky') chars = kfcTricky();
@@ -15908,6 +16120,7 @@ function showKanjiParent(){
 
   h += htParentHTML();
   if(kanjiState().oldKT) h += ktParentHTML();
+  if(ks.oldKT){
   h += '<h3>📝 Saturday test</h3>';
   h += '<div class="row" style="gap:6px"><button class="btn small '+(s.tab === 'miss' ? 'primary' : '')+'" data-kjp="tab:miss">After the test: what she missed</button><button class="btn small '+(s.tab === 'focus' ? 'primary' : '')+'" data-kjp="tab:focus">Before: what is coming up</button></div>';
   h += '<div class="hint" style="margin:6px 0">'+(s.tab === 'miss' ? 'Tap the kanji she missed, pick the kind of mistake, then save. These show up more in her practice. Kanji from the coming-up list that she got right ease off.' : 'Tap the kanji that will be on this Saturday\u2019s test. They show up more this week.')+'</div>';
@@ -15930,6 +16143,7 @@ function showKanjiParent(){
   if(tests.length){
     h += '<div class="hint" style="margin-top:8px">Recent tests:</div>';
     tests.forEach(function(t){ h += '<div class="hint">'+kjLog(t.d)+': '+(t.miss.length ? '<b lang="ja">'+t.miss.map(function(m){ return m.k; }).join(' ')+'</b>' : '🎉 all right')+'</div>'; });
+  }
   }
 
   h += '<h3>✍️ Writing</h3><div class="row" style="gap:8px;align-items:center"><button class="btn small" data-kwalbum="1">📓 Writing album</button><span class="hint">Her saved best kanji, first time vs latest. Stays on this device.</span></div>';
