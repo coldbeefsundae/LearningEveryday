@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.156', errs = [], shown = false;
+  var V = '26.11.157', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3202,23 +3202,26 @@ body[data-calm=on] .aursky i{opacity:.8}
 .mrsheen{inset:-30%!important;width:160%!important;height:160%!important;background:linear-gradient(115deg,transparent 38%,rgba(255,226,160,.14) 47%,rgba(255,246,220,.24) 50%,rgba(255,226,160,.14) 53%,transparent 62%);opacity:0}
 .mrframe,.mrfoil{inset:0;width:100%;height:100%}
 .mrfoil{opacity:0}
-.mrbadge{left:75.5%;top:8.46%;width:13.2%;height:5.3%;display:flex;align-items:center;justify-content:center;color:var(--mg2);font-size:4.2cqw;letter-spacing:.14em;padding-left:.14em;text-shadow:0 0 8px rgba(243,223,166,.5),0 1px 1px #000}
-.mrptr{left:0;top:0;width:4.2%;aspect-ratio:1;margin:-2.1% 0 0 -2.1%;background:radial-gradient(circle,#fff8e0 0%,#f3d991 22%,rgba(243,217,145,.35) 45%,transparent 70%);border-radius:50%;opacity:.95}
-.mrptr:before,.mrptr:after{content:"";position:absolute;left:50%;top:50%;width:170%;height:14%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#fff3c8,transparent);border-radius:50%}
-.mrptr:after{transform:translate(-50%,-50%) rotate(90deg)}
-.mrct{left:0;right:0;text-align:center;line-height:1;white-space:nowrap;color:var(--mg2);text-shadow:0 1px 2px #000,0 0 10px rgba(217,187,114,.25);--fk:1}
-.mrct.c1{top:79.6%;font-size:calc(5.2cqw * var(--fk));letter-spacing:.08em}
+.mrbadge{left:76.65%;top:7.6%;width:13.2%;height:5.3%;display:flex;align-items:center;justify-content:center;color:var(--mg2);font-size:4.2cqw;letter-spacing:.14em;padding-left:.14em;text-shadow:0 0 8px rgba(243,223,166,.5),0 1px 1px #000}
+.mrct{left:0;right:0;text-align:center;line-height:1;white-space:nowrap;color:var(--mg2);text-shadow:0 1px 2px #000;transform:translateY(-50%);--fk:1}
+.mrct.c1{top:10.4%;font-size:calc(5.2cqw * var(--fk));letter-spacing:.08em}
 .mrct.cm{top:80.9%;font-size:calc(3.6cqw * var(--fk));font-style:italic;letter-spacing:.03em}
 .mrct.cmj{top:83.8%;font-size:calc(2.6cqw * var(--fk));color:var(--mg)}
-.mrct.c2{top:86.4%;font-size:calc(3.1cqw * var(--fk));color:var(--mg)}
-.mrct.c3{top:89.2%;font-size:calc(2.2cqw * var(--fk));letter-spacing:.16em;text-transform:uppercase;color:var(--mg)}
-.mrbwin .mrsky{position:absolute;inset:0;width:100%;height:100%;opacity:.45}
-.mrbsvg{position:absolute;left:8%;top:50%;width:84%;transform:translateY(-50%);filter:drop-shadow(0 0 2.2cqw rgba(241,205,180,.45))}
+.mrct.c2{top:13.7%;font-size:calc(3.1cqw * var(--fk));color:var(--mg)}
+.mrct.c3{top:88%;font-size:calc(2.2cqw * var(--fk));letter-spacing:.16em;text-transform:uppercase;color:var(--mg)}
+.mrbrim{inset:2.6%;border-radius:4.2cqw;border:.5cqw solid rgba(226,169,140,.75);box-shadow:0 0 2.4cqw rgba(243,205,184,.35),inset 0 0 2.4cqw rgba(243,205,184,.22)}
+.mrbsvg{left:9%;top:42%;width:82%;transform:translateY(-50%);filter:drop-shadow(0 0 2cqw rgba(241,205,180,.4))}
+.mrbtx{left:0;right:0;top:80%;display:flex;flex-direction:column;align-items:center;gap:1.6cqw;text-align:center;line-height:1;white-space:nowrap;text-shadow:0 1px 2px #000}
+.mrbt1{font-size:6cqw;letter-spacing:.22em;padding-left:.22em;color:#f3cdb8}
+.mrbt2{font-size:4.4cqw;font-style:italic;letter-spacing:.06em;color:#e2a98c}
+.mrbt3{font-size:3.4cqw;color:#d9a58c}
 .mrbsheen{position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 42%,rgba(255,236,220,.22) 50%,transparent 58%);animation:llSweep 4.6s ease-in-out infinite}
 .tag.rr.r-MR,.rc.r-MR{background:#0b0a10;color:#f3cdb8;box-shadow:inset 0 0 0 2px #d9a58c}
 .mrwords{font-style:italic}
 .mrja{font-size:.86em;opacity:.8;margin-top:4px;font-style:normal}
 .mrpcv .pcv-art{background:#000}
+/* nebulas that were bigger than the inner frame: smaller, with a soft edge so no square shows */
+.mrc[data-mrid=dragon] .mrneb img,.mrc[data-mrid=genie] .mrneb img,.mrc[data-mrid=quetzalcoatl] .mrneb img,.mrc[data-mrid=moonrabbit] .mrneb img{transform:scale(.8);-webkit-mask-image:radial-gradient(closest-side,#000 78%,transparent 100%);mask-image:radial-gradient(closest-side,#000 78%,transparent 100%)}
 @media (prefers-reduced-motion:reduce){.mrneb img,.mrs i,.mrbsheen{animation:none}}
 </style>
 </head>
@@ -18852,30 +18855,27 @@ function mrFrontHTML(id){
   h += '<div class="mrsheen"></div></div></div>';
   h += '<img class="mrframe" src="'+MR_A+'frame.webp" alt="" draggable="false">';
   for(var f = 0; f < 4; f++) h += '<img class="mrfoil" src="'+MR_A+'foil'+f+'.webp" alt="" draggable="false">';
-  h += '<div class="mrbadge mrserif">MR</div><div class="mrptr"></div>';
+  h += '<div class="mrbadge mrserif">MR</div>';
   h += '<div class="mrct c1 mrserif">'+esc(t[0])+'</div><div class="mrct c2 mrjaf">'+esc(t[1])+'</div><div class="mrct cm mrserif">'+esc(t[2])+'</div><div class="mrct cmj mrjaf">'+esc(t[3])+'</div><div class="mrct c3 mrserif">'+esc(t[4])+'</div>';
   h += '</div>';
   return '<div class="tcgbox hb-mr">'+h+'</div>';
 }
 /* the back: one design for every Mythical. Full moon in a ring of 8 moon phases, in the card's own frame. */
 function mrBackHTML(){
-  var s = '<svg class="mrbsvg" viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="mrbM" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fff4e6"/><stop offset=".55" stop-color="#f1cdb4"/><stop offset="1" stop-color="#b9806a"/></radialGradient><linearGradient id="mrbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9d6"/><stop offset=".5" stop-color="#e2a98c"/><stop offset="1" stop-color="#9c6450"/></linearGradient></defs>';
-  s += '<circle cx="50" cy="50" r="44" fill="none" stroke="url(#mrbG)" stroke-width=".9"/><circle cx="50" cy="50" r="41" fill="none" stroke="url(#mrbG)" stroke-width=".4" stroke-dasharray="1 2.2"/>';
+  /* 26.11.157: plain black back, soft rose-gold rim, the 8 moon phases in a ring, a stylized moon in the middle */
+  var s = '<svg class="mrbsvg" viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="mrbM" cx=".4" cy=".36" r=".72"><stop offset="0" stop-color="#fff6ea"/><stop offset=".5" stop-color="#f3d2bb"/><stop offset="1" stop-color="#c0866f"/></radialGradient><radialGradient id="mrbH" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#f3cdb8" stop-opacity=".28"/><stop offset="1" stop-color="#f3cdb8" stop-opacity="0"/></radialGradient></defs>';
   for(var i = 0; i < 8; i++){
-    var a = -Math.PI/2 + i*Math.PI/4, x = 50 + 32*Math.cos(a), y = 50 + 32*Math.sin(a), r = 4.2, p = i/8;   /* 0 = full (top), then waning, new (bottom), waxing */
-    var ill = (Math.cos(p*2*Math.PI) + 1)/2, k = (1 - 2*ill), sweepR = p < .5;
-    s += '<circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="'+r+'" fill="#1b1520" stroke="url(#mrbG)" stroke-width=".35"/>';
-    if(ill > .02){
-      var rx = Math.abs(k)*r, top = (y - r).toFixed(2), bot = (y + r).toFixed(2), xs = x.toFixed(2);
-      if(ill > .98) s += '<circle cx="'+xs+'" cy="'+y.toFixed(2)+'" r="'+r+'" fill="url(#mrbM)"/>';
-      else s += '<path d="M'+xs+' '+top+' A'+r+' '+r+' 0 0 '+(sweepR ? 0 : 1)+' '+xs+' '+bot+' A'+rx.toFixed(2)+' '+r+' 0 0 '+((k > 0) === sweepR ? 1 : 0)+' '+xs+' '+top+'Z" fill="url(#mrbM)"/>';
-    }
+    var a = -Math.PI/2 + i*Math.PI/4, x = 50 + 36*Math.cos(a), y = 50 + 36*Math.sin(a), r = 5, p = i/8;   /* top = full, clockwise: waning, new (bottom), waxing */
+    var ill = (Math.cos(p*2*Math.PI) + 1)/2, k = (1 - 2*ill), sweepR = p < .5, xs = x.toFixed(2), ys = y.toFixed(2);
+    s += '<circle cx="'+xs+'" cy="'+ys+'" r="'+r+'" fill="#17121a" stroke="#d9a58c" stroke-opacity=".55" stroke-width=".35"/>';
+    if(ill > .98) s += '<circle cx="'+xs+'" cy="'+ys+'" r="'+r+'" fill="url(#mrbM)"/>';
+    else if(ill > .02) s += '<path d="M'+xs+' '+(y - r).toFixed(2)+' A'+r+' '+r+' 0 0 '+(sweepR ? 0 : 1)+' '+xs+' '+(y + r).toFixed(2)+' A'+(Math.abs(k)*r).toFixed(2)+' '+r+' 0 0 '+((k > 0) === sweepR ? 1 : 0)+' '+xs+' '+(y - r).toFixed(2)+'Z" fill="url(#mrbM)"/>';
   }
-  s += '<circle cx="50" cy="50" r="17" fill="url(#mrbM)"/><circle cx="50" cy="50" r="19.5" fill="none" stroke="url(#mrbG)" stroke-width=".6"/>';
-  s += '<g fill="#fff6ea">'; [[7,8,.7],[93,10,.55],[8,92,.5],[92,91,.7],[15,3,.4],[86,97,.4]].forEach(function(q){ s += '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+q[2]+'"/>'; }); s += '</g></svg>';
-  return '<div class="tcgbox hb-mr"><div class="mrc mrback"><div class="mrwin mrbwin"><img class="mrsky" src="'+MR_A+'sky.webp" alt="" draggable="false">'+s+'<div class="mrbsheen"></div></div>'+
-    '<img class="mrframe" src="'+MR_A+'frame.webp" alt="" draggable="false"><div class="mrbadge mrserif">MR</div>'+
-    '<div class="mrct c1 mrserif">STARQUEST</div><div class="mrct c2 mrjaf">スタークエスト</div><div class="mrct cm mrserif">Mythicals</div><div class="mrct cmj mrjaf">神話の星たち</div><div class="mrct c3 mrserif">Woken under the full moon</div></div></div>';
+  s += '<circle cx="50" cy="50" r="27" fill="url(#mrbH)"/><circle cx="50" cy="50" r="18" fill="url(#mrbM)"/>';
+  s += '<g fill="#b77f69" fill-opacity=".38">'; [[44,43,3.6],[56.5,47,2.4],[47.5,57,4.2],[57,57.5,1.8],[41,52,1.6],[52,38.5,1.4],[60.5,41,1.2]].forEach(function(c){ s += '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'"/>'; }); s += '</g>';
+  s += '<circle cx="50" cy="50" r="18" fill="none" stroke="#fff3e6" stroke-opacity=".35" stroke-width=".3"/></svg>';
+  return '<div class="tcgbox hb-mr"><div class="mrc mrback"><div class="mrbrim"></div>'+s+'<div class="mrbsheen"></div>'+
+    '<div class="mrbtx"><div class="mrbt1 mrserif">STARQUEST</div><div class="mrbt2 mrserif">Mythicals</div><div class="mrbt3 mrjaf">神話の星たち</div></div></div></div>';
 }
 /* names never spill out of the plate: shrink a line until it fits (sizes are in cqw, so the big view keeps them) */
 function mrFit(root){
@@ -18897,7 +18897,7 @@ function mrLoop(){
   var bk = HLF.el && HLF.el.classList.contains('bk');
   var target = (HL.ptr && !HL.hold && !bk) ? Math.min(1, Math.hypot(cx, cy)*1.5) : 0;   /* only a finger (or mouse) wakes the creature; the idle light drift does not */
   MRL.t += (target - MRL.t)*.12; var t = MRL.t, rv = mrSS(.28, .92, t);
-  if(MRL.wake && !MRL.woke && rv > .85){ MRL.woke = true; try{ if(!state.mute){ var au = new Audio(MR_A + 'mr-wake.mp3'); au.volume = .8; au.play(); } }catch(_){}
+  if(MRL.wake && !MRL.woke && rv > .85){ MRL.woke = true;   /* 26.11.157: no sound here; the wake sound is only for her real full-moon night */
     var hn = $('mrhint'); if(hn) hn.innerHTML = '✨ <b>'+esc(MR_D[MRL.wake].t[0])+'</b> is awake!'; }
   var a = target > .06 ? Math.atan2(cx, -cy)*180/Math.PI : 0, d = ((a - MRL.ang + 540)%360) - 180; MRL.ang += d*.1;
   var pp = mrDialPos(MRL.ang), p3 = Math.max(0, Math.min(1, .5 + cx*.55 + cy*.3))*3, inten = .3 + .7*Math.max(t, .25);
@@ -18915,7 +18915,6 @@ function mrLoop(){
     q('.mrlines').style.opacity = ((1 - mrSS(.1, .6, t))*.42).toFixed(3);
     var sh = q('.mrsheen'); sh.style.opacity = (.2 + .8*t).toFixed(3); sh.style.transform = 'translate('+(cx*22).toFixed(2)+'%,'+(cy*14).toFixed(2)+'%)';
     c.querySelectorAll('.mrfoil').forEach(function(f, k){ f.style.opacity = (Math.max(0, 1 - Math.abs(p3 - k))*inten).toFixed(3); });
-    var pt = q('.mrptr'); pt.style.left = (pp[0]*100).toFixed(2)+'%'; pt.style.top = (pp[1]*100).toFixed(2)+'%'; pt.style.transform = 'rotate('+MRL.ang.toFixed(1)+'deg)';
   });
   requestAnimationFrame(mrLoop);
 }
