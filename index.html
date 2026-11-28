@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.155', errs = [], shown = false;
+  var V = '26.11.156', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3174,6 +3174,52 @@ body[data-calm=on] .aursky i{opacity:.8}
 .kqbreath{width:90px;height:90px;border-radius:50%;margin:10px auto;background:radial-gradient(circle,#ffd6e7,#f8bbd0);animation:kqb 8s ease-in-out infinite}
 @keyframes kqb{0%,100%{transform:scale(.7)}50%{transform:scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.kqbreath{animation:none}}
+/* 26.11.156: Mythical cards (2:3 card, centred in the 5:7 card box) */
+.tcgbox.hb-mr{background:none}
+.mrc{position:absolute;top:0;bottom:0;left:50%;height:100%;aspect-ratio:2/3;transform:translateX(-50%);container-type:inline-size;border-radius:5.5cqw;overflow:hidden;background:#000;box-shadow:0 .9cqw 3cqw rgba(0,0,0,.45);--mg:#d9bb72;--mg2:#f3dfa6}
+.mrc img{display:block;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.mrc>*{position:absolute}
+.mrserif{font-family:"Cormorant Garamond","Palatino Linotype",Palatino,"Noto Serif",Georgia,serif}
+.mrjaf{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","Noto Serif CJK JP",serif}
+.mrwin{left:11.33%;top:20.05%;width:77.34%;height:54.56%;border-radius:6%;overflow:hidden;background:#03050c}
+.mrcart{position:absolute;left:0;top:50%;width:100%;aspect-ratio:3/4;transform:translateY(-50%)}
+.mrcart>*{position:absolute;inset:0;width:100%;height:100%}
+.mrsky{object-fit:cover}
+.mrneb{opacity:.74}.mrneb img{width:100%;height:100%;object-fit:cover;animation:mrBreathe 7s ease-in-out infinite}
+@keyframes mrBreathe{0%,100%{opacity:.82}50%{opacity:1}}
+.mrmoon{left:72%!important;top:27%!important;width:62%!important;height:auto!important;inset:auto;transform:translate(-50%,-50%);opacity:.55;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 55%,transparent 78%);mask-image:radial-gradient(circle,#000 55%,transparent 78%)}
+.mrfg>*{position:absolute;inset:0;width:100%;height:100%}
+.mrcre{object-fit:cover;opacity:0}
+.mrlines{overflow:visible;opacity:.42}
+.mrs{position:absolute;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%)}
+.mrs i{position:absolute;inset:0;border-radius:50%;animation:mrTw var(--d) ease-in-out var(--dl) infinite}
+.mrs.soft i{animation-name:mrTws}
+@keyframes mrTw{0%,100%{opacity:1}50%{opacity:.62}}
+@keyframes mrTws{0%,100%{opacity:1}50%{opacity:.86}}
+.mrs .x{position:absolute;left:50%;top:50%;width:420%;height:6%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);border-radius:50%}
+.mrs .x.v{transform:translate(-50%,-50%) rotate(90deg)}
+.mrg{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(0);opacity:0;background:radial-gradient(circle,rgba(235,240,255,.55) 0%,rgba(190,210,255,.22) 30%,rgba(255,200,140,.08) 55%,transparent 70%)}
+.mrsheen{inset:-30%!important;width:160%!important;height:160%!important;background:linear-gradient(115deg,transparent 38%,rgba(255,226,160,.14) 47%,rgba(255,246,220,.24) 50%,rgba(255,226,160,.14) 53%,transparent 62%);opacity:0}
+.mrframe,.mrfoil{inset:0;width:100%;height:100%}
+.mrfoil{opacity:0}
+.mrbadge{left:75.5%;top:8.46%;width:13.2%;height:5.3%;display:flex;align-items:center;justify-content:center;color:var(--mg2);font-size:4.2cqw;letter-spacing:.14em;padding-left:.14em;text-shadow:0 0 8px rgba(243,223,166,.5),0 1px 1px #000}
+.mrptr{left:0;top:0;width:4.2%;aspect-ratio:1;margin:-2.1% 0 0 -2.1%;background:radial-gradient(circle,#fff8e0 0%,#f3d991 22%,rgba(243,217,145,.35) 45%,transparent 70%);border-radius:50%;opacity:.95}
+.mrptr:before,.mrptr:after{content:"";position:absolute;left:50%;top:50%;width:170%;height:14%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#fff3c8,transparent);border-radius:50%}
+.mrptr:after{transform:translate(-50%,-50%) rotate(90deg)}
+.mrct{left:0;right:0;text-align:center;line-height:1;white-space:nowrap;color:var(--mg2);text-shadow:0 1px 2px #000,0 0 10px rgba(217,187,114,.25);--fk:1}
+.mrct.c1{top:79.6%;font-size:calc(5.2cqw * var(--fk));letter-spacing:.08em}
+.mrct.cm{top:80.9%;font-size:calc(3.6cqw * var(--fk));font-style:italic;letter-spacing:.03em}
+.mrct.cmj{top:83.8%;font-size:calc(2.6cqw * var(--fk));color:var(--mg)}
+.mrct.c2{top:86.4%;font-size:calc(3.1cqw * var(--fk));color:var(--mg)}
+.mrct.c3{top:89.2%;font-size:calc(2.2cqw * var(--fk));letter-spacing:.16em;text-transform:uppercase;color:var(--mg)}
+.mrbwin .mrsky{position:absolute;inset:0;width:100%;height:100%;opacity:.45}
+.mrbsvg{position:absolute;left:8%;top:50%;width:84%;transform:translateY(-50%);filter:drop-shadow(0 0 2.2cqw rgba(241,205,180,.45))}
+.mrbsheen{position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 42%,rgba(255,236,220,.22) 50%,transparent 58%);animation:llSweep 4.6s ease-in-out infinite}
+.tag.rr.r-MR,.rc.r-MR{background:#0b0a10;color:#f3cdb8;box-shadow:inset 0 0 0 2px #d9a58c}
+.mrwords{font-style:italic}
+.mrja{font-size:.86em;opacity:.8;margin-top:4px;font-style:normal}
+.mrpcv .pcv-art{background:#000}
+@media (prefers-reduced-motion:reduce){.mrneb img,.mrs i,.mrbsheen{animation:none}}
 </style>
 </head>
 <body data-theme="grape" data-skin="hybrid">
@@ -18633,7 +18679,7 @@ var MR_LIST = [
   ['moonrabbit','🐇','Moon Rabbit'],['anansi','🕷️','Anansi'],['maui','🪝','Māui'],['finale','✨','Her own Mythical']
 ];
 var MR_SIZE = {n:{q:12,k:8,w:3,label:'Normal'}, l:{q:8,k:5,w:2,label:'Light'}};
-var MR_PV = 'assets/mr1/index.html';
+var MR_PV = 'assets/mr2/index.html';
 function mrInfo(id){ for(var i=0;i<MR_LIST.length;i++) if(MR_LIST[i][0]===id) return MR_LIST[i]; return [id,'✨',id]; }
 function mrSt(){
   if(!state.mr || typeof state.mr !== 'object') state.mr = {};
@@ -18716,15 +18762,15 @@ function mrParentHTML(){
   h += '<h3>🔢 Order</h3><div class="hint">Pegasus first, her own Mythical last, the rest in a surprise order.</div>';
   m.ord.forEach(function(x, n){ var f = mrInfo(x); h += '<div class="hint">'+(n+1)+'. '+f[1]+' '+esc(f[2])+(m.woke[x] ? ' · woke '+mrFmt(m.woke[x]) : (n === i ? ' · current' : ''))+'</div>'; });
   if(!i) h += '<div class="row" style="margin-top:6px"><button class="btn small" data-mr="shuf">🔀 Shuffle the middle</button></div>';
-  h += '<h3>👀 Preview</h3><div class="hint">Opens a Mythical\u2019s card exactly as she will see it. Preview never counts.</div><div class="row" style="flex-wrap:wrap;gap:6px">';
-  MR_LIST.slice(0, MR_LIST.length-1).forEach(function(x){ h += '<button class="btn small" data-mr="pv:'+x[0]+'">'+x[1]+' '+esc(x[2])+'</button>'; });
-  h += '</div><div class="row" style="margin-top:6px"><button class="btn small" data-mr="snd">🔔 Play the wake sound</button></div>';
+  h += '<h3>🎴 Mythical cards</h3><div class="hint">Each Mythical card has its own page, like the other cards: same finger tilt, ↻ Flip, tap to see it big. Slide a finger on the card to wake it. Looking never counts.</div>';
+  h += '<div class="row" style="flex-wrap:wrap;gap:6px"><button class="btn small primary" data-mr="mcards">🎴 Open Mythical cards</button><button class="btn small" data-mr="pv:pegasus">▶ Pegasus awakening (intro)</button><button class="btn small" data-mr="snd">🔔 Play the wake sound</button></div>';
+  h += '<div class="hint">The intro ends by handing the card to its page. Intros for the other ten come next (build 2b).</div>';
   return h;
 }
 function mrPreview(id){
   var o = document.createElement('div'); o.id = 'mrpv';
   o.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:#05060f';
-  o.innerHTML = '<iframe src="'+MR_PV+'?m='+encodeURIComponent(id)+'" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="fullscreen; autoplay"></iframe><button class="btn small" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:2" data-mr="pvx">✖ Close</button>';
+  o.innerHTML = '<iframe src="'+MR_PV+'?name='+encodeURIComponent(mrName())+(id && id !== 'pegasus' ? '&m='+encodeURIComponent(id) : '')+'" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="fullscreen; autoplay"></iframe><button class="btn small" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:2" data-mr="pvx">✖ Close</button>';
   document.body.appendChild(o);
 }
 document.addEventListener('click', function(e){
@@ -18733,7 +18779,12 @@ document.addEventListener('click', function(e){
   var p = b.getAttribute('data-mr').split(':'), m = mrSt(), a = p[0], v = p.slice(1).join(':');
   if(a === 'pvx'){ var o = $('mrpv'); if(o) o.remove(); return; }
   if(a === 'pv'){ mrPreview(v); return; }
-  if(a === 'snd'){ try{ var au = new Audio('assets/mr1/assets/mr-wake.mp3'); au.volume = 0.8; au.play(); }catch(_){} return; }
+  if(a === 'mcards'){ var ps0 = parScroller(); MRV.mscroll = ps0 ? ps0.scrollTop : 0; mrCardsPage(); return; }
+  if(a === 'mcard'){ var ps1 = parScroller(); MRV.scroll = ps1 ? ps1.scrollTop : 0; mrDetail(v, {wake:true, from:'cards'}); return; }
+  if(a === 'mback'){ stopSpeak(); mrCardsPage(MRV.scroll); return; }
+  if(a === 'mmyth'){ showParentSection('myth', MRV.mscroll || 0); return; }
+  if(a === 'mclose'){ stopSpeak(); closeModal(); return; }
+  if(a === 'snd'){ try{ var au = new Audio('assets/mr2/assets/mr-wake.mp3'); au.volume = 0.8; au.play(); }catch(_){} return; }
   var i = Object.keys(m.woke).length;
   if(a === 'first') m.first = v || null;
   else if(a === 'sz') m.sz = v === 'l' ? 'l' : 'n';
@@ -18742,6 +18793,208 @@ document.addEventListener('click', function(e){
   save();
   var pm = parScroller(), st = pm ? pm.scrollTop : 0; showParentSection('myth', st);
 }, true);
+
+/* ---------- 26.11.156: Mythical cards (build 2a) ----------
+   - A Mythical card is a real card: same finger tilt as every other card (hlFlipBind + hlLoop), same ↻ Flip,
+     tap to see it big. Moving the device does nothing (26.11.38 rule).
+   - At rest the card shows the constellation; sliding a finger leans the card and the creature appears.
+   - The back is a card back (the same for all Mythicals), not text.
+   - Each card has its own page, like the other cards: name, words to her, the legend, read aloud. */
+var MR_A = 'assets/mr2/assets/';
+var MR_D = {"pegasus":{"D":{"stars":[{"n":"Alpheratz","x":0.4169,"y":0.5759,"mag":2.06,"c":"#cfe0ff"},{"n":"Scheat","x":0.4984,"y":0.4248,"mag":2.42,"c":"#ffc8a0"},{"n":"Markab","x":0.6721,"y":0.4704,"mag":2.49,"c":"#cfe0ff"},{"n":"Algenib","x":0.6006,"y":0.6341,"mag":2.83,"c":"#cfe0ff"},{"n":"Homam","x":0.7559,"y":0.4293,"mag":3.4,"c":"#cfe0ff"},{"n":"Biham","x":0.8517,"y":0.3701,"mag":3.53,"c":"#eef3ff"},{"n":"Enif","x":0.8291,"y":0.2955,"mag":2.38,"c":"#ffd9a8"},{"n":"Matar","x":0.4912,"y":0.368,"mag":2.94,"c":"#fff1d6"},{"n":"Pi","x":0.4857,"y":0.2792,"mag":4.29,"c":"#fffaf0"},{"n":"Sadalbari","x":0.5601,"y":0.4035,"mag":3.48,"c":"#ffd9a8"},{"n":"Lambda","x":0.5778,"y":0.3987,"mag":3.95,"c":"#fff1d6"},{"n":"Iota","x":0.5951,"y":0.2982,"mag":3.77,"c":"#fffaf0"},{"n":"Kappa","x":0.6145,"y":0.2438,"mag":4.13,"c":"#fffaf0"}],"lines":[["Alpheratz","Scheat"],["Scheat","Markab"],["Markab","Algenib"],["Algenib","Alpheratz"],["Markab","Homam"],["Homam","Biham"],["Biham","Enif"],["Scheat","Matar"],["Matar","Pi"],["Scheat","Sadalbari"],["Sadalbari","Lambda"],["Lambda","Iota"],["Iota","Kappa"]]},"t":["Pegasus","ペガスス座","The Winged Horse of the Heavens","天かける翼の馬","Greece · Mythical · Constellation"]},"dragon":{"D":{"stars":[{"n":"Spica","x":0.76,"y":0.16,"mag":0.98,"c":"#cfe0ff"},{"n":"Heze","x":0.5931,"y":0.0934,"mag":3.38,"c":"#eef3ff"},{"n":"Kang","x":0.6452,"y":0.2943,"mag":4.18,"c":"#ffd9a8"},{"n":"Syrma","x":0.5867,"y":0.2736,"mag":4.07,"c":"#fffaf0"},{"n":"Elgafar","x":0.5173,"y":0.2815,"mag":4.81,"c":"#fff1d6"},{"n":"Khambalia","x":0.6704,"y":0.3302,"mag":4.52,"c":"#eef3ff"},{"n":"Zubenelgenubi","x":0.6477,"y":0.4185,"mag":2.75,"c":"#eef3ff"},{"n":"iotaLib","x":0.6577,"y":0.481,"mag":4.54,"c":"#eef3ff"},{"n":"Zubenelhakrabi","x":0.5718,"y":0.5063,"mag":3.91,"c":"#ffd9a8"},{"n":"Zubeneschamali","x":0.5341,"y":0.4426,"mag":2.61,"c":"#cfe0ff"},{"n":"Fang","x":0.6686,"y":0.5956,"mag":2.89,"c":"#cfe0ff"},{"n":"Iklil","x":0.7046,"y":0.6034,"mag":3.87,"c":"#cfe0ff"},{"n":"Dschubba","x":0.6288,"y":0.5857,"mag":2.29,"c":"#cfe0ff"},{"n":"Acrab","x":0.5921,"y":0.5853,"mag":2.56,"c":"#cfe0ff"},{"n":"Alniyat","x":0.6396,"y":0.6352,"mag":2.9,"c":"#cfe0ff"},{"n":"Antares","x":0.641,"y":0.6534,"mag":1.06,"c":"#ffc8a0"},{"n":"Paikauhale","x":0.655,"y":0.6711,"mag":2.82,"c":"#cfe0ff"},{"n":"Larawag","x":0.7128,"y":0.7155,"mag":2.29,"c":"#ffd9a8"},{"n":"Xamidimura","x":0.7558,"y":0.7296,"mag":3.0,"c":"#cfe0ff"},{"n":"zetaSco","x":0.8067,"y":0.7472,"mag":3.62,"c":"#ffd9a8"},{"n":"etaSco","x":0.8079,"y":0.7801,"mag":3.32,"c":"#fffaf0"},{"n":"Sargas","x":0.7941,"y":0.825,"mag":1.86,"c":"#fffaf0"},{"n":"iotaSco","x":0.7528,"y":0.8386,"mag":2.99,"c":"#fffaf0"},{"n":"kappaSco","x":0.7404,"y":0.8262,"mag":2.39,"c":"#cfe0ff"},{"n":"Lesath","x":0.7236,"y":0.7994,"mag":2.7,"c":"#cfe0ff"},{"n":"Shaula","x":0.7198,"y":0.8045,"mag":1.62,"c":"#cfe0ff"},{"n":"Alnasl","x":0.62,"y":0.86,"mag":2.98,"c":"#ffd9a8"},{"n":"KausMedia","x":0.6055,"y":0.8953,"mag":2.72,"c":"#ffd9a8"},{"n":"KausAustralis","x":0.6658,"y":0.9089,"mag":1.79,"c":"#cfe0ff"},{"n":"etaSgr","x":0.6996,"y":0.8968,"mag":3.1,"c":"#ffc8a0"}],"lines":[["Spica","Heze"],["Spica","Kang"],["Kang","Syrma"],["Syrma","Elgafar"],["Kang","Khambalia"],["Kang","Zubenelgenubi"],["Zubenelgenubi","iotaLib"],["iotaLib","Zubenelhakrabi"],["Zubenelhakrabi","Zubeneschamali"],["Zubeneschamali","Zubenelgenubi"],["iotaLib","Fang"],["Iklil","Fang"],["Fang","Dschubba"],["Dschubba","Acrab"],["Dschubba","Alniyat"],["Alniyat","Antares"],["Antares","Paikauhale"],["Paikauhale","Larawag"],["Larawag","Xamidimura"],["Xamidimura","zetaSco"],["zetaSco","etaSco"],["etaSco","Sargas"],["Sargas","iotaSco"],["iotaSco","kappaSco"],["kappaSco","Shaula"],["Shaula","Lesath"],["Lesath","Alnasl"],["Alnasl","KausMedia"],["KausMedia","KausAustralis"],["KausAustralis","etaSgr"],["etaSgr","Alnasl"]]},"t":["Azure Dragon","青龍（せいりゅう）","Guardian of the Eastern Sky","東の空をまもる龍","China · Mythical · Seven Mansions"]},"kitsune":{"D":{"stars":[{"n":"Anser","x":0.6561,"y":0.2781,"mag":4.44,"c":"#ffc8a0"},{"n":"1Vul","x":0.76,"y":0.3,"mag":4.76,"c":"#cfe0ff"},{"n":"9Vul","x":0.691,"y":0.3677,"mag":5.0,"c":"#cfe0ff"},{"n":"12Vul","x":0.5745,"y":0.3588,"mag":4.9,"c":"#cfe0ff"},{"n":"13Vul","x":0.5451,"y":0.3405,"mag":4.57,"c":"#cfe0ff"},{"n":"15Vul","x":0.4649,"y":0.2973,"mag":4.66,"c":"#eef3ff"},{"n":"23Vul","x":0.3942,"y":0.3242,"mag":4.5,"c":"#ffd9a8"},{"n":"29Vul","x":0.3513,"y":0.4756,"mag":4.81,"c":"#eef3ff"},{"n":"31Vul","x":0.22,"y":0.4,"mag":4.56,"c":"#fff1d6"}],"lines":[["1Vul","Anser"],["Anser","13Vul"],["13Vul","15Vul"],["15Vul","23Vul"],["23Vul","31Vul"],["13Vul","12Vul"],["12Vul","9Vul"],["15Vul","29Vul"]]},"t":["Kitsune","九尾のきつね","The Nine-Tailed Star Fox","星をまもる白いきつね","Japan · Mythical · Vulpecula"]},"dokkaebi":{"D":{"stars":[{"n":"theCnc","x":0.7134,"y":0.588,"mag":5.33,"c":"#ffd9a8"},{"n":"etaCnc","x":0.6485,"y":0.4493,"mag":5.33,"c":"#ffd9a8"},{"n":"AsellusBorealis","x":0.43,"y":0.42,"mag":4.66,"c":"#eef3ff"},{"n":"AsellusAustralis","x":0.4603,"y":0.6261,"mag":3.94,"c":"#ffd9a8"},{"n":"Beehive","x":0.52,"y":0.52,"mag":3.7,"c":"#dfe8ff","cl":1}],"lines":[["theCnc","etaCnc"],["etaCnc","AsellusBorealis"],["AsellusBorealis","AsellusAustralis"],["AsellusAustralis","theCnc"]]},"t":["Dokkaebi","トッケビ","Trickster with a Magic Club","魔法のこん棒をもつ、いたずら好き","Korea · Mythical · Ghost Mansion"]},"genie":{"D":{"stars":[{"n":"Betelgeuse","x":0.3518,"y":0.2002,"mag":0.45,"c":"#ffc8a0"},{"n":"Rigel","x":0.7759,"y":0.69,"mag":0.18,"c":"#cfe0ff"},{"n":"Bellatrix","x":0.6643,"y":0.2337,"mag":1.64,"c":"#cfe0ff"},{"n":"Saiph","x":0.4312,"y":0.7366,"mag":2.07,"c":"#cfe0ff"},{"n":"Mintaka","x":0.5935,"y":0.4418,"mag":2.25,"c":"#cfe0ff"},{"n":"Alnilam","x":0.55,"y":0.47,"mag":1.69,"c":"#cfe0ff"},{"n":"Alnitak","x":0.5029,"y":0.4932,"mag":1.74,"c":"#cfe0ff"},{"n":"Meissa","x":0.56,"y":0.12,"mag":3.39,"c":"#cfe0ff"},{"n":"Hatysa","x":0.5586,"y":0.617,"mag":2.75,"c":"#cfe0ff"}],"lines":[["Meissa","Betelgeuse"],["Meissa","Bellatrix"],["Betelgeuse","Alnitak"],["Bellatrix","Mintaka"],["Mintaka","Alnilam"],["Alnilam","Alnitak"],["Alnitak","Saiph"],["Mintaka","Rigel"],["Alnilam","Hatysa"]]},"t":["Genie","ランプの精","Spirit of the Lamp","ランプからあらわれる精霊","Middle East · Mythical · Al-Jabbār"]},"quetzalcoatl":{"D":{"stars":[{"n":"Venus","x":0.8,"y":0.1,"mag":-4.2,"c":"#fffaf0"}],"lines":[]},"t":["Quetzalcoatl","ケツァルコアトル","The Feathered Serpent","羽をもつ蛇の神さま","Mexico · Mythical · Morning Star"]},"boto":{"D":{"stars":[{"n":"Sualocin","x":0.6855,"y":0.3534,"mag":3.77,"c":"#cfe0ff"},{"n":"Rotanev","x":0.5779,"y":0.4264,"mag":3.64,"c":"#fffaf0"},{"n":"gammaDel","x":0.644,"y":0.226,"mag":4.27,"c":"#ffd9a8"},{"n":"deltaDel","x":0.5711,"y":0.3103,"mag":4.43,"c":"#eef3ff"},{"n":"Aldulfin","x":0.302,"y":0.595,"mag":4.03,"c":"#cfe0ff"},{"n":"zetaDel","x":0.6058,"y":0.4631,"mag":4.64,"c":"#eef3ff"}],"lines":[["Sualocin","Rotanev"],["Rotanev","deltaDel"],["deltaDel","gammaDel"],["gammaDel","Sualocin"],["Rotanev","Aldulfin"]]},"t":["Boto","ボト","The Pink River Dolphin","アマゾン川のピンクのイルカ","Brazil · Mythical · Delphinus"]},"raven":{"D":{"stars":[{"n":"Gienah","x":0.66,"y":0.26,"mag":2.58,"c":"#cfe0ff"},{"n":"Algorab","x":0.3935,"y":0.2151,"mag":2.94,"c":"#cfe0ff"},{"n":"Kraz","x":0.36,"y":0.62,"mag":2.65,"c":"#fff1d6"},{"n":"epsCrv","x":0.7874,"y":0.5501,"mag":3.02,"c":"#ffd9a8"},{"n":"Alchiba","x":0.8269,"y":0.6717,"mag":4.02,"c":"#fffaf0"}],"lines":[["Alchiba","epsCrv"],["epsCrv","Gienah"],["Gienah","Algorab"],["Algorab","Kraz"],["Kraz","epsCrv"]]},"t":["Raven","ワタリガラス","The Bringer of Light","世界に光をもたらした鳥","Haida Nation · Mythical · Corvus"]},"moonrabbit":{"D":{"stars":[],"lines":[]},"t":["Moon Rabbit","月のうさぎ","Who Lives on the Full Moon","満月にすむうさぎ","The World · Mythical · Full Moon"]},"anansi":{"D":{"stars":[{"n":"Alcyone","x":0.48,"y":0.32,"mag":2.85,"c":"#cfe0ff"},{"n":"Atlas","x":0.3402,"y":0.3454,"mag":3.62,"c":"#cfe0ff"},{"n":"Electra","x":0.7,"y":0.3,"mag":3.72,"c":"#cfe0ff"},{"n":"Maia","x":0.6095,"y":0.2359,"mag":3.87,"c":"#cfe0ff"},{"n":"Merope","x":0.584,"y":0.3557,"mag":4.14,"c":"#cfe0ff"},{"n":"Taygeta","x":0.6576,"y":0.2041,"mag":4.3,"c":"#cfe0ff"},{"n":"Pleione","x":0.335,"y":0.3224,"mag":5.05,"c":"#cfe0ff"},{"n":"Celaeno","x":0.6989,"y":0.2506,"mag":5.45,"c":"#cfe0ff"}],"lines":[]},"t":["Anansi","アナンシ","Keeper of All Stories","すべての物語をもつクモ","Ghana · Mythical · Pleiades"]},"maui":{"D":{"stars":[{"n":"Acrab","x":0.72,"y":0.62,"mag":2.56,"c":"#cfe0ff"},{"n":"Dschubba","x":0.6827,"y":0.5854,"mag":2.29,"c":"#cfe0ff"},{"n":"Fang","x":0.6585,"y":0.538,"mag":2.89,"c":"#cfe0ff"},{"n":"Alniyat","x":0.7526,"y":0.5226,"mag":2.9,"c":"#cfe0ff"},{"n":"Antares","x":0.7801,"y":0.5026,"mag":1.06,"c":"#ffc8a0"},{"n":"Paikauhale","x":0.7937,"y":0.4721,"mag":2.82,"c":"#cfe0ff"},{"n":"Larawag","x":0.805,"y":0.3782,"mag":2.29,"c":"#ffd9a8"},{"n":"Xamidimura","x":0.7843,"y":0.3284,"mag":3.0,"c":"#cfe0ff"},{"n":"zetaSco","x":0.7618,"y":0.2699,"mag":3.62,"c":"#ffd9a8"},{"n":"etaSco","x":0.8097,"y":0.2398,"mag":3.32,"c":"#fffaf0"},{"n":"Sargas","x":0.8882,"y":0.212,"mag":1.86,"c":"#fffaf0"},{"n":"iotaSco","x":0.9468,"y":0.2333,"mag":2.99,"c":"#fffaf0"},{"n":"kappaSco","x":0.9411,"y":0.254,"mag":2.39,"c":"#cfe0ff"},{"n":"Shaula","x":0.93,"y":0.29,"mag":1.62,"c":"#cfe0ff"},{"n":"Lesath","x":0.919,"y":0.2915,"mag":2.7,"c":"#cfe0ff"}],"lines":[["Acrab","Dschubba"],["Dschubba","Fang"],["Dschubba","Alniyat"],["Alniyat","Antares"],["Antares","Paikauhale"],["Paikauhale","Larawag"],["Larawag","Xamidimura"],["Xamidimura","zetaSco"],["zetaSco","etaSco"],["etaSco","Sargas"],["Sargas","iotaSco"],["iotaSco","kappaSco"],["kappaSco","Shaula"],["Shaula","Lesath"]]},"t":["Māui","マウイ","The Hero Who Fished Up Islands","島をつりあげた英雄","Polynesia · Mythical · Māui’s Hook"]}};
+var MR_TX = {
+  pegasus:{reg:'Greece', sky:'Pegasus constellation', w:['I have flown across the heavens to meet you, [name].','[name]、天をかけて会いに来たよ。'],
+    l:[['When the hero Perseus defeated Medusa, I sprang into the world.','英雄ペルセウスがメドゥーサをたおしたとき、ぼくは生まれた。'],['With the hero Bellerophon, I defeated the fire-breathing Chimera.','英雄ベレロフォンといっしょに、火をはく怪物キマイラをたおした。'],['But when he tried to fly to the home of the gods, he fell. I flew on, and Zeus placed me among the stars.','でも、神々の山へ行こうとして、彼は落ちてしまった。ぼくは飛びつづけ、ゼウスがぼくを星にした。']]},
+  dragon:{reg:'China', sky:'The Azure Dragon mansions', w:['I rose from the deep waters to meet you, [name].','[name]、深い水の底から会いにのぼってきたよ。'],
+    l:[['I am the Azure Dragon, guardian of the East and of spring.','ぼくは青龍。東の空と、春をまもっている。'],['Each spring I raise my head into the sky and bring the rain that helps the rice grow.','春になると空へ頭をもちあげて、お米をそだてる雨をふらせるんだ。'],['Each autumn I dive deep into the waters to rest.','秋になると、深い水の中へもぐって休むよ。']]},
+  kitsune:{reg:'Japan', sky:'Vulpecula, the Little Fox', w:['I followed the starlight all the way to you, [name].','[name]、星の光をたどって会いに来たよ。'],
+    l:[['I am a white fox, a messenger of Inari, the kami of rice.','わたしは白いきつね。お米の神さま、お稲荷さまのおつかい。'],['Every hundred years, I grew one more tail. Now I have nine.','百年ごとに、しっぽが一本ふえて、いまは九本。'],['With nine tails I can hear the whole world, and I keep my magic in my star jewel, the hoshi-no-tama.','九本のしっぽで世界中の音がきこえる。わたしの力は、この星の玉にしまってあるの。']]},
+  dokkaebi:{reg:'Korea', sky:'The Ghost mansion', w:['Ttukttak! I popped out to play with you, [name]!','トゥクタク！[name]、いっしょにあそぼう！'],
+    l:[['I am a Dokkaebi. On dark nights, my blue fires dance over the fields.','ぼくはトッケビ。暗い夜には、青い火が野原でおどるよ。'],['I love songs, dances and wrestling, and I can never say no to a contest!','歌もおどりもすもうも大すき。しょうぶをいどまれたら、ことわれないんだ！'],['Tap my club and say \u2018Gold, come out!\u2019 I help the kind and honest, and tease the greedy.','こん棒をふって『金、出てこい！』。正直でやさしい人をたすけて、よくばりな人はからかうよ。']]},
+  genie:{reg:'Middle East', sky:'Al-Jabb\u0101r (Orion)', w:['I have waited a thousand years to meet you, [name].','[name]、千年のあいだ、きみを待っていたよ。'],
+    l:[['For long, long years I slept inside an old brass lamp.','長い長いあいだ、ぼくは古いランプの中でねむっていた。'],['When young Aladdin rubbed it, I rose up in a cloud of smoke and built him a palace in one night.','アラジンがランプをこすると、けむりとともにあらわれて、一晩でごてんをたてたんだ。'],['My story is one of the Thousand and One Nights, told by Scheherazade night after night.','ぼくのお話は『千夜一夜物語』。シェヘラザードが毎晩語りつづけたお話のひとつだよ。']]},
+  quetzalcoatl:{reg:'Mexico', sky:'The Morning Star (Venus)', w:['I flew on the morning wind to meet you, [name].','[name]、朝の風にのって会いに来たよ。'],
+    l:[['I am the Feathered Serpent, god of the wind and of learning.','ぼくは羽をもつ蛇。風と、学びの神さまだよ。'],['When people had no food, I became a tiny ant and carried a grain of maize out of a mountain.','人びとに食べ物がなかったとき、小さなアリになって、山の中からトウモロコシのつぶを運んだ。'],['When I left the world, I rose into the sky as the Morning Star, the planet Venus.','この世界をはなれたとき、ぼくは明けの明星、金星になったんだ。']]},
+  boto:{reg:'Brazil', sky:'Delphinus, the Dolphin', w:['I swam up the great river to meet you, [name].','[name]、大きな川をのぼって会いに来たよ。'],
+    l:[['I am the Boto, the pink dolphin of the Amazon River.','ぼくはボト。アマゾン川のピンクのイルカ。'],['On festival nights I turn into a man in a white suit and hat, and I dance until dawn.','おまつりの夜には、白いスーツとぼうしの男の人にへんしんして、朝までおどるよ。'],['My hat hides my blowhole! Before the sun comes up, I slip back into the river.','ぼうしで頭のあなをかくしているんだ！日がのぼる前に、川へもどるよ。']]},
+  raven:{reg:'Haida Nation', sky:'Corvus, the Crow', w:['I brought a little light, just for you, [name].','[name]、きみのために、光をすこし持ってきたよ。'],
+    l:[['Long ago the world was dark. An old man kept all the light hidden in boxes inside boxes.','むかし、世界はまっ暗だった。おじいさんが、箱の中の箱の中に、光をぜんぶかくしていたんだ。'],['I turned myself into a baby, his grandson, and cried until he let me play with the boxes.','ぼくは赤ちゃんに、おじいさんのまごにへんしんして、箱であそばせてもらえるまでないたよ。'],['In the very last box was the light! I flew out through the smoke hole and gave the sun, moon and stars to the world.','さいごの箱に光があった！けむり出しのあなから飛び出して、太陽と月と星を世界にあげたんだ。']]},
+  moonrabbit:{reg:'Around the world', sky:'The full moon', w:['I hopped down from the moon to meet you, [name].','[name]、月からぴょんとおりて会いに来たよ。'],
+    l:[['Long ago, a hungry old traveller came by, and I had nothing to give him.','むかし、おなかをすかせたおじいさんが来たのに、ぼくには何もあげるものがなかった。'],['So I offered myself and jumped into his fire. But it was magic, and it did not burn me at all. The traveller was really a god.','だから、自分を食べてもらおうと火にとびこんだ。でもそれはまほうの火で、ぜんぜんあつくなかった。おじいさんは神さまだったんだ。'],['He drew me on the moon so everyone would remember. In Japan I make mochi, and in China I make medicine!','神さまは、みんながわすれないように、月にぼくの絵をかいた。日本ではおもちを、中国ではくすりをつくっているよ！']]},
+  anansi:{reg:'Ghana', sky:'The Pleiades', w:['I have a new story to spin with you, [name].','[name]、いっしょに新しいお話をつむごう。'],
+    l:[['Long ago, all the stories in the world belonged to Nyame, the Sky God.','むかし、世界中のお話は、空の神さまニャメのものだった。'],['He said I could have them if I caught the python, the leopard, the hornets and the fairy. With clever tricks, I caught them all!','ニシキヘビとヒョウとスズメバチと小人をつかまえたら、お話をくれるって。ちえを使って、ぜんぶつかまえたよ！'],['Now every story is mine, and that is why they are called Anansesem: spider stories.','だから今、お話はぜんぶぼくのもの。『アナンセセム』、クモのお話ってよばれているんだ。']]},
+  maui:{reg:'Polynesia', sky:'Te Matau a M\u0101ui (Scorpius)', w:['I paddled across the great ocean to meet you, [name].','[name]、大きな海をこえて会いに来たよ。'],
+    l:[['My brothers wouldn\u2019t take me fishing, so I hid in the bottom of their canoe.','お兄さんたちがつりにつれていってくれないから、カヌーのそこにかくれたんだ。'],['With my magic hook I pulled up a fish so huge it became an island: Te Ika-a-M\u0101ui, the North Island of Aotearoa.','まほうのつりばりで、島になるほど大きな魚をつりあげた。それがニュージーランドの北島だよ。'],['I also slowed the sun so the days would be long enough for everyone. Look for my hook in the sky!','みんなのために、太陽をゆっくりにもしたよ。空でぼくのつりばりをさがしてね！']]}
+};
+/* hidden spellings so the voice says the names right (never shown) */
+var MR_SAY = [['Te Ika-a-M\u0101ui','Teh Eeka ah Mow-ee'],['M\u0101ui','Mow-ee'],['Aotearoa','Ah-oh-teh-ah-roh-ah'],['Quetzalcoatl','Ket-sal-koh-ah-tul'],['Dokkaebi','Doh-kay-bee'],['Ttukttak','Took-tak'],['Anansesem','Ah-nan-seh-sem'],['Nyame','Nyah-meh'],['Kitsune','Kit-soo-neh'],['hoshi-no-tama','hoh-shee noh tah-mah'],['Inari','Ee-nah-ree'],['Boto','Boh-toh'],['Al-Jabb\u0101r','Al Jab-bar'],['Scheherazade','Sheh-heh-rah-zah-deh']];
+function mrSayEN(s){ s = String(s); MR_SAY.forEach(function(p){ s = s.split(p[0]).join(p[1]); }); return sayEN(s); }
+function mrName(){ return (state.name && String(state.name).trim()) || 'star'; }
+function mrNm(s){ return String(s).split('[name]').join(mrName()); }
+function mrImg(id, kind){ return MR_A + (id === 'pegasus' ? kind : id + '-' + kind) + '.webp'; }
+function mrHexA(c, a){ var n = parseInt(c.slice(1), 16); return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
+function mrFrontHTML(id){
+  var X = MR_D[id], D = X.D, t = X.t, by = {}, h = '', lines = '', stars = '', glows = '';
+  D.stars.forEach(function(s){ by[s.n] = s; });
+  var bright = D.stars.slice().sort(function(a,b){ return a.mag - b.mag; }).slice(0,2).map(function(s){ return s.n; });
+  D.lines.forEach(function(l){ var a = by[l[0]], b = by[l[1]]; lines += '<line x1="'+(a.x*300).toFixed(1)+'" y1="'+(a.y*400).toFixed(1)+'" x2="'+(b.x*300).toFixed(1)+'" y2="'+(b.y*400).toFixed(1)+'" stroke="rgba(220,230,255,.6)" stroke-width=".9" stroke-linecap="round"/>'; });
+  D.stars.forEach(function(s, i){
+    var size = s.cl ? 6 : Math.min(9, Math.max(1.8, 7*Math.pow(10, -0.2*(s.mag-2))));
+    var dur = (3 + ((i*7919)%400)/100).toFixed(2), dl = (-((i*3301)%700)/100).toFixed(2);
+    stars += '<div class="mrs'+(s.mag > 3.6 ? ' soft' : '')+'" data-mag="'+s.mag+'" style="left:'+(s.x*100)+'%;top:'+(s.y*100)+'%;width:'+size.toFixed(2)+'%"><i style="--d:'+dur+'s;--dl:'+dl+'s;background:radial-gradient(circle,#fff 0%,#fff 9%,'+s.c+' 20%,'+mrHexA(s.c,.35)+' 38%,transparent 70%)"></i>'+(bright.indexOf(s.n) >= 0 ? '<b class="x"></b><b class="x v"></b>' : '')+'</div>';
+    glows += '<div class="mrg" style="left:'+(s.x*100)+'%;top:'+(s.y*100)+'%"></div>';
+  });
+  h += '<div class="mrc mrfront" data-mrid="'+id+'"><div class="mrwin"><div class="mrcart">';
+  h += '<img class="mrsky" src="'+MR_A+'sky.webp" alt="" draggable="false">';
+  if(id === 'moonrabbit') h += '<img class="mrmoon" src="'+MR_A+'moon.webp" alt="" draggable="false">';
+  h += '<div class="mrneb"><img src="'+mrImg(id,'nebula')+'" alt="" draggable="false"></div>';
+  h += '<div class="mrfg"><div class="mrglows">'+glows+'</div><img class="mrcre" src="'+mrImg(id,'creature')+'" alt="" draggable="false"><svg class="mrlines" viewBox="0 0 300 400" preserveAspectRatio="none">'+lines+'</svg><div class="mrstars">'+stars+'</div></div>';
+  h += '<div class="mrsheen"></div></div></div>';
+  h += '<img class="mrframe" src="'+MR_A+'frame.webp" alt="" draggable="false">';
+  for(var f = 0; f < 4; f++) h += '<img class="mrfoil" src="'+MR_A+'foil'+f+'.webp" alt="" draggable="false">';
+  h += '<div class="mrbadge mrserif">MR</div><div class="mrptr"></div>';
+  h += '<div class="mrct c1 mrserif">'+esc(t[0])+'</div><div class="mrct c2 mrjaf">'+esc(t[1])+'</div><div class="mrct cm mrserif">'+esc(t[2])+'</div><div class="mrct cmj mrjaf">'+esc(t[3])+'</div><div class="mrct c3 mrserif">'+esc(t[4])+'</div>';
+  h += '</div>';
+  return '<div class="tcgbox hb-mr">'+h+'</div>';
+}
+/* the back: one design for every Mythical. Full moon in a ring of 8 moon phases, in the card's own frame. */
+function mrBackHTML(){
+  var s = '<svg class="mrbsvg" viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="mrbM" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fff4e6"/><stop offset=".55" stop-color="#f1cdb4"/><stop offset="1" stop-color="#b9806a"/></radialGradient><linearGradient id="mrbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9d6"/><stop offset=".5" stop-color="#e2a98c"/><stop offset="1" stop-color="#9c6450"/></linearGradient></defs>';
+  s += '<circle cx="50" cy="50" r="44" fill="none" stroke="url(#mrbG)" stroke-width=".9"/><circle cx="50" cy="50" r="41" fill="none" stroke="url(#mrbG)" stroke-width=".4" stroke-dasharray="1 2.2"/>';
+  for(var i = 0; i < 8; i++){
+    var a = -Math.PI/2 + i*Math.PI/4, x = 50 + 32*Math.cos(a), y = 50 + 32*Math.sin(a), r = 4.2, p = i/8;   /* 0 = full (top), then waning, new (bottom), waxing */
+    var ill = (Math.cos(p*2*Math.PI) + 1)/2, k = (1 - 2*ill), sweepR = p < .5;
+    s += '<circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="'+r+'" fill="#1b1520" stroke="url(#mrbG)" stroke-width=".35"/>';
+    if(ill > .02){
+      var rx = Math.abs(k)*r, top = (y - r).toFixed(2), bot = (y + r).toFixed(2), xs = x.toFixed(2);
+      if(ill > .98) s += '<circle cx="'+xs+'" cy="'+y.toFixed(2)+'" r="'+r+'" fill="url(#mrbM)"/>';
+      else s += '<path d="M'+xs+' '+top+' A'+r+' '+r+' 0 0 '+(sweepR ? 0 : 1)+' '+xs+' '+bot+' A'+rx.toFixed(2)+' '+r+' 0 0 '+((k > 0) === sweepR ? 1 : 0)+' '+xs+' '+top+'Z" fill="url(#mrbM)"/>';
+    }
+  }
+  s += '<circle cx="50" cy="50" r="17" fill="url(#mrbM)"/><circle cx="50" cy="50" r="19.5" fill="none" stroke="url(#mrbG)" stroke-width=".6"/>';
+  s += '<g fill="#fff6ea">'; [[7,8,.7],[93,10,.55],[8,92,.5],[92,91,.7],[15,3,.4],[86,97,.4]].forEach(function(q){ s += '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+q[2]+'"/>'; }); s += '</g></svg>';
+  return '<div class="tcgbox hb-mr"><div class="mrc mrback"><div class="mrwin mrbwin"><img class="mrsky" src="'+MR_A+'sky.webp" alt="" draggable="false">'+s+'<div class="mrbsheen"></div></div>'+
+    '<img class="mrframe" src="'+MR_A+'frame.webp" alt="" draggable="false"><div class="mrbadge mrserif">MR</div>'+
+    '<div class="mrct c1 mrserif">STARQUEST</div><div class="mrct c2 mrjaf">スタークエスト</div><div class="mrct cm mrserif">Mythicals</div><div class="mrct cmj mrjaf">神話の星たち</div><div class="mrct c3 mrserif">Woken under the full moon</div></div></div>';
+}
+/* names never spill out of the plate: shrink a line until it fits (sizes are in cqw, so the big view keeps them) */
+function mrFit(root){
+  (root || document).querySelectorAll('.mrc .mrct').forEach(function(e){
+    var box = e.closest('.mrc'); if(!box) return; var w = box.getBoundingClientRect().width; if(!w) return;
+    var base = parseFloat(e.getAttribute('data-fs') || '0'); if(!base){ base = 1; e.setAttribute('data-fs', '1'); }
+    var k = 1, n = 0; e.style.setProperty('--fk', '1');
+    var r = document.createRange(); r.selectNodeContents(e);
+    while(r.getBoundingClientRect().width > w*0.74 && n < 25){ k *= .95; e.style.setProperty('--fk', k.toFixed(3)); n++; }
+  });
+}
+function mrSS(a, b, v){ v = Math.max(0, Math.min(1, (v - a)/(b - a))); return v*v*(3 - 2*v); }
+var MRL = {run:false, t:0, ang:0, wake:null, woke:false, hint:null};
+function mrDialPos(deg){ var r = deg*Math.PI/180, dx = Math.sin(r), dy = -Math.cos(r), k = Math.min(422/Math.max(1e-6, Math.abs(dx)), 434/Math.max(1e-6, Math.abs(dy))); return [(509 + dx*k)/1024, (717 + dy*k)/1536]; }
+function mrLoop(){
+  var fr = document.querySelectorAll('.mrfront');
+  if(!fr.length){ MRL.run = false; return; }
+  var x = HL.x, y = HL.y, cx = (x - .5)*2, cy = (y - .5)*2;
+  var bk = HLF.el && HLF.el.classList.contains('bk');
+  var target = (HL.ptr && !HL.hold && !bk) ? Math.min(1, Math.hypot(cx, cy)*1.5) : 0;   /* only a finger (or mouse) wakes the creature; the idle light drift does not */
+  MRL.t += (target - MRL.t)*.12; var t = MRL.t, rv = mrSS(.28, .92, t);
+  if(MRL.wake && !MRL.woke && rv > .85){ MRL.woke = true; try{ if(!state.mute){ var au = new Audio(MR_A + 'mr-wake.mp3'); au.volume = .8; au.play(); } }catch(_){}
+    var hn = $('mrhint'); if(hn) hn.innerHTML = '✨ <b>'+esc(MR_D[MRL.wake].t[0])+'</b> is awake!'; }
+  var a = target > .06 ? Math.atan2(cx, -cy)*180/Math.PI : 0, d = ((a - MRL.ang + 540)%360) - 180; MRL.ang += d*.1;
+  var pp = mrDialPos(MRL.ang), p3 = Math.max(0, Math.min(1, .5 + cx*.55 + cy*.3))*3, inten = .3 + .7*Math.max(t, .25);
+  fr.forEach(function(c){
+    var q = function(s){ return c.querySelector(s); };
+    q('.mrsky').style.transform = 'translate('+(-cx*1.4).toFixed(2)+'%,'+(-cy*1.4).toFixed(2)+'%) scale(1.06)';
+    var nb = q('.mrneb'); nb.style.opacity = (.74 - .6*mrSS(.15, .9, t)).toFixed(3); nb.style.transform = 'translate('+(-cx*.5).toFixed(2)+'%,'+(-cy*.5).toFixed(2)+'%) scale(1.03)';
+    q('.mrfg').style.transform = 'translate('+cx.toFixed(2)+'%,'+cy.toFixed(2)+'%) scale('+(1 + .025*rv).toFixed(4)+')';
+    q('.mrcre').style.opacity = rv.toFixed(3);
+    c.querySelectorAll('.mrs').forEach(function(s, i){
+      var mag = +s.getAttribute('data-mag'), p = Math.max(0, Math.min(1, (t - .06 - Math.max(0, (mag - 2)*.1))/.55)), g = c.querySelectorAll('.mrg')[i];
+      if(g){ g.style.transform = 'translate(-50%,-50%) scale('+(p*2.2).toFixed(3)+')'; g.style.opacity = (Math.sin(Math.PI*Math.min(1, p*1.05))*.85).toFixed(3); }
+      s.style.transform = 'translate(-50%,-50%) scale('+(1.1 + .45*mrSS(.05, .5, t) - .15*rv).toFixed(3)+')';
+    });
+    q('.mrlines').style.opacity = ((1 - mrSS(.1, .6, t))*.42).toFixed(3);
+    var sh = q('.mrsheen'); sh.style.opacity = (.2 + .8*t).toFixed(3); sh.style.transform = 'translate('+(cx*22).toFixed(2)+'%,'+(cy*14).toFixed(2)+'%)';
+    c.querySelectorAll('.mrfoil').forEach(function(f, k){ f.style.opacity = (Math.max(0, 1 - Math.abs(p3 - k))*inten).toFixed(3); });
+    var pt = q('.mrptr'); pt.style.left = (pp[0]*100).toFixed(2)+'%'; pt.style.top = (pp[1]*100).toFixed(2)+'%'; pt.style.transform = 'rotate('+MRL.ang.toFixed(1)+'deg)';
+  });
+  requestAnimationFrame(mrLoop);
+}
+function mrStart(){ if(!MRL.run){ MRL.run = true; requestAnimationFrame(mrLoop); } }
+function mrTagHTML(id){ var X = MR_D[id], T = MR_TX[id]; return '<span class="tag rr r-MR">MR</span><button class="tag say" data-mrsay="reg:'+id+'">'+esc(T.reg)+' 🔊</button><span class="tag">'+esc(T.sky)+'</span><span class="tag">Mythical</span>'; }
+/* the card's own page (like every other card) */
+var MRV = {from:null, scroll:0};
+function mrDetail(id, o){
+  o = o || {}; var X = MR_D[id], T = MR_TX[id]; if(!X || !T) return;
+  MRV.from = o.from || null; MRL.wake = o.wake ? id : null; MRL.woke = false; MRL.t = 0;
+  var m = mrSt(), woke = m.woke && m.woke[id];
+  var h = '<span data-closable></span><h2 style="display:none">'+esc(X.t[0])+'</h2>';
+  if(o.from) h += '<div class="pcvbanner have">👪 Parent view · testing. Looking here changes nothing.</div>';
+  h += '<div class="detail"><div class="dc"><div class="dflip hlsc mrflip" id="dflip" data-rot="10" data-rotp="20.8"><div class="dflip-in"><div class="flip-face dfront">'+mrFrontHTML(id)+'</div><div class="flip-face dback">'+mrBackHTML()+'</div></div></div>';
+  h += '<div class="dfliphint" id="mrhint">'+(o.wake ? 'Slide your finger on the card to wake <b>'+esc(X.t[0])+'</b>' : 'Tap the card to see it big · slide to tilt')+' <button class="btn sm dflipbtn" id="dflipBtn" type="button">↻ Flip</button></div></div><div class="dt">';
+  h += '<div class="tagrow">'+mrTagHTML(id)+'</div>';
+  h += '<h2 class="say" data-mrsay="name:'+id+'">'+esc(X.t[0])+' <span class="spk">🔊</span></h2>';
+  h += '<div class="nat say" data-mrsay="ja:'+id+'">'+esc(X.t[1])+' <span class="spk">🔊</span></div>';
+  h += '<div class="tagline say" data-mrsay="tag:'+id+'">'+esc(X.t[2])+' <span class="spk">🔊</span></div>';
+  if(woke) h += '<div class="era"><b>🌕 Awakened:</b> '+esc(mrFmt(woke))+', full moon</div>';
+  h += '<div class="story say mrwords" data-mrsay="w:'+id+'">\u201c'+esc(mrNm(T.w[0]))+'\u201d <span class="spk">🔊</span><div class="mrja">'+esc(mrNm(T.w[1]))+'</div></div>';
+  h += '<div class="qlabel" style="margin-top:12px">📜 The legend</div>';
+  T.l.forEach(function(p, i){ h += '<div class="story say mrleg" data-mrsay="l'+i+':'+id+'">'+esc(p[0])+' <span class="spk">🔊</span><div class="mrja">'+esc(p[1])+'</div></div>'; });
+  h += '<div class="row" style="margin:10px 0 4px"><button class="btn llwatch" type="button" disabled title="Arrives in a later build">▶ Watch the legend · soon</button></div>';
+  h += '<div class="row" style="margin-top:14px"><button class="btn good" data-mrsay="all:'+id+'">🔊 Read it all</button><button class="btn small" data-mrsay="stop:'+id+'">⏹ Stop</button></div><div class="hint" style="margin-top:8px">Tip: tap any part with 🔊 to hear just that part.</div>';
+  if(o.from) h += '<div class="hint" style="margin-top:6px">Japanese is a draft until Mom checks it.</div>';
+  h += '</div></div>';
+  h += '<div class="row" style="justify-content:flex-end;margin-top:18px">'+(o.from ? '<button class="btn primary" data-mr="mback">← Back to Mythical cards</button>' : '<button class="btn primary" data-mr="mclose">Close</button>')+'</div>';
+  if(o.from) parIn('mrcard', h); else openModal(h);
+  $('modal').onclick = null; $('modal').onchange = null;
+  var fl = $('dflip');
+  if(fl){ hlFlipBind(fl); hlStart(); mrStart(); var fb = $('dflipBtn'); if(fb) fb.onclick = function(ev){ ev.stopPropagation(); hlFlipNow(); };
+    setTimeout(function(){ mrFit(fl); }, 60); setTimeout(function(){ mrFit(fl); }, 600); }
+}
+window.addEventListener('resize', function(){ if(document.querySelector('.mrc')) setTimeout(function(){ mrFit(); }, 120); });
+function mrSayPart(k, id){
+  var X = MR_D[id], T = MR_TX[id];
+  if(k === 'name') return {t:mrSayEN(X.t[0])};
+  if(k === 'tag') return {t:mrSayEN(X.t[2])};
+  if(k === 'reg') return {t:mrSayEN(T.reg)};
+  if(k === 'w') return {t:mrSayEN(mrNm(T.w[0]))};
+  if(/^l\d$/.test(k)) return {t:mrSayEN(T.l[+k.slice(1)][0])};
+  return null;
+}
+function mrSay(k, id, el){
+  if(!MR_D[id]) return;
+  if(k === 'stop'){ stopSpeak(); return; }
+  if(k === 'ja'){ speakText(MR_D[id].t[1], 'ja-JP', el); return; }
+  if(k === 'all'){
+    var box = el.closest('.dt') || $('modal'), q = function(s){ return box.querySelector('[data-mrsay="'+s+':'+id+'"]'); };
+    var seq = ['name','tag','w','l0','l1','l2'].map(function(s){ var p = mrSayPart(s, id); p.el = q(s); return p; });
+    seq[0].gap = 420; saySeq(seq, el); return;
+  }
+  var p = mrSayPart(k, id); if(p) saySeq([p], el);
+}
+/* Parent → Mythical cards: the card viewer for Mythicals (its own page, like 🔎 Card viewer) */
+function mrCardsPage(scrollTop){
+  var m = mrSt(), h = '<h2>🎴 Mythical cards</h2><div class="hint" style="margin-bottom:8px">Parents only, testing. Tap a card to open its page. Slide a finger on the card to wake it (with the wake sound), like on her full-moon night. Looking here changes nothing.</div><div class="pcgrid">';
+  MR_LIST.slice(0, MR_LIST.length-1).forEach(function(x){
+    var id = x[0], w = m.woke && m.woke[id];
+    h += '<button class="pcv mrpcv" data-mr="mcard:'+id+'"><span class="pcv-art"><img src="'+MR_A+id+'-thumb.webp" alt="" draggable="false"></span><span class="pcv-n">'+esc(MR_D[id].t[0])+'</span><span class="pcv-s"><b class="tag rr r-MR">MR</b> '+(w ? '🌕 awake' : 'asleep')+'</span></button>';
+  });
+  h += '</div><div class="row" style="margin-top:14px"><button class="btn" data-mr="mmyth">← Back to Mythicals</button></div>';
+  parIn('mrcards', h);
+  $('modal').onclick = null;
+  if(scrollTop !== undefined){ var ps = parScroller(); if(ps) ps.scrollTop = scrollTop; }
+}
+document.addEventListener('click', function(e){
+  var el = e.target.closest && e.target.closest('[data-mrsay]'); if(!el || !el.closest('#modal')) return;
+  e.stopPropagation(); var p = el.getAttribute('data-mrsay').split(':'); mrSay(p[0], p[1], el);
+}, true);
+/* the Pegasus intro (in a frame) hands the card over here when it ends */
+window.addEventListener('message', function(e){
+  var d = e.data; if(!d || d.sqmr !== 'card') return;
+  var o = $('mrpv'); if(o) o.remove();
+  var id = MR_D[d.m] ? d.m : 'pegasus';
+  if(parentUnlocked && window.__parCtx) mrDetail(id, {wake:true, from:'cards'}); else mrDetail(id, {wake:true});
+});
+
 
 try{ bankCatchUp(); }catch(e){}
 /* everything is defined now: draw the page once more so late modules (goal cards etc.) show up */
