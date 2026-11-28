@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.157', errs = [], shown = false;
+  var V = '26.11.158', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -3221,7 +3221,7 @@ body[data-calm=on] .aursky i{opacity:.8}
 .mrja{font-size:.86em;opacity:.8;margin-top:4px;font-style:normal}
 .mrpcv .pcv-art{background:#000}
 /* nebulas that were bigger than the inner frame: smaller, with a soft edge so no square shows */
-.mrc[data-mrid=dragon] .mrneb img,.mrc[data-mrid=genie] .mrneb img,.mrc[data-mrid=quetzalcoatl] .mrneb img,.mrc[data-mrid=moonrabbit] .mrneb img{transform:scale(.8);-webkit-mask-image:radial-gradient(closest-side,#000 78%,transparent 100%);mask-image:radial-gradient(closest-side,#000 78%,transparent 100%)}
+.mrc[data-mrid=dragon] .mrneb img,.mrc[data-mrid=genie] .mrneb img,.mrc[data-mrid=quetzalcoatl] .mrneb img,.mrc[data-mrid=moonrabbit] .mrneb img{-webkit-mask-image:radial-gradient(closest-side,#000 78%,transparent 100%);mask-image:radial-gradient(closest-side,#000 78%,transparent 100%)}
 @media (prefers-reduced-motion:reduce){.mrneb img,.mrs i,.mrbsheen{animation:none}}
 </style>
 </head>
@@ -18836,6 +18836,8 @@ function mrName(){ return (state.name && String(state.name).trim()) || 'star'; }
 function mrNm(s){ return String(s).split('[name]').join(mrName()); }
 function mrImg(id, kind){ return MR_A + (id === 'pegasus' ? kind : id + '-' + kind) + '.webp'; }
 function mrHexA(c, a){ var n = parseInt(c.slice(1), 16); return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
+/* 26.11.158: the whole picture (nebula, creature, stars) shrinks together, so the nebula and the creature still match */
+var MR_SC = {dragon:.8, genie:.8, quetzalcoatl:.8, moonrabbit:.8};
 function mrFrontHTML(id){
   var X = MR_D[id], D = X.D, t = X.t, by = {}, h = '', lines = '', stars = '', glows = '';
   D.stars.forEach(function(s){ by[s.n] = s; });
@@ -18847,7 +18849,7 @@ function mrFrontHTML(id){
     stars += '<div class="mrs'+(s.mag > 3.6 ? ' soft' : '')+'" data-mag="'+s.mag+'" style="left:'+(s.x*100)+'%;top:'+(s.y*100)+'%;width:'+size.toFixed(2)+'%"><i style="--d:'+dur+'s;--dl:'+dl+'s;background:radial-gradient(circle,#fff 0%,#fff 9%,'+s.c+' 20%,'+mrHexA(s.c,.35)+' 38%,transparent 70%)"></i>'+(bright.indexOf(s.n) >= 0 ? '<b class="x"></b><b class="x v"></b>' : '')+'</div>';
     glows += '<div class="mrg" style="left:'+(s.x*100)+'%;top:'+(s.y*100)+'%"></div>';
   });
-  h += '<div class="mrc mrfront" data-mrid="'+id+'"><div class="mrwin"><div class="mrcart">';
+  h += '<div class="mrc mrfront" data-mrid="'+id+'" data-ms="'+(MR_SC[id] || 1)+'"><div class="mrwin"><div class="mrcart">';
   h += '<img class="mrsky" src="'+MR_A+'sky.webp" alt="" draggable="false">';
   if(id === 'moonrabbit') h += '<img class="mrmoon" src="'+MR_A+'moon.webp" alt="" draggable="false">';
   h += '<div class="mrneb"><img src="'+mrImg(id,'nebula')+'" alt="" draggable="false"></div>';
@@ -18902,10 +18904,10 @@ function mrLoop(){
   var a = target > .06 ? Math.atan2(cx, -cy)*180/Math.PI : 0, d = ((a - MRL.ang + 540)%360) - 180; MRL.ang += d*.1;
   var pp = mrDialPos(MRL.ang), p3 = Math.max(0, Math.min(1, .5 + cx*.55 + cy*.3))*3, inten = .3 + .7*Math.max(t, .25);
   fr.forEach(function(c){
-    var q = function(s){ return c.querySelector(s); };
+    var q = function(s){ return c.querySelector(s); }, ms = +c.getAttribute('data-ms') || 1;
     q('.mrsky').style.transform = 'translate('+(-cx*1.4).toFixed(2)+'%,'+(-cy*1.4).toFixed(2)+'%) scale(1.06)';
-    var nb = q('.mrneb'); nb.style.opacity = (.74 - .6*mrSS(.15, .9, t)).toFixed(3); nb.style.transform = 'translate('+(-cx*.5).toFixed(2)+'%,'+(-cy*.5).toFixed(2)+'%) scale(1.03)';
-    q('.mrfg').style.transform = 'translate('+cx.toFixed(2)+'%,'+cy.toFixed(2)+'%) scale('+(1 + .025*rv).toFixed(4)+')';
+    var nb = q('.mrneb'); nb.style.opacity = (.74 - .6*mrSS(.15, .9, t)).toFixed(3); nb.style.transform = 'translate('+(-cx*.5).toFixed(2)+'%,'+(-cy*.5).toFixed(2)+'%) scale('+(1.03*ms).toFixed(4)+')';
+    q('.mrfg').style.transform = 'translate('+cx.toFixed(2)+'%,'+cy.toFixed(2)+'%) scale('+((1 + .025*rv)*ms).toFixed(4)+')';
     q('.mrcre').style.opacity = rv.toFixed(3);
     c.querySelectorAll('.mrs').forEach(function(s, i){
       var mag = +s.getAttribute('data-mag'), p = Math.max(0, Math.min(1, (t - .06 - Math.max(0, (mag - 2)*.1))/.55)), g = c.querySelectorAll('.mrg')[i];
