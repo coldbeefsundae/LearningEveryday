@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Mythicals preview (app 26.11.156) · StarQuest · Mythical preview v3 · Pegasus</title>
+<style>
+:root{--gold:#d9bb72;--gold2:#f3dfa6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#efe7d2}
+body{display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage{position:relative;width:min(100vw,calc(100vh*0.5625));height:min(100vh,calc(100vw*1.7778));overflow:hidden;background:#000;--W:min(100vw,calc(100vh*0.5625))}
+.stage>*{position:absolute}
+img{display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.serif{font-family:"Cormorant Garamond","Palatino Linotype",Palatino,"Noto Serif",Georgia,serif}
+.jaf{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","Noto Serif CJK JP",serif}
+
+/* ---------- intro layers ---------- */
+#skyW{inset:-4%;opacity:0;transform:translateY(-2.5%) scale(1.04)}
+#skyW img{width:100%;height:100%;object-fit:cover}
+#oneStar{left:64%;top:16%;width:5%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(.2);opacity:0;background:radial-gradient(circle,#fff 0%,#fff 8%,rgba(215,228,255,.55) 22%,transparent 62%)}
+#oneStar:before,#oneStar:after{content:"";position:absolute;left:50%;top:50%;width:360%;height:5%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent)}
+#oneStar:after{transform:translate(-50%,-50%) rotate(90deg)}
+#moonW{left:50%;top:8%;width:80%;aspect-ratio:1;transform:translate(-50%,235%) scale(1.12);opacity:0}
+#moonW>*{position:absolute}
+#rays{left:50%;top:50%;width:300%;height:300%;transform:translate(-50%,-50%);overflow:visible}
+#rays g{transform-origin:0 0;animation:spin 140s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#moonGlow{left:50%;top:50%;width:240%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.32) 0%,rgba(255,236,190,.14) 20%,rgba(200,215,255,.05) 38%,transparent 60%);opacity:0}
+#moonImg{inset:0;width:100%;height:100%;object-fit:contain}
+#seal{left:50%;top:30.5%;width:88%;aspect-ratio:1;transform:translate(-50%,-50%);overflow:visible;opacity:0;pointer-events:none}
+#threadL,#dustL{inset:0;pointer-events:none;overflow:hidden}
+.spk{position:absolute;left:0;top:0;width:2.2%;aspect-ratio:1;margin:-1.1% 0 0 -1.1%;border-radius:50%;background:radial-gradient(circle,#fff 0%,#ffeec0 30%,rgba(255,215,130,.4) 50%,transparent 70%);pointer-events:none}
+.spk.sm{width:1.3%;margin:-.65% 0 0 -.65%}
+.ring{position:absolute;left:0;top:0;width:8%;aspect-ratio:1;margin:-4% 0 0 -4%;border-radius:50%;border:2px solid rgba(255,236,190,.8);opacity:0;pointer-events:none}
+#sil{left:50%;top:30.5%;width:62%;aspect-ratio:3/4;transform:translate(-190%,-50%);opacity:0;filter:brightness(0);display:none}
+#sil img{width:100%;height:100%;object-fit:cover}
+#art{left:0;width:100%;aspect-ratio:3/4;top:47%;transform:translateY(-50%);pointer-events:none}
+#art>*{position:absolute;inset:0;width:100%;height:100%}
+#art img{object-fit:cover}
+#neb{opacity:0;transform:scale(1.08)}
+#cre{opacity:0;transform:scale(.97)}
+#iLines{overflow:visible}
+#iStars .star{transform:translate(-50%,-50%) scale(0)}
+#glint{position:absolute;width:10%;height:auto;aspect-ratio:1;inset:auto;transform:translate(-50%,-50%) scale(0);opacity:0;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.6) 12%,transparent 40%),linear-gradient(90deg,transparent 46%,rgba(255,255,255,.9) 50%,transparent 54%),linear-gradient(0deg,transparent 46%,rgba(255,255,255,.9) 50%,transparent 54%)}
+#bloom{inset:0;background:radial-gradient(circle at 50% 42%,rgba(255,240,205,.9),rgba(255,215,140,.35) 30%,transparent 65%);opacity:0;pointer-events:none}
+#vign{inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.lb{left:0;right:0;height:10%;background:#000;z-index:4}
+#lbT{top:0}#lbB{bottom:0}
+#band{left:0;right:0;bottom:0;height:42%;background:linear-gradient(transparent,rgba(0,0,6,.55) 40%,rgba(0,0,6,.78));opacity:0;pointer-events:none}
+#txt{left:6%;right:6%;bottom:7%;text-align:center;pointer-events:none}
+.en{position:relative;overflow:hidden;font-style:italic;color:#fff6dc;font-size:calc(var(--W)*0.064);line-height:1.2;text-shadow:0 0 18px rgba(255,220,150,.45),0 2px 4px #000;padding:.05em 0}
+.en.small{font-size:calc(var(--W)*0.05)}
+.ja{margin-top:.6em;color:var(--gold);font-size:calc(var(--W)*0.036);line-height:1.5;text-shadow:0 2px 4px #000;opacity:0;transition:opacity 1.2s}
+.w{display:inline-block;opacity:0;transform:translateY(.25em);transition:opacity .9s ease,transform .9s ease;margin-right:.22em}
+.w.on{opacity:1;transform:none}
+.shine{position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(100deg,transparent,rgba(255,236,180,.45),transparent);transform:translateX(-150%);pointer-events:none}
+.tapH{margin-top:.9em;font-size:calc(var(--W)*0.03);color:#cdbf98;opacity:0;transition:opacity .8s}
+#prompt{left:0;right:0;top:60%;text-align:center;opacity:0;pointer-events:none}
+#prompt .en{font-size:calc(var(--W)*0.05)}
+
+/* ---------- card ---------- */
+#cardDrop{left:50%;top:45%;width:82%;aspect-ratio:2/3;transform:translate(-50%,-50%);opacity:0;visibility:hidden;perspective:1400px}
+#cshadow{position:absolute;left:8%;right:8%;bottom:-5%;height:12%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.75),transparent 70%);opacity:.0}
+#card{position:absolute;inset:0;transform-style:preserve-3d}
+#flipper{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.1,.2,1)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face>*{position:absolute}
+.back{transform:rotateY(180deg)}
+.win{left:11.33%;top:20.05%;width:77.34%;height:54.56%;overflow:hidden;border-radius:6%;background:#02040a}
+.cart{position:absolute;left:0;width:100%;aspect-ratio:3/4;top:50%;transform:translateY(-50%)}
+.cart>*{position:absolute;inset:0;width:100%;height:100%}
+.cart img{object-fit:cover}
+#csky{transform:scale(1.06)}
+.cnebI{width:100%;height:100%;object-fit:cover;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.82}50%{opacity:1}}
+#ccre{opacity:0}
+#cLines{overflow:visible;opacity:.42}
+#cnebO{opacity:.74}
+#shootW{overflow:hidden;pointer-events:none}#shoot{position:absolute;left:0;top:0;width:30%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95));border-radius:99px;opacity:0;transform-origin:100% 50%}
+#csheen{inset:-30% !important;width:160% !important;height:160% !important;background:linear-gradient(115deg,transparent 38%,rgba(255,226,160,.14) 47%,rgba(255,246,220,.24) 50%,rgba(255,226,160,.14) 53%,transparent 62%);opacity:0}
+.frame,.foil{inset:0;width:100%;height:100%}
+.foil{opacity:0}
+.badge{left:75.5%;top:8.46%;width:13.2%;height:5.3%;display:flex;align-items:center;justify-content:center;color:var(--gold2);font-size:calc(var(--cw)*0.042);letter-spacing:.14em;text-shadow:0 0 8px rgba(243,223,166,.5),0 1px 1px #000;padding-left:.14em}
+#ptr{left:0;top:0;width:4.2%;aspect-ratio:1;margin:-2.1% 0 0 -2.1%;background:radial-gradient(circle,#fff8e0 0%,#f3d991 22%,rgba(243,217,145,.35) 45%,transparent 70%);border-radius:50%;opacity:.95}
+#ptr:before,#ptr:after{content:"";position:absolute;left:50%;top:50%;width:170%;height:14%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#fff3c8,transparent);border-radius:50%}
+#ptr:after{transform:translate(-50%,-50%) rotate(90deg)}
+.ct{left:0;right:0;text-align:center;color:var(--gold2);line-height:1;text-shadow:0 1px 2px #000,0 0 10px rgba(217,187,114,.25)}
+.c1{top:79.6%;font-size:calc(var(--cw)*0.052);letter-spacing:.08em}
+.c2{top:86.4%;font-size:calc(var(--cw)*0.031);color:var(--gold)}
+.c3{top:89.2%;font-size:calc(var(--cw)*0.022);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.bwin{left:11.33%;top:20.05%;width:77.34%;height:54.56%;border-radius:6%;overflow:hidden;background:#03050c}
+.bwin>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32}
+.bscroll{position:absolute;inset:0;overflow-y:auto;padding:9% 9% 10%;text-align:center;touch-action:pan-y;pointer-events:auto}
+.bh{color:var(--gold2);font-size:calc(var(--cw)*0.05);letter-spacing:.1em}
+.bd{color:#e9dcb5;font-size:calc(var(--cw)*0.032);margin-top:.4em}
+.bdj{color:var(--gold);font-size:calc(var(--cw)*0.028);margin-top:.2em}
+.bhr{height:1px;margin:7% 15%;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7}
+.bl{color:#fff3d6;font-style:italic;font-size:calc(var(--cw)*0.036);line-height:1.3;margin-top:5%}
+.blj{color:var(--gold);font-size:calc(var(--cw)*0.027);line-height:1.5;margin-top:.3em}
+.bbtn{margin-top:8%;font-size:calc(var(--cw)*0.034);background:rgba(20,24,40,.8);color:var(--gold2);border:1px solid #8a7440;border-radius:999px;padding:.4em 1.1em}
+#award{left:0;right:0;top:82.5%;text-align:center;opacity:0;pointer-events:none}
+#award .en{font-style:normal;letter-spacing:.12em;font-size:calc(var(--W)*0.048)}
+#award .ja{opacity:1;margin-top:.3em}
+#hint{left:0;right:0;top:83%;text-align:center;opacity:0;pointer-events:none}
+#hint .en{font-size:calc(var(--W)*0.045)}
+#hint .ja{opacity:1;margin-top:.3em}
+#hint svg{width:calc(var(--W)*0.12);height:auto;display:block;margin:0 auto .4em;animation:rock 2.2s ease-in-out infinite}
+@keyframes rock{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+#btns{left:0;right:0;bottom:3.5%;display:flex;gap:4%;justify-content:center;opacity:0;pointer-events:none}
+.btn{font-family:"Cormorant Garamond",Georgia,serif;font-size:calc(var(--W)*0.05);color:#1b1407;background:linear-gradient(#f6e4ad,#cfa755);border:0;border-radius:999px;padding:.4em 1.3em;box-shadow:0 0 24px rgba(246,214,140,.35);letter-spacing:.05em}
+.btn.ghost{background:rgba(20,26,42,.75);color:var(--gold2);border:1px solid #8a7440;box-shadow:none}
+
+/* ---------- ui ---------- */
+#start{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:6;background:#000}
+#start .sub{margin-top:1em;font-size:calc(var(--W)*0.032);color:#bfb391}
+#loading{font-size:calc(var(--W)*0.04);color:#cdbf98;animation:fadeP 1.6s ease-in-out infinite}
+@keyframes fadeP{50%{opacity:.35}}
+#go{display:none}
+.link{background:none;border:0;color:#8f866b;text-decoration:underline;font-size:calc(var(--W)*0.028);margin-top:1.6em}
+#skip{right:4%;top:2.5%;font-size:calc(var(--W)*0.034);background:rgba(20,26,42,.6);color:#f3dfa6;border:1px solid #6b5a2e;border-radius:999px;padding:.35em .9em;display:none;z-index:7}
+#rot{inset:0;z-index:9;background:#000;display:none;align-items:center;justify-content:center;text-align:center;font-size:calc(var(--W)*0.05);color:#efe2bd}
+#dbg{left:1%;top:1%;z-index:8;background:rgba(0,0,0,.78);border:1px solid #444;border-radius:8px;padding:6px;font:11px/1.3 system-ui;color:#ddd;display:none;max-width:60%}
+#dbg button{font:11px system-ui;margin:1px;padding:2px 6px;background:#222;color:#eee;border:1px solid #555;border-radius:4px}
+#dbg button.on{background:#7a5c1e}
+.dlab{position:absolute;transform:translate(6px,-50%);font:9px system-ui;color:#ffe08a;text-shadow:0 0 2px #000;white-space:nowrap;pointer-events:none}
+#dTip{position:absolute;z-index:9;font:11px system-ui;background:#000c;color:#ffe08a;padding:2px 5px;border-radius:4px;pointer-events:none;display:none}
+#glintMark{position:absolute;width:5%;aspect-ratio:1;border:2px solid #f44;border-radius:50%;transform:translate(-50%,-50%);display:none}
+
+/* star look (shared) */
+.star{position:absolute;border-radius:50%;transform:translate(-50%,-50%)}
+.star i{position:absolute;inset:0;border-radius:50%;animation:tw var(--d) ease-in-out var(--dl) infinite}
+.star.soft i{animation-name:tws}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.62}}
+@keyframes tws{0%,100%{opacity:1}50%{opacity:.86}}
+.star .x{position:absolute;left:50%;top:50%;width:420%;height:6%;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);border-radius:50%}
+.star .x.v{transform:translate(-50%,-50%) rotate(90deg)}
+.glow{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(0);opacity:0;background:radial-gradient(circle,rgba(235,240,255,.55) 0%,rgba(190,210,255,.22) 30%,rgba(255,200,140,.08) 55%,transparent 70%)}
+
+/* v4 overrides */
+.shine{display:none!important}
+.en{text-shadow:0 2px 4px #000,0 0 14px rgba(0,0,0,.85)!important}
+.ja{text-shadow:0 2px 4px #000,0 0 12px rgba(0,0,0,.85)}
+.ct,.badge{text-shadow:0 1px 2px #000!important}
+#rays,#band,#ptr,#sil{display:none!important}
+.badge{left:76.65%;top:7.6%}
+.ct{transform:translateY(-50%)}
+.c1{top:10.4%}
+.c2{top:13.7%}
+.cm{top:80.9%;font-size:calc(var(--cw)*0.036);font-style:italic;letter-spacing:.03em;color:var(--gold2)}
+.cmj{top:83.8%;font-size:calc(var(--cw)*0.026);color:var(--gold)}
+.c3{top:88%}
+#cmoon{position:absolute;left:72%;top:27%;right:auto;bottom:auto;width:62%;height:auto;aspect-ratio:auto;object-fit:contain;transform:translate(-50%,-50%);opacity:.55;mix-blend-mode:screen;pointer-events:none;-webkit-mask-image:radial-gradient(circle,#000 55%,transparent 78%);mask-image:radial-gradient(circle,#000 55%,transparent 78%)}
+#start.galm{justify-content:flex-start;overflow-y:auto;padding:14px 0 24px;container-type:size}
+#gal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(92%,560px,calc(100cqh - 170px));margin:10px auto 0}
+#gal a{display:block;text-decoration:none;color:#e8c878;font:600 12px/1.2 Georgia,serif}
+#gal img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid #6b5a2f;border-radius:6px;display:block;margin-bottom:4px}
+#gtitle{color:#e8c878;font:600 20px Georgia,serif}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div id="skyW"><img src="assets/skytall.webp" alt=""></div>
+  <div id="oneStar"></div>
+  <div id="moonW">
+    <svg id="rays" viewBox="-150 -150 300 300"></svg>
+    <div id="moonGlow"></div>
+    <img id="moonImg" src="assets/moon.webp" alt="">
+  </div>
+  <svg id="seal" viewBox="-60 -60 120 120"></svg>
+  <div id="sil"><img src="assets/creature.webp" alt=""></div>
+  <div id="art">
+    <img id="neb" src="assets/nebula.webp" alt="">
+    <div id="iGlows"></div>
+    <img id="cre" src="assets/creature.webp" alt="">
+    <svg id="iLines" viewBox="0 0 300 400" preserveAspectRatio="none"></svg>
+    <div id="iStars"></div>
+    <div id="glintL"><div id="glint"></div><div id="glintMark"></div></div>
+  </div>
+  <div id="threadL"></div>
+  <div id="bloom"></div>
+  <div id="vign"></div>
+  <div id="band"></div>
+  <div id="txt" class="serif"></div>
+  <div id="prompt"><div class="en serif">Trace the seal to awaken…</div><div class="ja jaf" style="opacity:1">封印をなぞって、めざめさせよう</div></div>
+
+  <div id="cardDrop">
+    <div id="cshadow"></div>
+    <div id="card"><div id="flipper">
+      <div class="face front">
+        <div class="win" id="cwin"><div class="cart" id="cart">
+          <img id="csky" src="assets/sky.webp" alt="">
+          <div id="shootW"><div id="shoot"></div></div>
+          <div id="cnebO"><img class="cnebI" src="assets/nebula.webp" alt=""></div>
+          <div id="cfg">
+            <div id="cGlows" style="position:absolute;inset:0"></div>
+            <img id="ccre" src="assets/creature.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+            <svg id="cLines" viewBox="0 0 300 400" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"></svg>
+            <div id="cStars" style="position:absolute;inset:0"></div>
+          </div>
+          <div id="csheen"></div>
+        </div></div>
+        <img class="frame" src="assets/frame.webp" alt="">
+        <img class="foil" src="assets/foil0.webp" alt=""><img class="foil" src="assets/foil1.webp" alt=""><img class="foil" src="assets/foil2.webp" alt=""><img class="foil" src="assets/foil3.webp" alt="">
+        <div class="badge serif">MR</div>
+        <div id="ptr"></div>
+        <div class="ct c1 serif">Pegasus</div><div class="ct c2 jaf">ペガスス座</div><div class="ct cm serif">The Winged Horse of the Heavens</div><div class="ct cmj jaf">天かける翼の馬</div><div class="ct c3 serif">Greece · Mythical · Constellation</div>
+      </div>
+      <div class="face back">
+        <div class="bwin"><img src="assets/sky.webp" alt=""><div class="bscroll" id="bscroll"></div></div>
+        <img class="frame" src="assets/frame.webp" alt="">
+        <div class="badge serif">MR</div>
+        <div class="ct c1 serif">Pegasus</div><div class="ct c2 jaf">ペガスス座</div><div class="ct cm serif">The Winged Horse of the Heavens</div><div class="ct cmj jaf">天かける翼の馬</div><div class="ct c3 serif">Greece · Mythical · Constellation</div>
+      </div>
+    </div></div>
+  </div>
+  <div id="award"><div class="en serif">Awakened · 1 of 12</div><div class="ja jaf">めざめた　1 / 12</div></div>
+  <div id="hint"></div>
+  <div id="btns"><button class="btn ghost" id="flipB">↻ Flip · うら</button><button class="btn" id="doneB">Done ✓</button></div>
+  <div class="lb" id="lbT"></div><div class="lb" id="lbB"></div>
+
+  <div id="start">
+    <div id="loading" class="serif">Gathering the stars…</div>
+    <button class="btn" id="go">✦ Unseal ✦</button>
+    <div class="sub jaf">封印をとく</div>
+    <div class="sub" id="nameNote"></div>
+    <button class="link" id="reset">Reset “first time” (demo)</button>
+  </div>
+  <button id="skip">Skip ▸</button>
+  <div id="rot"><div>Please turn your device upright ↻<br><span class="jaf" style="font-size:.8em;color:#d9bb72">たてにしてね</span></div></div>
+  <div id="dbg"></div>
+  <div id="dTip"></div>
+</div>
+<script>
+(function(){
+"use strict";
+function showErr(m){var d=document.getElementById('errB');if(!d){d=document.createElement('div');d.id='errB';d.style.cssText='position:fixed;left:4px;right:4px;bottom:4px;z-index:99;background:#400;color:#fdd;font:11px system-ui;padding:4px;border-radius:4px';document.body.appendChild(d)}d.textContent='Error: '+m}
+addEventListener('error',function(e){showErr(e.message)});addEventListener('unhandledrejection',function(e){showErr(e.reason&&e.reason.message||e.reason)});
+var D={"stars":[{"n":"Alpheratz","x":0.4169,"y":0.5759,"mag":2.06,"c":"#cfe0ff"},{"n":"Scheat","x":0.4984,"y":0.4248,"mag":2.42,"c":"#ffc8a0"},{"n":"Markab","x":0.6721,"y":0.4704,"mag":2.49,"c":"#cfe0ff"},{"n":"Algenib","x":0.6006,"y":0.6341,"mag":2.83,"c":"#cfe0ff"},{"n":"Homam","x":0.7559,"y":0.4293,"mag":3.4,"c":"#cfe0ff"},{"n":"Biham","x":0.8517,"y":0.3701,"mag":3.53,"c":"#eef3ff"},{"n":"Enif","x":0.8291,"y":0.2955,"mag":2.38,"c":"#ffd9a8"},{"n":"Matar","x":0.4912,"y":0.368,"mag":2.94,"c":"#fff1d6"},{"n":"Pi","x":0.4857,"y":0.2792,"mag":4.29,"c":"#fffaf0"},{"n":"Sadalbari","x":0.5601,"y":0.4035,"mag":3.48,"c":"#ffd9a8"},{"n":"Lambda","x":0.5778,"y":0.3987,"mag":3.95,"c":"#fff1d6"},{"n":"Iota","x":0.5951,"y":0.2982,"mag":3.77,"c":"#fffaf0"},{"n":"Kappa","x":0.6145,"y":0.2438,"mag":4.13,"c":"#fffaf0"}],"lines":[["Alpheratz","Scheat"],["Scheat","Markab"],["Markab","Algenib"],["Algenib","Alpheratz"],["Markab","Homam"],["Homam","Biham"],["Biham","Enif"],["Scheat","Matar"],["Matar","Pi"],["Scheat","Sadalbari"],["Sadalbari","Lambda"],["Lambda","Iota"],["Iota","Kappa"]]};
+
+var GM=(new URLSearchParams(location.search)).get('m')||'';
+var MY={"dragon": {"D": {"stars": [{"n": "Spica", "x": 0.76, "y": 0.16, "mag": 0.98, "c": "#cfe0ff"}, {"n": "Heze", "x": 0.5931, "y": 0.0934, "mag": 3.38, "c": "#eef3ff"}, {"n": "Kang", "x": 0.6452, "y": 0.2943, "mag": 4.18, "c": "#ffd9a8"}, {"n": "Syrma", "x": 0.5867, "y": 0.2736, "mag": 4.07, "c": "#fffaf0"}, {"n": "Elgafar", "x": 0.5173, "y": 0.2815, "mag": 4.81, "c": "#fff1d6"}, {"n": "Khambalia", "x": 0.6704, "y": 0.3302, "mag": 4.52, "c": "#eef3ff"}, {"n": "Zubenelgenubi", "x": 0.6477, "y": 0.4185, "mag": 2.75, "c": "#eef3ff"}, {"n": "iotaLib", "x": 0.6577, "y": 0.481, "mag": 4.54, "c": "#eef3ff"}, {"n": "Zubenelhakrabi", "x": 0.5718, "y": 0.5063, "mag": 3.91, "c": "#ffd9a8"}, {"n": "Zubeneschamali", "x": 0.5341, "y": 0.4426, "mag": 2.61, "c": "#cfe0ff"}, {"n": "Fang", "x": 0.6686, "y": 0.5956, "mag": 2.89, "c": "#cfe0ff"}, {"n": "Iklil", "x": 0.7046, "y": 0.6034, "mag": 3.87, "c": "#cfe0ff"}, {"n": "Dschubba", "x": 0.6288, "y": 0.5857, "mag": 2.29, "c": "#cfe0ff"}, {"n": "Acrab", "x": 0.5921, "y": 0.5853, "mag": 2.56, "c": "#cfe0ff"}, {"n": "Alniyat", "x": 0.6396, "y": 0.6352, "mag": 2.9, "c": "#cfe0ff"}, {"n": "Antares", "x": 0.641, "y": 0.6534, "mag": 1.06, "c": "#ffc8a0"}, {"n": "Paikauhale", "x": 0.655, "y": 0.6711, "mag": 2.82, "c": "#cfe0ff"}, {"n": "Larawag", "x": 0.7128, "y": 0.7155, "mag": 2.29, "c": "#ffd9a8"}, {"n": "Xamidimura", "x": 0.7558, "y": 0.7296, "mag": 3.0, "c": "#cfe0ff"}, {"n": "zetaSco", "x": 0.8067, "y": 0.7472, "mag": 3.62, "c": "#ffd9a8"}, {"n": "etaSco", "x": 0.8079, "y": 0.7801, "mag": 3.32, "c": "#fffaf0"}, {"n": "Sargas", "x": 0.7941, "y": 0.825, "mag": 1.86, "c": "#fffaf0"}, {"n": "iotaSco", "x": 0.7528, "y": 0.8386, "mag": 2.99, "c": "#fffaf0"}, {"n": "kappaSco", "x": 0.7404, "y": 0.8262, "mag": 2.39, "c": "#cfe0ff"}, {"n": "Lesath", "x": 0.7236, "y": 0.7994, "mag": 2.7, "c": "#cfe0ff"}, {"n": "Shaula", "x": 0.7198, "y": 0.8045, "mag": 1.62, "c": "#cfe0ff"}, {"n": "Alnasl", "x": 0.62, "y": 0.86, "mag": 2.98, "c": "#ffd9a8"}, {"n": "KausMedia", "x": 0.6055, "y": 0.8953, "mag": 2.72, "c": "#ffd9a8"}, {"n": "KausAustralis", "x": 0.6658, "y": 0.9089, "mag": 1.79, "c": "#cfe0ff"}, {"n": "etaSgr", "x": 0.6996, "y": 0.8968, "mag": 3.1, "c": "#ffc8a0"}], "lines": [["Spica", "Heze"], ["Spica", "Kang"], ["Kang", "Syrma"], ["Syrma", "Elgafar"], ["Kang", "Khambalia"], ["Kang", "Zubenelgenubi"], ["Zubenelgenubi", "iotaLib"], ["iotaLib", "Zubenelhakrabi"], ["Zubenelhakrabi", "Zubeneschamali"], ["Zubeneschamali", "Zubenelgenubi"], ["iotaLib", "Fang"], ["Iklil", "Fang"], ["Fang", "Dschubba"], ["Dschubba", "Acrab"], ["Dschubba", "Alniyat"], ["Alniyat", "Antares"], ["Antares", "Paikauhale"], ["Paikauhale", "Larawag"], ["Larawag", "Xamidimura"], ["Xamidimura", "zetaSco"], ["zetaSco", "etaSco"], ["etaSco", "Sargas"], ["Sargas", "iotaSco"], ["iotaSco", "kappaSco"], ["kappaSco", "Shaula"], ["Shaula", "Lesath"], ["Lesath", "Alnasl"], ["Alnasl", "KausMedia"], ["KausMedia", "KausAustralis"], ["KausAustralis", "etaSgr"], ["etaSgr", "Alnasl"]]}, "t": ["Azure Dragon", "青龍（せいりゅう）", "Guardian of the Eastern Sky", "東の空をまもる龍", "China · Mythical · Seven Mansions", "Tilt to wake the Azure Dragon", "かたむけて、青龍をめざめさせよう"]}, "kitsune": {"D": {"stars": [{"n": "Anser", "x": 0.6561, "y": 0.2781, "mag": 4.44, "c": "#ffc8a0"}, {"n": "1Vul", "x": 0.76, "y": 0.3, "mag": 4.76, "c": "#cfe0ff"}, {"n": "9Vul", "x": 0.691, "y": 0.3677, "mag": 5.0, "c": "#cfe0ff"}, {"n": "12Vul", "x": 0.5745, "y": 0.3588, "mag": 4.9, "c": "#cfe0ff"}, {"n": "13Vul", "x": 0.5451, "y": 0.3405, "mag": 4.57, "c": "#cfe0ff"}, {"n": "15Vul", "x": 0.4649, "y": 0.2973, "mag": 4.66, "c": "#eef3ff"}, {"n": "23Vul", "x": 0.3942, "y": 0.3242, "mag": 4.5, "c": "#ffd9a8"}, {"n": "29Vul", "x": 0.3513, "y": 0.4756, "mag": 4.81, "c": "#eef3ff"}, {"n": "31Vul", "x": 0.22, "y": 0.4, "mag": 4.56, "c": "#fff1d6"}], "lines": [["1Vul", "Anser"], ["Anser", "13Vul"], ["13Vul", "15Vul"], ["15Vul", "23Vul"], ["23Vul", "31Vul"], ["13Vul", "12Vul"], ["12Vul", "9Vul"], ["15Vul", "29Vul"]]}, "t": ["Kitsune", "九尾のきつね", "The Nine-Tailed Star Fox", "星をまもる白いきつね", "Japan · Mythical · Vulpecula", "Tilt to wake Kitsune", "かたむけて、きつねをめざめさせよう"]}, "dokkaebi": {"D": {"stars": [{"n": "theCnc", "x": 0.7134, "y": 0.588, "mag": 5.33, "c": "#ffd9a8"}, {"n": "etaCnc", "x": 0.6485, "y": 0.4493, "mag": 5.33, "c": "#ffd9a8"}, {"n": "AsellusBorealis", "x": 0.43, "y": 0.42, "mag": 4.66, "c": "#eef3ff"}, {"n": "AsellusAustralis", "x": 0.4603, "y": 0.6261, "mag": 3.94, "c": "#ffd9a8"}, {"n": "Beehive", "x": 0.52, "y": 0.52, "mag": 3.7, "c": "#dfe8ff", "cl": 1}], "lines": [["theCnc", "etaCnc"], ["etaCnc", "AsellusBorealis"], ["AsellusBorealis", "AsellusAustralis"], ["AsellusAustralis", "theCnc"]]}, "t": ["Dokkaebi", "トッケビ", "Trickster with a Magic Club", "魔法のこん棒をもつ、いたずら好き", "Korea · Mythical · Ghost Mansion", "Tilt to wake Dokkaebi", "かたむけて、トッケビをめざめさせよう"]}, "genie": {"D": {"stars": [{"n": "Betelgeuse", "x": 0.3518, "y": 0.2002, "mag": 0.45, "c": "#ffc8a0"}, {"n": "Rigel", "x": 0.7759, "y": 0.69, "mag": 0.18, "c": "#cfe0ff"}, {"n": "Bellatrix", "x": 0.6643, "y": 0.2337, "mag": 1.64, "c": "#cfe0ff"}, {"n": "Saiph", "x": 0.4312, "y": 0.7366, "mag": 2.07, "c": "#cfe0ff"}, {"n": "Mintaka", "x": 0.5935, "y": 0.4418, "mag": 2.25, "c": "#cfe0ff"}, {"n": "Alnilam", "x": 0.55, "y": 0.47, "mag": 1.69, "c": "#cfe0ff"}, {"n": "Alnitak", "x": 0.5029, "y": 0.4932, "mag": 1.74, "c": "#cfe0ff"}, {"n": "Meissa", "x": 0.56, "y": 0.12, "mag": 3.39, "c": "#cfe0ff"}, {"n": "Hatysa", "x": 0.5586, "y": 0.617, "mag": 2.75, "c": "#cfe0ff"}], "lines": [["Meissa", "Betelgeuse"], ["Meissa", "Bellatrix"], ["Betelgeuse", "Alnitak"], ["Bellatrix", "Mintaka"], ["Mintaka", "Alnilam"], ["Alnilam", "Alnitak"], ["Alnitak", "Saiph"], ["Mintaka", "Rigel"], ["Alnilam", "Hatysa"]]}, "t": ["Genie", "ランプの精", "Spirit of the Lamp", "ランプからあらわれる精霊", "Middle East · Mythical · Al-Jabbār", "Tilt to wake the Genie", "かたむけて、ランプの精をめざめさせよう"]}, "quetzalcoatl": {"D": {"stars": [{"n": "Venus", "x": 0.8, "y": 0.1, "mag": -4.2, "c": "#fffaf0"}], "lines": []}, "t": ["Quetzalcoatl", "ケツァルコアトル", "The Feathered Serpent", "羽をもつ蛇の神さま", "Mexico · Mythical · Morning Star", "Tilt to wake Quetzalcoatl", "かたむけて、ケツァルコアトルをめざめさせよう"]}, "boto": {"D": {"stars": [{"n": "Sualocin", "x": 0.6855, "y": 0.3534, "mag": 3.77, "c": "#cfe0ff"}, {"n": "Rotanev", "x": 0.5779, "y": 0.4264, "mag": 3.64, "c": "#fffaf0"}, {"n": "gammaDel", "x": 0.644, "y": 0.226, "mag": 4.27, "c": "#ffd9a8"}, {"n": "deltaDel", "x": 0.5711, "y": 0.3103, "mag": 4.43, "c": "#eef3ff"}, {"n": "Aldulfin", "x": 0.302, "y": 0.595, "mag": 4.03, "c": "#cfe0ff"}, {"n": "zetaDel", "x": 0.6058, "y": 0.4631, "mag": 4.64, "c": "#eef3ff"}], "lines": [["Sualocin", "Rotanev"], ["Rotanev", "deltaDel"], ["deltaDel", "gammaDel"], ["gammaDel", "Sualocin"], ["Rotanev", "Aldulfin"]]}, "t": ["Boto", "ボト", "The Pink River Dolphin", "アマゾン川のピンクのイルカ", "Brazil · Mythical · Delphinus", "Tilt to wake Boto", "かたむけて、ボトをめざめさせよう"]}, "raven": {"D": {"stars": [{"n": "Gienah", "x": 0.66, "y": 0.26, "mag": 2.58, "c": "#cfe0ff"}, {"n": "Algorab", "x": 0.3935, "y": 0.2151, "mag": 2.94, "c": "#cfe0ff"}, {"n": "Kraz", "x": 0.36, "y": 0.62, "mag": 2.65, "c": "#fff1d6"}, {"n": "epsCrv", "x": 0.7874, "y": 0.5501, "mag": 3.02, "c": "#ffd9a8"}, {"n": "Alchiba", "x": 0.8269, "y": 0.6717, "mag": 4.02, "c": "#fffaf0"}], "lines": [["Alchiba", "epsCrv"], ["epsCrv", "Gienah"], ["Gienah", "Algorab"], ["Algorab", "Kraz"], ["Kraz", "epsCrv"]]}, "t": ["Raven", "ワタリガラス", "The Bringer of Light", "世界に光をもたらした鳥", "Haida Nation · Mythical · Corvus", "Tilt to wake Raven", "かたむけて、ワタリガラスをめざめさせよう"]}, "moonrabbit": {"D": {"stars": [], "lines": []}, "t": ["Moon Rabbit", "月のうさぎ", "Who Lives on the Full Moon", "満月にすむうさぎ", "The World · Mythical · Full Moon", "Tilt to wake the Moon Rabbit", "かたむけて、月のうさぎをめざめさせよう"]}, "anansi": {"D": {"stars": [{"n": "Alcyone", "x": 0.48, "y": 0.32, "mag": 2.85, "c": "#cfe0ff"}, {"n": "Atlas", "x": 0.3402, "y": 0.3454, "mag": 3.62, "c": "#cfe0ff"}, {"n": "Electra", "x": 0.7, "y": 0.3, "mag": 3.72, "c": "#cfe0ff"}, {"n": "Maia", "x": 0.6095, "y": 0.2359, "mag": 3.87, "c": "#cfe0ff"}, {"n": "Merope", "x": 0.584, "y": 0.3557, "mag": 4.14, "c": "#cfe0ff"}, {"n": "Taygeta", "x": 0.6576, "y": 0.2041, "mag": 4.3, "c": "#cfe0ff"}, {"n": "Pleione", "x": 0.335, "y": 0.3224, "mag": 5.05, "c": "#cfe0ff"}, {"n": "Celaeno", "x": 0.6989, "y": 0.2506, "mag": 5.45, "c": "#cfe0ff"}], "lines": []}, "t": ["Anansi", "アナンシ", "Keeper of All Stories", "すべての物語をもつクモ", "Ghana · Mythical · Pleiades", "Tilt to wake Anansi", "かたむけて、アナンシをめざめさせよう"]}, "maui": {"D": {"stars": [{"n": "Acrab", "x": 0.72, "y": 0.62, "mag": 2.56, "c": "#cfe0ff"}, {"n": "Dschubba", "x": 0.6827, "y": 0.5854, "mag": 2.29, "c": "#cfe0ff"}, {"n": "Fang", "x": 0.6585, "y": 0.538, "mag": 2.89, "c": "#cfe0ff"}, {"n": "Alniyat", "x": 0.7526, "y": 0.5226, "mag": 2.9, "c": "#cfe0ff"}, {"n": "Antares", "x": 0.7801, "y": 0.5026, "mag": 1.06, "c": "#ffc8a0"}, {"n": "Paikauhale", "x": 0.7937, "y": 0.4721, "mag": 2.82, "c": "#cfe0ff"}, {"n": "Larawag", "x": 0.805, "y": 0.3782, "mag": 2.29, "c": "#ffd9a8"}, {"n": "Xamidimura", "x": 0.7843, "y": 0.3284, "mag": 3.0, "c": "#cfe0ff"}, {"n": "zetaSco", "x": 0.7618, "y": 0.2699, "mag": 3.62, "c": "#ffd9a8"}, {"n": "etaSco", "x": 0.8097, "y": 0.2398, "mag": 3.32, "c": "#fffaf0"}, {"n": "Sargas", "x": 0.8882, "y": 0.212, "mag": 1.86, "c": "#fffaf0"}, {"n": "iotaSco", "x": 0.9468, "y": 0.2333, "mag": 2.99, "c": "#fffaf0"}, {"n": "kappaSco", "x": 0.9411, "y": 0.254, "mag": 2.39, "c": "#cfe0ff"}, {"n": "Shaula", "x": 0.93, "y": 0.29, "mag": 1.62, "c": "#cfe0ff"}, {"n": "Lesath", "x": 0.919, "y": 0.2915, "mag": 2.7, "c": "#cfe0ff"}], "lines": [["Acrab", "Dschubba"], ["Dschubba", "Fang"], ["Dschubba", "Alniyat"], ["Alniyat", "Antares"], ["Antares", "Paikauhale"], ["Paikauhale", "Larawag"], ["Larawag", "Xamidimura"], ["Xamidimura", "zetaSco"], ["zetaSco", "etaSco"], ["etaSco", "Sargas"], ["Sargas", "iotaSco"], ["iotaSco", "kappaSco"], ["kappaSco", "Shaula"], ["Shaula", "Lesath"]]}, "t": ["Māui", "マウイ", "The Hero Who Fished Up Islands", "島をつりあげた英雄", "Polynesia · Mythical · Māui’s Hook", "Tilt to wake Māui", "かたむけて、マウイをめざめさせよう"]}, "moonrabbitbg": {"D": {"stars": [], "lines": []}, "t": ["Moon Rabbit", "月のうさぎ", "Who Lives on the Full Moon", "満月にすむうさぎ", "The World · Mythical · Full Moon", "Tilt to wake the Moon Rabbit", "かたむけて、月のうさぎをめざめさせよう"], "a": "moonrabbit"}}, GORDER=["pegasus", "dragon", "kitsune", "dokkaebi", "genie", "quetzalcoatl", "boto", "raven", "moonrabbit", "moonrabbitbg", "anansi", "maui"], GNAMES={"pegasus": "Pegasus", "dragon": "Azure Dragon", "kitsune": "Kitsune", "dokkaebi": "Dokkaebi", "genie": "Genie", "quetzalcoatl": "Quetzalcoatl", "boto": "Boto", "raven": "Raven", "moonrabbit": "Moon Rabbit (no moon)", "anansi": "Anansi", "maui": "Māui", "moonrabbitbg": "Moon Rabbit (moon in sky)"};
+var GX=GM&&MY[GM]?MY[GM]:null, MOONC=null, AK=GX&&GX.a?GX.a:GM;
+if(GX){D=GX.D;
+  document.querySelectorAll('img').forEach(function(im){var a=im.getAttribute('src')||'';
+    if(a==='assets/nebula.webp')im.setAttribute('src','assets/'+AK+'-nebula.webp');
+    if(a==='assets/creature.webp')im.setAttribute('src','assets/'+AK+'-creature.webp');});
+  if(typeof PRE!=='undefined'&&PRE.forEach){PRE.forEach(function(x,i){if(x==='assets/nebula.webp')PRE[i]='assets/'+GM+'-nebula.webp';if(x==='assets/creature.webp')PRE[i]='assets/'+GM+'-creature.webp';});}
+  [['c1',0],['c2',1],['cm',2],['cmj',3],['c3',4]].forEach(function(p){document.querySelectorAll('.ct.'+p[0]).forEach(function(e){e.textContent=GX.t[p[1]]})});
+  if(GM==='moonrabbitbg'){var nb=document.getElementById('cnebO');MOONC=document.createElement('img');MOONC.id='cmoon';MOONC.src='assets/moon.webp';MOONC.alt='';nb.parentNode.insertBefore(MOONC,nb);}
+}
+function gFitText(){var cw=(document.getElementById('cardDrop')||document.body).getBoundingClientRect().width;
+  document.querySelectorAll('.ct').forEach(function(e){e.style.fontSize='';e.style.whiteSpace='nowrap';var k=0,fs=parseFloat(getComputedStyle(e).fontSize);
+    var r=document.createRange();r.selectNodeContents(e);while(r.getBoundingClientRect().width>cw*0.74&&k<25){fs*=0.95;e.style.fontSize=fs+'px';k++;}});}
+var Q=function(id){return document.getElementById(id)};
+var stage=Q('stage'),qs=new URLSearchParams(location.search);
+var NAME=(qs.get('name')||'').trim()||'star';           /* from the app; never invented */
+var DEBUG=qs.has('debug'),SPEED=Math.max(1,+qs.get('speed')||1),START_ACT=+qs.get('act')||0;
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var SEEN_KEY='sqMythPegasusSeen';
+Q('nameNote').textContent='Name used: '+NAME+'  (demo: add ?name=… to the link)';
+
+/* ================= timing helpers (support fast-forward + skip) ================= */
+var curAct=0,ffUntil=0,pend=[];
+function ff(){return curAct<ffUntil}
+function act(n){curAct=n;var e=Q('dAct');if(e)e.textContent='Act '+n}
+function wait(ms){return new Promise(function(r){if(ff())return r();var t=setTimeout(function(){r()},ms/SPEED);pend.push(function(){clearTimeout(t);r()})})}
+function T(el,props,ms,ease,delay){var d=ff()?0:ms/SPEED;el.style.transition=d?('all '+d+'ms '+(ease||'ease-in-out')+' '+((delay||0)/SPEED)+'ms'):'none';for(var k in props)el.style[k]=props[k]}
+function commit(el,f){for(var k in f)if(k!=='offset'&&k!=='easing'&&k!=='composite')el.style[k]=f[k]}
+function A(el,frames,ms,opts){var last=frames[frames.length-1];
+  if(ff()){el.style.transition='none';commit(el,last);return Promise.resolve()}
+  opts=Object.assign({duration:ms/SPEED,easing:'ease-in-out',fill:'forwards'},opts||{});if(opts.delay)opts.delay/=SPEED;
+  var an=el.animate(frames,opts);return an.finished.then(function(){el.style.transition='none';commit(el,last);try{an.cancel()}catch(e){}}).catch(function(){})}
+function tapOn(el){return new Promise(function(r){if(ff())return r();var h=function(){el.removeEventListener('pointerup',h);r()};
+  var t=setTimeout(function(){el.addEventListener('pointerup',h)},250);pend.push(function(){clearTimeout(t);el.removeEventListener('pointerup',h);r()})})}
+function ss(a,b,v){v=Math.max(0,Math.min(1,(v-a)/(b-a)));return v*v*(3-2*v)}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function srect(){return stage.getBoundingClientRect()}
+
+/* ================= stars (shared by intro + card) ================= */
+var byN={};D.stars.forEach(function(s){byN[s.n]=s});
+function hexA(c,a){var n=parseInt(c.slice(1),16);return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'}
+var brightest=D.stars.slice().sort(function(a,b){return a.mag-b.mag}).slice(0,2).map(function(s){return s.n});
+function buildStars(host,svg,glowHost,stroke){
+  var h='';D.lines.forEach(function(l){var a=byN[l[0]],b=byN[l[1]],len=Math.hypot((a.x-b.x)*300,(a.y-b.y)*400);
+    h+='<line x1="'+a.x*300+'" y1="'+a.y*400+'" x2="'+b.x*300+'" y2="'+b.y*400+'" stroke="'+stroke+'" stroke-width=".9" stroke-linecap="round" style="stroke-dasharray:'+len+';stroke-dashoffset:'+len+'"/>'});
+  svg.innerHTML=h;var lines=[].slice.call(svg.querySelectorAll('line'));
+  var els={},glows={};
+  D.stars.forEach(function(s,i){var size=(s.cl?6:Math.min(9,Math.max(1.8,7*Math.pow(10,-0.2*(s.mag-2)))));var e=document.createElement('div');e.className='star'+(s.mag>3.6?' soft':'');
+    e.style.left=s.x*100+'%';e.style.top=s.y*100+'%';e.style.width=size+'%';e.style.aspectRatio='1';
+    var dur=(3+((i*7919)%400)/100).toFixed(2),dl=(-((i*3301)%700)/100).toFixed(2);
+    e.innerHTML='<i style="--d:'+dur+'s;--dl:'+dl+'s;background:radial-gradient(circle,#fff 0%,#fff 9%,'+s.c+' 20%,'+hexA(s.c,.35)+' 38%,transparent 70%)"></i>'+(brightest.indexOf(s.n)>=0?'<div class="x"></div><div class="x v"></div>':'');
+    host.appendChild(e);els[s.n]=e;
+    if(DEBUG){var lb=document.createElement('div');lb.className='dlab';lb.textContent=s.n;lb.style.left=s.x*100+'%';lb.style.top=s.y*100+'%';lb.style.display='none';host.appendChild(lb)}
+    if(glowHost){var g=document.createElement('div');g.className='glow';g.style.left=s.x*100+'%';g.style.top=s.y*100+'%';glowHost.appendChild(g);glows[s.n]=g}
+  });
+  return {lines:lines,els:els,glows:glows};
+}
+var I=buildStars(Q('iStars'),Q('iLines'),Q('iGlows'),'rgba(255,226,150,.95)');
+var C=buildStars(Q('cStars'),Q('cLines'),Q('cGlows'),'rgba(220,230,255,.6)');
+Object.keys(C.els).forEach(function(n){C.els[n].style.transform='translate(-50%,-50%) scale(1)'});
+C.lines.forEach(function(l){l.style.strokeDashoffset=0});
+/* eye glint position (art coords, estimated; shown in ?debug) */
+var EYE={x:0.732,y:0.2865};
+['glint','glintMark'].forEach(function(id){Q(id).style.left=EYE.x*100+'%';Q(id).style.top=EYE.y*100+'%'});
+
+/* ================= moon rays ================= */
+(function(){var h='<defs><radialGradient id="rg" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="150"><stop offset="0.25" stop-color="rgba(255,240,205,.22)"/><stop offset="0.6" stop-color="rgba(255,240,205,.07)"/><stop offset="1" stop-color="rgba(255,240,205,0)"/></radialGradient></defs><g fill="url(#rg)">';
+  for(var i=0;i<18;i++){var a=i*20+((i*37)%9),w=1.2+((i*13)%5)*0.5,r=110+((i*29)%40);var a1=(a-w)*Math.PI/180,a2=(a+w)*Math.PI/180;
+    h+='<polygon points="0,0 '+(r*Math.cos(a1)).toFixed(1)+','+(r*Math.sin(a1)).toFixed(1)+' '+(r*Math.cos(a2)).toFixed(1)+','+(r*Math.sin(a2)).toFixed(1)+'"/>'}
+  Q('rays').innerHTML=h+'</g>';if(RM)Q('rays').querySelector('g').style.animation='none'})();
+
+/* ================= Greek key seal ================= */
+var seal=Q('seal'),u=7;
+var key=[[0,6],[0,0],[6,0],[6,6],[2,6],[2,2],[4,2],[4,4]].map(function(p){return [(p[0]-3)*u*1.6,(p[1]-3)*u*1.6]});
+var keyD='M'+key.map(function(p){return p.join(',')}).join(' L');
+function band(){var d='',s=4.2,R=52;
+  for(var side=0;side<4;side++){for(var k=0;k<6;k++){var x0=-R+k*(2*R/6)+3,y0=-R-2;
+    var pts=[[0,s*2],[0,0],[s*2,0],[s*2,s*1.4],[s*0.8,s*1.4],[s*0.8,s*0.7],[s*1.4,s*0.7]].map(function(p){return [x0+p[0],y0+p[1]]});
+    var a=side*Math.PI/2,c=Math.cos(a),sn=Math.sin(a);
+    d+='M'+pts.map(function(p){return (p[0]*c-p[1]*sn).toFixed(2)+','+(p[0]*sn+p[1]*c).toFixed(2)}).join(' L')}}return d}
+seal.innerHTML='<g id="sBorder"><rect x="-56" y="-56" width="112" height="112" fill="none" stroke="rgba(217,187,114,.55)" stroke-width=".6"/>'+
+ '<rect x="-44" y="-44" width="88" height="88" fill="none" stroke="rgba(217,187,114,.45)" stroke-width=".5"/>'+
+ '<path d="'+band()+'" fill="none" stroke="rgba(217,187,114,.55)" stroke-width=".9"/></g>'+
+ '<path id="sShade" d="'+keyD+'" fill="none" stroke="rgba(10,12,25,.45)" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>'+
+ '<path id="sGuide" d="'+keyD+'" fill="none" stroke="rgba(246,224,160,.95)" stroke-width="4.2" stroke-linecap="square" stroke-linejoin="miter"/>'+
+ '<path id="sGlow" d="'+keyD+'" fill="none" stroke="rgba(255,230,160,.35)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<path id="sLit" d="'+keyD+'" fill="none" stroke="#fff3c8" stroke-width="4.4" stroke-linecap="square" stroke-linejoin="miter"/>'+
+ '<circle id="sStart" r="4.5" fill="#fff3c8" cx="'+key[0][0]+'" cy="'+key[0][1]+'"><animate attributeName="r" values="3.5;6;3.5" dur="1.4s" repeatCount="indefinite"/></circle>';
+var guide=Q('sGuide'),lit=Q('sLit'),sglow=Q('sGlow'),shade=Q('sShade'),L=lit.getTotalLength();
+[guide,lit,sglow,shade].forEach(function(p){p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+var samples=[];for(var i=0;i<=200;i++){var pt=lit.getPointAtLength(L*i/200);samples.push([pt.x,pt.y])}
+function setLit(f){var o=L*(1-f);lit.style.transition='none';sglow.style.transition='none';lit.style.strokeDashoffset=o;sglow.style.strokeDashoffset=o}
+function sealPx(k){var r=seal.getBoundingClientRect(),s=srect(),p=samples[k];return [r.left-s.left+(p[0]+60)/120*r.width,r.top-s.top+(p[1]+60)/120*r.height]}
+function artPx(x,y){var r=Q('art').getBoundingClientRect(),s=srect();return [r.left-s.left+x*r.width,r.top-s.top+y*r.height]}
+function spark(cls,x,y){var e=document.createElement('div');e.className='spk'+(cls?' '+cls:'');e.style.transform='translate('+x+'px,'+y+'px)';Q('threadL').appendChild(e);return e}
+var lastSpark=0;
+function trace(){return new Promise(function(done){
+  if(ff()){setLit(1);return done()}
+  var prog=0,down=false,fin=false;Q('sStart').style.display='';
+  function local(e){var r=seal.getBoundingClientRect();return [(e.clientX-r.left)/r.width*120-60,(e.clientY-r.top)/r.height*120-60]}
+  function move(e){if(!down||fin)return;var p=local(e),best=-1,bd=1e9;
+    for(var j=prog;j<Math.min(samples.length,prog+14);j++){var d=Math.hypot(samples[j][0]-p[0],samples[j][1]-p[1]);if(d<bd){bd=d;best=j}}
+    if(best>=0&&bd<13){prog=Math.max(prog,best);setLit(prog/200);var sp=samples[prog];Q('sStart').setAttribute('cx',sp[0]);Q('sStart').setAttribute('cy',sp[1]);
+      var now=performance.now();if(now-lastSpark>45&&!RM){lastSpark=now;var s=srect(),x=e.clientX-s.left,y=e.clientY-s.top,el=spark('sm',x,y);
+        el.animate([{transform:'translate('+x+'px,'+y+'px) scale(1)',opacity:1},{transform:'translate('+(x+(Math.random()-.5)*40)+'px,'+(y-20-Math.random()*40)+'px) scale(.3)',opacity:0}],{duration:700,easing:'ease-out'}).finished.then(function(){el.remove()})}}
+    if(prog>=197)finish()}
+  function finish(){if(fin)return;fin=true;cleanup();setLit(1);done()}
+  function dn(e){down=true;try{stage.setPointerCapture(e.pointerId)}catch(_){}move(e)}function up(){down=false}
+  function cleanup(){stage.removeEventListener('pointerdown',dn);window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);Q('sStart').style.display='none'}
+  stage.addEventListener('pointerdown',dn);window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);
+  pend.push(finish);
+})}
+
+/* ================= words ================= */
+function words(en,ja,small){var t=Q('txt');t.innerHTML='';var e=document.createElement('div');e.className='en serif'+(small?' small':'');
+  en.split(' ').forEach(function(w){var s=document.createElement('span');s.className='w';s.textContent=w;e.appendChild(s)});
+  var sh=document.createElement('div');sh.className='shine';e.appendChild(sh);
+  var j=document.createElement('div');j.className='ja jaf';j.textContent=ja;var tp=document.createElement('div');tp.className='tapH';tp.textContent='tap ▸';
+  t.appendChild(e);t.appendChild(j);t.appendChild(tp);
+  var ws=e.querySelectorAll('.w');
+  return (async function(){
+    if(ff()){return}
+    for(var i=0;i<ws.length;i++){ws[i].classList.add('on');await wait(small?220:320)}
+    A(sh,[{transform:'translateX(-150%)'},{transform:'translateX(420%)'}],1300,{easing:'ease-in-out'});
+    await wait(300);j.style.opacity=1;await wait(900);tp.style.opacity=1;await tapOn(stage);
+    e.style.transition='opacity .6s';e.style.opacity=0;j.style.opacity=0;tp.style.opacity=0;await wait(650)})()}
+function artT(s){return 'translateY(-50%) '+(s||'')}
+var CAM=RM?0.4:1;function cam(v){return 1+(v-1)*CAM}
+
+/* ================= the sequence ================= */
+async function run(){
+  var first=!localStorage.getItem(SEEN_KEY);
+  Q('start').style.display='none';Q('skip').style.display=(first&&!DEBUG)?'none':'block';
+  /* I  the sky remembers */
+  act(1);
+  T(Q('oneStar'),{opacity:1,transform:'translate(-50%,-50%) scale(1)'},1800,'ease-out');await wait(2200);
+  T(Q('skyW'),{opacity:1},3400,'ease-in-out');await wait(3600);
+  /* II  the moon */
+  act(2);
+  T(Q('moonW'),{opacity:1,transform:'translate(-50%,0) scale(1)'},10000,'cubic-bezier(.12,.55,.2,1)');
+  T(Q('moonGlow'),{opacity:1},9000,'ease-in');
+  T(Q('skyW'),{transform:'translateY(0) scale(1)'},10500,'cubic-bezier(.12,.55,.2,1)');
+  T(Q('oneStar'),{opacity:0},6000);
+  await wait(10600);await wait(1500);
+  /* III  her seal */
+  act(3);
+  T(Q('moonW'),{opacity:.78},1500);T(seal,{opacity:1},600);
+  T(guide,{strokeDashoffset:'0'},2600);T(shade,{strokeDashoffset:'0'},2600);await wait(2800);
+  T(guide,{stroke:'rgba(246,224,160,.45)'},1000);T(Q('prompt'),{opacity:1},900);await wait(600);
+  await trace();
+  T(Q('prompt'),{opacity:0},500);
+  if(!ff()&&navigator.vibrate){try{navigator.vibrate([25,40,70])}catch(e){}}
+  T(lit,{stroke:'#ffffff'},300);T(sglow,{stroke:'rgba(255,244,214,.7)',strokeWidth:'16px'},400);await wait(900);
+  /* IV  the thread: her line becomes the constellation */
+  act(4);
+  T(Q('sBorder'),{opacity:0},1500);T(guide,{opacity:0},800);T(shade,{opacity:0},800);
+  Q('iStars').style.opacity=1;
+  var litStars={};
+  function ignite(n){if(litStars[n])return;litStars[n]=1;var el=I.els[n];
+    A(el,[{transform:'translate(-50%,-50%) scale(0)'},{transform:'translate(-50%,-50%) scale(1.8)',offset:.45},{transform:'translate(-50%,-50%) scale(1)'}],650);
+    if(!ff()){var p=artPx(byN[n].x,byN[n].y),r=document.createElement('div');r.className='ring';Q('threadL').appendChild(r);
+      r.animate([{transform:'translate('+p[0]+'px,'+p[1]+'px) scale(.2)',opacity:.9},{transform:'translate('+p[0]+'px,'+p[1]+'px) scale(2.2)',opacity:0}],{duration:700/SPEED,easing:'ease-out'}).finished.then(function(){r.remove()})}}
+  var nL=D.lines.length,dur=nL*330+1200;
+  T(lit,{strokeDashoffset:String(-L)},dur,'linear');T(sglow,{strokeDashoffset:String(-L)},dur,'linear');
+  await Promise.all(D.lines.map(function(l,i){return (async function(){
+    await wait(i*330);
+    var k=Math.round(i/(nL-1)*200),a=sealPx(k),b=artPx(byN[l[0]].x,byN[l[0]].y);
+    if(!ff()){var sp=spark('',a[0],a[1]);await A(sp,[{transform:'translate('+a[0]+'px,'+a[1]+'px) scale(.6)'},{transform:'translate('+b[0]+'px,'+b[1]+'px) scale(1.2)'}],700,{easing:'cubic-bezier(.3,0,.2,1)'});sp.remove()}
+    ignite(l[0]);T(I.lines[i],{strokeDashoffset:'0'},450,'ease-out');await wait(450);ignite(l[1]);
+  })()}));
+  T(seal,{opacity:0},600);
+  I.lines.forEach(function(l){T(l,{stroke:'rgba(220,230,255,.6)'},1500)});
+  await wait(1300);
+  act(5);
+  /* VI  the awakening */
+  act(6);
+  var order=D.stars.slice().sort(function(a,b){return a.mag-b.mag});
+  order.forEach(function(s,i){A(I.els[s.n],[{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.8)',offset:.4},{transform:'translate(-50%,-50%) scale(1)'}],700,{delay:i*110})});
+  T(Q('neb'),{opacity:.9,transform:'scale(1)'},3200);
+  T(Q('moonW'),{opacity:.38,transform:'translate(-50%,-10%) scale(1)'},3200);T(Q('moonGlow'),{opacity:.5},3200);
+  await wait(1600);
+  D.stars.forEach(function(s){T(I.glows[s.n],{transform:'translate(-50%,-50%) scale(2.4)',opacity:.9},2600,'ease-out',Math.max(0,(s.mag-2)*220))});
+  await wait(900);
+  T(Q('cre'),{opacity:1,transform:'scale(1)'},2800);T(Q('neb'),{opacity:.3},2800);T(Q('iLines'),{opacity:.14},2000);
+  await wait(1400);
+  A(Q('bloom'),[{opacity:0},{opacity:.55,offset:.3},{opacity:0}],2000);
+  T(Q('lbT'),{transform:'translateY(-100%)'},1600);T(Q('lbB'),{transform:'translateY(100%)'},1600);
+  T(Q('art'),{transform:artT('scale('+cam(1.06)+')')},6000,'ease-out');
+  await wait(600);D.stars.forEach(function(s){T(I.glows[s.n],{opacity:0},1200)});
+  await wait(1300);
+  await A(Q('glint'),[{opacity:0,transform:'translate(-50%,-50%) scale(0) rotate(0deg)'},{opacity:1,transform:'translate(-50%,-50%) scale(1) rotate(45deg)',offset:.45},{opacity:0,transform:'translate(-50%,-50%) scale(.4) rotate(90deg)'}],1300);
+  await wait(2000);
+  /* VII  he speaks */
+  act(7);
+  await wait(600);
+  await words('I have flown across the heavens to meet you, '+NAME+'.',NAME+'、天をかけて会いに来たよ。');
+  T(Q('art'),{transform:artT('translate(0,'+(-2*CAM)+'%) scale('+cam(1.12)+')')},9000);
+  await words('When the hero Perseus defeated Medusa, I sprang into the world.','英雄ペルセウスがメドゥーサをたおしたとき、ぼくは生まれた。',true);
+  T(Q('art'),{transform:artT('translate('+(8*CAM)+'%,'+(6*CAM)+'%) scale('+cam(1.18)+')')},9000);
+  await words('With the hero Bellerophon, I defeated the fire-breathing Chimera.','英雄ベレロフォンといっしょに、火をはく怪物キマイラをたおした。',true);
+  T(Q('moonW'),{opacity:.12},3000);T(Q('art'),{transform:artT('translate(0,'+(10*CAM)+'%) scale('+cam(1.04)+')')},9000);T(Q('skyW'),{transform:'translateY('+(3*CAM)+'%) scale(1)'},9000);
+  await words('But when he tried to fly to the home of the gods, he fell. I flew on, and Zeus placed me among the stars.','でも、神々の山へ行こうとして、彼は落ちてしまった。ぼくは飛びつづけ、ゼウスがぼくを星にした。',true);
+  /* VIII  he launches; the card falls like a leaf */
+  act(8);
+  Q('txt').innerHTML='';
+  if(!ff()&&!RM){var c=artPx(.6,.45);for(var d=0;d<36;d++){(function(d){var x=c[0]+(Math.random()-.5)*120,y=c[1]+(Math.random()-.5)*160,e=spark(d%3?'sm':'',x,y);
+    e.animate([{transform:'translate('+x+'px,'+y+'px) scale(1)',opacity:0},{opacity:1,offset:.2},{transform:'translate('+(x+(Math.random()-.5)*60)+'px,'+(y-260-Math.random()*200)+'px) scale(.3)',opacity:0}],{duration:(1600+Math.random()*900)/SPEED,delay:d*35/SPEED,easing:'ease-out'}).finished.then(function(){e.remove()})})(d)}}
+  T(Q('art'),{transform:artT('translate(0,-95%) scale(.55)'),opacity:0},1500,'cubic-bezier(.5,0,.8,.4)');
+  T(Q('moonW'),{opacity:0},1500);T(Q('moonGlow'),{opacity:0},1500);
+  await wait(1700);
+  var cd=Q('cardDrop');cd.style.visibility='visible';
+  var P='perspective(1200px) ';
+  await A(cd,[{opacity:0,transform:P+'translate(-50%,-185%) rotateZ(-14deg) rotateY(55deg)'},{opacity:1,offset:.12},
+    {transform:P+'translate(-38%,-125%) rotateZ(9deg) rotateY(-30deg)',offset:.35},{transform:P+'translate(-60%,-82%) rotateZ(-6deg) rotateY(18deg)',offset:.62},
+    {transform:P+'translate(-48%,-56%) rotateZ(2deg) rotateY(-5deg)',offset:.86},{opacity:1,transform:P+'translate(-50%,-50%) rotateZ(0deg) rotateY(0deg)'}],3400,{easing:'ease-out'});
+  A(Q('bloom'),[{opacity:0},{opacity:.3,offset:.3},{opacity:0}],1200);
+  T(Q('cshadow'),{opacity:.6},800);
+  T(Q('award'),{opacity:1},900);await wait(1800);
+  localStorage.setItem(SEEN_KEY,'1');
+  if(!ff()){Q('hint').innerHTML='<div class="en serif">Tap the card ✦</div><div class="ja jaf">カードをタップしてね</div>';T(Q('hint'),{opacity:1},700);T(Q('award'),{opacity:0},500);
+    await tapOn(cd);T(Q('hint'),{opacity:0},300)}
+  else{Q('award').style.opacity=0}
+  /* IX  the live card in her hands */
+  act(9);ffUntil=0;Q('skip').style.display='none';
+  /* 26.11.156: inside the app, the card's own page takes over (same finger tilt as every card) */
+  if(window.parent&&window.parent!==window){try{window.parent.postMessage({sqmr:'card',m:GM||'pegasus'},'*');return}catch(e){}}
+  cardMode();
+}
+
+/* ================= live card ================= */
+var tx=0,ty=0,cx=0,cy=0,base=null,dragging=false,dx0=0,dy0=0,src='none',flipped=false,ang=0,tiltTime=0,cardOn=false;
+var foils=[].slice.call(document.querySelectorAll('#cardDrop .front .foil'));
+function onOri(e){if(e.beta==null)return;var b=e.beta,g=e.gamma,a=(screen.orientation&&screen.orientation.angle)||window.orientation||0;
+  if(a==90){var q=b;b=-g;g=q}else if(a==-90||a==270){var q2=b;b=g;g=-q2}else if(a==180){b=-b;g=-g}
+  src='device';if(!base)base={b:b,g:g};base.b+=(b-base.b)*0.002;base.g+=(g-base.g)*0.002;tx=clamp((g-base.g)/22,-1,1);ty=clamp((b-base.b)/22,-1,1)}
+/* 26.11.156: moving the device no longer tilts the card (app rule since 26.11.38); finger only */
+function askMotion(){}
+var cardEl=Q('card');
+cardEl.addEventListener('pointerdown',function(e){if(!cardOn||flipped)return;dragging=true;dx0=e.clientX;dy0=e.clientY;if(src!=='device')src='drag';try{cardEl.setPointerCapture(e.pointerId)}catch(_){}});
+cardEl.addEventListener('pointermove',function(e){if(!dragging)return;if(src==='device')return;tx=clamp((e.clientX-dx0)/140,-1,1);ty=clamp((e.clientY-dy0)/140,-1,1)});
+function endDrag(){dragging=false;if(src==='drag'){tx=0;ty=0}}
+cardEl.addEventListener('pointerup',endDrag);cardEl.addEventListener('pointercancel',endDrag);
+/* dial track on the frame (frame px 1024x1536) */
+var DC={x:509,y:717,a:422,b:434};
+function dialPos(deg){var r=deg*Math.PI/180,dx=Math.sin(r),dy=-Math.cos(r),k=Math.min(DC.a/Math.max(1e-6,Math.abs(dx)),DC.b/Math.max(1e-6,Math.abs(dy)));return [(DC.x+dx*k)/1024,(DC.y+dy*k)/1536]}
+var CW=300,CH=450;function sizeVars(){var e=Q('cardDrop');CW=e.offsetWidth||300;CH=e.offsetHeight||450;e.style.setProperty('--cw',CW+'px')}
+function parkPtr(){var pp=dialPos(ang);Q('ptr').style.transform='translate('+(pp[0]*CW).toFixed(1)+'px,'+(pp[1]*CH).toFixed(1)+'px) rotate('+ang.toFixed(1)+'deg)'}
+addEventListener('resize',function(){sizeVars();parkPtr()});sizeVars();parkPtr();
+function shootingStar(){if(!cardOn)return;var s=Q('shoot'),W=Q('shootW').offsetWidth,H=Q('shootW').offsetHeight;
+  var x0=W*(0.55+Math.random()*0.35),y0=H*(0.12+Math.random()*0.25),x1=x0-W*0.55,y1=y0+W*0.26;
+  if(!flipped)s.animate([{transform:'translate('+x0+'px,'+y0+'px) rotate(155deg) scaleX(.2)',opacity:0},{opacity:.9,offset:.25},{transform:'translate('+x1+'px,'+y1+'px) rotate(155deg) scaleX(1)',opacity:0}],{duration:900,easing:'ease-in'});
+  setTimeout(shootingStar,(DEBUG?6000:20000+Math.random()*20000))}
+function buildBack(){var d=new Date(),en=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),ja=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+  var L3=[['When the hero Perseus defeated Medusa, I sprang into the world.','英雄ペルセウスがメドゥーサをたおしたとき、ぼくは生まれた。'],['With the hero Bellerophon, I defeated the fire-breathing Chimera.','英雄ベレロフォンといっしょに、火をはく怪物キマイラをたおした。'],['But when he tried to fly to the home of the gods, he fell. I flew on, and Zeus placed me among the stars.','でも、神々の山へ行こうとして、彼は落ちてしまった。ぼくは飛びつづけ、ゼウスがぼくを星にした。']];
+  if(GX)L3=[['The legend of '+GX.t[0]+' comes in the next step.','この伝説は、つぎのステップでとどきます。']];
+  var h='<div class="bh serif">Awakened</div><div class="bd serif">'+en+' · Full moon</div><div class="bdj jaf">'+ja+'　満月の夜</div><div class="bhr"></div>';
+  L3.forEach(function(p){h+='<div class="bl serif">'+p[0]+'</div><div class="blj jaf">'+p[1]+'</div>'});
+  h+='<button class="bbtn serif" id="again">▶ Watch again · もう一度見る</button>';Q('bscroll').innerHTML=h;
+  Q('again').onclick=function(e){e.stopPropagation();var p=new URLSearchParams(location.search);p.delete('act');location.search=p.toString()}}
+function cardMode(){
+  cardOn=true;base=null;tx=ty=0;sizeVars();setTimeout(gFitText,60);buildBack();askMotion();
+  Q('hint').innerHTML='<svg viewBox="0 0 40 60"><rect x="8" y="4" width="24" height="44" rx="4" fill="none" stroke="#f3dfa6" stroke-width="2"/><circle cx="20" cy="42" r="1.6" fill="#f3dfa6"/><path d="M4 54 Q20 60 36 54" fill="none" stroke="#d9bb72" stroke-width="1.5"/></svg><div class="en serif">'+(GX?GX.t[5]:'Tilt to wake Pegasus')+'</div><div class="ja jaf">'+(GX?GX.t[6]:'かたむけて、ペガススをめざめさせよう')+'</div>';
+  Q('hint').style.transition='opacity .8s';Q('hint').style.opacity=1;
+  var t0=performance.now(),hintGone=false,btnsOn=false,last=performance.now();
+  setTimeout(shootingStar,DEBUG?3000:15000);
+  function frame(now){
+    var dt=Math.min(.05,(now-last)/1000);last=now;
+    cx+=(tx-cx)*0.12;cy+=(ty-cy)*0.12;var t=clamp(Math.hypot(cx,cy),0,1);
+    if(t>0.3)tiltTime+=dt;
+    if(!hintGone&&t>0.45){hintGone=true;Q('hint').style.opacity=0}
+    if(!btnsOn&&(tiltTime>4||now-t0>10000)){btnsOn=true;var b=Q('btns');b.style.transition='opacity .8s';b.style.opacity=1;b.style.pointerEvents='auto'}
+    cardEl.style.transform='rotateY('+(cx*10).toFixed(2)+'deg) rotateX('+(-cy*8).toFixed(2)+'deg)';
+    Q('cshadow').style.transform='translate('+(-cx*5).toFixed(2)+'%,'+(-cy*4).toFixed(2)+'%) scale('+(1-t*.05).toFixed(3)+')';
+    if(!flipped){
+      Q('csky').style.transform='translate('+(-cx*1.4).toFixed(2)+'%,'+(-cy*1.4).toFixed(2)+'%) scale(1.06)';
+      var nb=Q('cnebO');nb.style.opacity=(0.74-0.6*ss(0.15,0.9,t)).toFixed(3);nb.style.transform='translate('+(-cx*.5).toFixed(2)+'%,'+(-cy*.5).toFixed(2)+'%) scale(1.03)';
+      var rv=ss(0.28,0.92,t);
+      Q('cfg').style.transform='translate('+(cx*1).toFixed(2)+'%,'+(cy*1).toFixed(2)+'%) scale('+(1+0.025*rv).toFixed(4)+')';
+      Q('ccre').style.opacity=rv.toFixed(3);if(!window.__mrWoke&&rv>0.85){window.__mrWoke=1;try{var au=new Audio('assets/mr-wake.mp3');au.volume=0.8;au.play();}catch(_){}}
+      D.stars.forEach(function(s){var p=clamp((t-0.06-Math.max(0,(s.mag-2)*0.1))/0.55,0,1),g=C.glows[s.n];
+        g.style.transform='translate(-50%,-50%) scale('+(p*2.2).toFixed(3)+')';g.style.opacity=(Math.sin(Math.PI*Math.min(1,p*1.05))*0.85).toFixed(3);
+        C.els[s.n].style.transform='translate(-50%,-50%) scale('+(1.1+0.45*ss(0.05,0.5,t)-0.15*rv).toFixed(3)+')'});
+      Q('cLines').style.opacity=((1-ss(0.1,0.6,t))*0.42).toFixed(3);
+      var sh=Q('csheen');sh.style.opacity=(0.2+0.8*t).toFixed(3);sh.style.transform='translate('+(cx*22).toFixed(2)+'%,'+(cy*14).toFixed(2)+'%)';
+      var p=clamp(0.5+cx*0.55+cy*0.3,0,1)*3,inten=0.3+0.7*t;
+      foils.forEach(function(f,k){f.style.opacity=(Math.max(0,1-Math.abs(p-k))*inten).toFixed(3)});
+      var target=t>0.06?Math.atan2(cx,-cy)*180/Math.PI:0,diff=((target-ang+540)%360)-180;ang+=diff*0.1;
+      var pp=dialPos(ang);
+      Q('ptr').style.transform='translate('+(pp[0]*CW).toFixed(1)+'px,'+(pp[1]*CH).toFixed(1)+'px) rotate('+ang.toFixed(1)+'deg)';
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+Q('flipB').onclick=function(e){e.stopPropagation();flipped=!flipped;base=null;Q('flipper').style.transform=flipped?'rotateY(180deg)':'rotateY(0deg)';this.textContent=flipped?'↻ Flip · おもて':'↻ Flip · うら';tx=ty=0};
+Q('doneB').onclick=function(e){e.stopPropagation();location.search=''};
+
+/* ================= start, fullscreen, wake lock, skip ================= */
+var wakeLock=null;
+function keepAwake(){try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(l){wakeLock=l}).catch(function(){})}catch(e){}}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&wakeLock)keepAwake()});
+function goFull(){try{var d=document.documentElement,r=d.requestFullscreen?d.requestFullscreen({navigationUI:'hide'}):(d.webkitRequestFullscreen&&d.webkitRequestFullscreen());
+  if(r&&r.then)r.then(function(){try{screen.orientation.lock('portrait').catch(function(){})}catch(e){}}).catch(function(){})}catch(e){}}
+Q('go').onclick=function(e){e.stopPropagation();if(GM)ffUntil=9;goFull();keepAwake();askMotion();run().catch(function(er){showErr(er.message)})};
+Q('reset').onclick=function(e){e.stopPropagation();localStorage.removeItem(SEEN_KEY);this.textContent='Reset ✓ (next run is a first viewing)'};
+Q('skip').onclick=function(e){e.stopPropagation();ffUntil=9;this.style.display='none';
+  try{document.getAnimations().forEach(function(a){var it=a.effect&&a.effect.getTiming&&a.effect.getTiming().iterations;if(it!==Infinity){try{a.finish()}catch(_){}}})}catch(_){}
+  var p=pend;pend=[];p.forEach(function(f){f()})};
+/* portrait only on touch devices */
+var coarse=matchMedia('(pointer:coarse)').matches;
+function checkRot(){Q('rot').style.display=(coarse&&innerWidth>innerHeight*1.05)?'flex':'none'}
+addEventListener('resize',checkRot);checkRot();
+/* preload everything first */
+var srcs=['skytall','moon',(GX?AK+'-':'')+'nebula',(GX?AK+'-':'')+'creature','frame','sky','foil0','foil1','foil2','foil3'].map(function(n){return 'assets/'+n+'.webp'});
+if(!GM){Q('loading').style.display='none';var gh='<div id="gtitle">Mythicals preview (app 26.11.156) · preview</div><div class="sub">Tap one to open its card</div><div id="gal">';GORDER.forEach(function(k){gh+='<a href="?m='+k+'"><img src="assets/'+k+'-thumb.webp" alt="">'+GNAMES[k]+'</a>'});gh+='</div>';Q('start').innerHTML=gh;Q('start').classList.add('galm');}
+else{var gb=Q('go');gb.textContent='✦ Open '+GNAMES[GM]+' ✦';}
+Promise.all(srcs.map(function(s){return new Promise(function(r){var im=new Image();im.onload=im.onerror=function(){(im.decode?im.decode():Promise.resolve()).then(r,r)};im.src=s})})).then(function(){
+  if(!GM)return;Q('loading').style.display='none';Q('go').style.display='inline-block';
+  if(DEBUG&&START_ACT){ffUntil=START_ACT;run().catch(function(er){showErr(er.message)})}
+});
+
+/* ================= debug ================= */
+if(DEBUG){var dbg=Q('dbg');dbg.style.display='block';
+  var h='<b id="dAct">Act 0</b><br>Jump: ';for(var a=1;a<=9;a++)h+='<button data-a="'+a+'">'+a+'</button>';
+  h+='<br>Speed: ';[1,2,4].forEach(function(s){h+='<button data-s="'+s+'" class="'+(s===SPEED?'on':'')+'">'+s+'×</button>'});
+  h+='<br><button id="dNames">star names</button><button id="dEye">eye marker</button><br><span style="opacity:.7">Tap the art to read x/y</span>';
+  dbg.innerHTML=h;
+  dbg.addEventListener('pointerup',function(e){e.stopPropagation()});dbg.addEventListener('pointerdown',function(e){e.stopPropagation()});
+  dbg.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var p=new URLSearchParams(location.search);p.set('act',b.dataset.a);location.search=p.toString()}});
+  dbg.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){var p=new URLSearchParams(location.search);p.set('speed',b.dataset.s);location.search=p.toString()}});
+  Q('dNames').onclick=function(){this.classList.toggle('on');var on=this.classList.contains('on');document.querySelectorAll('.dlab').forEach(function(l){l.style.display=on?'block':'none'})};
+  Q('dEye').onclick=function(){this.classList.toggle('on');Q('glintMark').style.display=this.classList.contains('on')?'block':'none'};
+  stage.addEventListener('pointerdown',function(e){var box=(cardOn?Q('cart'):Q('art')).getBoundingClientRect();var x=(e.clientX-box.left)/box.width,y=(e.clientY-box.top)/box.height;
+    if(x<0||x>1||y<0||y>1)return;var tip=Q('dTip'),s=srect();tip.style.display='block';tip.style.left=(e.clientX-s.left+8)+'px';tip.style.top=(e.clientY-s.top-24)+'px';tip.textContent='x '+x.toFixed(3)+'  y '+y.toFixed(3)},true);
+}
+})();
+</script>
+</body>
+</html>
