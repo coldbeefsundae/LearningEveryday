@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.158', errs = [], shown = false;
+  var V = '26.11.159', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -18773,7 +18773,7 @@ function mrParentHTML(){
 function mrPreview(id){
   var o = document.createElement('div'); o.id = 'mrpv';
   o.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:#05060f';
-  o.innerHTML = '<iframe src="'+MR_PV+'?name='+encodeURIComponent(mrName())+(id && id !== 'pegasus' ? '&m='+encodeURIComponent(id) : '')+'" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="fullscreen; autoplay"></iframe><button class="btn small" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:2" data-mr="pvx">✖ Close</button>';
+  o.innerHTML = '<iframe src="'+MR_PV+'?name='+encodeURIComponent(mrName())+'&m='+encodeURIComponent(id || 'pegasus')+(!id || id === 'pegasus' ? '&intro=1' : '')+'&v='+V+'" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="fullscreen; autoplay"></iframe><button class="btn small" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:2" data-mr="pvx">✖ Close</button>';
   document.body.appendChild(o);
 }
 document.addEventListener('click', function(e){
