@@ -543,7 +543,7 @@ function keepAwake(){try{if(navigator.wakeLock)navigator.wakeLock.request('scree
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&wakeLock)keepAwake()});
 function goFull(){try{var d=document.documentElement,r=d.requestFullscreen?d.requestFullscreen({navigationUI:'hide'}):(d.webkitRequestFullscreen&&d.webkitRequestFullscreen());
   if(r&&r.then)r.then(function(){try{screen.orientation.lock('portrait').catch(function(){})}catch(e){}}).catch(function(){})}catch(e){}}
-Q('go').onclick=function(e){e.stopPropagation();if(GM)ffUntil=9;goFull();keepAwake();askMotion();run().catch(function(er){showErr(er.message)})};
+Q('go').onclick=function(e){e.stopPropagation();if(GM&&!qs.has('intro'))ffUntil=9;goFull();keepAwake();askMotion();run().catch(function(er){showErr(er.message)})};
 Q('reset').onclick=function(e){e.stopPropagation();localStorage.removeItem(SEEN_KEY);this.textContent='Reset ✓ (next run is a first viewing)'};
 Q('skip').onclick=function(e){e.stopPropagation();ffUntil=9;this.style.display='none';
   try{document.getAnimations().forEach(function(a){var it=a.effect&&a.effect.getTiming&&a.effect.getTiming().iterations;if(it!==Infinity){try{a.finish()}catch(_){}}})}catch(_){}
@@ -555,7 +555,7 @@ addEventListener('resize',checkRot);checkRot();
 /* preload everything first */
 var srcs=['skytall','moon',(GX?AK+'-':'')+'nebula',(GX?AK+'-':'')+'creature','frame','sky','foil0','foil1','foil2','foil3'].map(function(n){return 'assets/'+n+'.webp'});
 if(!GM){Q('loading').style.display='none';var gh='<div id="gtitle">Mythicals preview (app 26.11.156) · preview</div><div class="sub">Tap one to open its card</div><div id="gal">';GORDER.forEach(function(k){gh+='<a href="?m='+k+'"><img src="assets/'+k+'-thumb.webp" alt="">'+GNAMES[k]+'</a>'});gh+='</div>';Q('start').innerHTML=gh;Q('start').classList.add('galm');}
-else{var gb=Q('go');gb.textContent='✦ Open '+GNAMES[GM]+' ✦';}
+else if(!qs.has('intro')){var gb=Q('go');gb.textContent='✦ Open '+GNAMES[GM]+' ✦';}  /* 26.11.159: ?intro=1 plays the full awakening */
 Promise.all(srcs.map(function(s){return new Promise(function(r){var im=new Image();im.onload=im.onerror=function(){(im.decode?im.decode():Promise.resolve()).then(r,r)};im.src=s})})).then(function(){
   if(!GM)return;Q('loading').style.display='none';Q('go').style.display='inline-block';
   if(DEBUG&&START_ACT){ffUntil=START_ACT;run().catch(function(er){showErr(er.message)})}
