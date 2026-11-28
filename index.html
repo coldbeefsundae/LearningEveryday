@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script>
 (function(){
-  var V = '26.11.154', errs = [], shown = false;
+  var V = '26.11.155', errs = [], shown = false;
   window.__SQV = V; window.__SQDATE = '2026-11-16';
   function note(m){ try{ if(errs.length < 8) errs.push(String(m).slice(0, 300)); }catch(e){} }
   window.addEventListener('error', function(ev){
@@ -18626,13 +18626,6 @@ document.addEventListener('change', function(e){
   if(t.getAttribute('data-bkset') === 'on' && parentUnlocked){ var b = bk(); b.on = !!t.checked; save(); if(!b.on && tab === 'money') setTab('home'); else render(); toast(b.on ? 'The Money tab is shown on this device.' : 'The Money tab is hidden on this device.', 2400); }
 });
 
-try{ bankCatchUp(); }catch(e){}
-/* everything is defined now: draw the page once more so late modules (goal cards etc.) show up */
-try{ render(); }catch(e){ try{ console.error('final render', e); }catch(_){} }
-})();
-</script>
-<script>if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(r){ setTimeout(function(){ try{ (r.active || navigator.serviceWorker.controller).postMessage({type:'warm'}); }catch(e){} }, 8000); }).catch(function(){});});}</script>
-<script>
 /* ---------- 26.11.154: Mythicals (MR) build 1: hidden in Parent only ---------- */
 var MR_LIST = [
   ['pegasus','🐎','Pegasus'],['dragon','🐉','Azure Dragon'],['kitsune','🦊','Kitsune'],['dokkaebi','🪵','Dokkaebi'],
@@ -18750,6 +18743,11 @@ document.addEventListener('click', function(e){
   var pm = parScroller(), st = pm ? pm.scrollTop : 0; showParentSection('myth', st);
 }, true);
 
+try{ bankCatchUp(); }catch(e){}
+/* everything is defined now: draw the page once more so late modules (goal cards etc.) show up */
+try{ render(); }catch(e){ try{ console.error('final render', e); }catch(_){} }
+})();
 </script>
+<script>if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(r){ setTimeout(function(){ try{ (r.active || navigator.serviceWorker.controller).postMessage({type:'warm'}); }catch(e){} }, 8000); }).catch(function(){});});}</script>
 </body>
 </html>
